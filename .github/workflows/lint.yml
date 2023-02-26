@@ -10,8 +10,11 @@ on:
       - main
       - dev
 
+permissions: read-all|write-all
+
 jobs:
   lint:
+    name: Lint
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
