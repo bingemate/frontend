@@ -36,7 +36,8 @@ jobs:
         run: |
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
-          git commit -a -m "Lint fixes"
+          git add .
+          git diff-index --quiet HEAD || git commit -m "Linting fixes"
 
       - name: Push changes
         uses: ad-m/github-push-action@master
