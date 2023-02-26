@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "BINGE_MATE": {
+    "binge_mate": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -92,13 +92,13 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "BINGE_MATE:build:production"
+              "browserTarget": "binge_mate:build:production"
             },
             "development": {
-              "browserTarget": "BINGE_MATE:build:development"
+              "browserTarget": "binge_mate:build:development"
             },
             "local": {
-              "browserTarget": "BINGE_MATE:build:local"
+              "browserTarget": "binge_mate:build:local"
             }
           },
           "defaultConfiguration": "local"
@@ -106,7 +106,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "BINGE_MATE:build"
+            "browserTarget": "binge_mate:build"
           }
         },
         "test": {
