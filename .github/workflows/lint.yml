@@ -10,8 +10,6 @@ on:
       - main
       - dev
 
-permissions: read-all|write-all
-
 jobs:
   lint:
     name: Lint
