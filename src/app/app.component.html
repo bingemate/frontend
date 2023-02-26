@@ -33,7 +33,16 @@
           </li>
         </ul>
       </li>
+      <li nzPlacement="bottomLeft" nz-submenu nzOpen nzTitle="Compte" nzIcon="user">
+        <ul>
+          <li *ngFor="let accountLink of accountLinks" nz-menu-item nzMatchRouter>
+            <a [routerLink]="accountLink.path">{{ accountLink.name }}</a>
+          </li>
+        </ul>
+      </li>
     </ul>
+
+    <!-- botom -->
   </nz-sider>
   <nz-layout>
     <nz-header>
@@ -42,7 +51,7 @@
           <span class="trigger" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"></span>
         </span>
         <span class="header-trigger" (click)="toggleTheme()">
-          <i class="trigger" nz-icon nzType="skin" nzTheme="outline"></i>
+          <i class="trigger" nz-icon nzType="bg-colors" nzTheme="outline"></i>
         </span>
       </div>
     </nz-header>

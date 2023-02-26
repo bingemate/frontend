@@ -14,6 +14,7 @@ import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { AppInitializerProvider } from './app-initializer.service';
+import { NzSpaceModule } from 'ng-zorro-antd/space';
 
 registerLocaleData(fr);
 
@@ -29,6 +30,7 @@ registerLocaleData(fr);
     NzLayoutModule,
     NzMenuModule,
     NzButtonModule,
+    NzSpaceModule,
   ],
   providers: [AppInitializerProvider, { provide: NZ_I18N, useValue: fr_FR }],
   bootstrap: [AppComponent],
