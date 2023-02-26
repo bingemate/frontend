@@ -10,9 +10,6 @@ import { accountLinks, socialNetworkLinks, subscriptionLinks } from './app-routi
 export class AppComponent {
   isCollapsed = false;
 
-
-
-  
   accountLinks = Object.values(accountLinks);
   subscriptionLinks = subscriptionLinks;
   socialNetworkLinks = socialNetworkLinks;
