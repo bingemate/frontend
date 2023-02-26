@@ -38,3 +38,6 @@ testem.log
 Thumbs.db
 
 documentation/
+
+# Protobuf
+**/generated

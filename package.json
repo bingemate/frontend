@@ -16,6 +16,7 @@
     "compodoc:build": "compodoc --theme material -p tsconfig.doc.json",
     "compodoc:build-and-serve": "compodoc --theme material -p tsconfig.doc.json -s",
     "compodoc:serve": "compodoc --theme material -s"
+    "protoc:generate:win": "protoc --js_out=import_style=commonjs,binary:src/app/generated --ts_out=service=grpc-web:src/app/generated proto/video.proto"
   },
   "private": true,
   "dependencies": {
