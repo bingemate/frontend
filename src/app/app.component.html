@@ -12,7 +12,7 @@
         <h1>Ant Design Of Angular</h1>
       </a>
     </div>
-    <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
+    <ul nz-menu nzMode="inline" [nzInlineCollapsed]="isCollapsed">
       <li nz-submenu nzOpen nzTitle="Dashboard" nzIcon="dashboard">
         <ul>
           <li nz-menu-item nzMatchRouter>
@@ -40,6 +40,9 @@
       <div class="app-header">
         <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
           <span class="trigger" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"></span>
+        </span>
+        <span class="header-trigger" (click)="toggleTheme()">
+          <i class="trigger" nz-icon nzType="skin" nzTheme="outline"></i>
         </span>
       </div>
     </nz-header>

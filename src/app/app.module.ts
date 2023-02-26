@@ -12,6 +12,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IconsProviderModule } from './icons-provider.module';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { AppInitializerProvider } from './app-initializer.service';
 
 registerLocaleData(fr);
 
@@ -26,8 +28,9 @@ registerLocaleData(fr);
     IconsProviderModule,
     NzLayoutModule,
     NzMenuModule,
+    NzButtonModule,
   ],
-  providers: [{ provide: NZ_I18N, useValue: fr_FR }],
+  providers: [AppInitializerProvider, { provide: NZ_I18N, useValue: fr_FR }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
