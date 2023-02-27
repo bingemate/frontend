@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
-import { NavigationLinks } from '../../app-routing.module';
+import { NavigationLinks, navigationRoot } from '../../app-routing.module';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthLoginRegisterComponent } from './auth-login-register/auth-login-register.component';
+import { AuthMyAccountComponent } from './auth-my-account/auth-my-account.component';
 
 export const accountLinks: NavigationLinks<
   'login' | 'register' | 'my_account' | 'logout'
@@ -48,12 +49,13 @@ const routes: Routes = [
   },
   {
     path: accountLinks.my_account.path,
-    component: AuthLoginRegisterComponent,
+    component: AuthMyAccountComponent,
     data: { title: accountLinks.my_account.name },
   },
   {
     path: accountLinks.logout.path,
-    component: AuthLoginRegisterComponent,
+    pathMatch: 'full',
+    redirectTo: `/${navigationRoot.home.path}`,
     data: { title: accountLinks.logout.name },
   },
 ];

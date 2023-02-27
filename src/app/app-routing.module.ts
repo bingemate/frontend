@@ -115,7 +115,7 @@ export const socialNetworkLinks: NavigationLinks<
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: navigationRoot.home.path },
   {
-    path: 'welcome',
+    path: 'home',
     loadChildren: () =>
       import('./pages/welcome/welcome.module').then(m => m.WelcomeModule),
   },
