@@ -1,6 +1,11 @@
 import { Component } from '@angular/core';
 import { ThemeService } from './theme.service';
-import { accountLinks, socialNetworkLinks, subscriptionLinks } from './app-routing.module';
+import {
+  navigationRoot,
+  socialNetworkLinks,
+  subscriptionLinks,
+} from './app-routing.module';
+import { accountLinks } from './pages/auth/auth-routing.module';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +15,9 @@ import { accountLinks, socialNetworkLinks, subscriptionLinks } from './app-routi
 export class AppComponent {
   isCollapsed = false;
 
-  accountLinks = Object.values(accountLinks);
+  accountLinks = Object.values(accountLinks).map(link => {
+    return { ...link, path: `${navigationRoot.auth.path}/${link.path}` };
+  });
   subscriptionLinks = subscriptionLinks;
   socialNetworkLinks = socialNetworkLinks;
 

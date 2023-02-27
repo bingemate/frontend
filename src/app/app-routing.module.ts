@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 export interface Link {
   path: string;
@@ -13,28 +13,26 @@ export type NavigationLinks<T extends string> = {
   [key in T]: Link;
 };
 
-export const accountLinks: NavigationLinks<'login' | 'register' | 'my_account' | 'logout'> = {
-  login: {
-    path: '/login',
-    name: 'Connexion / Inscription',
-    // icon: 'login',
+export const navigationRoot: NavigationLinks<
+  'home' | 'social_network' | 'subscriptions' | 'auth'
+> = {
+  home: {
+    path: 'home',
+    name: 'Accueil',
   },
-  register: {
-    path: '/register',
-    name: 'Inscription',
-    // icon: 'user',
-  },
-  my_account: {
-    path: '/my-account',
-    name: 'Mon compte',
+  social_network: {
+    path: 'social-network',
+    name: 'Réseau social',
     auth: true,
-    // icon: 'user',
   },
-  logout: {
-    path: '/logout',
-    name: 'Déconnexion',
+  subscriptions: {
+    path: 'subscriptions',
+    name: 'Abonnements',
     auth: true,
-    // icon: 'logout',
+  },
+  auth: {
+    path: 'auth',
+    name: 'Authentification',
   },
 };
 
@@ -115,15 +113,26 @@ export const socialNetworkLinks: NavigationLinks<
 };
 
 const routes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: '/welcome' },
+  { path: '', pathMatch: 'full', redirectTo: navigationRoot.home.path },
   {
     path: 'welcome',
-    loadChildren: () => import('./pages/welcome/welcome.module').then(m => m.WelcomeModule),
+    loadChildren: () =>
+      import('./pages/welcome/welcome.module').then(m => m.WelcomeModule),
+  },
+  {
+    path: navigationRoot.auth.path,
+    loadChildren: () =>
+      import('./pages/auth/auth.module').then(m => m.AuthModule),
   },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [
+    RouterModule.forRoot(routes, {
+      scrollPositionRestoration: 'enabled',
+      preloadingStrategy: PreloadAllModules,
+    }),
+  ],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}
