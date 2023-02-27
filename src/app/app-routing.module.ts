@@ -117,7 +117,7 @@ const routes: Routes = [
   {
     path: 'home',
     loadChildren: () =>
-      import('./pages/welcome/welcome.module').then(m => m.WelcomeModule),
+      import('./pages/home/home.module').then(m => m.HomeModule),
   },
   {
     path: navigationRoot.auth.path,
