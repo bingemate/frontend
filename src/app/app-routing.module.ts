@@ -14,13 +14,13 @@ export type NavigationLinks<T extends string> = {
 };
 
 export const navigationRoot: NavigationLinks<
-  'home' | 'social_network' | 'subscriptions' | 'auth'
+  'home' | 'socialNetwork' | 'subscriptions' | 'auth'
 > = {
   home: {
     path: 'home',
     name: 'Accueil',
   },
-  social_network: {
+  socialNetwork: {
     path: 'social-network',
     name: 'Réseau social',
     auth: true,
@@ -61,57 +61,6 @@ export const subscriptionLinks: NavigationLinks<
   },
 };
 
-export const socialNetworkLinks: NavigationLinks<
-  | 'social_network'
-  | 'search_media'
-  | 'search_user'
-  | 'media'
-  | 'user_profile'
-  | 'chat'
-  | 'relations'
-  | 'trending'
-> = {
-  social_network: {
-    path: '/social-network',
-    name: 'Réseau social',
-    auth: true,
-  },
-  search_media: {
-    path: '/social-network/search-media',
-    name: 'Recherche média',
-    auth: true,
-  },
-  search_user: {
-    path: '/social-network/search-user',
-    name: 'Recherche utilisateur',
-    auth: true,
-  },
-  media: {
-    path: '/social-network/media',
-    name: 'Média',
-    auth: true,
-  },
-  user_profile: {
-    path: '/social-network/user-profile',
-    name: 'Profil utilisateur',
-  },
-  chat: {
-    path: '/social-network/chat',
-    name: 'Chat',
-    auth: true,
-  },
-  relations: {
-    path: '/social-network/relations',
-    name: 'Relations',
-    auth: true,
-  },
-  trending: {
-    path: '/social-network/trending',
-    name: 'Tendances',
-    auth: true,
-  },
-};
-
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: navigationRoot.home.path },
   {
@@ -123,6 +72,13 @@ const routes: Routes = [
     path: navigationRoot.auth.path,
     loadChildren: () =>
       import('./pages/auth/auth.module').then(m => m.AuthModule),
+  },
+  {
+    path: navigationRoot.socialNetwork.path,
+    loadChildren: () =>
+      import('./pages/social-network/social-network.module').then(
+        m => m.SocialNetworkModule
+      ),
   },
 ];
 

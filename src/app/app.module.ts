@@ -15,6 +15,15 @@ import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { AppInitializerProvider } from './app-initializer.service';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
+import { NzDividerModule } from 'ng-zorro-antd/divider';
+import { NzTableModule } from 'ng-zorro-antd/table';
+import { CdkScrollable } from '@angular/cdk/overlay';
+import {
+  CdkFixedSizeVirtualScroll,
+  CdkVirtualScrollableElement,
+  CdkVirtualScrollableWindow,
+  CdkVirtualScrollViewport,
+} from '@angular/cdk/scrolling';
 
 registerLocaleData(fr);
 
@@ -31,6 +40,13 @@ registerLocaleData(fr);
     NzMenuModule,
     NzButtonModule,
     NzSpaceModule,
+    NzDividerModule,
+    NzTableModule,
+    CdkScrollable,
+    CdkVirtualScrollViewport,
+    CdkFixedSizeVirtualScroll,
+    CdkVirtualScrollableWindow,
+    CdkVirtualScrollableElement,
   ],
   providers: [AppInitializerProvider, { provide: NZ_I18N, useValue: fr_FR }],
   bootstrap: [AppComponent],
