@@ -40,22 +40,22 @@ export const subscriptionLinks: NavigationLinks<
   'subscriptions' | 'subscribe' | 'my_subscription' | 'billing'
 > = {
   subscriptions: {
-    path: '/subscriptions',
+    path: 'subscriptions',
     name: 'Abonnements',
     auth: true,
   },
   subscribe: {
-    path: '/subscribe',
+    path: 'subscribe',
     name: 'Souscription',
     auth: true,
   },
   my_subscription: {
-    path: '/my-subscription',
+    path: 'my-subscription',
     name: 'Mon abonnement',
     auth: true,
   },
   billing: {
-    path: '/billing',
+    path: 'billing',
     name: 'Facturation',
     auth: true,
   },
@@ -64,7 +64,7 @@ export const subscriptionLinks: NavigationLinks<
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: navigationRoot.home.path },
   {
-    path: 'home',
+    path: navigationRoot.home.path,
     loadChildren: () =>
       import('./pages/home/home.module').then(m => m.HomeModule),
   },
@@ -78,6 +78,13 @@ const routes: Routes = [
     loadChildren: () =>
       import('./pages/social-network/social-network.module').then(
         m => m.SocialNetworkModule
+      ),
+  },
+  {
+    path: navigationRoot.subscriptions.path,
+    loadChildren: () =>
+      import('./pages/subscription/subscription.module').then(
+        m => m.SubscriptionModule
       ),
   },
 ];

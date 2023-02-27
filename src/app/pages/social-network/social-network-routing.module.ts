@@ -14,7 +14,7 @@ export const socialNetworkLinks: NavigationLinks<
   | 'trending'
 > = {
   social_network_home: {
-    path: '',
+    path: 'home',
     name: 'Réseau social',
   },
   search_media: {

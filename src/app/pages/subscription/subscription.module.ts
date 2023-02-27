@@ -1,12 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-
+import { SubscriptionListComponent } from './subscription-list/subscription-list.component';
 
 @NgModule({
-  declarations: [],
-  imports: [
-    CommonModule
-  ]
+  declarations: [SubscriptionListComponent],
+  imports: [CommonModule],
 })
-export class SubscriptionModule { }
+export class SubscriptionModule {}
