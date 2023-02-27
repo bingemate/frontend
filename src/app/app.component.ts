@@ -6,6 +6,7 @@ import {
   subscriptionLinks,
 } from './app-routing.module';
 import { accountLinks } from './pages/auth/auth-routing.module';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -14,6 +15,7 @@ import { accountLinks } from './pages/auth/auth-routing.module';
 })
 export class AppComponent {
   isCollapsed = false;
+  royuteName = '';
 
   accountLinks = Object.values(accountLinks).map(link => {
     return { ...link, path: `${navigationRoot.auth.path}/${link.path}` };

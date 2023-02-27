@@ -7,39 +7,27 @@
     [(nzCollapsed)]="isCollapsed"
     [nzTrigger]="null">
     <div class="sidebar-logo">
-      <a href="https://ng.ant.design/" target="_blank">
-        <img src="https://ng.ant.design/assets/img/logo.svg" alt="logo" />
-        <h1>Ant Design Of Angular</h1>
+      <a routerLink="/">
+        <img
+          src="https://cdn1.iconfinder.com/data/icons/drink-beverage/512/11-coffee-espresso-cafe-mug-256.png"
+          alt="logo" />
+        <h1>Binge Mate</h1>
       </a>
     </div>
 
     <ul nz-menu nzMode="inline" [nzInlineCollapsed]="isCollapsed">
-      <li nz-submenu nzOpen nzTitle="Dashboard" nzIcon="dashboard">
-        <ul>
-          <li nz-menu-item nzMatchRouter>
-            <a routerLink="/home">Welcome</a>
-          </li>
-          <li nz-menu-item nzMatchRouter>
-            <a>Monitor</a>
-          </li>
-          <li nz-menu-item nzMatchRouter>
-            <a>Workplace</a>
-          </li>
-        </ul>
+      <li nz-menu-item nzMatchRouter>
+        <a routerLink="/home">
+          <span nz-icon nzType="home"> </span><span>Accueil</span>
+        </a>
       </li>
-      <li nz-submenu nzOpen nzTitle="Form" nzIcon="form">
-        <ul>
-          <li nz-menu-item nzMatchRouter>
-            <a>Basic Form</a>
-          </li>
-        </ul>
-      </li>
-      <li
-        nzPlacement="bottomLeft"
-        nz-submenu
-        nzOpen
-        nzTitle="Compte"
-        nzIcon="user">
+      <li nz-submenu nzOpen nzTitle="Médiathèque" nzIcon="play-square"></li>
+      <li nz-submenu nzTitle="Listes de lectures" nzIcon="unordered-list"></li>
+      <li nz-submenu nzTitle="Statistiques" nzIcon="line-chart"></li>
+      <li nz-submenu nzTitle="Communauté" nzIcon="global"></li>
+      <li nz-submenu nzTitle="Paramètres" nzIcon="setting"></li>
+      <li nz-submenu nzTitle="Abonnement" nzIcon="barcode"></li>
+      <li nz-submenu nzTitle="Compte" nzIcon="user">
         <ul>
           <li
             *ngFor="let accountLink of accountLinks"
@@ -50,8 +38,7 @@
         </ul>
       </li>
     </ul>
-
-    <!-- botom -->
+    <!-- bottom -->
   </nz-sider>
   <nz-layout>
     <nz-header>
