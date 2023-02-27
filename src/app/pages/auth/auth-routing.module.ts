@@ -5,7 +5,7 @@ import { AuthLoginRegisterComponent } from './auth-login-register/auth-login-reg
 import { AuthMyAccountComponent } from './auth-my-account/auth-my-account.component';
 
 export const accountLinks: NavigationLinks<
-  'login' | 'register' | 'my_account' | 'logout'
+  'login' | 'register' | 'myAccount' | 'logout'
 > = {
   login: {
     path: 'login',
@@ -17,7 +17,7 @@ export const accountLinks: NavigationLinks<
     name: 'Inscription',
     // icon: 'user',
   },
-  my_account: {
+  myAccount: {
     path: 'my-account',
     name: 'Mon compte',
     auth: true,
@@ -48,9 +48,9 @@ const routes: Routes = [
     data: { title: accountLinks.register.name },
   },
   {
-    path: accountLinks.my_account.path,
+    path: accountLinks.myAccount.path,
     component: AuthMyAccountComponent,
-    data: { title: accountLinks.my_account.name },
+    data: { title: accountLinks.myAccount.name },
   },
   {
     path: accountLinks.logout.path,
