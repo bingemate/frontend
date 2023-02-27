@@ -14,30 +14,52 @@
         <h1>Binge Mate</h1>
       </a>
     </div>
-
-    <ul nz-menu nzMode="inline" [nzInlineCollapsed]="isCollapsed">
-      <li nz-menu-item nzMatchRouter>
-        <a routerLink="/home">
-          <span nz-icon nzType="home"> </span><span>Accueil</span>
-        </a>
-      </li>
-      <li nz-submenu nzOpen nzTitle="Médiathèque" nzIcon="play-square"></li>
-      <li nz-submenu nzTitle="Listes de lectures" nzIcon="unordered-list"></li>
-      <li nz-submenu nzTitle="Statistiques" nzIcon="line-chart"></li>
-      <li nz-submenu nzTitle="Communauté" nzIcon="global"></li>
-      <li nz-submenu nzTitle="Paramètres" nzIcon="setting"></li>
-      <li nz-submenu nzTitle="Abonnement" nzIcon="barcode"></li>
-      <li nz-submenu nzTitle="Compte" nzIcon="user">
-        <ul>
-          <li
-            *ngFor="let accountLink of accountLinks"
-            nz-menu-item
-            nzMatchRouter>
-            <a [routerLink]="accountLink.path">{{ accountLink.name }}</a>
-          </li>
-        </ul>
-      </li>
-    </ul>
+    <div class="menu-bar">
+      <ul nz-menu nzMode="inline" [nzInlineCollapsed]="isCollapsed">
+        <li nz-menu-item nzMatchRouter>
+          <a routerLink="/home">
+            <span nz-icon nzType="home"> </span><span>Accueil</span>
+          </a>
+        </li>
+        <li nz-submenu nzOpen nzTitle="Médiathèque" nzIcon="play-square"></li>
+        <li
+          nz-submenu
+          nzTitle="Listes de lectures"
+          nzIcon="unordered-list"></li>
+        <li nz-submenu nzTitle="Statistiques" nzIcon="line-chart"></li>
+        <li nz-submenu nzTitle="Communauté" nzIcon="global">
+          <ul>
+            <li
+              *ngFor="let socialNetworkLink of socialNetworkLinks"
+              nz-menu-item
+              nzMatchRouter>
+              <a [routerLink]="socialNetworkLink.path">
+                {{ socialNetworkLink.name }}</a
+              >
+            </li>
+          </ul>
+        </li>
+      </ul>
+      <ul nz-menu nzMode="inline" [nzInlineCollapsed]="isCollapsed">
+        <nz-divider></nz-divider>
+        <li nz-submenu nzTitle="Abonnement" nzIcon="barcode"></li>
+        <li nz-submenu nzTitle="Compte" nzIcon="user">
+          <ul>
+            <li
+              *ngFor="let accountLink of accountLinks"
+              nz-menu-item
+              nzMatchRouter>
+              <a [routerLink]="accountLink.path">{{ accountLink.name }}</a>
+            </li>
+          </ul>
+        </li>
+        <li
+          nz-submenu
+          nzTitle="Paramètres"
+          nzIcon="setting"
+          nzPlacement="bottomCenter"></li>
+      </ul>
+    </div>
     <!-- bottom -->
   </nz-sider>
   <nz-layout>

@@ -39,7 +39,11 @@
     height: 100vh;
 
     .menu-sidebar {
+      overflow-x: hidden;
+      overflow-y: auto;
+      height: 100%;
       position: relative;
+      left: 0;
       z-index: 10;
       min-height: 100vh;
       box-shadow: 2px 0 6px rgba(0, 21, 41, .35);
@@ -48,7 +52,12 @@
         border-right: none;
       }
 
-
+      .menu-bar{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: ~"calc(100% - 64px)";
+      }
     }
 
     .sidebar-logo {
