@@ -1,0 +1,14 @@
+<nz-page-header>
+  <nz-page-header-title>Calendrier des médias suivis</nz-page-header-title>
+  <nz-page-header-content>
+    <nz-calendar nzMode="month">
+      <ul *nzDateCell="let date" class="events">
+        <li *ngFor="let event of getEventsFromDate(date)">
+          <nz-badge
+            [nzColor]="getEventColor(event)"
+            [nzText]="getEventTitle(event)"></nz-badge>
+        </li>
+      </ul>
+    </nz-calendar>
+  </nz-page-header-content>
+</nz-page-header>

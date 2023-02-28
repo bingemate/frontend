@@ -14,7 +14,15 @@ export type NavigationLinks<T extends string> = {
 };
 
 export const navigationRoot: NavigationLinks<
-  'home' | 'socialNetwork' | 'subscriptions' | 'auth'
+  | 'home'
+  | 'socialNetwork'
+  | 'subscriptions'
+  | 'auth'
+  | 'medias'
+  | 'streaming'
+  | 'watchlist'
+  | 'statistics'
+  | 'settings'
 > = {
   home: {
     path: 'home',
@@ -33,6 +41,30 @@ export const navigationRoot: NavigationLinks<
   auth: {
     path: 'auth',
     name: 'Authentification',
+  },
+  medias: {
+    path: 'medias',
+    name: 'Médias',
+    auth: true,
+  },
+  streaming: {
+    path: 'streaming',
+    name: 'Streaming',
+    auth: true,
+  },
+  watchlist: {
+    path: 'watchlist',
+    name: 'Watchlist',
+    auth: true,
+  },
+  statistics: {
+    path: 'statistics',
+    name: 'Statistiques',
+    auth: true,
+  },
+  settings: {
+    path: 'settings',
+    name: 'Paramètres',
   },
 };
 
@@ -60,6 +92,28 @@ const routes: Routes = [
     loadChildren: () =>
       import('./pages/subscription/subscription.module').then(
         m => m.SubscriptionModule
+      ),
+  },
+  {
+    path: navigationRoot.medias.path,
+    loadChildren: () =>
+      import('./pages/medias/medias.module').then(m => m.MediasModule),
+  },
+  {
+    path: navigationRoot.streaming.path,
+    loadChildren: () =>
+      import('./pages/streaming/streaming.module').then(m => m.StreamingModule),
+  },
+  {
+    path: navigationRoot.watchlist.path,
+    loadChildren: () =>
+      import('./pages/watchlist/watchlist.module').then(m => m.WatchlistModule),
+  },
+  {
+    path: navigationRoot.statistics.path,
+    loadChildren: () =>
+      import('./pages/statistics/statistics.module').then(
+        m => m.StatisticsModule
       ),
   },
 ];

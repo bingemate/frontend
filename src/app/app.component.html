@@ -21,12 +21,36 @@
             <span nz-icon nzType="home"> </span><span>Accueil</span>
           </a>
         </li>
-        <li nz-submenu nzOpen nzTitle="Médiathèque" nzIcon="play-square"></li>
-        <li
-          nz-submenu
-          nzTitle="Listes de lectures"
-          nzIcon="unordered-list"></li>
-        <li nz-submenu nzTitle="Statistiques" nzIcon="line-chart"></li>
+        <li nz-submenu nzOpen nzTitle="Médiathèque" nzIcon="play-square">
+          <ul>
+            <li
+              *ngFor="let mediaLink of mediasLinks"
+              nz-menu-item
+              nzMatchRouter>
+              <a [routerLink]="mediaLink.path">{{ mediaLink.name }}</a>
+            </li>
+          </ul>
+        </li>
+        <li nz-submenu nzTitle="Listes de lectures" nzIcon="unordered-list">
+          <ul>
+            <li
+              *ngFor="let watchlistLink of watchlistLinks"
+              nz-menu-item
+              nzMatchRouter>
+              <a [routerLink]="watchlistLink.path"> {{ watchlistLink.name }}</a>
+            </li>
+          </ul>
+        </li>
+        <li nz-submenu nzTitle="Statistiques" nzIcon="line-chart">
+          <ul>
+            <li
+              *ngFor="let statisticLink of statisticsLinks"
+              nz-menu-item
+              nzMatchRouter>
+              <a [routerLink]="statisticLink.path"> {{ statisticLink.name }}</a>
+            </li>
+          </ul>
+        </li>
         <li nz-submenu nzTitle="Communauté" nzIcon="global">
           <ul>
             <li

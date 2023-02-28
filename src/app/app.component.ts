@@ -5,6 +5,9 @@ import { accountLinks } from './pages/auth/auth-routing.module';
 import { socialNetworkLinks } from './pages/social-network/social-network-routing.module';
 import { Router } from '@angular/router';
 import { subscriptionLinks } from './pages/subscription/subscriptions-routing.module';
+import { mediasLinks } from './pages/medias/medias-routing.module';
+import { watchlistLinks } from './pages/watchlist/watchlist-routing.module';
+import { statisticsLinks } from './pages/statistics/statistics-routing.module';
 
 @Component({
   selector: 'app-root',
@@ -32,6 +35,27 @@ export class AppComponent {
     return {
       ...link,
       path: `${navigationRoot.socialNetwork.path}/${link.path}`,
+    };
+  });
+
+  mediasLinks = Object.values(mediasLinks).map(link => {
+    return {
+      ...link,
+      path: `${navigationRoot.medias.path}/${link.path}`,
+    };
+  });
+
+  watchlistLinks = Object.values(watchlistLinks).map(link => {
+    return {
+      ...link,
+      path: `${navigationRoot.watchlist.path}/${link.path}`,
+    };
+  });
+
+  statisticsLinks = Object.values(statisticsLinks).map(link => {
+    return {
+      ...link,
+      path: `${navigationRoot.statistics.path}/${link.path}`,
     };
   });
 
