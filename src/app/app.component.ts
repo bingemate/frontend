@@ -1,5 +1,4 @@
-import { Component, OnChanges } from '@angular/core';
-import { ThemeService } from './core/theme/theme.service';
+import { Component } from '@angular/core';
 import { navigationRoot } from './app-routing.module';
 import { accountLinks } from './pages/auth/auth-routing.module';
 import { socialNetworkLinks } from './pages/social-network/social-network-routing.module';
@@ -9,6 +8,10 @@ import { mediasLinks } from './pages/medias/medias-routing.module';
 import { watchlistLinks } from './pages/watchlist/watchlist-routing.module';
 import { statisticsLinks } from './pages/statistics/statistics-routing.module';
 import { NotificationsService } from './core/notifications/notifications.service';
+import { Store } from '@ngxs/store';
+import { ToggleTheme } from './core/theme/store/theme.actions';
+import { ThemeState } from './core/theme/store/theme.state';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -19,7 +22,8 @@ export class AppComponent {
   isCollapsed = false;
   currentSection = 'home';
   currentSectionName = 'Accueil';
-  isDarkTheme: boolean;
+  isDarkTheme$: Observable<boolean>;
+  isDarkTheme = false;
 
   chatLink = `${navigationRoot.socialNetwork.path}/${socialNetworkLinks.chat.path}`;
 
@@ -63,12 +67,10 @@ export class AppComponent {
   });
 
   constructor(
-    private readonly themeService: ThemeService,
     private readonly router: Router,
-    public readonly notificationsService: NotificationsService
+    public readonly notificationsService: NotificationsService,
+    public readonly store: Store
   ) {
-    this.isDarkTheme = this.themeService.currentTheme === 'dark';
-
     router.events.subscribe(() => {
       this.currentSection = router.url.split('/')[1];
       this.currentSectionName =
@@ -76,13 +78,14 @@ export class AppComponent {
           link => link.path === this.currentSection
         )?.name ?? 'Accueil';
     });
+
+    this.isDarkTheme$ = this.store.select(ThemeState.isDarkTheme);
+    this.isDarkTheme$.subscribe(isDarkTheme => {
+      this.isDarkTheme = isDarkTheme;
+    });
   }
 
   toggleTheme() {
-    this.themeService
-      .toggleTheme()
-      .then(
-        () => (this.isDarkTheme = this.themeService.currentTheme === 'dark')
-      );
+    this.store.dispatch(new ToggleTheme());
   }
 }

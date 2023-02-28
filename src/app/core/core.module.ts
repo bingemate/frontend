@@ -5,6 +5,7 @@ import { AppErrorHandler } from './error-handler/app-error-handler';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpErrorInterceptor } from './http-interceptors/http-error.interceptor';
 import { NzNotificationModule } from 'ng-zorro-antd/notification';
+import { ThemeService } from './theme/theme.service';
 
 @NgModule({
   declarations: [],
@@ -18,6 +19,7 @@ import { NzNotificationModule } from 'ng-zorro-antd/notification';
       provide: ErrorHandler,
       useClass: AppErrorHandler,
     },
+    ThemeService,
   ],
   imports: [CommonModule, IconsProviderModule, NzNotificationModule],
   exports: [IconsProviderModule],
