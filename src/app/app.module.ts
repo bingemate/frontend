@@ -30,6 +30,10 @@ import { NzPopoverModule } from 'ng-zorro-antd/popover';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { CoreModule } from './core/core.module';
 import { NZ_CONFIG, NzConfig } from 'ng-zorro-antd/core/config';
+import { NgxsModule } from '@ngxs/store';
+import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
+import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
+import { environment } from '../environments/environment';
 
 registerLocaleData(fr);
 
@@ -64,6 +68,13 @@ const ngZorroConfig: NzConfig = {
     NzBadgeModule,
     NzPopoverModule,
     NzDropDownModule,
+    NgxsModule.forRoot([], {
+      developmentMode: !environment.production,
+    }),
+    NgxsLoggerPluginModule.forRoot(),
+    NgxsReduxDevtoolsPluginModule.forRoot({
+      disabled: environment.production,
+    }),
   ],
   providers: [
     AppInitializerProvider,
