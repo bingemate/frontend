@@ -151,7 +151,8 @@
               nz-button
               nzShape="circle"
               nz-popover="Something is processing ..."
-              nzPopoverPlacement="bottomRight">
+              nzPopoverPlacement="bottomRight"
+              (click)="notificationsService.success('Coucou', 'Ca va ?')">
               <span nz-icon nzType="sync" nzSpin></span>
             </button>
             <nz-badge *nzSpaceItem [nzCount]="6">

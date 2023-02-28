@@ -9,11 +9,10 @@ import fr from '@angular/common/locales/fr';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { IconsProviderModule } from './icons-provider.module';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzButtonModule } from 'ng-zorro-antd/button';
-import { AppInitializerProvider } from './app-initializer.service';
+import { AppInitializerProvider } from './core/app-initializer.service';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzTableModule } from 'ng-zorro-antd/table';
@@ -29,18 +28,26 @@ import { NzPageHeaderModule } from 'ng-zorro-antd/page-header';
 import { NzBadgeModule } from 'ng-zorro-antd/badge';
 import { NzPopoverModule } from 'ng-zorro-antd/popover';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
+import { CoreModule } from './core/core.module';
+import { NZ_CONFIG, NzConfig } from 'ng-zorro-antd/core/config';
 
 registerLocaleData(fr);
+
+const ngZorroConfig: NzConfig = {
+  notification: {
+    nzPlacement: 'bottomRight',
+  },
+};
 
 @NgModule({
   declarations: [AppComponent],
   imports: [
+    CoreModule,
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    IconsProviderModule,
     NzLayoutModule,
     NzMenuModule,
     NzButtonModule,
@@ -58,7 +65,11 @@ registerLocaleData(fr);
     NzPopoverModule,
     NzDropDownModule,
   ],
-  providers: [AppInitializerProvider, { provide: NZ_I18N, useValue: fr_FR }],
+  providers: [
+    AppInitializerProvider,
+    { provide: NZ_I18N, useValue: fr_FR },
+    { provide: NZ_CONFIG, useValue: ngZorroConfig },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

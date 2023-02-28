@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { ThemeService } from './theme.service';
+import { Component, OnChanges } from '@angular/core';
+import { ThemeService } from './core/theme/theme.service';
 import { navigationRoot } from './app-routing.module';
 import { accountLinks } from './pages/auth/auth-routing.module';
 import { socialNetworkLinks } from './pages/social-network/social-network-routing.module';
@@ -8,6 +8,7 @@ import { subscriptionLinks } from './pages/subscription/subscriptions-routing.mo
 import { mediasLinks } from './pages/medias/medias-routing.module';
 import { watchlistLinks } from './pages/watchlist/watchlist-routing.module';
 import { statisticsLinks } from './pages/statistics/statistics-routing.module';
+import { NotificationsService } from './core/notifications/notifications.service';
 
 @Component({
   selector: 'app-root',
@@ -61,7 +62,11 @@ export class AppComponent {
     };
   });
 
-  constructor(private themeService: ThemeService, router: Router) {
+  constructor(
+    private readonly themeService: ThemeService,
+    private readonly router: Router,
+    public readonly notificationsService: NotificationsService
+  ) {
     this.isDarkTheme = this.themeService.currentTheme === 'dark';
 
     router.events.subscribe(() => {
