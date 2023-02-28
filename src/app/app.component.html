@@ -42,7 +42,18 @@
       </ul>
       <ul nz-menu nzMode="inline" [nzInlineCollapsed]="isCollapsed">
         <nz-divider></nz-divider>
-        <li nz-submenu nzTitle="Abonnement" nzIcon="barcode"></li>
+        <li nz-submenu nzTitle="Abonnement" nzIcon="barcode">
+          <ul>
+            <li
+              *ngFor="let subscriptionLink of subscriptionLinks"
+              nz-menu-item
+              nzMatchRouter>
+              <a [routerLink]="subscriptionLink.path">
+                {{ subscriptionLink.name }}</a
+              >
+            </li>
+          </ul>
+        </li>
         <li nz-submenu nzTitle="Compte" nzIcon="user">
           <ul>
             <li

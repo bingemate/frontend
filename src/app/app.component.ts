@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { ThemeService } from './theme.service';
-import { navigationRoot, subscriptionLinks } from './app-routing.module';
+import { navigationRoot } from './app-routing.module';
 import { accountLinks } from './pages/auth/auth-routing.module';
 import { socialNetworkLinks } from './pages/social-network/social-network-routing.module';
 import { Router } from '@angular/router';
+import { subscriptionLinks } from './pages/subscription/subscriptions-routing.module';
 
 @Component({
   selector: 'app-root',
@@ -18,7 +19,14 @@ export class AppComponent {
   accountLinks = Object.values(accountLinks).map(link => {
     return { ...link, path: `${navigationRoot.auth.path}/${link.path}` };
   });
-  subscriptionLinks = subscriptionLinks;
+
+  subscriptionLinks = Object.values(subscriptionLinks).map(link => {
+    return {
+      ...link,
+      path: `${navigationRoot.subscriptions.path}/${link.path}`,
+    };
+  });
+
   socialNetworkLinks = Object.values(socialNetworkLinks).map(link => {
     return {
       ...link,

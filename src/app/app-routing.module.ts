@@ -36,31 +36,6 @@ export const navigationRoot: NavigationLinks<
   },
 };
 
-export const subscriptionLinks: NavigationLinks<
-  'subscriptions' | 'subscribe' | 'my_subscription' | 'billing'
-> = {
-  subscriptions: {
-    path: 'subscriptions',
-    name: 'Abonnements',
-    auth: true,
-  },
-  subscribe: {
-    path: 'subscribe',
-    name: 'Souscription',
-    auth: true,
-  },
-  my_subscription: {
-    path: 'my-subscription',
-    name: 'Mon abonnement',
-    auth: true,
-  },
-  billing: {
-    path: 'billing',
-    name: 'Facturation',
-    auth: true,
-  },
-};
-
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: navigationRoot.home.path },
   {
