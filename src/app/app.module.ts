@@ -25,6 +25,10 @@ import {
   CdkVirtualScrollViewport,
 } from '@angular/cdk/scrolling';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
+import { NzPageHeaderModule } from 'ng-zorro-antd/page-header';
+import { NzBadgeModule } from 'ng-zorro-antd/badge';
+import { NzPopoverModule } from 'ng-zorro-antd/popover';
+import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 
 registerLocaleData(fr);
 
@@ -49,6 +53,10 @@ registerLocaleData(fr);
     CdkVirtualScrollableWindow,
     CdkVirtualScrollableElement,
     NzSwitchModule,
+    NzPageHeaderModule,
+    NzBadgeModule,
+    NzPopoverModule,
+    NzDropDownModule,
   ],
   providers: [AppInitializerProvider, { provide: NZ_I18N, useValue: fr_FR }],
   bootstrap: [AppComponent],

@@ -20,6 +20,8 @@ export class AppComponent {
   currentSectionName = 'Accueil';
   isDarkTheme: boolean;
 
+  chatLink = `${navigationRoot.socialNetwork.path}/${socialNetworkLinks.chat.path}`;
+
   accountLinks = Object.values(accountLinks).map(link => {
     return { ...link, path: `${navigationRoot.auth.path}/${link.path}` };
   });

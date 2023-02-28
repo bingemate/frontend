@@ -119,7 +119,7 @@
   </nz-sider>
   <nz-layout>
     <nz-header>
-      <div class="app-header">
+      <!--      <div class="app-header">
         <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
           <span
             class="trigger"
@@ -130,7 +130,48 @@
           >Current section : {{ currentSection }} -
           {{ currentSectionName }}</span
         >
-      </div>
+      </div>-->
+      <nz-page-header class="app-header">
+        <nz-page-header-title>
+          <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
+            <span
+              class="trigger"
+              nz-icon
+              [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"></span>
+          </span>
+          Current section : {{ currentSection }}
+        </nz-page-header-title>
+        <nz-page-header-subtitle>
+          {{ currentSectionName }}
+        </nz-page-header-subtitle>
+        <nz-page-header-extra>
+          <nz-space nzAlign="baseline" nzSize="large">
+            <button
+              *nzSpaceItem
+              nz-button
+              nzShape="circle"
+              nz-popover="Something is processing ..."
+              nzPopoverPlacement="bottomRight">
+              <span nz-icon nzType="sync" nzSpin></span>
+            </button>
+            <nz-badge *nzSpaceItem [nzCount]="6">
+              <button nz-button nzShape="circle" [routerLink]="chatLink">
+                <span nz-icon nzType="message"></span>
+              </button>
+            </nz-badge>
+            <nz-badge *nzSpaceItem [nzCount]="99" [nzOverflowCount]="15">
+              <button
+                nz-button
+                nzShape="circle"
+                nz-dropdown
+                nzTrigger="click"
+                [nzDropdownMenu]="notifications">
+                <span nz-icon nzType="bell"></span>
+              </button>
+            </nz-badge>
+          </nz-space>
+        </nz-page-header-extra>
+      </nz-page-header>
     </nz-header>
     <nz-content>
       <div class="inner-content">
@@ -139,3 +180,22 @@
     </nz-content>
   </nz-layout>
 </nz-layout>
+<nz-dropdown-menu #notifications="nzDropdownMenu">
+  <ul nz-menu>
+    <nz-space nzDirection="vertical">
+      <li nz-menu-item *nzSpaceItem>
+        <nz-badge nzColor="red" nzText="Notification 1"></nz-badge>
+      </li>
+      <li nz-menu-item *nzSpaceItem>
+        <nz-badge nzColor="green" nzText="Notification 2"></nz-badge>
+      </li>
+      <li nz-menu-item *nzSpaceItem>
+        <nz-badge nzColor="blue" nzText="Notification 3"></nz-badge>
+      </li>
+      <li nz-menu-divider *nzSpaceItem></li>
+      <li nz-menu-item *nzSpaceItem>
+        <nz-badge nzColor="pink" nzText="Coucou"></nz-badge>
+      </li>
+    </nz-space>
+  </ul>
+</nz-dropdown-menu>
