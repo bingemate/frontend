@@ -31,9 +31,11 @@ import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { CoreModule } from './core/core.module';
 import { NZ_CONFIG, NzConfig } from 'ng-zorro-antd/core/config';
 import { NgxsModule } from '@ngxs/store';
+import { ThemeState } from './core/theme/store/theme.state';
+import { environment } from '../environments/environment';
+import { NgxsStoragePluginModule, StorageOption } from '@ngxs/storage-plugin';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
-import { environment } from '../environments/environment';
 
 registerLocaleData(fr);
 
@@ -68,8 +70,31 @@ const ngZorroConfig: NzConfig = {
     NzBadgeModule,
     NzPopoverModule,
     NzDropDownModule,
-    NgxsModule.forRoot([], {
+    // Classic Ngxs State, wipe at refresh
+    NgxsModule.forRoot([ThemeState], {
       developmentMode: !environment.production,
+    }),
+    // SessionStorage Ngxs State, persist at refresh
+    NgxsStoragePluginModule.forRoot({
+      key: [ThemeState],
+      storage: StorageOption.SessionStorage,
+      afterDeserialize(obj: unknown, key: string): unknown {
+        if (!environment.production) {
+          console.debug('Deserialize NGXS from session storage', obj, key);
+        }
+        return obj;
+      },
+    }),
+    // LocalStorage Ngxs State, persist at refresh and browser close
+    NgxsStoragePluginModule.forRoot({
+      key: [ThemeState],
+      storage: StorageOption.LocalStorage,
+      afterDeserialize(obj: unknown, key: string): unknown {
+        if (!environment.production) {
+          console.debug('Deserialize NGXS from local storage', obj, key);
+        }
+        return obj;
+      },
     }),
     NgxsLoggerPluginModule.forRoot(),
     NgxsReduxDevtoolsPluginModule.forRoot({
