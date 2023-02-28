@@ -1,17 +1,13 @@
 import { Injectable } from '@angular/core';
 
-enum ThemeType {
+export enum ThemeType {
   dark = 'dark',
   default = 'default',
 }
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class ThemeService {
-  currentTheme = ThemeType.default;
-
-  private reverseTheme(theme: string): ThemeType {
+  public reverseTheme(theme: string): ThemeType {
     return theme === ThemeType.dark ? ThemeType.default : ThemeType.dark;
   }
 
@@ -35,8 +31,7 @@ export class ThemeService {
     });
   }
 
-  public loadTheme(firstLoad = true): Promise<Event> {
-    const theme = this.currentTheme;
+  public loadTheme(theme: ThemeType, firstLoad = true): Promise<Event> {
     if (firstLoad) {
       document.documentElement.classList.add(theme);
     }
@@ -54,8 +49,7 @@ export class ThemeService {
     });
   }
 
-  public toggleTheme(): Promise<Event> {
-    this.currentTheme = this.reverseTheme(this.currentTheme);
-    return this.loadTheme(false);
+  public setTheme(theme: ThemeType): Promise<Event> {
+    return this.loadTheme(theme, false);
   }
 }
