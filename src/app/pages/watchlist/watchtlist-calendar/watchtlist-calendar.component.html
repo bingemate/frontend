@@ -3,7 +3,10 @@
   <nz-page-header-content>
     <nz-calendar nzMode="month">
       <ul *nzDateCell="let date" class="events">
-        <li *ngFor="let event of getEventsFromDate(date)">
+        <li
+          *ngFor="let event of getEventsFromDate(date)"
+          [nz-popover]="getEventTitle(event)"
+          [nzPopoverContent]="event.date.toLocaleString()">
           <nz-badge
             [nzColor]="getEventColor(event)"
             [nzText]="getEventTitle(event)"></nz-badge>

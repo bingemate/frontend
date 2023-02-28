@@ -6,6 +6,7 @@ import { WatchtlistCalendarComponent } from './watchtlist-calendar/watchtlist-ca
 import { NzPageHeaderModule } from 'ng-zorro-antd/page-header';
 import { NzCalendarModule } from 'ng-zorro-antd/calendar';
 import { NzBadgeModule } from 'ng-zorro-antd/badge';
+import { NzPopoverModule } from 'ng-zorro-antd/popover';
 
 @NgModule({
   declarations: [WatchtlistComponent, WatchtlistCalendarComponent],
@@ -15,6 +16,7 @@ import { NzBadgeModule } from 'ng-zorro-antd/badge';
     NzPageHeaderModule,
     NzCalendarModule,
     NzBadgeModule,
+    NzPopoverModule,
   ],
 })
 export class WatchlistModule {}

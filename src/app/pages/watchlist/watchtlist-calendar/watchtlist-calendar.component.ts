@@ -62,6 +62,10 @@ export class WatchtlistCalendarComponent {
       episode: '1x7',
       date: new Date('2023-02-27'),
     },
+    {
+      title: 'Avatar 3: The Last Airbender',
+      date: new Date('2023-03-01'),
+    },
   ];
 
   getEventColor(event: Event): string {
