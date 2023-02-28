@@ -15,6 +15,7 @@ export class AppComponent {
   isCollapsed = false;
   currentSection = 'home';
   currentSectionName = 'Accueil';
+  isDarkTheme: boolean;
 
   accountLinks = Object.values(accountLinks).map(link => {
     return { ...link, path: `${navigationRoot.auth.path}/${link.path}` };
@@ -35,6 +36,8 @@ export class AppComponent {
   });
 
   constructor(private themeService: ThemeService, router: Router) {
+    this.isDarkTheme = this.themeService.currentTheme === 'dark';
+
     router.events.subscribe(() => {
       this.currentSection = router.url.split('/')[1];
       this.currentSectionName =
@@ -45,6 +48,10 @@ export class AppComponent {
   }
 
   toggleTheme() {
-    this.themeService.toggleTheme().then(() => console.count('theme toggled'));
+    this.themeService
+      .toggleTheme()
+      .then(
+        () => (this.isDarkTheme = this.themeService.currentTheme === 'dark')
+      );
   }
 }

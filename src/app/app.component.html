@@ -68,7 +68,27 @@
           nz-submenu
           nzTitle="Paramètres"
           nzIcon="setting"
-          nzPlacement="bottomCenter"></li>
+          nzPlacement="bottomCenter">
+          <ul>
+            <li nz-menu-item>
+              <nz-space nzAlign="center">
+                <i
+                  *nzSpaceItem
+                  class="trigger"
+                  nz-icon
+                  nzType="bg-colors"
+                  nzTheme="outline"></i>
+                <span *nzSpaceItem>Thème sombre</span>
+                <nz-switch
+                  *nzSpaceItem
+                  nzSize="small"
+                  [(ngModel)]="isDarkTheme"
+                  (click)="toggleTheme()">
+                </nz-switch>
+              </nz-space>
+            </li>
+          </ul>
+        </li>
       </ul>
     </div>
     <!-- bottom -->
@@ -81,9 +101,6 @@
             class="trigger"
             nz-icon
             [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"></span>
-        </span>
-        <span class="header-trigger" (click)="toggleTheme()">
-          <i class="trigger" nz-icon nzType="bg-colors" nzTheme="outline"></i>
         </span>
         <span
           >Current section : {{ currentSection }} -

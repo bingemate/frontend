@@ -24,6 +24,7 @@ import {
   CdkVirtualScrollableWindow,
   CdkVirtualScrollViewport,
 } from '@angular/cdk/scrolling';
+import { NzSwitchModule } from 'ng-zorro-antd/switch';
 
 registerLocaleData(fr);
 
@@ -47,6 +48,7 @@ registerLocaleData(fr);
     CdkFixedSizeVirtualScroll,
     CdkVirtualScrollableWindow,
     CdkVirtualScrollableElement,
+    NzSwitchModule,
   ],
   providers: [AppInitializerProvider, { provide: NZ_I18N, useValue: fr_FR }],
   bootstrap: [AppComponent],
