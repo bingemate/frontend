@@ -1,7 +1,7 @@
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { Injectable } from '@angular/core';
 import { ThemeService, ThemeType } from '../theme.service';
-import { InitTheme, ToggleTheme } from './theme.actions';
+import { ThemeAction } from './theme.actions';
 
 export interface ThemeStateModel {
   theme: ThemeType;
@@ -27,19 +27,18 @@ export class ThemeState {
     return state.theme === ThemeType.dark;
   }
 
-  @Action(ToggleTheme)
+  @Action(ThemeAction.Toggle)
   async toggleTheme(ctx: StateContext<ThemeStateModel>) {
     const state = ctx.getState();
     const theme = this.themeService.reverseTheme(state.theme);
 
     await this.themeService.setTheme(theme);
     ctx.patchState({
-      ...state,
       theme,
     });
   }
 
-  @Action(InitTheme)
+  @Action(ThemeAction.Init)
   async initTheme(ctx: StateContext<ThemeStateModel>) {
     const state = ctx.getState();
     await this.themeService.loadTheme(state.theme);

@@ -96,7 +96,9 @@ const ngZorroConfig: NzConfig = {
         return obj;
       },
     }),
-    NgxsLoggerPluginModule.forRoot(),
+    NgxsLoggerPluginModule.forRoot({
+      disabled: environment.production,
+    }),
     NgxsReduxDevtoolsPluginModule.forRoot({
       disabled: environment.production,
     }),

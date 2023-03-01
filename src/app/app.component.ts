@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { navigationRoot } from './app-routing.module';
 import { accountLinks } from './pages/auth/auth-routing.module';
 import { socialNetworkLinks } from './pages/social-network/social-network-routing.module';
@@ -8,8 +8,8 @@ import { mediasLinks } from './pages/medias/medias-routing.module';
 import { watchlistLinks } from './pages/watchlist/watchlist-routing.module';
 import { statisticsLinks } from './pages/statistics/statistics-routing.module';
 import { NotificationsService } from './core/notifications/notifications.service';
-import { Store } from '@ngxs/store';
-import { ToggleTheme } from './core/theme/store/theme.actions';
+import { Select, Store } from '@ngxs/store';
+import { ThemeAction } from './core/theme/store/theme.actions';
 import { ThemeState } from './core/theme/store/theme.state';
 import { Observable } from 'rxjs';
 
@@ -18,11 +18,12 @@ import { Observable } from 'rxjs';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.less'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   isCollapsed = false;
   currentSection = 'home';
   currentSectionName = 'Accueil';
-  isDarkTheme$: Observable<boolean>;
+  @Select(ThemeState.isDarkTheme)
+  isDarkTheme$!: Observable<boolean>;
   isDarkTheme = false;
 
   chatLink = `${navigationRoot.socialNetwork.path}/${socialNetworkLinks.chat.path}`;
@@ -78,14 +79,15 @@ export class AppComponent {
           link => link.path === this.currentSection
         )?.name ?? 'Accueil';
     });
+  }
 
-    this.isDarkTheme$ = this.store.select(ThemeState.isDarkTheme);
+  ngOnInit(): void {
     this.isDarkTheme$.subscribe(isDarkTheme => {
       this.isDarkTheme = isDarkTheme;
     });
   }
 
   toggleTheme() {
-    this.store.dispatch(new ToggleTheme());
+    this.store.dispatch(new ThemeAction.Toggle());
   }
 }
