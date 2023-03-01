@@ -36,6 +36,7 @@ import { environment } from '../environments/environment';
 import { NgxsStoragePluginModule, StorageOption } from '@ngxs/storage-plugin';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
+import { NzListModule } from 'ng-zorro-antd/list';
 
 registerLocaleData(fr);
 
@@ -102,6 +103,7 @@ const ngZorroConfig: NzConfig = {
     NgxsReduxDevtoolsPluginModule.forRoot({
       disabled: environment.production,
     }),
+    NzListModule,
   ],
   providers: [
     AppInitializerProvider,

@@ -12,6 +12,7 @@ import { Select, Store } from '@ngxs/store';
 import { ThemeAction } from './core/theme/store/theme.actions';
 import { ThemeState } from './core/theme/store/theme.state';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -19,6 +20,7 @@ import { Observable } from 'rxjs';
   styleUrls: ['./app.component.less'],
 })
 export class AppComponent implements OnInit {
+  readonly environment = environment;
   isCollapsed = false;
   currentSection = 'home';
   currentSectionName = 'Accueil';

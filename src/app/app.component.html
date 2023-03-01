@@ -111,6 +111,14 @@
             </li>
           </ul>
         </li>
+        <li nz-menu-item nzMatchRouter>
+          <a href="https://github.com/bingemate" target="_blank">
+            <span nz-icon nzType="bug"> </span
+            ><span *ngIf="!environment.production"
+              >{{ environment.envName }} - </span
+            ><span>{{ environment.appVersion }}</span>
+          </a>
+        </li>
       </ul>
     </div>
     <!-- bottom -->
