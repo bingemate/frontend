@@ -1,0 +1,14 @@
+@import "base";
+
+.themeMixin(@rules) {
+  html {
+    &.default {
+      @import './default.less';
+      @rules();
+    }
+    &.dark {
+      @import './dark.less';
+      @rules();
+    }
+  }
+}
