@@ -104,6 +104,7 @@ const ngZorroConfig: NzConfig = {
       disabled: environment.production,
     }),
     NzListModule,
+    NzMenuModule,
   ],
   providers: [
     AppInitializerProvider,

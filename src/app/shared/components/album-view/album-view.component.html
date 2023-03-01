@@ -1,0 +1,14 @@
+<nz-card [nzTitle]="album.title | titlecase">
+  <nz-card-tab>
+    <nz-tabset nzSize="large" [(nzSelectedIndex)]="selectedTabIndex">
+      <nz-tab nzTitle="Album Id"></nz-tab>
+      <nz-tab nzTitle="User Id"></nz-tab>
+    </nz-tabset>
+  </nz-card-tab>
+  <div *ngIf="selectedTabIndex === 0">
+    <p>{{ album.id }}</p>
+  </div>
+  <div *ngIf="selectedTabIndex === 1">
+    <p>{{ album.userId }}</p>
+  </div>
+</nz-card>

@@ -4,9 +4,7 @@ import { StreamingRoutingModule } from './streaming-routing.module';
 import { StreamComponent } from './stream/stream.component';
 
 @NgModule({
-  declarations: [
-    StreamComponent
-  ],
+  declarations: [StreamComponent],
   imports: [CommonModule, StreamingRoutingModule],
 })
 export class StreamingModule {}

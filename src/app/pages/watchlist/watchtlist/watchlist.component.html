@@ -1,1 +1,8 @@
-<p>watchtlist works!</p>
+<nz-space nzDirection="vertical">
+  <nz-header *nzSpaceItem><h3>Albums</h3> </nz-header>
+  <nz-row *nzSpaceItem [nzGutter]="[8, 8]">
+    <nz-col *ngFor="let album of albums$ | async" [nzSpan]="8">
+      <app-album-view [album]="album"></app-album-view>
+    </nz-col>
+  </nz-row>
+</nz-space>

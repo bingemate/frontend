@@ -6,6 +6,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpErrorInterceptor } from './http-interceptors/http-error.interceptor';
 import { NzNotificationModule } from 'ng-zorro-antd/notification';
 import { ThemeService } from './theme/theme.service';
+import { FeaturesModule } from '../feature/features.module';
 
 @NgModule({
   declarations: [],
@@ -21,7 +22,12 @@ import { ThemeService } from './theme/theme.service';
     },
     ThemeService,
   ],
-  imports: [CommonModule, IconsProviderModule, NzNotificationModule],
+  imports: [
+    CommonModule,
+    FeaturesModule,
+    IconsProviderModule,
+    NzNotificationModule,
+  ],
   exports: [IconsProviderModule],
 })
 export class CoreModule {}
