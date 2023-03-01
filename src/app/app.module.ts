@@ -77,7 +77,7 @@ const ngZorroConfig: NzConfig = {
     }),
     // SessionStorage Ngxs State, persist at refresh
     NgxsStoragePluginModule.forRoot({
-      key: [ThemeState],
+      key: [],
       storage: StorageOption.SessionStorage,
       afterDeserialize(obj: unknown, key: string): unknown {
         if (!environment.production) {

@@ -1,23 +1,38 @@
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { Injectable } from '@angular/core';
-import { ThemeAction } from './theme.actions';
-import {
-  ThemeStateModel,
-  ThemeType,
-} from '../../../shared/models/theme.models';
-import { ThemeService } from '../theme.service';
+import { AlbumsService } from '../albums.service';
+import { AlbumsStateModel } from '../../../shared/models/album.models';
+import { AlbumsActions } from './albums.actions';
+import { tap } from 'rxjs/operators';
 
-@State<ThemeStateModel>({
-  name: 'theme',
+@State<AlbumsStateModel>({
+  name: 'albums',
   defaults: {
-    theme: ThemeType.default,
+    albums: [],
+    currentAlbumId: null,
   },
 })
 @Injectable()
-export class ThemeState {
-  constructor(private readonly themeService: ThemeService) {}
+export class AlbumsState {
+  constructor(private readonly albumService: AlbumsService) {}
 
   @Selector()
+  static albums(state: AlbumsStateModel) {
+    return state.albums;
+  }
+
+  @Action(AlbumsActions.GetAll)
+  getAll(ctx: StateContext<AlbumsStateModel>) {
+    return this.albumService.getAlbums().pipe(
+      tap(albums => {
+        ctx.patchState({
+          albums,
+        });
+      })
+    );
+  }
+
+  /*  @Selector()
   static theme(state: ThemeStateModel) {
     return state.theme;
   }
@@ -42,5 +57,5 @@ export class ThemeState {
   async initTheme(ctx: StateContext<ThemeStateModel>) {
     const state = ctx.getState();
     await this.themeService.loadTheme(state.theme);
-  }
+  }*/
 }

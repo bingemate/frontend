@@ -1,9 +1,5 @@
 import { Injectable } from '@angular/core';
-
-export enum ThemeType {
-  dark = 'dark',
-  default = 'default',
-}
+import { ThemeType } from '../../shared/models/theme.models';
 
 @Injectable()
 export class ThemeService {
