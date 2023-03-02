@@ -3,6 +3,7 @@ import { NavigationLinks, navigationRoot } from '../../app-routing.module';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthLoginRegisterComponent } from './auth-login-register/auth-login-register.component';
 import { AuthMyAccountComponent } from './auth-my-account/auth-my-account.component';
+import { AuthLogoutComponent } from './auth-logout/auth-logout.component';
 
 export const accountLinks: NavigationLinks<
   'login' | 'register' | 'myAccount' | 'logout'
@@ -54,8 +55,7 @@ const routes: Routes = [
   },
   {
     path: accountLinks.logout.path,
-    pathMatch: 'full',
-    redirectTo: `/${navigationRoot.home.path}`,
+    component: AuthLogoutComponent,
     data: { title: accountLinks.logout.name },
   },
 ];

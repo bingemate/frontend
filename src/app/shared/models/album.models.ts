@@ -16,7 +16,7 @@ export interface AlbumAPIResponse {
 }
 
 export function toAlbums(albums: AlbumAPIResponse[]): AlbumModel[] {
-  return albums.map(album => toAlbum(album));
+  return albums.map(toAlbum);
 }
 
 export function toAlbum(album: AlbumModel): AlbumModel {

@@ -27,25 +27,31 @@ export const navigationRoot: NavigationLinks<
   home: {
     path: 'home',
     name: 'Accueil',
+    auth: false,
+    icon: 'home',
   },
   socialNetwork: {
     path: 'social-network',
     name: 'Réseau social',
     auth: true,
+    icon: 'global',
   },
   subscriptions: {
     path: 'subscriptions',
     name: 'Abonnements',
     auth: true,
+    icon: 'barcode',
   },
   auth: {
     path: 'auth',
     name: 'Authentification',
+    icon: 'user',
   },
   medias: {
     path: 'medias',
     name: 'Médias',
     auth: true,
+    icon: 'play-square',
   },
   streaming: {
     path: 'streaming',
@@ -54,17 +60,21 @@ export const navigationRoot: NavigationLinks<
   },
   watchlist: {
     path: 'watchlist',
-    name: 'Watchlist',
+    name: 'Suivies',
     auth: true,
+    icon: 'unordered-list',
   },
   statistics: {
     path: 'statistics',
     name: 'Statistiques',
     auth: true,
+    icon: 'line-chart',
   },
   settings: {
     path: 'settings',
     name: 'Paramètres',
+    auth: false,
+    icon: 'setting',
   },
 };
 

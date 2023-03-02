@@ -1,11 +1,15 @@
 import { Injectable } from '@angular/core';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { Actions } from '@ngxs/store';
 
 @Injectable({
   providedIn: 'root',
 })
 export class NotificationsService {
-  constructor(private readonly nzNotificationService: NzNotificationService) {}
+  constructor(
+    private readonly nzNotificationService: NzNotificationService,
+    private readonly actions$: Actions
+  ) {}
 
   default(title: string, message = '', duration = 2000) {
     this.nzNotificationService.blank(title, message, {
