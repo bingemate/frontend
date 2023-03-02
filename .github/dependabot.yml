@@ -10,6 +10,8 @@ updates:
     schedule:
       interval: "daily"
     target-branch: "main"
+    assignees:
+      - "Nouuu"
     open-pull-requests-limit: 0
   - package-ecosystem: "npm" # See documentation for possible values
     directory: "/" # Location of package manifests
