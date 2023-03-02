@@ -43,7 +43,7 @@
     "@angular-eslint/schematics": "15.2.1",
     "@angular-eslint/template-parser": "15.2.1",
     "@angular/cli": "~15.2.1",
-    "@angular/compiler-cli": "^15.2.0",
+    "@angular/compiler-cli": "^15.2.1",
     "@ngxs/devtools-plugin": "^3.7.6",
     "@typescript-eslint/eslint-plugin": "5.54.0",
     "@typescript-eslint/parser": "5.54.0",
