@@ -18,6 +18,6 @@ updates:
     schedule:
       interval: "daily"
     target-branch: "dev"
-    assignees:
-      - "Nouuu"
+#    assignees:
+#      - "Nouuu"
     open-pull-requests-limit: 10
