@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { navigationRoot } from './app-routing.module';
+import { Link, navigationRoot } from './app-routing.module';
 import { accountLinks } from './pages/auth/auth-routing.module';
 import { socialNetworkLinks } from './pages/social-network/social-network-routing.module';
 import { Router } from '@angular/router';
@@ -15,6 +15,7 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { AuthActions } from './core/auth/store/auth.actions';
 import { AuthState } from './core/auth/store/auth.state';
+import { isMatchingRole, UserModel } from './shared/models/user.models';
 
 @Component({
   selector: 'app-root',
@@ -49,6 +50,9 @@ export class AppComponent implements OnInit {
   @Select(AuthState.isAdmin)
   isAdmin$!: Observable<boolean>;
   isAdmin = false;
+  @Select(AuthState.user)
+  user$!: Observable<UserModel>;
+  user: UserModel | null = null;
 
   subscribeForAuthEvents() {
     this.isAuthenticated$.subscribe(isAuthenticated => {
@@ -56,6 +60,10 @@ export class AppComponent implements OnInit {
     });
     this.isAdmin$.subscribe(isAdmin => {
       this.isAdmin = isAdmin;
+    });
+    this.user$.subscribe(user => {
+      this.user = user;
+      this.accountLinks = this._accountLinks();
     });
   }
 
@@ -107,30 +115,47 @@ export class AppComponent implements OnInit {
 
   readonly chatLink = `${navigationRoot.socialNetwork.path}/${socialNetworkLinks.chat.path}`;
 
-  readonly accountLinks = Object.values(accountLinks).map(link => {
-    return { ...link, path: `${navigationRoot.auth.path}/${link.path}` };
-  });
+  accountLinks: Link[] = [];
 
-  readonly subscriptionLinks = Object.values(subscriptionLinks).map(link => {
-    return {
-      ...link,
-      path: `${navigationRoot.subscriptions.path}/${link.path}`,
-    };
-  });
+  private _accountLinks = () => {
+    return Object.values(accountLinks)
+      .filter(link =>
+        this.isAuthenticated
+          ? link.requiredRole !== undefined &&
+            isMatchingRole(this.user, link.requiredRole)
+          : link.requiredRole === undefined
+      )
+      .map(link => {
+        return { ...link, path: `${navigationRoot.auth.path}/${link.path}` };
+      });
+  };
 
-  readonly socialNetworkLinks = Object.values(socialNetworkLinks).map(link => {
-    return {
-      ...link,
-      path: `${navigationRoot.socialNetwork.path}/${link.path}`,
-    };
-  });
+  readonly subscriptionLinks = Object.values(subscriptionLinks)
+    .filter(link => !['subscribe'].includes(link.path))
+    .map(link => {
+      return {
+        ...link,
+        path: `${navigationRoot.subscriptions.path}/${link.path}`,
+      };
+    });
 
-  readonly mediasLinks = Object.values(mediasLinks).map(link => {
-    return {
-      ...link,
-      path: `${navigationRoot.medias.path}/${link.path}`,
-    };
-  });
+  readonly socialNetworkLinks = Object.values(socialNetworkLinks)
+    .filter(link => !['media', 'user-profile', 'chat'].includes(link.path))
+    .map(link => {
+      return {
+        ...link,
+        path: `${navigationRoot.socialNetwork.path}/${link.path}`,
+      };
+    });
+
+  readonly mediasLinks = Object.values(mediasLinks)
+    .filter(media => !['view'].includes(media.path))
+    .map(link => {
+      return {
+        ...link,
+        path: `${navigationRoot.medias.path}/${link.path}`,
+      };
+    });
 
   readonly watchlistLinks = Object.values(watchlistLinks).map(link => {
     return {

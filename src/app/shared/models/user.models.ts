@@ -20,6 +20,10 @@ export interface UserAPIResponse {
 
 export type Role = 'admin' | 'user';
 
+export function isMatchingRole(user: UserModel | null, role?: Role): boolean {
+  return user?.role === role || user?.role === 'admin';
+}
+
 export function toUserModel(response: UserAPIResponse): UserModel {
   return {
     id: response.id,

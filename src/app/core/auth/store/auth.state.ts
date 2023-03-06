@@ -21,9 +21,9 @@ export class AuthState {
     return state.token;
   }
 
-  @Selector([AuthState.token])
-  static isAuthenticated(state: AuthStateModel, token: string | null) {
-    return token !== null;
+  @Selector()
+  static isAuthenticated(state: AuthStateModel) {
+    return state.token !== null;
   }
 
   @Selector()
@@ -31,9 +31,9 @@ export class AuthState {
     return state.user;
   }
 
-  @Selector([AuthState.user])
-  static isAdmin(user: UserModel | null) {
-    return !!user && user.role === 'admin';
+  @Selector()
+  static isAdmin(state: AuthStateModel) {
+    return !!state.user && state.user.role === 'admin';
   }
 
   constructor(

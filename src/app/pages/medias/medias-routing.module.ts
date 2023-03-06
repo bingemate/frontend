@@ -10,7 +10,7 @@ export const mediasLinks: NavigationLinks<'list' | 'search' | 'view'> = {
   },
   search: {
     path: 'search',
-    name: 'Recherche média',
+    name: 'Rechercher un média',
   },
   view: {
     path: 'view',

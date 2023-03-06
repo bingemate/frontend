@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
-import { NavigationLinks, navigationRoot } from '../../app-routing.module';
+import { NavigationLinks } from '../../app-routing.module';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthLoginRegisterComponent } from './auth-login-register/auth-login-register.component';
 import { AuthMyAccountComponent } from './auth-my-account/auth-my-account.component';
 import { AuthLogoutComponent } from './auth-logout/auth-logout.component';
+import { authGuard } from '../../core/guard/auth.guard';
 
 export const accountLinks: NavigationLinks<
   'login' | 'register' | 'myAccount' | 'logout'
@@ -21,13 +22,13 @@ export const accountLinks: NavigationLinks<
   myAccount: {
     path: 'my-account',
     name: 'Mon compte',
-    auth: true,
+    requiredRole: 'user',
     // icon: 'user',
   },
   logout: {
     path: 'logout',
     name: 'Déconnexion',
-    auth: true,
+    requiredRole: 'user',
     // icon: 'logout',
   },
 };
@@ -52,11 +53,13 @@ const routes: Routes = [
     path: accountLinks.myAccount.path,
     component: AuthMyAccountComponent,
     data: { title: accountLinks.myAccount.name },
+    canActivate: [authGuard],
   },
   {
     path: accountLinks.logout.path,
     component: AuthLogoutComponent,
     data: { title: accountLinks.logout.name },
+    canActivate: [authGuard],
   },
 ];
 

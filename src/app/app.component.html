@@ -21,6 +21,7 @@
           </a>
         </li>
         <li
+          *ngIf="isAuthenticated"
           nz-submenu
           nzOpen
           nzTitle="Médiathèque"
@@ -35,6 +36,7 @@
           </ul>
         </li>
         <li
+          *ngIf="isAuthenticated"
           nz-submenu
           nzTitle="Listes de lectures"
           [nzIcon]="navigationRoot.watchlist.icon!">
@@ -48,6 +50,7 @@
           </ul>
         </li>
         <li
+          *ngIf="isAuthenticated"
           nz-submenu
           nzTitle="Statistiques"
           [nzIcon]="navigationRoot.statistics.icon!">
@@ -61,6 +64,7 @@
           </ul>
         </li>
         <li
+          *ngIf="isAuthenticated"
           nz-submenu
           nzTitle="Communauté"
           [nzIcon]="navigationRoot.socialNetwork.icon!">
@@ -79,6 +83,7 @@
       <ul nz-menu nzMode="inline" [nzInlineCollapsed]="isNavbarCollapsed">
         <nz-divider></nz-divider>
         <li
+          *ngIf="isAuthenticated"
           nz-submenu
           nzTitle="Abonnement"
           [nzIcon]="navigationRoot.subscriptions.icon!">
