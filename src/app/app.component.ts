@@ -30,12 +30,11 @@ export class AppComponent implements OnInit {
     public readonly notificationsService: NotificationsService,
     private readonly store: Store,
     private readonly actions: Actions
-  ) {
-    this.subscribeForRouterEvents();
-    this.subscribeForAuthEvents();
-  }
+  ) {}
 
   ngOnInit(): void {
+    this.subscribeForRouterEvents();
+    this.subscribeForAuthEvents();
     this.subscribeForThemeEvents();
     this.subscribeForActionsNavigation();
   }
