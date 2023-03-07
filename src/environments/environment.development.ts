@@ -8,4 +8,5 @@ export const environment: EnvironmentType = {
   appName: 'Binge Mate',
   envName: 'DEV',
   appVersion: packageJson.version,
+  apiUrl: 'https://api-dev.bingemate.fr',
 };
