@@ -12,7 +12,10 @@
     "build:prod": "ng build --configuration production --progress --aot --build-optimizer",
     "watch": "ng build --watch --configuration development",
     "lint": "ng lint",
-    "lint:fix": "ng lint --fix"
+    "lint:fix": "ng lint --fix",
+    "compodoc:build": "compodoc -p tsconfig.doc.json",
+    "compodoc:build-and-serve": "compodoc -p tsconfig.doc.json -s",
+    "compodoc:serve": "compodoc -s"
   },
   "private": true,
   "dependencies": {
@@ -45,6 +48,7 @@
     "@angular-eslint/template-parser": "15.2.1",
     "@angular/cli": "~15.2.1",
     "@angular/compiler-cli": "^15.2.1",
+    "@compodoc/compodoc": "^1.1.19",
     "@ngxs/devtools-plugin": "^3.7.6",
     "@typescript-eslint/eslint-plugin": "5.54.1",
     "@typescript-eslint/parser": "5.54.1",
