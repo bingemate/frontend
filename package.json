@@ -13,9 +13,9 @@
     "watch": "ng build --watch --configuration development",
     "lint": "ng lint",
     "lint:fix": "ng lint --fix",
-    "compodoc:build": "compodoc -p tsconfig.doc.json",
-    "compodoc:build-and-serve": "compodoc -p tsconfig.doc.json -s",
-    "compodoc:serve": "compodoc -s"
+    "compodoc:build": "compodoc --theme material -p tsconfig.doc.json",
+    "compodoc:build-and-serve": "compodoc --theme material -p tsconfig.doc.json -s",
+    "compodoc:serve": "compodoc --theme material -s"
   },
   "private": true,
   "dependencies": {
