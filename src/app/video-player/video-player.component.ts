@@ -26,12 +26,17 @@ export class VideoPlayerComponent implements OnInit {
     videoRequest.setVideoId(1);
     this.videoUrl = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(this.media));
     this.media.addEventListener("sourceopen", () => {
-      this.media.setLiveSeekableRange(0, 260)
+      this.media.duration = 500;
+      this.sourceBuffer = this.media.addSourceBuffer('video/mp4; codecs="mp4a.40.2, hev1.1.6.L120.90"');
+      this.sourceBuffer.addEventListener("updateend", () => {
+        const chunk = this.chunks.shift();
+        if (chunk) {
+          this.sourceBuffer?.appendBuffer(chunk);
+        }
+      });
+      this.sourceBuffer.mode = "sequence";
       if (this.metadata) {
-        this.sourceBuffer = this.media.addSourceBuffer('video/mp4; codecs="mp4a.40.2, hev1.1.6.L120.90"');
-        this.sourceBuffer.mode = "segments";
         this.sourceBuffer.appendBuffer(this.metadata);
-        this.chunks.forEach(chunk => this.sourceBuffer?.appendBuffer(chunk));
       }
     });
     this.grpcClient = grpc.invoke(VideoService.GetVideoStream, {
@@ -46,7 +51,7 @@ export class VideoPlayerComponent implements OnInit {
           }
         }
         if (message.getData_asU8().length > 0) {
-          if (this.sourceBuffer) {
+          if (this.sourceBuffer && !this.sourceBuffer.updating && this.chunks.length === 0) {
             this.sourceBuffer.appendBuffer(message.getData_asU8());
           } else {
             this.chunks.push(message.getData_asU8());
