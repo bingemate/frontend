@@ -1,7 +1,6 @@
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { AuthStateModel } from '../../../shared/models/auth.models';
 import { Injectable } from '@angular/core';
-import { UserModel } from '../../../shared/models/user.models';
 import { AuthService } from '../auth.service';
 import { AuthActions } from './auth.actions';
 import { catchError, mergeMap, tap } from 'rxjs/operators';
