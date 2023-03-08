@@ -8,4 +8,5 @@ export const environment: EnvironmentType = {
   appName: 'Binge Mate',
   envName: 'LOCAL',
   appVersion: packageJson.version,
+  apiUrl: 'http://localhost:3000',
 };

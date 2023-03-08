@@ -4,6 +4,7 @@ import { NavigationLinks } from '../../app-routing.module';
 import { SocialNetworkHomeComponent } from './social-network-home/social-network-home.component';
 
 export const socialNetworkLinks: NavigationLinks<
+  | 'trending'
   | 'social_network_home'
   | 'search_media'
   | 'search_user'
@@ -11,19 +12,22 @@ export const socialNetworkLinks: NavigationLinks<
   | 'user_profile'
   | 'chat'
   | 'relations'
-  | 'trending'
 > = {
+  trending: {
+    path: 'trending',
+    name: 'Tendances',
+  },
   social_network_home: {
     path: 'home',
     name: 'Réseau social',
   },
   search_media: {
     path: 'search-media',
-    name: 'Recherche média',
+    name: 'Rechercher un média',
   },
   search_user: {
     path: 'search-user',
-    name: 'Recherche utilisateur',
+    name: 'Rechercher un utilisateur',
   },
   media: {
     path: 'media',
@@ -39,11 +43,7 @@ export const socialNetworkLinks: NavigationLinks<
   },
   relations: {
     path: 'relations',
-    name: 'Relations',
-  },
-  trending: {
-    path: 'trending',
-    name: 'Tendances',
+    name: 'Mes relations',
   },
 };
 

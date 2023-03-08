@@ -6,11 +6,11 @@ import { StatisticsHistoryComponent } from './statistics-history/statistics-hist
 
 export const statisticsLinks: NavigationLinks<'watch_stats' | 'history'> = {
   watch_stats: {
-    name: 'Watch Stats',
+    name: 'Statistiques de visionnage',
     path: 'watch-stats',
   },
   history: {
-    name: 'History',
+    name: 'Historique de lecture',
     path: 'history',
   },
 };

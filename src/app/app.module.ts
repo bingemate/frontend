@@ -37,6 +37,7 @@ import { NgxsStoragePluginModule, StorageOption } from '@ngxs/storage-plugin';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { NzListModule } from 'ng-zorro-antd/list';
+import { AuthState } from './core/auth/store/auth.state';
 
 registerLocaleData(fr);
 
@@ -72,12 +73,12 @@ const ngZorroConfig: NzConfig = {
     NzPopoverModule,
     NzDropDownModule,
     // Classic Ngxs State, wipe at refresh
-    NgxsModule.forRoot([ThemeState], {
+    NgxsModule.forRoot([ThemeState, AuthState], {
       developmentMode: !environment.production,
     }),
     // SessionStorage Ngxs State, persist at refresh
-    NgxsStoragePluginModule.forRoot({
-      key: [],
+    /*    NgxsStoragePluginModule.forRoot({
+      key: [AuthState],
       storage: StorageOption.SessionStorage,
       afterDeserialize(obj: unknown, key: string): unknown {
         if (!environment.production) {
@@ -85,10 +86,10 @@ const ngZorroConfig: NzConfig = {
         }
         return obj;
       },
-    }),
+    }),*/
     // LocalStorage Ngxs State, persist at refresh and browser close
     NgxsStoragePluginModule.forRoot({
-      key: [ThemeState],
+      key: [ThemeState, AuthState],
       storage: StorageOption.LocalStorage,
       afterDeserialize(obj: unknown, key: string): unknown {
         if (!environment.production) {

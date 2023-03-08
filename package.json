@@ -6,9 +6,10 @@
     "start": "ng serve --configuration local",
     "start:dev": "ng serve --configuration development",
     "start:prod": "ng serve --configuration production",
-    "build": "ng build --configuration local",
-    "build:dev": "ng build --configuration development",
-    "build:prod": "ng build --configuration production",
+    "build": "ng build --configuration local --progress",
+    "build:local": "ng build --configuration local --progress",
+    "build:dev": "ng build --configuration development --progress",
+    "build:prod": "ng build --configuration production --progress --aot --build-optimizer",
     "watch": "ng build --watch --configuration development",
     "lint": "ng lint",
     "lint:fix": "ng lint --fix"

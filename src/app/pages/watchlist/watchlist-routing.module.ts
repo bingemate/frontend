@@ -6,7 +6,7 @@ import { WatchtlistCalendarComponent } from './watchtlist-calendar/watchtlist-ca
 
 export const watchlistLinks: NavigationLinks<'lists' | 'calendar'> = {
   lists: {
-    name: 'Listes',
+    name: 'Mes listes',
     path: 'lists',
   },
   calendar: {

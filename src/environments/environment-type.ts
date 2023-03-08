@@ -3,4 +3,5 @@ export type EnvironmentType = {
   appName: string;
   envName: string;
   appVersion: string;
+  apiUrl: string;
 };
