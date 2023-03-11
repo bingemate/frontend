@@ -11,48 +11,43 @@ import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
   styleUrls: ['./video-player.component.scss']
 })
 export class VideoPlayerComponent implements OnInit {
+  private grpcClient?: Request;
+  private chunks: Uint8Array[] = [];
+  private sourceBuffer?: SourceBuffer;
+  private media = new MediaSource();
+  private lastClear = 0;
+  private quotaExceeded= false;
   videoUrl?: SafeUrl;
-  grpcClient?: Request;
-  chunks: Uint8Array[] = [];
-  metadata?: Uint8Array;
-  sourceBuffer?: SourceBuffer;
-  media = new MediaSource();
 
   constructor(private sanitizer: DomSanitizer) {
   }
 
   ngOnInit(): void {
     const videoRequest = new VideoRequest();
-    videoRequest.setVideoId(1);
+    videoRequest.setVideoId(5);
     this.videoUrl = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(this.media));
     this.media.addEventListener("sourceopen", () => {
-      this.media.duration = 500;
-      this.sourceBuffer = this.media.addSourceBuffer('video/mp4; codecs="mp4a.40.2, hev1.1.6.L120.90"');
+      this.sourceBuffer = this.media.addSourceBuffer('video/mp4; codecs="mp4a.40.2, hvc1.1.6.L120.90"');
       this.sourceBuffer.addEventListener("updateend", () => {
         const chunk = this.chunks.shift();
         if (chunk) {
-          this.sourceBuffer?.appendBuffer(chunk);
+          this.appendChunk(chunk);
         }
       });
       this.sourceBuffer.mode = "sequence";
-      if (this.metadata) {
-        this.sourceBuffer.appendBuffer(this.metadata);
+      this.media.duration = 1385;
+      const chunk = this.chunks.shift();
+      if (chunk) {
+        this.appendChunk(chunk);
       }
     });
     this.grpcClient = grpc.invoke(VideoService.GetVideoStream, {
       request: videoRequest,
       host: `http://localhost:50051`,
       onMessage: (message: VideoResponse) => {
-        if (message.getMetadata_asU8().length > 0) {
-          if (this.sourceBuffer) {
-            this.sourceBuffer.appendBuffer(message.getMetadata_asU8());
-          } else {
-            this.metadata = message.getMetadata_asU8();
-          }
-        }
         if (message.getData_asU8().length > 0) {
           if (this.sourceBuffer && !this.sourceBuffer.updating && this.chunks.length === 0) {
-            this.sourceBuffer.appendBuffer(message.getData_asU8());
+            this.appendChunk(message.getData_asU8());
           } else {
             this.chunks.push(message.getData_asU8());
           }
@@ -68,5 +63,25 @@ export class VideoPlayerComponent implements OnInit {
         }
       },
     });
+  }
+
+  setCurrentTime(event: Event) {
+    const currentTime = (event.target as HTMLMediaElement).currentTime;
+    if (currentTime - 20 > 0 && currentTime - 20 > this.lastClear && this.quotaExceeded) {
+      this.sourceBuffer?.remove(this.lastClear, currentTime - 20);
+      this.quotaExceeded = false;
+    }
+  }
+
+  private appendChunk(chunk: Uint8Array): void {
+    try {
+      this.sourceBuffer?.appendBuffer(chunk);
+    } catch (e) {
+      if ((e as Error).name !== 'QuotaExceededError') {
+        throw e;
+      }
+      this.chunks = [chunk, ...this.chunks];
+      this.quotaExceeded = true;
+    }
   }
 }
