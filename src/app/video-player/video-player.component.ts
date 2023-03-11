@@ -69,6 +69,7 @@ export class VideoPlayerComponent implements OnInit {
     const currentTime = (event.target as HTMLMediaElement).currentTime;
     if (currentTime - 20 > 0 && currentTime - 20 > this.lastClear && this.quotaExceeded) {
       this.sourceBuffer?.remove(this.lastClear, currentTime - 20);
+      this.lastClear = currentTime - 20
       this.quotaExceeded = false;
     }
   }
