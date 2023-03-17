@@ -35,7 +35,7 @@ export class VideoPlayerComponent implements OnInit {
     this.loadChunks(1);
     this.media.addEventListener("sourceopen", () => {
       this.createSourceBuffer();
-      this.media.duration = 256;
+      this.media.duration = 1385;
       if (this.metadata) {
         this.sourceBuffer?.appendBuffer(this.metadata);
       }
@@ -53,19 +53,14 @@ export class VideoPlayerComponent implements OnInit {
 
   seekVideo(event: Event) {
     const currentTime = (event.target as HTMLMediaElement).currentTime;
+    if (!this.sourceBuffer || this.sourceBuffer.buffered.start(0) <= currentTime && this.sourceBuffer.buffered.end(0) > currentTime) {
+      return;
+    }
     this.grpcClient?.close();
     this.chunks = [];
-    if (this.sourceBuffer) {
-      for (let i = 0; i < this.sourceBuffer.buffered.length; i++) {
-        if (this.sourceBuffer.buffered.start(i) <= currentTime && this.sourceBuffer.buffered.end(i) >= currentTime) {
-          this.loading = true;
-          this.loadChunks(1, this.sourceBuffer.buffered.end(i));
-          return;
-        }
-      }
-      this.loading = true;
-      this.loadChunks(1, currentTime);
-    }
+    this.loading = true;
+    this.sourceBuffer.remove(this.sourceBuffer.buffered.start(0), this.sourceBuffer.buffered.end(0))
+    this.loadChunks(1, currentTime);
   }
 
   private createSourceBuffer() {
@@ -91,7 +86,6 @@ export class VideoPlayerComponent implements OnInit {
       onMessage: (message: VideoResponse) => {
         if (this.sourceBuffer && this.loading) {
           this.loading = false;
-          this.sourceBuffer.abort();
           this.sourceBuffer.timestampOffset = message.getStarttime();
         }
         if (message.getData_asU8().length > 0) {
