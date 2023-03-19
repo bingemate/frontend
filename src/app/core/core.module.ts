@@ -6,7 +6,6 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpErrorInterceptor } from './http-interceptors/http-error.interceptor';
 import { NzNotificationModule } from 'ng-zorro-antd/notification';
 import { ThemeService } from './theme/theme.service';
-import { FeaturesModule } from '../feature/features.module';
 import { HttpAuthTokenInterceptor } from './http-interceptors/http-auth-token.interceptor';
 
 @NgModule({
@@ -28,12 +27,7 @@ import { HttpAuthTokenInterceptor } from './http-interceptors/http-auth-token.in
     },
     ThemeService,
   ],
-  imports: [
-    CommonModule,
-    FeaturesModule,
-    IconsProviderModule,
-    NzNotificationModule,
-  ],
+  imports: [CommonModule, IconsProviderModule, NzNotificationModule],
   exports: [IconsProviderModule],
 })
 export class CoreModule {}

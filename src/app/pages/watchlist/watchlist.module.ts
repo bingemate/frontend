@@ -12,11 +12,13 @@ import { NzGridModule } from 'ng-zorro-antd/grid';
 import { SharedModule } from '../../shared/shared.module';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
+import { AlbumsModule } from '../../feature/albums/albums.module';
 
 @NgModule({
   declarations: [WatchlistComponent, WatchtlistCalendarComponent],
   imports: [
     CommonModule,
+    AlbumsModule,
     WatchlistRoutingModule,
     NzPageHeaderModule,
     NzCalendarModule,
