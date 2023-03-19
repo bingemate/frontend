@@ -24,7 +24,6 @@ export class VideoPlayerComponent implements OnInit {
   private media = new MediaSource();
   private lastClear = 0;
   private quotaExceeded = false;
-  private loading = false;
   videoUrl?: SafeUrl;
 
   constructor(private sanitizer: DomSanitizer) {
@@ -44,7 +43,7 @@ export class VideoPlayerComponent implements OnInit {
 
   setCurrentTime(event: Event) {
     const currentTime = (event.target as HTMLMediaElement).currentTime;
-    if (currentTime - 60 > 0 && currentTime - 60 > this.lastClear && this.quotaExceeded) {
+    if (currentTime - 60 > 0 && currentTime - 60 > this.lastClear && this.quotaExceeded && !this.sourceBuffer?.updating) {
       this.sourceBuffer?.remove(this.lastClear, currentTime - 60);
       this.lastClear = currentTime - 60;
       this.quotaExceeded = false;
@@ -53,13 +52,16 @@ export class VideoPlayerComponent implements OnInit {
 
   seekVideo(event: Event) {
     const currentTime = (event.target as HTMLMediaElement).currentTime;
-    if (!this.sourceBuffer || this.sourceBuffer.buffered.start(0) <= currentTime && this.sourceBuffer.buffered.end(0) > currentTime) {
+    if (!this.sourceBuffer || (this.sourceBuffer.buffered.length !== 0 && this.sourceBuffer.buffered.start(0) <= currentTime && this.sourceBuffer.buffered.end(0) > currentTime)) {
       return;
     }
+    this.lastClear = 0;
     this.grpcClient?.close();
     this.chunks = [];
-    this.loading = true;
-    this.sourceBuffer.remove(this.sourceBuffer.buffered.start(0), this.sourceBuffer.buffered.end(0))
+    if (this.sourceBuffer.buffered.length > 0) {
+      this.sourceBuffer.abort();
+      this.sourceBuffer.remove(this.sourceBuffer.buffered.start(0), this.sourceBuffer.buffered.end(0))
+    }
     this.loadChunks(1, currentTime);
   }
 
@@ -84,10 +86,6 @@ export class VideoPlayerComponent implements OnInit {
       request: videoRequest,
       host: `http://localhost:50051`,
       onMessage: (message: VideoResponse) => {
-        if (this.sourceBuffer && this.loading) {
-          this.loading = false;
-          this.sourceBuffer.timestampOffset = message.getStarttime();
-        }
         if (message.getData_asU8().length > 0) {
           const chunk: VideoChunk = {
             chunk: message.getData_asU8(),
@@ -109,8 +107,7 @@ export class VideoPlayerComponent implements OnInit {
         }
       },
       onEnd: (code: grpc.Code, msg: string | undefined, trailers: grpc.Metadata) => {
-        // This section works when server close connection.
-
+        this.grpcClient = undefined;
         if (code == grpc.Code.OK) {
           console.log('request finished wihtout any error');
         } else {
