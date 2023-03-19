@@ -16,7 +16,7 @@
     "compodoc:build": "compodoc --theme material -p tsconfig.doc.json",
     "compodoc:build-and-serve": "compodoc --theme material -p tsconfig.doc.json -s",
     "compodoc:serve": "compodoc --theme material -s",
-    "protoc:generate:win": "protoc --js_out=import_style=commonjs,binary:src/app/generated --ts_out=service=grpc-web:src/app/generated proto/video.proto"
+    "protoc:generate:win": "protoc --js_out=import_style=commonjs,binary:src/app --ts_out=service=grpc-web:src/app proto/video.proto"
   },
   "private": true,
   "dependencies": {
@@ -28,15 +28,15 @@
     "@angular/platform-browser": "^15.2.3",
     "@angular/platform-browser-dynamic": "^15.2.3",
     "@angular/router": "^15.2.3",
+    "@improbable-eng/grpc-web": "^0.15.0",
     "@ngxs/logger-plugin": "^3.7.6",
     "@ngxs/storage-plugin": "^3.7.6",
     "@ngxs/store": "dev",
     "eslint-config-prettier": "^8.7.0",
     "eslint-plugin-prettier": "^4.2.1",
+    "google-protobuf": "^3.21.2",
     "ng-zorro-antd": "^15.0.3",
     "prettier-eslint": "^15.0.1",
-    "@improbable-eng/grpc-web": "^0.15.0",
-    "google-protobuf": "^3.21.2",
     "rxjs": "~7.8.0",
     "save-dev": "^0.0.1-security",
     "tslib": "^2.3.0",
@@ -53,11 +53,11 @@
     "@angular/compiler-cli": "^15.2.3",
     "@compodoc/compodoc": "^1.1.19",
     "@ngxs/devtools-plugin": "^3.7.6",
+    "@types/google-protobuf": "^3.15.6",
     "@typescript-eslint/eslint-plugin": "5.55.0",
     "@typescript-eslint/parser": "5.55.0",
     "eslint": "^8.36.0",
     "prettier": "^2.8.4",
-    "@types/google-protobuf": "^3.15.6",
     "typescript": "~4.9.4"
   }
 }
