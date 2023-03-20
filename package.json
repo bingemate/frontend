@@ -30,7 +30,7 @@
     "@ngxs/logger-plugin": "^3.7.6",
     "@ngxs/storage-plugin": "^3.7.6",
     "@ngxs/store": "dev",
-    "eslint-config-prettier": "^8.7.0",
+    "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^4.2.1",
     "ng-zorro-antd": "^15.0.3",
     "prettier-eslint": "^15.0.1",
