@@ -1,11 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from "@angular/core";
 import { grpc } from '@improbable-eng/grpc-web';
 import { Request } from '@improbable-eng/grpc-web/dist/typings/invoke';
-import { VideoRequest, VideoResponse } from '../../../proto/video_pb';
 import { VideoService } from '../../../proto/video_pb_service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import {
+  VideoChunk,
+  VideoChunkRequest,
+  VideoMetadata,
+  VideoMetadataRequest,
+} from '../../../proto/video_pb';
 
-interface VideoChunk {
+interface Chunk {
   chunk: Uint8Array;
   startTime: number;
   endTime: number;
@@ -17,12 +22,14 @@ interface VideoChunk {
   styleUrls: ['./video-player.component.scss'],
 })
 export class VideoPlayerComponent implements OnInit {
+  @Input()
+  videoId = 1;
+  private media = new MediaSource();
+  private sourceBuffer?: SourceBuffer;
   private grpcClient?: Request;
   private metadata?: Uint8Array;
-  private chunks: VideoChunk[] = [];
-  private sourceBuffer?: SourceBuffer;
-  private media = new MediaSource();
   private lastClear = 0;
+  private lastLoadedChunk = 0;
   private quotaExceeded = false;
   videoUrl?: SafeUrl;
 
@@ -32,10 +39,9 @@ export class VideoPlayerComponent implements OnInit {
     this.videoUrl = this.sanitizer.bypassSecurityTrustUrl(
       URL.createObjectURL(this.media)
     );
-    this.loadChunks(1);
+    this.loadMetadata(this.videoId);
     this.media.addEventListener('sourceopen', () => {
       this.createSourceBuffer();
-      this.media.duration = 1385;
       if (this.metadata) {
         this.sourceBuffer?.appendBuffer(this.metadata);
       }
@@ -67,8 +73,6 @@ export class VideoPlayerComponent implements OnInit {
       return;
     }
     this.lastClear = 0;
-    this.grpcClient?.close();
-    this.chunks = [];
     if (this.sourceBuffer.buffered.length > 0) {
       this.sourceBuffer.abort();
       this.sourceBuffer.remove(
@@ -76,7 +80,7 @@ export class VideoPlayerComponent implements OnInit {
         this.sourceBuffer.buffered.end(0)
       );
     }
-    this.loadChunks(1, currentTime);
+    this.loadNextChunk(this.videoId);
   }
 
   private createSourceBuffer() {
@@ -85,49 +89,60 @@ export class VideoPlayerComponent implements OnInit {
     );
     this.sourceBuffer.mode = 'segments';
     this.sourceBuffer.addEventListener('updateend', () => {
-      const chunk = this.chunks.shift();
-      if (chunk) {
-        this.appendChunk(chunk);
-      }
+      this.loadNextChunk(this.videoId);
     });
   }
 
-  private loadChunks(id: number, seek?: number): void {
-    const videoRequest = new VideoRequest();
+  private loadMetadata(id: number): void {
+    const videoRequest = new VideoMetadataRequest();
     videoRequest.setVideoId(id);
-    if (seek) {
-      videoRequest.setSeek(seek);
-    }
-    this.grpcClient = grpc.invoke(VideoService.GetVideoStream, {
+    this.grpcClient = grpc.invoke(VideoService.GetVideoMetadata, {
       request: videoRequest,
       host: `http://localhost:50051`,
-      onMessage: (message: VideoResponse) => {
-        if (message.getData_asU8().length > 0) {
-          const chunk: VideoChunk = {
-            chunk: message.getData_asU8(),
-            startTime: message.getStarttime(),
-            endTime: message.getEndtime(),
-          };
-          if (
-            this.sourceBuffer &&
-            !this.sourceBuffer.updating &&
-            this.chunks.length === 0
-          ) {
-            this.appendChunk(chunk);
-          } else {
-            this.chunks.push(chunk);
-          }
+      onMessage: (message: VideoMetadata) => {
+        this.media.duration = message.getVideoDuration();
+        this.metadata = message.getMetadata_asU8();
+        if (
+          this.sourceBuffer &&
+          !this.sourceBuffer.updating
+        ) {
+          this.sourceBuffer.appendBuffer(message.getMetadata_asU8());
         }
-        if (message.getMetadata_asU8().length > 0) {
-          if (
-            this.sourceBuffer &&
-            !this.sourceBuffer.updating &&
-            this.chunks.length === 0
-          ) {
-            this.sourceBuffer.appendBuffer(message.getMetadata_asU8());
-          } else {
-            this.metadata = message.getMetadata_asU8();
-          }
+        this.loadNextChunk(id);
+      },
+      onEnd: (
+        code: grpc.Code,
+        msg: string | undefined,
+        trailers: grpc.Metadata
+      ) => {
+        this.grpcClient = undefined;
+        if (code == grpc.Code.OK) {
+          console.log('request finished wihtout any error');
+        } else {
+          console.log('an error occured', code, msg, trailers);
+        }
+      },
+    });
+  }
+
+  private loadNextChunk(id: number): void {
+    const videoRequest = new VideoChunkRequest();
+    videoRequest.setVideoId(id);
+    videoRequest.setSeek(this.lastLoadedChunk);
+    this.grpcClient = grpc.invoke(VideoService.GetVideoChunk, {
+      request: videoRequest,
+      host: `http://localhost:50051`,
+      onMessage: (message: VideoChunk) => {
+        const chunk: Chunk = {
+          chunk: message.getData_asU8(),
+          startTime: message.getStartTime(),
+          endTime: message.getEndTime(),
+        };
+        if (
+          this.sourceBuffer &&
+          !this.sourceBuffer.updating
+        ) {
+          this.appendChunk(chunk);
         }
       },
       onEnd: (
@@ -145,14 +160,14 @@ export class VideoPlayerComponent implements OnInit {
     });
   }
 
-  private appendChunk(chunk: VideoChunk): void {
+  private appendChunk(chunk: Chunk): void {
     try {
       this.sourceBuffer?.appendBuffer(chunk.chunk);
+      this.lastLoadedChunk = chunk.endTime;
     } catch (e) {
       if ((e as Error).name !== 'QuotaExceededError') {
         throw e;
       }
-      this.chunks = [chunk, ...this.chunks];
       this.quotaExceeded = true;
     }
   }
