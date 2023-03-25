@@ -1,7 +1,28 @@
-<video
-  controls
-  autoplay
-  [src]="videoUrl"
-  [volume]="0.1"
-  (timeupdate)="setCurrentTime($event)"
-  (seeking)="seekVideo($event)"></video>
+<vg-player class="video-player">
+  <vg-overlay-play></vg-overlay-play>
+  <vg-scrub-bar>
+    <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+    <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
+    <vg-scrub-bar-cue-points></vg-scrub-bar-cue-points>
+  </vg-scrub-bar>
+  <vg-buffering></vg-buffering>
+  <vg-controls [vgAutohide]="false" [vgAutohideTime]="1.5">
+    <vg-play-pause></vg-play-pause>
+    <vg-playback-button></vg-playback-button>
+    <vg-time-display vgProperty="current" vgFormat="mm:ss"></vg-time-display>
+    <vg-time-display vgProperty="total" vgFormat="mm:ss"></vg-time-display>
+    <vg-scrub-bar style="pointer-events: none"></vg-scrub-bar>
+    <vg-track-selector></vg-track-selector>
+    <vg-quality-selector></vg-quality-selector>
+    <vg-mute></vg-mute>
+    <vg-volume></vg-volume>
+    <vg-fullscreen></vg-fullscreen>
+  </vg-controls>
+  <video
+    #media
+    id="video-player"
+    [vgMedia]="$any(media)"
+    [src]="videoUrl"
+    (timeupdate)="setCurrentTime($event)"
+    (seeking)="seekVideo($event)"></video>
+</vg-player>
