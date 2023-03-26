@@ -4,7 +4,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthLoginRegisterComponent } from './auth-login-register/auth-login-register.component';
 import { AuthMyAccountComponent } from './auth-my-account/auth-my-account.component';
 import { AuthLogoutComponent } from './auth-logout/auth-logout.component';
-import { authGuard } from '../../core/guard/auth.guard';
 import { KeycloakGuard } from '../../core/guard/keycloak.guard';
 
 export const accountLinks: NavigationLinks<'login' | 'myAccount' | 'logout'> = {
@@ -41,14 +40,20 @@ const routes: Routes = [
   {
     path: accountLinks.myAccount.path,
     component: AuthMyAccountComponent,
-    data: { title: accountLinks.myAccount.name },
+    data: {
+      title: accountLinks.myAccount.name,
+      requiredRoles: accountLinks.myAccount.requiredRoles,
+    },
     canActivate: [KeycloakGuard],
   },
   {
     path: accountLinks.logout.path,
     component: AuthLogoutComponent,
-    data: { title: accountLinks.logout.name },
-    canActivate: [authGuard],
+    data: {
+      title: accountLinks.logout.name,
+      requiredRoles: accountLinks.logout.requiredRoles,
+    },
+    canActivate: [KeycloakGuard],
   },
 ];
 
