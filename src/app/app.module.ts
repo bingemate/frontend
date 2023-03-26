@@ -38,6 +38,7 @@ import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { NzListModule } from 'ng-zorro-antd/list';
 import { AuthState } from './core/auth/store/auth.state';
+import { KeycloakAngularModule } from 'keycloak-angular';
 
 registerLocaleData(fr);
 
@@ -53,6 +54,7 @@ const ngZorroConfig: NzConfig = {
     CoreModule,
     BrowserModule,
     AppRoutingModule,
+    KeycloakAngularModule,
     FormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
