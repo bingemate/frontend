@@ -22,12 +22,13 @@ export const KeycloakInitializerProvider: Provider = {
 };
 
 function initializeKeycloak(keycloak: KeycloakService) {
+  const { auth } = environment;
   return () =>
     keycloak.init({
       config: {
-        url: 'http://localhost:8080',
-        realm: 'bingemate',
-        clientId: 'angular-frontend',
+        url: auth.url,
+        realm: auth.realm,
+        clientId: auth.clientId,
       },
       initOptions: {
         onLoad: 'check-sso',
