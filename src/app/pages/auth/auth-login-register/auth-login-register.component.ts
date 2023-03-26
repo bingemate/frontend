@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngxs/store';
-import { AuthActions } from '../../../core/auth/store/auth.actions';
 import { KeycloakService } from 'keycloak-angular';
 
 @Component({

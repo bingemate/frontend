@@ -15,6 +15,7 @@ export interface UserAPIResponse {
   email: string;
   roles: string[];
 }
+
 export function isMatchingRoles(
   user: UserModel | null,
   requiredRoles: string[]
