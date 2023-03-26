@@ -120,9 +120,9 @@ export class AppComponent implements OnInit {
     return Object.values(accountLinks)
       .filter(link =>
         this.isAuthenticated
-          ? link.requiredRole !== undefined &&
-            isMatchingRole(this.user, link.requiredRole)
-          : link.requiredRole === undefined
+          ? link.requiredRoles !== undefined &&
+            isMatchingRoles(this.user, link.requiredRoles)
+          : link.requiredRoles === undefined
       )
       .map(link => {
         return { ...link, path: `${navigationRoot.auth.path}/${link.path}` };

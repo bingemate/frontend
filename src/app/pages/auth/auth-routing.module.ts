@@ -22,13 +22,13 @@ export const accountLinks: NavigationLinks<
   myAccount: {
     path: 'my-account',
     name: 'Mon compte',
-    requiredRole: 'user',
+    requiredRoles: ['user'],
     // icon: 'user',
   },
   logout: {
     path: 'logout',
     name: 'Déconnexion',
-    requiredRole: 'user',
+    requiredRoles: ['user'],
     // icon: 'logout',
   },
 };

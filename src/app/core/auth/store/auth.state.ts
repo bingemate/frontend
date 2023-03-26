@@ -32,7 +32,7 @@ export class AuthState {
 
   @Selector()
   static isAdmin(state: AuthStateModel) {
-    return !!state.user && state.user.role === 'admin';
+    return !!state.user && state.user.roles.includes('admin');
   }
 
   constructor(

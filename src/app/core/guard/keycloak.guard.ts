@@ -22,17 +22,21 @@ export class KeycloakGuard extends KeycloakAuthGuard {
 
   async isAccessAllowed(
     route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
+    _state: RouterStateSnapshot
   ): Promise<boolean | UrlTree> {
     // Force the user to log in if currently unauthenticated.
     if (!this.authenticated) {
-      await this.keycloak.login({
-        redirectUri: window.location.origin + state.url,
-      });
+      this.notificationsService.error(
+        'Vous devez être connecté pour accéder à ce contenu'
+      );
+      return false;
+      // await this.keycloak.login({
+      //   redirectUri: window.location.origin + state.url,
+      // });
     }
 
     // Get the roles required from the route.
-    const requiredRoles = route.data['roles'];
+    const requiredRoles = route.data['requiredRoles'];
 
     let granted = false;
 

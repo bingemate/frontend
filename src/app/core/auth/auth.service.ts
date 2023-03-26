@@ -32,7 +32,7 @@ export class AuthService {
         lastname: 'Doe',
         birthdate: new Date(1997, 1, 2),
         email: 'example@mail.com',
-        role: 'admin',
+        roles: ['admin'],
       });
       observer.complete();
     });

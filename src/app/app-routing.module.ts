@@ -6,7 +6,7 @@ import { authGuard } from './core/guard/auth.guard';
 export interface Link {
   path: string;
   name: string;
-  requiredRole?: Role;
+  requiredRoles?: Role[];
   icon?: string;
 }
 
@@ -33,13 +33,13 @@ export const navigationRoot: NavigationLinks<
   socialNetwork: {
     path: 'social-network',
     name: 'Réseau social',
-    requiredRole: 'user',
+    requiredRoles: ['user'],
     icon: 'global',
   },
   subscriptions: {
     path: 'subscriptions',
     name: 'Abonnements',
-    requiredRole: 'user',
+    requiredRoles: ['user'],
     icon: 'barcode',
   },
   auth: {
@@ -50,30 +50,30 @@ export const navigationRoot: NavigationLinks<
   medias: {
     path: 'medias',
     name: 'Médias',
-    requiredRole: 'user',
+    requiredRoles: ['user'],
     icon: 'play-square',
   },
   streaming: {
     path: 'streaming',
     name: 'Streaming',
-    requiredRole: 'user',
+    requiredRoles: ['user'],
   },
   watchlist: {
     path: 'watchlist',
     name: 'Suivies',
-    requiredRole: 'user',
+    requiredRoles: ['user'],
     icon: 'unordered-list',
   },
   statistics: {
     path: 'statistics',
     name: 'Statistiques',
-    requiredRole: 'user',
+    requiredRoles: ['user'],
     icon: 'line-chart',
   },
   settings: {
     path: 'settings',
     name: 'Paramètres',
-    requiredRole: 'user',
+    requiredRoles: ['user'],
     icon: 'setting',
   },
 };
