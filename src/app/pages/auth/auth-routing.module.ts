@@ -5,30 +5,24 @@ import { AuthLoginRegisterComponent } from './auth-login-register/auth-login-reg
 import { AuthMyAccountComponent } from './auth-my-account/auth-my-account.component';
 import { AuthLogoutComponent } from './auth-logout/auth-logout.component';
 import { authGuard } from '../../core/guard/auth.guard';
+import { KeycloakGuard } from '../../core/guard/keycloak.guard';
 
-export const accountLinks: NavigationLinks<
-  'login' | 'register' | 'myAccount' | 'logout'
-> = {
+export const accountLinks: NavigationLinks<'login' | 'myAccount' | 'logout'> = {
   login: {
     path: 'login',
-    name: 'Connexion',
+    name: 'Connexion / Inscription',
     // icon: 'login',
-  },
-  register: {
-    path: 'register',
-    name: 'Inscription',
-    // icon: 'user',
   },
   myAccount: {
     path: 'my-account',
     name: 'Mon compte',
-    requiredRoles: ['user'],
+    requiredRoles: [],
     // icon: 'user',
   },
   logout: {
     path: 'logout',
     name: 'Déconnexion',
-    requiredRoles: ['user'],
+    requiredRoles: [],
     // icon: 'logout',
   },
 };
@@ -45,15 +39,10 @@ const routes: Routes = [
     data: { title: accountLinks.login.name },
   },
   {
-    path: accountLinks.register.path,
-    component: AuthLoginRegisterComponent,
-    data: { title: accountLinks.register.name },
-  },
-  {
     path: accountLinks.myAccount.path,
     component: AuthMyAccountComponent,
     data: { title: accountLinks.myAccount.name },
-    canActivate: [authGuard],
+    canActivate: [KeycloakGuard],
   },
   {
     path: accountLinks.logout.path,

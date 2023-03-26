@@ -94,7 +94,7 @@ const ngZorroConfig: NzConfig = {
     }),*/
     // LocalStorage Ngxs State, persist at refresh and browser close
     NgxsStoragePluginModule.forRoot({
-      key: [ThemeState, AuthState],
+      key: [ThemeState],
       storage: StorageOption.LocalStorage,
       afterDeserialize(obj: unknown, key: string): unknown {
         if (!environment.production) {

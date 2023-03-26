@@ -1,12 +1,11 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-import { Role } from './shared/models/user.models';
 import { authGuard } from './core/guard/auth.guard';
 
 export interface Link {
   path: string;
   name: string;
-  requiredRoles?: Role[];
+  requiredRoles?: string[];
   icon?: string;
 }
 

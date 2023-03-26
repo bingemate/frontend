@@ -17,7 +17,8 @@ export class HttpAuthTokenInterceptor implements HttpInterceptor {
     req: HttpRequest<unknown>,
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
-    const token = this.store.selectSnapshot(AuthState.token);
+    // const token = this.store.selectSnapshot(AuthState.token);
+    const token = 'stub';
     if (token) {
       req = req.clone({
         setHeaders: {

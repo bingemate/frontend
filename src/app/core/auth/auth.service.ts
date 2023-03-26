@@ -30,7 +30,6 @@ export class AuthService {
         username: 'John Doe',
         firstname: 'John',
         lastname: 'Doe',
-        birthdate: new Date(1997, 1, 2),
         email: 'example@mail.com',
         roles: ['admin'],
       });

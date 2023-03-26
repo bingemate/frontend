@@ -9,20 +9,19 @@ import { NotificationsService } from '../../notifications/notifications.service'
 @State<AuthStateModel>({
   name: 'auth',
   defaults: {
-    token: null,
     user: null,
   },
 })
 @Injectable()
 export class AuthState {
-  @Selector()
+  /*  @Selector()
   static token(state: AuthStateModel) {
     return state.token;
-  }
+  }*/
 
   @Selector()
   static isAuthenticated(state: AuthStateModel) {
-    return state.token !== null;
+    return state.user !== null;
   }
 
   @Selector()
@@ -42,23 +41,21 @@ export class AuthState {
 
   @Action(AuthActions.Login)
   login(ctx: StateContext<AuthStateModel>, action: AuthActions.Login) {
-    return this.authService.login(action.payload).pipe(
-      tap(token => {
-        ctx.patchState({
-          token,
-        });
-      }),
-      mergeMap(() => {
-        return ctx.dispatch(new AuthActions.LoginSuccess());
-      }),
-      catchError(error => {
-        console.error(error);
-        return ctx.dispatch(new AuthActions.LoginFailure());
-      })
-    );
+    const profile = action.payload.profile;
+    const roles = action.payload.roles;
+    ctx.setState({
+      user: {
+        id: profile.id!,
+        username: profile.username!,
+        email: profile.email!,
+        firstname: profile.firstName!,
+        lastname: profile.lastName!,
+        roles: roles,
+      },
+    });
   }
 
-  @Action(AuthActions.LoginSuccess)
+  /*  @Action(AuthActions.LoginSuccess)
   loginSuccess(ctx: StateContext<AuthStateModel>) {
     this.notificationService.success('Vous êtes connecté');
     return ctx.dispatch(new AuthActions.GetMe());
@@ -67,14 +64,13 @@ export class AuthState {
   @Action(AuthActions.LoginFailure)
   loginError() {
     this.notificationService.error('Erreur de connexion');
-  }
+  }*/
 
   @Action(AuthActions.Logout)
   logout(ctx: StateContext<AuthStateModel>) {
     return this.authService.logout().pipe(
       tap(() => {
         ctx.patchState({
-          token: null,
           user: null,
         });
       }),
@@ -98,7 +94,7 @@ export class AuthState {
     this.notificationService.error('Erreur de déconnexion');
   }
 
-  @Action(AuthActions.GetMe)
+  /*@Action(AuthActions.GetMe)
   getMe(ctx: StateContext<AuthStateModel>) {
     return this.authService.getMe().pipe(
       tap(user => {
@@ -107,5 +103,5 @@ export class AuthState {
         });
       })
     );
-  }
+  }*/
 }

@@ -15,7 +15,8 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { AuthActions } from './core/auth/store/auth.actions';
 import { AuthState } from './core/auth/store/auth.state';
-import { isMatchingRole, UserModel } from './shared/models/user.models';
+import { isMatchingRoles, UserModel } from './shared/models/user.models';
+import { KeycloakService } from 'keycloak-angular';
 
 @Component({
   selector: 'app-root',
@@ -29,7 +30,8 @@ export class AppComponent implements OnInit {
     private readonly router: Router,
     public readonly notificationsService: NotificationsService,
     private readonly store: Store,
-    private readonly actions: Actions
+    private readonly actions: Actions,
+    private readonly keycloak: KeycloakService
   ) {}
 
   ngOnInit(): void {
@@ -37,6 +39,7 @@ export class AppComponent implements OnInit {
     this.subscribeForAuthEvents();
     this.subscribeForThemeEvents();
     this.subscribeForActionsNavigation();
+    this.isUserLoggedIn().then();
   }
 
   ////////////////////////////////////////////////////////////////////////////
@@ -64,6 +67,20 @@ export class AppComponent implements OnInit {
       this.user = user;
       this.accountLinks = this._accountLinks();
     });
+  }
+
+  async isUserLoggedIn() {
+    const logged = await this.keycloak.isLoggedIn();
+    if (logged) {
+      const profile = await this.keycloak.loadUserProfile();
+      const roles = this.keycloak.getUserRoles();
+      this.store.dispatch(
+        new AuthActions.Login({
+          profile,
+          roles,
+        })
+      );
+    }
   }
 
   //////////////////////////////////////////////////////////////////////////////
