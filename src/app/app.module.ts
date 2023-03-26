@@ -12,7 +12,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzButtonModule } from 'ng-zorro-antd/button';
-import { AppInitializerProvider } from './core/app-initializer.service';
+import {
+  AppInitializerProvider,
+  KeycloakInitializerProvider,
+} from './core/app-initializer.service';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzTableModule } from 'ng-zorro-antd/table';
@@ -110,6 +113,7 @@ const ngZorroConfig: NzConfig = {
     NzMenuModule,
   ],
   providers: [
+    KeycloakInitializerProvider,
     AppInitializerProvider,
     { provide: NZ_I18N, useValue: fr_FR },
     { provide: NZ_CONFIG, useValue: ngZorroConfig },

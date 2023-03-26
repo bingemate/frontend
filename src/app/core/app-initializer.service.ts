@@ -8,16 +8,22 @@ import { KeycloakService } from 'keycloak-angular';
 
 export const AppInitializerProvider: Provider = {
   provide: APP_INITIALIZER,
-  useFactory: (store: Store, keycloakService: KeycloakService) => () => {
-    initializeKeycloak(keycloakService);
+  useFactory: (store: Store) => () => {
     store.dispatch(new ThemeAction.Init());
     const isAuth = store.selectSnapshot(AuthState.isAuthenticated);
     if (isAuth) {
       store.dispatch(new AuthActions.GetMe());
     }
   },
-  deps: [Store, ThemeService, KeycloakService],
+  deps: [Store, ThemeService],
   multi: true,
+};
+
+export const KeycloakInitializerProvider: Provider = {
+  provide: APP_INITIALIZER,
+  useFactory: initializeKeycloak,
+  multi: true,
+  deps: [KeycloakService],
 };
 
 function initializeKeycloak(keycloak: KeycloakService) {
