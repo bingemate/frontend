@@ -38,7 +38,6 @@ export class AppComponent implements OnInit {
     this.subscribeForRouterEvents();
     this.subscribeForAuthEvents();
     this.subscribeForThemeEvents();
-    // this.subscribeForActionsNavigation();
     this.isUserLoggedIn().then();
   }
 
@@ -119,15 +118,6 @@ export class AppComponent implements OnInit {
         )?.name ?? 'Accueil';
     });
   }
-
-  // subscribeForActionsNavigation() {
-  //   this.actions.pipe(ofActionSuccessful(AuthActions.Logout)).subscribe(() => {
-  //     this.router.navigate(['/']).then();
-  //   });
-  //   this.actions.pipe(ofActionSuccessful(AuthActions.Login)).subscribe(() => {
-  //     this.router.navigate(['/']).then();
-  //   });
-  // }
 
   readonly chatLink = `${navigationRoot.socialNetwork.path}/${socialNetworkLinks.chat.path}`;
 
