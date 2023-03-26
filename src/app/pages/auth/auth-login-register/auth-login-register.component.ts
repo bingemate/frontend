@@ -23,7 +23,7 @@ export class AuthLoginRegisterComponent implements OnInit {
   login() {
     this.keycloak
       .login({
-        redirectUri: window.location.origin + this.router.url,
+        redirectUri: window.location.origin,
       })
       .then();
   }
