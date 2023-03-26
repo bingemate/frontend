@@ -8,7 +8,7 @@ import { mediasLinks } from './pages/medias/medias-routing.module';
 import { watchlistLinks } from './pages/watchlist/watchlist-routing.module';
 import { statisticsLinks } from './pages/statistics/statistics-routing.module';
 import { NotificationsService } from './core/notifications/notifications.service';
-import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
+import { Actions, Select, Store } from '@ngxs/store';
 import { ThemeAction } from './core/theme/store/theme.actions';
 import { ThemeState } from './core/theme/store/theme.state';
 import { Observable } from 'rxjs';
@@ -74,7 +74,7 @@ export class AppComponent implements OnInit {
       const profile = await this.keycloak.loadUserProfile();
       const roles = this.keycloak.getUserRoles();
       this.store.dispatch(
-        new AuthActions.Login({
+        new AuthActions.LoggedIn({
           profile,
           roles,
         })

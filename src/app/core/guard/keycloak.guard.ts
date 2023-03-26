@@ -1,11 +1,6 @@
 import { Injectable } from '@angular/core';
 import { KeycloakAuthGuard, KeycloakService } from 'keycloak-angular';
-import {
-  ActivatedRouteSnapshot,
-  Router,
-  RouterStateSnapshot,
-  UrlTree,
-} from '@angular/router';
+import { ActivatedRouteSnapshot, Router, UrlTree } from '@angular/router';
 import { NotificationsService } from '../notifications/notifications.service';
 
 @Injectable({
@@ -21,8 +16,7 @@ export class KeycloakGuard extends KeycloakAuthGuard {
   }
 
   async isAccessAllowed(
-    route: ActivatedRouteSnapshot,
-    _state: RouterStateSnapshot
+    route: ActivatedRouteSnapshot
   ): Promise<boolean | UrlTree> {
     // Force the user to log in if currently unauthenticated.
     if (!this.authenticated) {
@@ -30,9 +24,6 @@ export class KeycloakGuard extends KeycloakAuthGuard {
         'Vous devez être connecté pour accéder à ce contenu'
       );
       return false;
-      // await this.keycloak.login({
-      //   redirectUri: window.location.origin + state.url,
-      // });
     }
 
     // Get the roles required from the route.
