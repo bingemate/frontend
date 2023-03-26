@@ -3,6 +3,7 @@ import { ThemeService } from './theme/theme.service';
 import { Store } from '@ngxs/store';
 import { ThemeAction } from './theme/store/theme.actions';
 import { KeycloakService } from 'keycloak-angular';
+import { environment } from '../../environments/environment';
 
 export const AppInitializerProvider: Provider = {
   provide: APP_INITIALIZER,
@@ -34,5 +35,10 @@ function initializeKeycloak(keycloak: KeycloakService) {
           window.location.origin + '/assets/silent-check-sso.html',
       },
       loadUserProfileAtStartUp: true,
+      shouldAddToken: request => {
+        const url = request.url;
+
+        return url.includes(environment.apiUrl) && !url.includes('/public');
+      },
     });
 }
