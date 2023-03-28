@@ -1,9 +1,7 @@
 import { environment as env } from '../../../environments/environment';
 
 export const API_RESOURCE_URI = {
-  // Auth
-  AUTH: `${env.apiUrl}/auth`,
-  AUTH_ME: `${env.apiUrl}/auth/me`,
+  HTTP_BIN: 'https://api.bingemate.fr/test/httpbin',
   // Users
   USERS: `${env.apiUrl}/users`,
   USERS_SEARCH: `${env.apiUrl}/users/search`,

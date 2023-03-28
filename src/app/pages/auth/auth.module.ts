@@ -5,6 +5,9 @@ import { AuthLoginRegisterComponent } from './auth-login-register/auth-login-reg
 import { AuthMyAccountComponent } from './auth-my-account/auth-my-account.component';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { AuthLogoutComponent } from './auth-logout/auth-logout.component';
+import { NzDividerModule } from 'ng-zorro-antd/divider';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzSpaceModule } from 'ng-zorro-antd/space';
 
 @NgModule({
   declarations: [
@@ -12,6 +15,13 @@ import { AuthLogoutComponent } from './auth-logout/auth-logout.component';
     AuthMyAccountComponent,
     AuthLogoutComponent,
   ],
-  imports: [CommonModule, AuthRoutingModule, NzButtonModule],
+  imports: [
+    CommonModule,
+    AuthRoutingModule,
+    NzButtonModule,
+    NzDividerModule,
+    NzFormModule,
+    NzSpaceModule,
+  ],
 })
 export class AuthModule {}
