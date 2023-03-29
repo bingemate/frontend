@@ -49,7 +49,7 @@
     "@angular/cli": "~15.2.4",
     "@angular/compiler-cli": "^15.2.4",
     "@compodoc/compodoc": "^1.1.19",
-    "@ngxs/devtools-plugin": "^3.7.6",
+    "@ngxs/devtools-plugin": "^3.8.0",
     "@typescript-eslint/eslint-plugin": "5.57.0",
     "@typescript-eslint/parser": "5.57.0",
     "eslint": "^8.37.0",
