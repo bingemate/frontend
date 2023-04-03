@@ -50,7 +50,7 @@
     "@angular/compiler-cli": "^15.2.5",
     "@compodoc/compodoc": "^1.1.19",
     "@ngxs/devtools-plugin": "^3.8.0",
-    "@typescript-eslint/eslint-plugin": "5.57.0",
+    "@typescript-eslint/eslint-plugin": "5.57.1",
     "@typescript-eslint/parser": "5.57.0",
     "eslint": "^8.37.0",
     "prettier": "^2.8.7",
