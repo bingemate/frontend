@@ -8,14 +8,15 @@ import { mediasLinks } from './pages/medias/medias-routing.module';
 import { watchlistLinks } from './pages/watchlist/watchlist-routing.module';
 import { statisticsLinks } from './pages/statistics/statistics-routing.module';
 import { NotificationsService } from './core/notifications/notifications.service';
-import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
+import { Actions, Select, Store } from '@ngxs/store';
 import { ThemeAction } from './core/theme/store/theme.actions';
 import { ThemeState } from './core/theme/store/theme.state';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { AuthActions } from './core/auth/store/auth.actions';
 import { AuthState } from './core/auth/store/auth.state';
-import { isMatchingRole, UserModel } from './shared/models/user.models';
+import { isMatchingRoles, UserModel } from './shared/models/user.models';
+import { KeycloakService } from 'keycloak-angular';
 
 @Component({
   selector: 'app-root',
@@ -29,14 +30,15 @@ export class AppComponent implements OnInit {
     private readonly router: Router,
     public readonly notificationsService: NotificationsService,
     private readonly store: Store,
-    private readonly actions: Actions
+    private readonly actions: Actions,
+    private readonly keycloak: KeycloakService
   ) {}
 
   ngOnInit(): void {
     this.subscribeForRouterEvents();
     this.subscribeForAuthEvents();
     this.subscribeForThemeEvents();
-    this.subscribeForActionsNavigation();
+    this.isUserLoggedIn().then();
   }
 
   ////////////////////////////////////////////////////////////////////////////
@@ -64,6 +66,20 @@ export class AppComponent implements OnInit {
       this.user = user;
       this.accountLinks = this._accountLinks();
     });
+  }
+
+  async isUserLoggedIn() {
+    const logged = await this.keycloak.isLoggedIn();
+    if (logged) {
+      const profile = await this.keycloak.loadUserProfile();
+      const roles = this.keycloak.getUserRoles();
+      this.store.dispatch(
+        new AuthActions.LoggedIn({
+          profile,
+          roles,
+        })
+      );
+    }
   }
 
   //////////////////////////////////////////////////////////////////////////////
@@ -103,15 +119,6 @@ export class AppComponent implements OnInit {
     });
   }
 
-  subscribeForActionsNavigation() {
-    this.actions.pipe(ofActionSuccessful(AuthActions.Logout)).subscribe(() => {
-      this.router.navigate(['/']).then();
-    });
-    this.actions.pipe(ofActionSuccessful(AuthActions.Login)).subscribe(() => {
-      this.router.navigate(['/']).then();
-    });
-  }
-
   readonly chatLink = `${navigationRoot.socialNetwork.path}/${socialNetworkLinks.chat.path}`;
 
   accountLinks: Link[] = [];
@@ -120,9 +127,9 @@ export class AppComponent implements OnInit {
     return Object.values(accountLinks)
       .filter(link =>
         this.isAuthenticated
-          ? link.requiredRole !== undefined &&
-            isMatchingRole(this.user, link.requiredRole)
-          : link.requiredRole === undefined
+          ? link.requiredRoles !== undefined &&
+            isMatchingRoles(this.user, link.requiredRoles)
+          : link.requiredRoles === undefined
       )
       .map(link => {
         return { ...link, path: `${navigationRoot.auth.path}/${link.path}` };

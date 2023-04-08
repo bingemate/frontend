@@ -1,12 +1,11 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-import { Role } from './shared/models/user.models';
-import { authGuard } from './core/guard/auth.guard';
+import { KeycloakGuard } from './core/guard/keycloak.guard';
 
 export interface Link {
   path: string;
   name: string;
-  requiredRole?: Role;
+  requiredRoles?: string[];
   icon?: string;
 }
 
@@ -33,13 +32,13 @@ export const navigationRoot: NavigationLinks<
   socialNetwork: {
     path: 'social-network',
     name: 'Réseau social',
-    requiredRole: 'user',
+    requiredRoles: [],
     icon: 'global',
   },
   subscriptions: {
     path: 'subscriptions',
     name: 'Abonnements',
-    requiredRole: 'user',
+    requiredRoles: [],
     icon: 'barcode',
   },
   auth: {
@@ -50,30 +49,30 @@ export const navigationRoot: NavigationLinks<
   medias: {
     path: 'medias',
     name: 'Médias',
-    requiredRole: 'user',
+    requiredRoles: [],
     icon: 'play-square',
   },
   streaming: {
     path: 'streaming',
     name: 'Streaming',
-    requiredRole: 'user',
+    requiredRoles: [],
   },
   watchlist: {
     path: 'watchlist',
     name: 'Suivies',
-    requiredRole: 'user',
+    requiredRoles: [],
     icon: 'unordered-list',
   },
   statistics: {
     path: 'statistics',
     name: 'Statistiques',
-    requiredRole: 'user',
+    requiredRoles: [],
     icon: 'line-chart',
   },
   settings: {
     path: 'settings',
     name: 'Paramètres',
-    requiredRole: 'user',
+    requiredRoles: [],
     icon: 'setting',
   },
 };
@@ -96,7 +95,10 @@ const routes: Routes = [
       import('./pages/social-network/social-network.module').then(
         m => m.SocialNetworkModule
       ),
-    canActivate: [authGuard],
+    canActivate: [KeycloakGuard],
+    data: {
+      requiredRoles: navigationRoot.socialNetwork.requiredRoles,
+    },
   },
   {
     path: navigationRoot.subscriptions.path,
@@ -104,25 +106,37 @@ const routes: Routes = [
       import('./pages/subscription/subscription.module').then(
         m => m.SubscriptionModule
       ),
-    canActivate: [authGuard],
+    canActivate: [KeycloakGuard],
+    data: {
+      requiredRoles: navigationRoot.subscriptions.requiredRoles,
+    },
   },
   {
     path: navigationRoot.medias.path,
     loadChildren: () =>
       import('./pages/medias/medias.module').then(m => m.MediasModule),
-    canActivate: [authGuard],
+    canActivate: [KeycloakGuard],
+    data: {
+      requiredRoles: navigationRoot.medias.requiredRoles,
+    },
   },
   {
     path: navigationRoot.streaming.path,
     loadChildren: () =>
       import('./pages/streaming/streaming.module').then(m => m.StreamingModule),
-    canActivate: [authGuard],
+    canActivate: [KeycloakGuard],
+    data: {
+      requiredRoles: navigationRoot.streaming.requiredRoles,
+    },
   },
   {
     path: navigationRoot.watchlist.path,
     loadChildren: () =>
       import('./pages/watchlist/watchlist.module').then(m => m.WatchlistModule),
-    canActivate: [authGuard],
+    canActivate: [KeycloakGuard],
+    data: {
+      requiredRoles: navigationRoot.watchlist.requiredRoles,
+    },
   },
   {
     path: navigationRoot.statistics.path,
@@ -130,7 +144,10 @@ const routes: Routes = [
       import('./pages/statistics/statistics.module').then(
         m => m.StatisticsModule
       ),
-    canActivate: [authGuard],
+    canActivate: [KeycloakGuard],
+    data: {
+      requiredRoles: navigationRoot.statistics.requiredRoles,
+    },
   },
 ];
 

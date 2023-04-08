@@ -12,7 +12,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzButtonModule } from 'ng-zorro-antd/button';
-import { AppInitializerProvider } from './core/app-initializer.service';
+import {
+  AppInitializerProvider,
+  KeycloakInitializerProvider,
+} from './core/app-initializer.service';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzTableModule } from 'ng-zorro-antd/table';
@@ -38,6 +41,7 @@ import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { NzListModule } from 'ng-zorro-antd/list';
 import { AuthState } from './core/auth/store/auth.state';
+import { KeycloakAngularModule } from 'keycloak-angular';
 
 registerLocaleData(fr);
 
@@ -53,6 +57,7 @@ const ngZorroConfig: NzConfig = {
     CoreModule,
     BrowserModule,
     AppRoutingModule,
+    KeycloakAngularModule,
     FormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
@@ -89,7 +94,7 @@ const ngZorroConfig: NzConfig = {
     }),*/
     // LocalStorage Ngxs State, persist at refresh and browser close
     NgxsStoragePluginModule.forRoot({
-      key: [ThemeState, AuthState],
+      key: [ThemeState],
       storage: StorageOption.LocalStorage,
       afterDeserialize(obj: unknown, key: string): unknown {
         if (!environment.production) {
@@ -108,6 +113,7 @@ const ngZorroConfig: NzConfig = {
     NzMenuModule,
   ],
   providers: [
+    KeycloakInitializerProvider,
     AppInitializerProvider,
     { provide: NZ_I18N, useValue: fr_FR },
     { provide: NZ_CONFIG, useValue: ngZorroConfig },

@@ -7,7 +7,6 @@ import { HttpErrorInterceptor } from './http-interceptors/http-error.interceptor
 import { NzNotificationModule } from 'ng-zorro-antd/notification';
 import { ThemeService } from './theme/theme.service';
 import { FeaturesModule } from '../feature/features.module';
-import { HttpAuthTokenInterceptor } from './http-interceptors/http-auth-token.interceptor';
 
 @NgModule({
   declarations: [],
@@ -15,11 +14,6 @@ import { HttpAuthTokenInterceptor } from './http-interceptors/http-auth-token.in
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpErrorInterceptor,
-      multi: true,
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: HttpAuthTokenInterceptor,
       multi: true,
     },
     {

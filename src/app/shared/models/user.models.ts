@@ -3,9 +3,8 @@ export interface UserModel {
   username: string;
   firstname: string;
   lastname: string;
-  birthdate: Date;
   email: string;
-  role: Role;
+  roles: string[];
 }
 
 export interface UserAPIResponse {
@@ -13,15 +12,18 @@ export interface UserAPIResponse {
   username: string;
   firstname: string;
   lastname: string;
-  birthdate: Date;
   email: string;
-  role: Role;
+  roles: string[];
 }
 
-export type Role = 'admin' | 'user';
-
-export function isMatchingRole(user: UserModel | null, role?: Role): boolean {
-  return user?.role === role || user?.role === 'admin';
+export function isMatchingRoles(
+  user: UserModel | null,
+  requiredRoles: string[]
+): boolean {
+  return (
+    user?.roles.includes('admin') ||
+    requiredRoles.every(requiredRole => user?.roles.includes(requiredRole))
+  );
 }
 
 export function toUserModel(response: UserAPIResponse): UserModel {
@@ -30,9 +32,8 @@ export function toUserModel(response: UserAPIResponse): UserModel {
     username: response.username,
     firstname: response.firstname,
     lastname: response.lastname,
-    birthdate: response.birthdate,
     email: response.email,
-    role: response.role,
+    roles: response.roles,
   };
 }
 
@@ -42,9 +43,8 @@ export function toUserAPIResponse(model: UserModel): UserAPIResponse {
     username: model.username,
     firstname: model.firstname,
     lastname: model.lastname,
-    birthdate: model.birthdate,
     email: model.email,
-    role: model.role,
+    roles: model.roles,
   };
 }
 

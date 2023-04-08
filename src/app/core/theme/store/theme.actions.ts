@@ -1,6 +1,7 @@
 export namespace ThemeAction {
   export class Update {
     static readonly type = '[Theme] Update Theme';
+
     constructor(public theme: string) {}
   }
 
