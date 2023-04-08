@@ -37,7 +37,7 @@ export class AuthMyAccountComponent implements OnInit {
           'Content-Type': 'application/json',
         },
       })
-      .subscribe((response: any) => {
+      .subscribe((response: unknown) => {
         this.httpbinResponse = JSON.stringify(response, null, 2);
       });
   }
