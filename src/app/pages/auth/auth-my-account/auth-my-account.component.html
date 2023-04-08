@@ -1,1 +1,19 @@
-<p>my-account works!</p>
+<h2>Keycloak Account info</h2>
+<p>ID : {{ user?.id }}</p>
+<p>Username : {{ user?.username }}</p>
+<p>Email : {{ user?.email }}</p>
+<p>First Name : {{ user?.firstname }}</p>
+<p>Last Name : {{ user?.lastname }}</p>
+<p>Role : {{ user?.roles?.join(' | ') }}</p>
+
+<nz-divider></nz-divider>
+<h2>Http Bin</h2>
+
+<nz-space nzDirection="vertical" nzSize="large">
+  <button *nzSpaceItem nz-button nzType="primary" (click)="getHttpBin()">
+    Get Http Bin
+  </button>
+  <code *nzSpaceItem style="white-space: pre">
+    {{ httpbinResponse }}
+  </code>
+</nz-space>

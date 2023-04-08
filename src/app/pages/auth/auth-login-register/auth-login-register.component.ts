@@ -1,23 +1,29 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngxs/store';
-import { AuthActions } from '../../../core/auth/store/auth.actions';
+import { KeycloakService } from 'keycloak-angular';
 
 @Component({
   selector: 'app-auth-login-register',
   templateUrl: './auth-login-register.component.html',
   styleUrls: ['./auth-login-register.component.less'],
 })
-export class AuthLoginRegisterComponent {
-  loginMode = true;
+export class AuthLoginRegisterComponent implements OnInit {
+  constructor(
+    private router: Router,
+    private readonly store: Store,
+    private keycloak: KeycloakService
+  ) {}
 
-  constructor(router: Router, private readonly store: Store) {
-    this.loginMode = router.url.includes('login');
+  ngOnInit(): void {
+    this.login();
   }
 
   login() {
-    this.store.dispatch(
-      new AuthActions.Login({ email: 'jon@example.com', password: '123456' })
-    );
+    this.keycloak
+      .login({
+        redirectUri: window.location.origin,
+      })
+      .then();
   }
 }

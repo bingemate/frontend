@@ -4,4 +4,10 @@ export type EnvironmentType = {
   envName: string;
   appVersion: string;
   apiUrl: string;
+
+  auth: {
+    clientId: string;
+    realm: string;
+    url: string;
+  };
 };
