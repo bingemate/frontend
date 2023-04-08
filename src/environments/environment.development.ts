@@ -8,9 +8,9 @@ export const environment: EnvironmentType = {
   appName: 'Binge Mate',
   envName: 'DEV',
   appVersion: packageJson.version,
-  apiUrl: 'https://api-dev.bingemate.fr',
+  apiUrl: 'https://api.bingemate.fr',
   auth: {
-    clientId: 'angular-frontend',
+    clientId: 'angular-dev-frontend',
     realm: 'bingemate-dev',
     url: 'https://auth.bingemate.fr',
   },
