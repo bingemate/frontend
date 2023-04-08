@@ -4,13 +4,13 @@ on:
   push:
     branches:
       - main
-      - -dev
+      - dev
 
 permissions:
   contents: read
   pages: write
   id-token: write
-  
+
 jobs:
   build-and-deploy:
     if: startsWith(github.event.head_commit.message, 'doc:') || startsWith(github.event.head_commit.message, 'docs:')
