@@ -8,7 +8,7 @@ import { NzNotificationModule } from 'ng-zorro-antd/notification';
 import { ThemeService } from './theme/theme.service';
 import { FeaturesModule } from '../feature/features.module';
 import { environment } from '../../environments/environment';
-import { LocalHttpAuthInterceptor } from "./http-interceptors/auth-http.interceptor";
+import { LocalHttpAuthInterceptor } from './http-interceptors/auth-http.interceptor';
 
 @NgModule({
   declarations: [],

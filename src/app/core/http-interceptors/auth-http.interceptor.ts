@@ -7,7 +7,7 @@ import {
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Store } from '@ngxs/store';
-import { AuthState } from "../auth/store/auth.state";
+import { AuthState } from '../auth/store/auth.state';
 
 /** Passes user id in headers in local */
 @Injectable()
