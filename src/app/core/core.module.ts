@@ -7,10 +7,21 @@ import { HttpErrorInterceptor } from './http-interceptors/http-error.interceptor
 import { NzNotificationModule } from 'ng-zorro-antd/notification';
 import { ThemeService } from './theme/theme.service';
 import { FeaturesModule } from '../feature/features.module';
+import { environment } from '../../environments/environment';
+import { LocalHttpAuthInterceptor } from "./http-interceptors/auth-http.interceptor";
 
 @NgModule({
   declarations: [],
   providers: [
+    ...[
+      environment.envName === 'LOCAL'
+        ? {
+            provide: HTTP_INTERCEPTORS,
+            useClass: LocalHttpAuthInterceptor,
+            multi: true,
+          }
+        : [],
+    ],
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpErrorInterceptor,
