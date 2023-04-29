@@ -7,8 +7,10 @@ import {
   PlaylistItem,
   PlaylistItemsApiResponse,
   PlaylistsApiResponse,
-  toPlaylistItems, toPlaylists
-} from "../../shared/models/playlist.model";
+  toPlaylistItems,
+  toPlaylists,
+} from '../../shared/models/playlist.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class PlaylistsService {
@@ -16,18 +18,30 @@ export class PlaylistsService {
 
   getPlaylistItems(playlistId: string): Observable<PlaylistItem[]> {
     return this.http
-      .get<PlaylistItemsApiResponse>(`http://localhost:3000/playlist/${playlistId}`)
+      .get<PlaylistItemsApiResponse>(
+        `${environment.apiUrl}/playlist/${playlistId}`
+      )
       .pipe(map(response => toPlaylistItems(response)));
   }
 
   getPlaylists(userId: string): Observable<Playlist[]> {
     return this.http
-      .get<PlaylistsApiResponse>(`http://localhost:3000/playlist/user/${userId}`)
+      .get<PlaylistsApiResponse>(
+        `${environment.apiUrl}/playlist/user/${userId}`
+      )
       .pipe(map(response => toPlaylists(response)));
   }
 
+  deletePlaylist(playlistId: string): Observable<void> {
+    return this.http.delete<void>(
+      `${environment.apiUrl}/playlist/${playlistId}`
+    );
+  }
+
   createPlaylist(createPlaylist: CreatePlaylistApiRequest): Observable<string> {
-    return this.http
-      .post<string>("https://jsonplaceholder.typicode.com/albums", createPlaylist);
+    return this.http.post<string>(
+      `${environment.apiUrl}/playlist`,
+      createPlaylist
+    );
   }
 }

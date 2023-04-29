@@ -21,6 +21,9 @@ import { PlaylistComponent } from './playlist/playlist.component';
 import { CdkDrag, CdkDropList } from "@angular/cdk/drag-drop";
 import { NzModalModule } from "ng-zorro-antd/modal";
 import { NzButtonModule } from "ng-zorro-antd/button";
+import { FormsModule } from "@angular/forms";
+import { NzInputModule } from "ng-zorro-antd/input";
+import { NzIconModule } from "ng-zorro-antd/icon";
 
 @NgModule({
   declarations: [
@@ -49,7 +52,10 @@ import { NzButtonModule } from "ng-zorro-antd/button";
     CdkDrag,
     NgOptimizedImage,
     NzModalModule,
-    NzButtonModule
+    NzButtonModule,
+    FormsModule,
+    NzInputModule,
+    NzIconModule
   ]
 })
 export class WatchlistModule {}

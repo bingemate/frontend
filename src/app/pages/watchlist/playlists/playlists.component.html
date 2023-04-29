@@ -28,17 +28,29 @@
 </nz-list>
 <nz-modal
   [(nzVisible)]="isPlaylistShown"
-  nzTitle="Custom Modal Title"
+  nzTitle="Créer une nouvelle playlist"
   (nzOnCancel)="closeModal()">
   <div *nzModalContent>
-    <p>Modal Content</p>
-    <p>Modal Content</p>
+    <nz-input-group [nzSuffix]="inputClearTpl">
+      <input type="text" nz-input [(ngModel)]="playlistName" placeholder="input with clear icon" />
+    </nz-input-group>
+    <ng-template #inputClearTpl>
+      <span
+        nz-icon
+        class="ant-input-clear-icon"
+        nzTheme="fill"
+        nzType="close-circle"
+        *ngIf="playlistName"
+        (click)="playlistName = undefined"
+      ></span>
+    </ng-template>
   </div>
   <div *nzModalFooter>
     <button nz-button nzType="default" (click)="closeModal()">Annuler</button>
     <button
       nz-button
       nzType="primary"
+      [disabled]="!playlistName || playlistName.length === 0"
       (click)="createPlaylist()"
       [nzLoading]="isConfirmLoading">
       Créer
