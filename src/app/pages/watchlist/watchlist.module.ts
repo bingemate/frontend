@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from "@angular/common";
 import { WatchlistRoutingModule } from './watchlist-routing.module';
 import { WatchlistComponent } from './watchtlist/watchlist.component';
 import { WatchtlistCalendarComponent } from './watchtlist-calendar/watchtlist-calendar.component';
@@ -12,13 +12,28 @@ import { NzGridModule } from 'ng-zorro-antd/grid';
 import { SharedModule } from '../../shared/shared.module';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
+import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
+import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
+import { PlaylistsComponent } from './playlists/playlists.component';
+import { NzListModule } from 'ng-zorro-antd/list';
+import { NzSkeletonModule } from 'ng-zorro-antd/skeleton';
+import { PlaylistComponent } from './playlist/playlist.component';
+import { CdkDrag, CdkDropList } from "@angular/cdk/drag-drop";
+import { NzModalModule } from "ng-zorro-antd/modal";
+import { NzButtonModule } from "ng-zorro-antd/button";
 
 @NgModule({
-  declarations: [WatchlistComponent, WatchtlistCalendarComponent],
+  declarations: [
+    WatchlistComponent,
+    WatchtlistCalendarComponent,
+    PlaylistsComponent,
+    PlaylistComponent,
+  ],
   imports: [
     CommonModule,
     WatchlistRoutingModule,
     NzPageHeaderModule,
+    NzBreadCrumbModule,
     NzCalendarModule,
     NzBadgeModule,
     NzPopoverModule,
@@ -27,6 +42,14 @@ import { NzTypographyModule } from 'ng-zorro-antd/typography';
     SharedModule,
     NzSpaceModule,
     NzTypographyModule,
-  ],
+    NzDropDownModule,
+    NzListModule,
+    NzSkeletonModule,
+    CdkDropList,
+    CdkDrag,
+    NgOptimizedImage,
+    NzModalModule,
+    NzButtonModule
+  ]
 })
 export class WatchlistModule {}

@@ -1,0 +1,36 @@
+<nz-breadcrumb>
+  <nz-breadcrumb-item>
+    <a [routerLink]="['..']">Playlists</a>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item [nzOverlay]="menu">Test</nz-breadcrumb-item>
+</nz-breadcrumb>
+<nz-dropdown-menu #menu="nzDropdownMenu">
+  <ul nz-menu nzSelectable>
+    <li
+      *ngFor="let playlist of playlists"
+      nz-menu-item
+      [nzSelected]="playlist.id === 'id'"
+      [routerLink]="['..', playlist.id]">
+      {{ playlist.name }}
+    </li>
+  </ul>
+</nz-dropdown-menu>
+<nz-list
+  nzItemLayout="vertical"
+  [nzLoading]="false"
+  cdkDropList
+  (cdkDropListDropped)="itemMoved($event)">
+  <nz-list-item *ngFor="let item of playlistItems" cdkDrag>
+    <nz-list-item-meta>
+      <nz-list-item-meta-title>
+      <img width="160" height="90" alt="logo"
+           ngSrc="https://thumbor.comeup.com/unsafe/fit-in/630x354/filters:quality(90):no_upscale()/uploads/media/picture/2022-01-10/miniature-youtube-5-euros-61db6e98249f3.png" />
+        <a href="https://ng.ant.design">{{ item.mediaId }}</a>
+      </nz-list-item-meta-title>
+    </nz-list-item-meta>
+    <ul nz-list-item-actions>
+      <nz-list-item-action><a>Supprimer</a></nz-list-item-action>
+    </ul>
+  </nz-list-item>
+  <nz-list-empty *ngIf="playlists.length === 0" nzNoResult="Aucun média"></nz-list-empty>
+</nz-list>
