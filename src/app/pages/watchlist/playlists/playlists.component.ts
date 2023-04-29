@@ -46,4 +46,8 @@ export class PlaylistsComponent implements OnInit {
         this.closeModal();
       });
   }
+
+  deletePlaylist(id: string) {
+    this.store.dispatch(new PlaylistsActions.DeletePlaylist(id));
+  }
 }

@@ -6,6 +6,7 @@ export namespace PlaylistsActions {
   }
   export class DeletePlaylist {
     static readonly type = '[Playlists] Delete Playlist';
+    constructor(public payload: string) {}
   }
   export class CreatePlaylist {
     static readonly type = '[Playlists] Create Playlist';
