@@ -7,11 +7,11 @@
 <nz-dropdown-menu #menu="nzDropdownMenu">
   <ul nz-menu nzSelectable>
     <li
-      *ngFor="let playlist of playlists"
+      *ngFor="let playlistItem of (playlists$|async)"
       nz-menu-item
-      [nzSelected]="playlist.id === 'id'"
-      [routerLink]="['..', playlist.id]">
-      {{ playlist.name }}
+      [nzSelected]="playlistItem.id === playlist?.id"
+      [routerLink]="['..', playlistItem.id]">
+      {{ playlistItem.name }}
     </li>
   </ul>
 </nz-dropdown-menu>
@@ -20,7 +20,7 @@
   [nzLoading]="false"
   cdkDropList
   (cdkDropListDropped)="itemMoved($event)">
-  <nz-list-item *ngFor="let item of playlistItems" cdkDrag>
+  <nz-list-item *ngFor="let item of playlist?.items" cdkDrag>
     <nz-list-item-meta>
       <nz-list-item-meta-title>
       <img width="160" height="90" alt="logo"
@@ -32,5 +32,5 @@
       <nz-list-item-action><a>Supprimer</a></nz-list-item-action>
     </ul>
   </nz-list-item>
-  <nz-list-empty *ngIf="playlists.length === 0" nzNoResult="Aucun média"></nz-list-empty>
+  <nz-list-empty *ngIf="(playlists$|async)?.length === 0" nzNoResult="Aucun média"></nz-list-empty>
 </nz-list>

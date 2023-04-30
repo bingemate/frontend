@@ -4,12 +4,12 @@ import { PlaylistsService } from '../playlists.service';
 
 import { tap } from 'rxjs/operators';
 import { PlaylistsActions } from './playlists.actions';
-import {
-  PlaylistStateModel,
-} from '../../../shared/models/playlist.model';
+import { PlaylistStateModel } from '../../../shared/models/playlist.model';
 import CreatePlaylist = PlaylistsActions.CreatePlaylist;
 import DeletePlaylist = PlaylistsActions.DeletePlaylist;
 import GetUserPlaylists = PlaylistsActions.GetUserPlaylists;
+import GetPlaylistItems = PlaylistsActions.GetPlaylistItems;
+import { map } from "rxjs";
 
 @State<PlaylistStateModel>({
   name: 'playlists',
@@ -27,7 +27,10 @@ export class PlaylistsState {
   }
 
   @Action(PlaylistsActions.GetUserPlaylists)
-  getUserPlaylists(ctx: StateContext<PlaylistStateModel>, userId: GetUserPlaylists) {
+  getUserPlaylists(
+    ctx: StateContext<PlaylistStateModel>,
+    userId: GetUserPlaylists
+  ) {
     return this.playlistsService.getPlaylists(userId.payload).pipe(
       tap(playlists => {
         console.log(playlists);
@@ -38,7 +41,10 @@ export class PlaylistsState {
     );
   }
   @Action(PlaylistsActions.DeletePlaylist)
-  deletePlaylist(ctx: StateContext<PlaylistStateModel>, playlistId: DeletePlaylist) {
+  deletePlaylist(
+    ctx: StateContext<PlaylistStateModel>,
+    playlistId: DeletePlaylist
+  ) {
     const playlists = ctx
       .getState()
       .playlists.filter(playlist => playlist.id !== playlistId.payload);
@@ -64,6 +70,32 @@ export class PlaylistsState {
               id: playlistId.id,
               name: createPlaylist.payload.name,
               userId: '',
+            },
+          ],
+        });
+      })
+    );
+  }
+  @Action(PlaylistsActions.GetPlaylistItems)
+  getPlaylistItems(
+    ctx: StateContext<PlaylistStateModel>,
+    playlistId: GetPlaylistItems
+  ) {
+    return this.playlistsService.getPlaylistItems(playlistId.payload).pipe(
+      map(items => {
+        const playlist = ctx
+          .getState()
+          .playlists.find(playlist => playlist.id === playlistId.payload)!;
+        const playlists = ctx
+          .getState()
+          .playlists.filter(playlist => playlist.id !== playlistId.payload)!;
+
+        ctx.patchState({
+          playlists: [
+            ...playlists,
+            {
+              ...playlist,
+              items,
             },
           ],
         });
