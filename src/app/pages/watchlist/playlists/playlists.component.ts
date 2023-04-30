@@ -4,6 +4,7 @@ import { Observable } from "rxjs";
 import { Playlist } from "../../../shared/models/playlist.model";
 import { PlaylistsState } from "../../../feature/playlist/store/playlists.state";
 import { PlaylistsActions } from "../../../feature/playlist/store/playlists.actions";
+import { AuthState } from "../../../core/auth/store/auth.state";
 
 @Component({
   selector: "app-playlists",
@@ -13,13 +14,6 @@ import { PlaylistsActions } from "../../../feature/playlist/store/playlists.acti
 export class PlaylistsComponent implements OnInit {
   @Select(PlaylistsState.playlists) playlists$!: Observable<Playlist[]>;
 
-  playlists: Playlist[] = [
-    {
-      name: "Test",
-      userId: "id",
-      id: "id"
-    }
-  ];
   isPlaylistShown: boolean = false;
   isConfirmLoading: boolean = false;
   playlistName: string | undefined;
@@ -28,6 +22,8 @@ export class PlaylistsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    const userId = this.store.selectSnapshot(AuthState.user)?.id;
+    this.store.dispatch(new PlaylistsActions.GetUserPlaylists(userId!));
   }
 
   showModal(): void {

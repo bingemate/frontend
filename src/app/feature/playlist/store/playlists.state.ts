@@ -5,9 +5,11 @@ import { PlaylistsService } from '../playlists.service';
 import { tap } from 'rxjs/operators';
 import { PlaylistsActions } from './playlists.actions';
 import {
-  CreatePlaylistApiRequest,
   PlaylistStateModel,
 } from '../../../shared/models/playlist.model';
+import CreatePlaylist = PlaylistsActions.CreatePlaylist;
+import DeletePlaylist = PlaylistsActions.DeletePlaylist;
+import GetUserPlaylists = PlaylistsActions.GetUserPlaylists;
 
 @State<PlaylistStateModel>({
   name: 'playlists',
@@ -25,9 +27,10 @@ export class PlaylistsState {
   }
 
   @Action(PlaylistsActions.GetUserPlaylists)
-  getUserPlaylists(ctx: StateContext<PlaylistStateModel>, userId: string) {
-    return this.playlistsService.getPlaylists(userId).pipe(
+  getUserPlaylists(ctx: StateContext<PlaylistStateModel>, userId: GetUserPlaylists) {
+    return this.playlistsService.getPlaylists(userId.payload).pipe(
       tap(playlists => {
+        console.log(playlists);
         ctx.patchState({
           playlists,
         });
@@ -35,11 +38,11 @@ export class PlaylistsState {
     );
   }
   @Action(PlaylistsActions.DeletePlaylist)
-  deletePlaylist(ctx: StateContext<PlaylistStateModel>, playlistId: string) {
+  deletePlaylist(ctx: StateContext<PlaylistStateModel>, playlistId: DeletePlaylist) {
     const playlists = ctx
       .getState()
-      .playlists.filter(playlist => playlist.id !== playlistId);
-    return this.playlistsService.deletePlaylist(playlistId).pipe(
+      .playlists.filter(playlist => playlist.id !== playlistId.payload);
+    return this.playlistsService.deletePlaylist(playlistId.payload).pipe(
       tap(() => {
         ctx.patchState({
           playlists,
@@ -50,16 +53,16 @@ export class PlaylistsState {
   @Action(PlaylistsActions.CreatePlaylist)
   createPlaylist(
     ctx: StateContext<PlaylistStateModel>,
-    playlistApiRequest: CreatePlaylistApiRequest
+    createPlaylist: CreatePlaylist
   ) {
-    return this.playlistsService.createPlaylist(playlistApiRequest).pipe(
+    return this.playlistsService.createPlaylist(createPlaylist.payload).pipe(
       tap(playlistId => {
         ctx.patchState({
           playlists: [
             ...ctx.getState().playlists,
             {
-              id: playlistId,
-              name: playlistApiRequest.name,
+              id: playlistId.id,
+              name: createPlaylist.payload.name,
               userId: '',
             },
           ],

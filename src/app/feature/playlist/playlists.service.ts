@@ -3,13 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 import {
   CreatePlaylistApiRequest,
-  Playlist,
+  Playlist, PlaylistIdDto,
   PlaylistItem,
   PlaylistItemsApiResponse,
   PlaylistsApiResponse,
   toPlaylistItems,
-  toPlaylists,
-} from '../../shared/models/playlist.model';
+  toPlaylists
+} from "../../shared/models/playlist.model";
 import { environment } from '../../../environments/environment';
 
 @Injectable()
@@ -38,8 +38,8 @@ export class PlaylistsService {
     );
   }
 
-  createPlaylist(createPlaylist: CreatePlaylistApiRequest): Observable<string> {
-    return this.http.post<string>(
+  createPlaylist(createPlaylist: CreatePlaylistApiRequest): Observable<PlaylistIdDto> {
+    return this.http.post<PlaylistIdDto>(
       `${environment.apiUrl}/playlist`,
       createPlaylist
     );

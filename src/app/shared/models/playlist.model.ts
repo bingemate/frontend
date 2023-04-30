@@ -35,6 +35,10 @@ export interface CreatePlaylistApiRequest {
   name: string;
 }
 
+export interface PlaylistIdDto {
+  id: string;
+}
+
 export function toPlaylists(playlist: PlaylistsApiResponse): Playlist[] {
   return playlist.items.map(toPlaylist);
 }
