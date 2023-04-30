@@ -9,7 +9,7 @@ import CreatePlaylist = PlaylistsActions.CreatePlaylist;
 import DeletePlaylist = PlaylistsActions.DeletePlaylist;
 import GetUserPlaylists = PlaylistsActions.GetUserPlaylists;
 import GetPlaylistItems = PlaylistsActions.GetPlaylistItems;
-import { map } from "rxjs";
+import ReorderPlaylistItems = PlaylistsActions.ReorderPlaylistItems;
 
 @State<PlaylistStateModel>({
   name: 'playlists',
@@ -82,7 +82,7 @@ export class PlaylistsState {
     playlistId: GetPlaylistItems
   ) {
     return this.playlistsService.getPlaylistItems(playlistId.payload).pipe(
-      map(items => {
+      tap(items => {
         const playlist = ctx
           .getState()
           .playlists.find(playlist => playlist.id === playlistId.payload)!;
@@ -101,5 +101,33 @@ export class PlaylistsState {
         });
       })
     );
+  }
+  @Action(PlaylistsActions.ReorderPlaylistItems)
+  reorderPlaylist(
+    ctx: StateContext<PlaylistStateModel>,
+    reorderPlaylist: ReorderPlaylistItems
+  ) {
+    return this.playlistsService
+      .updatePlaylistOrder(reorderPlaylist.id, {
+        items: reorderPlaylist.playlistItems,
+      })
+      .pipe(
+        tap(() => {
+          let playlist = ctx
+            .getState()
+            .playlists.find(playlist => playlist.id === reorderPlaylist.id)!;
+          const playlists = ctx
+            .getState()
+            .playlists.filter(playlist => playlist.id !== reorderPlaylist.id)!;
+          playlist = {
+            ...playlist,
+            items: reorderPlaylist.playlistItems,
+          };
+
+          ctx.patchState({
+            playlists: [...playlists, playlist],
+          });
+        })
+      );
   }
 }

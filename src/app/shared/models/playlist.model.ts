@@ -35,6 +35,10 @@ export interface CreatePlaylistApiRequest {
   name: string;
 }
 
+export interface UpdatePlaylistOrderApiRequest {
+  items: PlaylistItem[];
+}
+
 export interface PlaylistIdDto {
   id: string;
 }

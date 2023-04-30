@@ -8,7 +8,7 @@ import {
   PlaylistItemsApiResponse,
   PlaylistsApiResponse,
   toPlaylistItems,
-  toPlaylists
+  toPlaylists, UpdatePlaylistOrderApiRequest
 } from "../../shared/models/playlist.model";
 import { environment } from '../../../environments/environment';
 
@@ -42,6 +42,13 @@ export class PlaylistsService {
     return this.http.post<PlaylistIdDto>(
       `${environment.apiUrl}/playlist`,
       createPlaylist
+    );
+  }
+
+  updatePlaylistOrder(playlistId: string, playlistItems: UpdatePlaylistOrderApiRequest): Observable<void> {
+    return this.http.put<void>(
+      `${environment.apiUrl}/playlist/${playlistId}`,
+      playlistItems
     );
   }
 }
