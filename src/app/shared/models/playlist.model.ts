@@ -55,11 +55,15 @@ export function toPlaylist(playlistItem: PlaylistApiResponse): Playlist {
   };
 }
 
-export function toPlaylistItems(playlist: PlaylistItemsApiResponse): PlaylistItem[] {
+export function toPlaylistItems(
+  playlist: PlaylistItemsApiResponse
+): PlaylistItem[] {
   return playlist.items.map(toPlaylistItem);
 }
 
-export function toPlaylistItem(playlistItem: PlaylistItemApiResponse): PlaylistItem {
+export function toPlaylistItem(
+  playlistItem: PlaylistItemApiResponse
+): PlaylistItem {
   return {
     mediaId: playlistItem.mediaId,
   };

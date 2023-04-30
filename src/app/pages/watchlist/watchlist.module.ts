@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule, NgOptimizedImage } from "@angular/common";
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { WatchlistRoutingModule } from './watchlist-routing.module';
 import { WatchlistComponent } from './watchtlist/watchlist.component';
 import { WatchtlistCalendarComponent } from './watchtlist-calendar/watchtlist-calendar.component';
@@ -18,12 +18,12 @@ import { PlaylistsComponent } from './playlists/playlists.component';
 import { NzListModule } from 'ng-zorro-antd/list';
 import { NzSkeletonModule } from 'ng-zorro-antd/skeleton';
 import { PlaylistComponent } from './playlist/playlist.component';
-import { CdkDrag, CdkDropList } from "@angular/cdk/drag-drop";
-import { NzModalModule } from "ng-zorro-antd/modal";
-import { NzButtonModule } from "ng-zorro-antd/button";
-import { FormsModule } from "@angular/forms";
-import { NzInputModule } from "ng-zorro-antd/input";
-import { NzIconModule } from "ng-zorro-antd/icon";
+import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { FormsModule } from '@angular/forms';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 
 @NgModule({
   declarations: [
@@ -55,7 +55,7 @@ import { NzIconModule } from "ng-zorro-antd/icon";
     NzButtonModule,
     FormsModule,
     NzInputModule,
-    NzIconModule
-  ]
+    NzIconModule,
+  ],
 })
 export class WatchlistModule {}

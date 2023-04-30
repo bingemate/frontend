@@ -61,20 +61,22 @@ export class PlaylistsState {
     ctx: StateContext<PlaylistStateModel>,
     payload: CreatePlaylist
   ) {
-    return this.playlistsService.createPlaylist(payload.createPlaylistApiRequest).pipe(
-      tap(playlistId => {
-        ctx.patchState({
-          playlists: [
-            ...ctx.getState().playlists,
-            {
-              id: playlistId.id,
-              name: payload.createPlaylistApiRequest.name,
-              userId: '',
-            },
-          ],
-        });
-      })
-    );
+    return this.playlistsService
+      .createPlaylist(payload.createPlaylistApiRequest)
+      .pipe(
+        tap(playlistId => {
+          ctx.patchState({
+            playlists: [
+              ...ctx.getState().playlists,
+              {
+                id: playlistId.id,
+                name: payload.createPlaylistApiRequest.name,
+                userId: '',
+              },
+            ],
+          });
+        })
+      );
   }
   @Action(PlaylistsActions.GetPlaylistItems)
   getPlaylistItems(

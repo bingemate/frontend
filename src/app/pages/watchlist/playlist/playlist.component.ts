@@ -36,7 +36,7 @@ export class PlaylistComponent implements OnInit {
     if (!this.playlist || !this.playlist.items) {
       return;
     }
-    let items = [...this.playlist.items];
+    const items = [...this.playlist.items];
     moveItemInArray(items, event.previousIndex, event.currentIndex);
     this.store
       .dispatch(new ReorderPlaylistItems(this.playlist.id, items))

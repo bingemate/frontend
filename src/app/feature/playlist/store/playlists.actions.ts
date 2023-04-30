@@ -1,4 +1,7 @@
-import { CreatePlaylistApiRequest, PlaylistItem } from "../../../shared/models/playlist.model";
+import {
+  CreatePlaylistApiRequest,
+  PlaylistItem,
+} from '../../../shared/models/playlist.model';
 
 export namespace PlaylistsActions {
   export class GetUserPlaylists {
