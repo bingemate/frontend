@@ -29,9 +29,9 @@ export class PlaylistsState {
   @Action(PlaylistsActions.GetUserPlaylists)
   getUserPlaylists(
     ctx: StateContext<PlaylistStateModel>,
-    userId: GetUserPlaylists
+    payload: GetUserPlaylists
   ) {
-    return this.playlistsService.getPlaylists(userId.payload).pipe(
+    return this.playlistsService.getPlaylists(payload.userId).pipe(
       tap(playlists => {
         console.log(playlists);
         ctx.patchState({
@@ -43,12 +43,12 @@ export class PlaylistsState {
   @Action(PlaylistsActions.DeletePlaylist)
   deletePlaylist(
     ctx: StateContext<PlaylistStateModel>,
-    playlistId: DeletePlaylist
+    payload: DeletePlaylist
   ) {
     const playlists = ctx
       .getState()
-      .playlists.filter(playlist => playlist.id !== playlistId.payload);
-    return this.playlistsService.deletePlaylist(playlistId.payload).pipe(
+      .playlists.filter(playlist => playlist.id !== payload.playlistId);
+    return this.playlistsService.deletePlaylist(payload.playlistId).pipe(
       tap(() => {
         ctx.patchState({
           playlists,
@@ -59,16 +59,16 @@ export class PlaylistsState {
   @Action(PlaylistsActions.CreatePlaylist)
   createPlaylist(
     ctx: StateContext<PlaylistStateModel>,
-    createPlaylist: CreatePlaylist
+    payload: CreatePlaylist
   ) {
-    return this.playlistsService.createPlaylist(createPlaylist.payload).pipe(
+    return this.playlistsService.createPlaylist(payload.createPlaylistApiRequest).pipe(
       tap(playlistId => {
         ctx.patchState({
           playlists: [
             ...ctx.getState().playlists,
             {
               id: playlistId.id,
-              name: createPlaylist.payload.name,
+              name: payload.createPlaylistApiRequest.name,
               userId: '',
             },
           ],
@@ -79,24 +79,24 @@ export class PlaylistsState {
   @Action(PlaylistsActions.GetPlaylistItems)
   getPlaylistItems(
     ctx: StateContext<PlaylistStateModel>,
-    playlistId: GetPlaylistItems
+    payload: GetPlaylistItems
   ) {
-    return this.playlistsService.getPlaylistItems(playlistId.payload).pipe(
+    return this.playlistsService.getPlaylistItems(payload.playlistId).pipe(
       tap(items => {
         const playlist = ctx
           .getState()
-          .playlists.find(playlist => playlist.id === playlistId.payload)!;
+          .playlists.find(playlist => playlist.id === payload.playlistId)!;
         const playlists = ctx
           .getState()
-          .playlists.filter(playlist => playlist.id !== playlistId.payload)!;
+          .playlists.filter(playlist => playlist.id !== payload.playlistId)!;
 
         ctx.patchState({
           playlists: [
-            ...playlists,
             {
               ...playlist,
               items,
             },
+            ...playlists,
           ],
         });
       })
@@ -105,27 +105,27 @@ export class PlaylistsState {
   @Action(PlaylistsActions.ReorderPlaylistItems)
   reorderPlaylist(
     ctx: StateContext<PlaylistStateModel>,
-    reorderPlaylist: ReorderPlaylistItems
+    payload: ReorderPlaylistItems
   ) {
     return this.playlistsService
-      .updatePlaylistOrder(reorderPlaylist.id, {
-        items: reorderPlaylist.playlistItems,
+      .updatePlaylistOrder(payload.id, {
+        items: payload.playlistItems,
       })
       .pipe(
         tap(() => {
           let playlist = ctx
             .getState()
-            .playlists.find(playlist => playlist.id === reorderPlaylist.id)!;
+            .playlists.find(playlist => playlist.id === payload.id)!;
           const playlists = ctx
             .getState()
-            .playlists.filter(playlist => playlist.id !== reorderPlaylist.id)!;
+            .playlists.filter(playlist => playlist.id !== payload.id)!;
           playlist = {
             ...playlist,
-            items: reorderPlaylist.playlistItems,
+            items: payload.playlistItems,
           };
 
           ctx.patchState({
-            playlists: [...playlists, playlist],
+            playlists: [playlist, ...playlists],
           });
         })
       );

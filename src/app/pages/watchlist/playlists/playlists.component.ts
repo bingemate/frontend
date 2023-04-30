@@ -32,13 +32,14 @@ export class PlaylistsComponent implements OnInit {
 
   closeModal() {
     this.isPlaylistShown = false;
+    this.playlistName = undefined;
+    this.isConfirmLoading = false;
   }
 
   createPlaylist() {
     this.isConfirmLoading = true;
     this.store.dispatch(new PlaylistsActions.CreatePlaylist({ name: this.playlistName! }))
       .subscribe(() => {
-        this.isConfirmLoading = false;
         this.closeModal();
       });
   }

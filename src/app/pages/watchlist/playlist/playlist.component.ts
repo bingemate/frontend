@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
-import { combineLatest, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Playlist, PlaylistItem } from '../../../shared/models/playlist.model';
 import { PlaylistsState } from '../../../feature/playlist/store/playlists.state';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';

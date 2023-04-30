@@ -2,7 +2,7 @@
   <nz-breadcrumb-item>
     <a [routerLink]="['..']">Playlists</a>
   </nz-breadcrumb-item>
-  <nz-breadcrumb-item [nzOverlay]="menu">Test</nz-breadcrumb-item>
+  <nz-breadcrumb-item [nzOverlay]="menu">{{ playlist?.name }}</nz-breadcrumb-item>
 </nz-breadcrumb>
 <nz-dropdown-menu #menu="nzDropdownMenu">
   <ul nz-menu nzSelectable>
