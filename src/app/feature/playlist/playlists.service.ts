@@ -21,7 +21,7 @@ export class PlaylistsService {
   getPlaylistItems(playlistId: string): Observable<PlaylistItem[]> {
     return this.http
       .get<PlaylistItemsApiResponse>(
-        `${environment.apiUrl}/playlist/${playlistId}`
+        `${environment.apiUrl}/watch-service/playlist/${playlistId}`
       )
       .pipe(map(response => toPlaylistItems(response)));
   }
@@ -29,14 +29,14 @@ export class PlaylistsService {
   getPlaylists(userId: string): Observable<Playlist[]> {
     return this.http
       .get<PlaylistsApiResponse>(
-        `${environment.apiUrl}/playlist/user/${userId}`
+        `${environment.apiUrl}/watch-service/playlist/user/${userId}`
       )
       .pipe(map(response => toPlaylists(response)));
   }
 
   deletePlaylist(playlistId: string): Observable<void> {
     return this.http.delete<void>(
-      `${environment.apiUrl}/playlist/${playlistId}`
+      `${environment.apiUrl}/watch-service/playlist/${playlistId}`
     );
   }
 
@@ -44,7 +44,7 @@ export class PlaylistsService {
     createPlaylist: CreatePlaylistApiRequest
   ): Observable<PlaylistIdDto> {
     return this.http.post<PlaylistIdDto>(
-      `${environment.apiUrl}/playlist`,
+      `${environment.apiUrl}/watch-service/playlist`,
       createPlaylist
     );
   }
