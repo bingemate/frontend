@@ -25,6 +25,7 @@ import { FormsModule } from '@angular/forms';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzSelectModule } from 'ng-zorro-antd/select';
+import { HistoryComponent } from './history/history.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
     WatchtlistCalendarComponent,
     PlaylistsComponent,
     PlaylistComponent,
+    HistoryComponent,
   ],
   imports: [
     CommonModule,
