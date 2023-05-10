@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
   styleUrls: ['./history.component.less'],
 })
 export class HistoryComponent implements OnInit {
-  @Select(AlbumsState.albums) albums$!: Observable<AlbumModel[]>;
+  @Select(AlbumsState.albums) history$!: Observable<AlbumModel[]>;
 
   constructor(private readonly store: Store) {}
 
