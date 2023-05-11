@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
-import { AlbumsActions } from '../../../feature/albums/store/albums.actions';
-import { AlbumModel } from '../../../shared/models/album.models';
 import { Observable } from 'rxjs';
 import { HistoryState } from '../../../feature/history/store/history.state';
 import { HistoryActions } from '../../../feature/history/store/history.actions';
+import { HistoryModel } from '../../../shared/models/history.models';
 
 @Component({
   selector: 'app-history',
@@ -12,11 +11,15 @@ import { HistoryActions } from '../../../feature/history/store/history.actions';
   styleUrls: ['./history.component.less'],
 })
 export class HistoryComponent implements OnInit {
-  @Select(HistoryState.history) history$!: Observable<AlbumModel[]>;
+  @Select(HistoryState.history) history$!: Observable<HistoryModel[]>;
 
   constructor(private readonly store: Store) {}
 
   ngOnInit(): void {
     this.store.dispatch(new HistoryActions.GetAll());
+  }
+
+  deleteMedia(mediaId: string) {
+    this.store.dispatch(new HistoryActions.DeleteFromHistory(mediaId));
   }
 }

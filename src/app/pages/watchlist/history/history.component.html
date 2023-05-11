@@ -9,12 +9,14 @@
             height="90"
             alt="logo"
             ngSrc="https://thumbor.comeup.com/unsafe/fit-in/630x354/filters:quality(90):no_upscale()/uploads/media/picture/2022-01-10/miniature-youtube-5-euros-61db6e98249f3.png" />
-          <a href="https://ng.ant.design">{{ item.title }}</a>
+          <a href="https://ng.ant.design">{{ item.mediaId }}</a>
         </nz-space>
       </nz-list-item-meta-title>
     </nz-list-item-meta>
     <ul nz-list-item-actions>
-      <nz-list-item-action><a>Supprimer</a></nz-list-item-action>
+      <nz-list-item-action>
+        <a (click)="deleteMedia(item.mediaId)">Supprimer</a>
+      </nz-list-item-action>
     </ul>
   </nz-list-item>
   <nz-list-empty

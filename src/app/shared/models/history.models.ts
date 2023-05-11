@@ -1,6 +1,6 @@
 export interface HistoryModel {
-  userId: number;
-  mediaId: number;
+  userId: string;
+  mediaId: string;
   stoppedAt: number;
 }
 
@@ -9,8 +9,8 @@ export interface HistoryStateModel {
 }
 
 export interface MediaHistoryAPIResponse {
-  userId: number;
-  mediaId: number;
+  userId: string;
+  mediaId: string;
   stoppedAt: number;
 }
 

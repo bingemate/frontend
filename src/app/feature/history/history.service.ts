@@ -17,4 +17,10 @@ export class HistoryService {
       .get<HistoryAPIResponse>(`${environment.apiUrl}/watch-service/history`)
       .pipe(map(response => toHistories(response)));
   }
+
+  deleteHistory(mediaId: string): Observable<void> {
+    return this.http.delete<void>(
+      `${environment.apiUrl}/watch-service/history/${mediaId}`
+    );
+  }
 }

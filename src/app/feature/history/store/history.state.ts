@@ -4,6 +4,7 @@ import { HistoryService } from '../history.service';
 import { HistoryActions } from './history.actions';
 import { tap } from 'rxjs/operators';
 import { HistoryStateModel } from '../../../shared/models/history.models';
+import DeleteFromHistory = HistoryActions.DeleteFromHistory;
 
 @State<HistoryStateModel>({
   name: 'history',
@@ -24,6 +25,23 @@ export class HistoryState {
   getAll(ctx: StateContext<HistoryStateModel>) {
     return this.historyService.getHistory().pipe(
       tap(history => {
+        ctx.patchState({
+          history,
+        });
+      })
+    );
+  }
+
+  @Action(HistoryActions.DeleteFromHistory)
+  deleteFromHistory(
+    ctx: StateContext<HistoryStateModel>,
+    payload: DeleteFromHistory
+  ) {
+    const history = ctx
+      .getState()
+      .history.filter(history => history.mediaId !== payload.mediaId);
+    return this.historyService.deleteHistory(payload.mediaId).pipe(
+      tap(() => {
         ctx.patchState({
           history,
         });
