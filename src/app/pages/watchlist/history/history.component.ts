@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { AlbumsActions } from '../../../feature/albums/store/albums.actions';
-import { AlbumsState } from '../../../feature/albums/store/albums.state';
 import { AlbumModel } from '../../../shared/models/album.models';
 import { Observable } from 'rxjs';
+import { HistoryState } from '../../../feature/history/store/history.state';
+import { HistoryActions } from '../../../feature/history/store/history.actions';
 
 @Component({
   selector: 'app-history',
@@ -11,11 +12,11 @@ import { Observable } from 'rxjs';
   styleUrls: ['./history.component.less'],
 })
 export class HistoryComponent implements OnInit {
-  @Select(AlbumsState.albums) history$!: Observable<AlbumModel[]>;
+  @Select(HistoryState.history) history$!: Observable<AlbumModel[]>;
 
   constructor(private readonly store: Store) {}
 
   ngOnInit(): void {
-    this.store.dispatch(new AlbumsActions.GetAll());
+    this.store.dispatch(new HistoryActions.GetAll());
   }
 }

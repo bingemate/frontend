@@ -26,6 +26,7 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { HistoryComponent } from './history/history.component';
+import { HistoryModule } from '../../feature/history/history.module';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { HistoryComponent } from './history/history.component';
   ],
   imports: [
     CommonModule,
+    HistoryModule,
     WatchlistRoutingModule,
     NzPageHeaderModule,
     NzBreadCrumbModule,
