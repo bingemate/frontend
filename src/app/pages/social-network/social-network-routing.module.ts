@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { NavigationLinks } from '../../app-routing.module';
 import { SocialNetworkHomeComponent } from './social-network-home/social-network-home.component';
+import { TrendingComponent } from './trending/trending.component';
 
 export const socialNetworkLinks: NavigationLinks<
   | 'trending'
@@ -86,7 +87,7 @@ const routes: Routes = [
   },
   {
     path: socialNetworkLinks.trending.path,
-    component: SocialNetworkHomeComponent,
+    component: TrendingComponent,
     data: { title: socialNetworkLinks.trending.name },
   },
 ];
