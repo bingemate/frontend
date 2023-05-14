@@ -1,6 +1,7 @@
 export enum MediaType {
   TvShow = 'TvShow',
   Movie = 'Movie',
+  Episode = 'Episode',
 }
 
 export interface Crew {
