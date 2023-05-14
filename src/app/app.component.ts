@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Link, navigationRoot } from './app-routing.module';
 import { accountLinks } from './pages/auth/auth-routing.module';
 import { socialNetworkLinks } from './pages/social-network/social-network-routing.module';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { subscriptionLinks } from './pages/subscription/subscriptions-routing.module';
 import { mediasLinks } from './pages/medias/medias-routing.module';
 import { watchlistLinks } from './pages/watchlist/watchlist-routing.module';
@@ -28,6 +28,7 @@ export class AppComponent implements OnInit {
 
   constructor(
     private readonly router: Router,
+    private route: ActivatedRoute,
     public readonly notificationsService: NotificationsService,
     private readonly store: Store,
     private readonly actions: Actions,
