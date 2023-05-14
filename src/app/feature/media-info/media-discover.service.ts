@@ -68,12 +68,9 @@ export class MediaDiscoverService {
     );
   }
 
-  getRecentMovies(page = 1): Observable<MovieResults> {
-    const params = new HttpParams().set('page', page.toString());
-
-    return this.http.get<MovieResults>(
-      API_RESOURCE_URI.MEDIA_INFO + '/discover/movie/recent',
-      { params }
+  getRecentMovies(): Observable<MovieResponse[]> {
+    return this.http.get<MovieResponse[]>(
+      API_RESOURCE_URI.MEDIA_INFO + '/discover/movie/recent'
     );
   }
 
@@ -125,12 +122,9 @@ export class MediaDiscoverService {
     );
   }
 
-  getRecentTvShows(page = 1): Observable<TvShowResults> {
-    const params = new HttpParams().set('page', page.toString());
-
-    return this.http.get<TvShowResults>(
-      API_RESOURCE_URI.MEDIA_INFO + '/discover/tv/recent',
-      { params }
+  getRecentTvShows(): Observable<TvShowResponse[]> {
+    return this.http.get<TvShowResponse[]>(
+      API_RESOURCE_URI.MEDIA_INFO + '/discover/tv/recent'
     );
   }
 
