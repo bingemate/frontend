@@ -19,7 +19,12 @@
               alt="logo"
               ngSrc="https://thumbor.comeup.com/unsafe/fit-in/630x354/filters:quality(90):no_upscale()/uploads/media/picture/2022-01-10/miniature-youtube-5-euros-61db6e98249f3.png" />
           </span>
-          <a href="https://ng.ant.design">{{ item.mediaId }}</a>
+          <nz-space nzDirection="vertical" nzSize="small">
+            <a href="https://ng.ant.design">{{ item.mediaId }}</a>
+            <span nz-typography nzType="secondary">
+              vu le {{ item.viewedAt | date : 'dd/MM/yyyy' }}
+            </span>
+          </nz-space>
         </nz-space>
       </nz-list-item-meta-title>
     </nz-list-item-meta>

@@ -2,6 +2,7 @@ export interface HistoryModel {
   userId: string;
   mediaId: string;
   stoppedAt: number;
+  viewedAt: Date;
 }
 
 export interface HistoryStateModel {
@@ -12,6 +13,7 @@ export interface MediaHistoryAPIResponse {
   userId: string;
   mediaId: string;
   stoppedAt: number;
+  viewedAt: Date;
 }
 
 export interface HistoryAPIResponse {
@@ -27,5 +29,6 @@ export function toHistory(history: MediaHistoryAPIResponse): HistoryModel {
     userId: history.userId,
     mediaId: history.mediaId,
     stoppedAt: history.stoppedAt,
+    viewedAt: history.viewedAt,
   };
 }
