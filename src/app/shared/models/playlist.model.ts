@@ -6,7 +6,7 @@ export interface Playlist {
   id: string;
   name: string;
   userId: string;
-  items?: PlaylistItem[];
+  items: PlaylistItem[];
 }
 
 export interface PlaylistItem {
@@ -52,6 +52,7 @@ export function toPlaylist(playlistItem: PlaylistApiResponse): Playlist {
     id: playlistItem.id,
     name: playlistItem.name,
     userId: playlistItem.userId,
+    items: [],
   };
 }
 

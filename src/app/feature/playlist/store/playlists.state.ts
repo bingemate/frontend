@@ -40,6 +40,7 @@ export class PlaylistsState {
       })
     );
   }
+
   @Action(PlaylistsActions.DeletePlaylist)
   deletePlaylist(
     ctx: StateContext<PlaylistStateModel>,
@@ -56,6 +57,7 @@ export class PlaylistsState {
       })
     );
   }
+
   @Action(PlaylistsActions.CreatePlaylist)
   createPlaylist(
     ctx: StateContext<PlaylistStateModel>,
@@ -72,12 +74,14 @@ export class PlaylistsState {
                 id: playlistId.id,
                 name: payload.createPlaylistApiRequest.name,
                 userId: '',
+                items: [],
               },
             ],
           });
         })
       );
   }
+
   @Action(PlaylistsActions.GetPlaylistItems)
   getPlaylistItems(
     ctx: StateContext<PlaylistStateModel>,
@@ -87,23 +91,26 @@ export class PlaylistsState {
       tap(items => {
         const playlist = ctx
           .getState()
-          .playlists.find(playlist => playlist.id === payload.playlistId)!;
+          .playlists.find(playlist => playlist.id === payload.playlistId);
         const playlists = ctx
           .getState()
-          .playlists.filter(playlist => playlist.id !== payload.playlistId)!;
+          .playlists.filter(playlist => playlist.id !== payload.playlistId);
 
-        ctx.patchState({
-          playlists: [
-            {
-              ...playlist,
-              items,
-            },
-            ...playlists,
-          ],
-        });
+        if (playlist) {
+          ctx.patchState({
+            playlists: [
+              {
+                ...playlist,
+                items,
+              },
+              ...playlists,
+            ],
+          });
+        }
       })
     );
   }
+
   @Action(PlaylistsActions.ReorderPlaylistItems)
   reorderPlaylist(
     ctx: StateContext<PlaylistStateModel>,
@@ -117,18 +124,20 @@ export class PlaylistsState {
         tap(() => {
           let playlist = ctx
             .getState()
-            .playlists.find(playlist => playlist.id === payload.id)!;
+            .playlists.find(playlist => playlist.id === payload.id);
           const playlists = ctx
             .getState()
-            .playlists.filter(playlist => playlist.id !== payload.id)!;
-          playlist = {
-            ...playlist,
-            items: payload.playlistItems,
-          };
+            .playlists.filter(playlist => playlist.id !== payload.id);
+          if (playlist) {
+            playlist = {
+              ...playlist,
+              items: payload.playlistItems,
+            };
 
-          ctx.patchState({
-            playlists: [playlist, ...playlists],
-          });
+            ctx.patchState({
+              playlists: [playlist, ...playlists],
+            });
+          }
         })
       );
   }
