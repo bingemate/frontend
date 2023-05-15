@@ -28,7 +28,6 @@ export class StatsDailyViewsComponent {
       },
     },
     scales: {
-      // We use this empty structure as a placeholder for dynamic theming.
       y: {
         position: 'left',
       },
@@ -38,6 +37,7 @@ export class StatsDailyViewsComponent {
         display: false,
       },
     },
+    responsive: false,
   };
 
   public lineChartType: ChartType = 'line';
