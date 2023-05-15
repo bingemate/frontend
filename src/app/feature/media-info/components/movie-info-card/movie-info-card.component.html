@@ -1,5 +1,6 @@
-<nz-card class="movie-poster" [nzCover]="cover">
+<nz-card nzHoverable class="movie-poster" [nzCover]="cover">
   <nz-card-meta
+    [routerLink]="movieViewPath"
     nzTitle="{{ movie?.title }}"
     [nzDescription]="description"></nz-card-meta>
 </nz-card>
@@ -11,5 +12,6 @@
 <ng-template #description>
   {{ movie?.releaseDate | date : 'yyyy' }}
   <br />
-  <span nz-icon nzType="star" nzTheme="fill"></span> {{ movie?.voteAverage }}
+  <nz-rate [ngModel]="getRate()" nzAllowHalf nzDisabled></nz-rate>
+  {{ movie?.voteAverage }}
 </ng-template>
