@@ -74,6 +74,7 @@ export class PlaylistsState {
                 id: playlistId.id,
                 name: payload.createPlaylistApiRequest.name,
                 userId: '',
+                type: payload.createPlaylistApiRequest.type,
                 items: [],
               },
             ],

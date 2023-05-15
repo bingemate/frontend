@@ -24,6 +24,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { FormsModule } from '@angular/forms';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzSelectModule } from 'ng-zorro-antd/select';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
     FormsModule,
     NzInputModule,
     NzIconModule,
+    NzSelectModule,
   ],
 })
 export class WatchlistModule {}

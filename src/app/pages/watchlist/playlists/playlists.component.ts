@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { Playlist } from '../../../shared/models/playlist.model';
+import { Playlist, PlaylistType } from '../../../shared/models/playlist.model';
 import { PlaylistsState } from '../../../feature/playlist/store/playlists.state';
 import { PlaylistsActions } from '../../../feature/playlist/store/playlists.actions';
 import { AuthState } from '../../../core/auth/store/auth.state';
@@ -16,7 +16,8 @@ export class PlaylistsComponent implements OnInit {
 
   isPlaylistShown = false;
   isConfirmLoading = false;
-  playlistName: string | undefined;
+  playlistName?: string;
+  playlistType?: PlaylistType;
 
   constructor(private readonly store: Store) {}
 
@@ -36,10 +37,16 @@ export class PlaylistsComponent implements OnInit {
   }
 
   createPlaylist() {
+    if (!this.playlistName || !this.playlistType) {
+      return;
+    }
     this.isConfirmLoading = true;
     this.store
       .dispatch(
-        new PlaylistsActions.CreatePlaylist({ name: this.playlistName! })
+        new PlaylistsActions.CreatePlaylist({
+          name: this.playlistName,
+          type: this.playlistType,
+        })
       )
       .subscribe(() => {
         this.closeModal();

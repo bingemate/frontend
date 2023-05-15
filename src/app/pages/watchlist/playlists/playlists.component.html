@@ -31,13 +31,17 @@
   nzTitle="Créer une nouvelle playlist"
   (nzOnCancel)="closeModal()">
   <div *nzModalContent>
-    <nz-input-group [nzSuffix]="inputClearTpl">
+    <nz-input-group [nzSuffix]="inputClearTpl" class="name-input">
       <input
         type="text"
         nz-input
         [(ngModel)]="playlistName"
-        placeholder="input with clear icon" />
+        placeholder="Playlist name" />
     </nz-input-group>
+    <nz-select [(ngModel)]="playlistType" nzPlaceHolder="Media type">
+      <nz-option nzValue="EPISODE" nzLabel="Episode"></nz-option>
+      <nz-option nzValue="MOVIE" nzLabel="Movie"></nz-option>
+    </nz-select>
     <ng-template #inputClearTpl>
       <span
         nz-icon
@@ -53,7 +57,7 @@
     <button
       nz-button
       nzType="primary"
-      [disabled]="!playlistName || playlistName.length === 0"
+      [disabled]="!playlistName || playlistName.length === 0 || !playlistType"
       (click)="createPlaylist()"
       [nzLoading]="isConfirmLoading">
       Créer

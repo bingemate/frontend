@@ -2,10 +2,16 @@ export interface PlaylistStateModel {
   playlists: Playlist[];
 }
 
+export enum PlaylistType {
+  MOVIE = 'MOVIE',
+  EPISODE = 'EPISODE',
+}
+
 export interface Playlist {
   id: string;
   name: string;
   userId: string;
+  type: PlaylistType;
   items: PlaylistItem[];
 }
 
@@ -21,6 +27,7 @@ export interface PlaylistApiResponse {
   id: string;
   name: string;
   userId: string;
+  type: PlaylistType;
 }
 
 export interface PlaylistItemsApiResponse {
@@ -33,6 +40,7 @@ export interface PlaylistItemApiResponse {
 
 export interface CreatePlaylistApiRequest {
   name: string;
+  type: PlaylistType;
 }
 
 export interface UpdatePlaylistOrderApiRequest {
@@ -52,6 +60,7 @@ export function toPlaylist(playlistItem: PlaylistApiResponse): Playlist {
     id: playlistItem.id,
     name: playlistItem.name,
     userId: playlistItem.userId,
+    type: playlistItem.type,
     items: [],
   };
 }
