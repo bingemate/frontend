@@ -1,5 +1,5 @@
 <nz-row [nzGutter]="[32, 32]">
-  <nz-col [nzSpan]="3" *ngFor="let movie of movies">
+  <nz-col [nzSm]="12" [nzMd]="6" [nzXXl]="3" *ngFor="let movie of movies">
     <app-movie-info-card
       [movie]="movie"
       [title]="movie.title"></app-movie-info-card>
