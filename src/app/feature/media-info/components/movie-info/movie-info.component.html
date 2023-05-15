@@ -1,1 +1,60 @@
-<p>movie-info works!</p>
+<nz-skeleton
+  *ngIf="movie === undefined"
+  [nzActive]="true"
+  [nzParagraph]="{ rows: 20 }"></nz-skeleton>
+<div class="movie-details-container" *ngIf="movie">
+  <nz-row [nzGutter]="[24, 24]" class="movie-details">
+    <div class="movie-poster" nz-col nzSpan="8">
+      <img nz-image [nzSrc]="movie.posterUrl" alt="Movie Poster" width="100%" />
+    </div>
+
+    <div class="movie-info" nz-col [nzMd]="24" [nzXl]="16">
+      <nz-row [nzGutter]="[24, 24]">
+        <h1 class="movie-title" nz-col nzSpan="24">{{ movie.title }}</h1>
+        <div class="movie-rating" nz-col nzSpan="24">
+          <nz-rate [ngModel]="getRate()" nzDisabled nzAllowHalf></nz-rate>
+          &nbsp;{{ movie.voteAverage.toFixed(2) }}
+        </div>
+
+        <nz-descriptions nzBordered [nzColumn]="1" nz-col nzSpan="24">
+          <nz-descriptions-item nzTitle="Date de sortie">{{
+            movie.releaseDate | date : 'dd/MM/yyyy'
+          }}</nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Genres">
+            <nz-tag *ngFor="let genre of movie.genres" nzChecked>{{
+              genre.name
+            }}</nz-tag>
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Overview" [nzSpan]="24">{{
+            movie.overview
+          }}</nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Studio">TODO</nz-descriptions-item>
+        </nz-descriptions>
+      </nz-row>
+    </div>
+    <div class="actors" nz-col nzSpan="24">
+      <h2>Cast</h2>
+      <nz-list
+        [nzPagination]="actorListPagination"
+        [nzBordered]="false"
+        [nzGrid]="{ gutter: 16, xs: 2, sm: 3, md: 4, lg: 6, xl: 6, xxl: 6 }">
+        <nz-list-item *ngFor="let actor of getActorsSlice()">
+          <nz-list-item-meta
+            [nzAvatar]="actor.profileUrl"
+            nzTitle="{{ actor.name }}"
+            nzDescription="{{ actor.character }}"></nz-list-item-meta>
+        </nz-list-item>
+      </nz-list>
+    </div>
+  </nz-row>
+</div>
+
+<ng-template #actorListPagination>
+  <nz-pagination
+    [nzPageIndex]="actorsCurrentPage"
+    [nzTotal]="movie?.actors?.length ?? 0"
+    [nzPageSize]="6"
+    [nzShowSizeChanger]="false"
+    [nzSize]="'small'"
+    (nzPageIndexChange)="onActorsPageChange($event)"></nz-pagination>
+</ng-template>
