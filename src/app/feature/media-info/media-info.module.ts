@@ -14,6 +14,15 @@ import { MovieListComponent } from './components/movie-list/movie-list.component
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { TvListComponent } from './components/tv-list/tv-list.component';
+import { RouterLink } from '@angular/router';
+import { NzRateModule } from 'ng-zorro-antd/rate';
+import { FormsModule } from '@angular/forms';
+import { NzSkeletonModule } from 'ng-zorro-antd/skeleton';
+import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
+import { NzTagModule } from 'ng-zorro-antd/tag';
+import { NzListModule } from 'ng-zorro-antd/list';
+import { NzAvatarModule } from 'ng-zorro-antd/avatar';
+import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 
 @NgModule({
   declarations: [
@@ -35,6 +44,15 @@ import { TvListComponent } from './components/tv-list/tv-list.component';
     NzImageModule,
     NzGridModule,
     NzDividerModule,
+    RouterLink,
+    NzRateModule,
+    FormsModule,
+    NzSkeletonModule,
+    NzDescriptionsModule,
+    NzTagModule,
+    NzListModule,
+    NzAvatarModule,
+    NzPaginationModule,
   ],
   exports: [
     MediaInfoComponent,
@@ -43,6 +61,7 @@ import { TvListComponent } from './components/tv-list/tv-list.component';
     EpisodeInfoCardComponent,
     MovieListComponent,
     TvListComponent,
+    MovieInfoComponent,
   ],
 })
 export class MediaInfoModule {}
