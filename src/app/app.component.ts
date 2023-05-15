@@ -147,7 +147,10 @@ export class AppComponent implements OnInit {
     });
 
   readonly socialNetworkLinks = Object.values(socialNetworkLinks)
-    .filter(link => !['media', 'user-profile', 'chat'].includes(link.path))
+    .filter(
+      link =>
+        !['media', 'user-profile', 'chat', 'movie-view'].includes(link.path)
+    )
     .map(link => {
       return {
         ...link,

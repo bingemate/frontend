@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { NavigationLinks } from '../../app-routing.module';
+import { NavigationLinks, navigationRoot } from '../../app-routing.module';
 import { SocialNetworkHomeComponent } from './social-network-home/social-network-home.component';
 import { TrendingComponent } from './trending/trending.component';
+import { MovieViewComponent } from './movie-view/movie-view.component';
 
 export const socialNetworkLinks: NavigationLinks<
   | 'trending'
@@ -13,6 +14,7 @@ export const socialNetworkLinks: NavigationLinks<
   | 'user_profile'
   | 'chat'
   | 'relations'
+  | 'movie_view'
 > = {
   trending: {
     path: 'trending',
@@ -46,7 +48,17 @@ export const socialNetworkLinks: NavigationLinks<
     path: 'relations',
     name: 'Mes relations',
   },
+  movie_view: {
+    path: 'movie-view',
+    name: 'Film',
+  },
 };
+
+export const movieViewPath =
+  '/' +
+  navigationRoot.socialNetwork.path +
+  '/' +
+  socialNetworkLinks.movie_view.path;
 
 const routes: Routes = [
   {
@@ -89,6 +101,11 @@ const routes: Routes = [
     path: socialNetworkLinks.trending.path,
     component: TrendingComponent,
     data: { title: socialNetworkLinks.trending.name },
+  },
+  {
+    path: socialNetworkLinks.movie_view.path + '/:id',
+    component: MovieViewComponent,
+    data: { title: socialNetworkLinks.movie_view.name },
   },
 ];
 
