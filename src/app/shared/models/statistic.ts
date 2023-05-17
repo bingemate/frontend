@@ -10,8 +10,8 @@ export interface StatisticApiResponse {
   id: string;
   userId: string;
   mediaId: string;
-  startedAt: Date;
-  stoppedAt?: Date;
+  startedAt: string;
+  stoppedAt?: string;
 }
 
 export function toStatistics(statistics: StatisticApiResponse[]): Statistic[] {
@@ -23,7 +23,7 @@ export function toStatistic(statistic: StatisticApiResponse): Statistic {
     id: statistic.id,
     mediaId: statistic.mediaId,
     userId: statistic.userId,
-    startedAt: statistic.startedAt,
-    stoppedAt: statistic.stoppedAt || new Date(),
+    startedAt: new Date(statistic.startedAt),
+    stoppedAt: new Date(statistic.stoppedAt || new Date()),
   };
 }
