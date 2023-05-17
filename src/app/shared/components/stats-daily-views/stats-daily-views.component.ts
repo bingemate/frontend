@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ChartConfiguration, ChartType } from 'chart.js';
-import 'chartjs-adapter-moment';
+
 @Component({
   selector: 'app-stats-daily-views',
   templateUrl: './stats-daily-views.component.html',
