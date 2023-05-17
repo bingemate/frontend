@@ -31,7 +31,7 @@
     "@ngxs/logger-plugin": "^3.8.1",
     "@ngxs/storage-plugin": "^3.8.1",
     "@ngxs/store": "dev",
-    "chart.js": "^3.6.0",
+    "chart.js": "^4.3.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^4.2.1",
     "keycloak-angular": "^13.0.0",
