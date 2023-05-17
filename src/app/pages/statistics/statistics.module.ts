@@ -10,6 +10,7 @@ import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { StatisticsService } from './statistics.service';
 
 @NgModule({
   declarations: [
@@ -27,5 +28,6 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
     NzIconModule,
     NzButtonModule,
   ],
+  providers: [StatisticsService],
 })
 export class StatisticsModule {}

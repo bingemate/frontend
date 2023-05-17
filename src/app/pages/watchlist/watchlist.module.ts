@@ -27,6 +27,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { HistoryComponent } from './history/history.component';
 import { HistoryModule } from '../../feature/history/history.module';
+import { PlaylistModule } from '../../feature/playlist/playlist.module';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { HistoryModule } from '../../feature/history/history.module';
   imports: [
     CommonModule,
     HistoryModule,
+    PlaylistModule,
     WatchlistRoutingModule,
     NzPageHeaderModule,
     NzBreadCrumbModule,

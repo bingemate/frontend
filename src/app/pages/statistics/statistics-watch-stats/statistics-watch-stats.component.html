@@ -1,6 +1,6 @@
-<div nz-row>
-  <div nz-col nzFlex="3">
-    <nz-space>
+<div nz-row [nzGutter]="{ xs: 2, sm: 4, md: 6, lg: 8 }">
+  <div nz-col [nzXs]="30" [nzSm]="22" [nzMd]="14" [nzLg]="6" class="gutter-row">
+    <div nz-row nzJustify="space-between">
       <h3>Temps de visionnage quotidien</h3>
       <nz-button-group>
         <button nz-button nz-dropdown [nzDropdownMenu]="menu4">
@@ -8,8 +8,11 @@
           <span nz-icon nzType="down"></span>
         </button>
       </nz-button-group>
-    </nz-space>
-    <app-stats-daily-views class="stats-item"></app-stats-daily-views>
+    </div>
+    <app-stats-daily-views
+      [data]="data"
+      [labels]="labels"
+      class="stats-item"></app-stats-daily-views>
   </div>
 </div>
 <nz-dropdown-menu #menu4="nzDropdownMenu">
