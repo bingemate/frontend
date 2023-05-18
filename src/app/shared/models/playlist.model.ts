@@ -12,11 +12,12 @@ export interface Playlist {
   name: string;
   userId: string;
   type: PlaylistType;
-  items: PlaylistItem[];
 }
 
 export interface PlaylistItem {
   mediaId: string;
+  season: number;
+  episode: number;
 }
 
 export interface PlaylistsApiResponse {
@@ -36,6 +37,8 @@ export interface PlaylistItemsApiResponse {
 
 export interface PlaylistItemApiResponse {
   mediaId: string;
+  season: number;
+  episode: number;
 }
 
 export interface CreatePlaylistApiRequest {
@@ -61,7 +64,6 @@ export function toPlaylist(playlistItem: PlaylistApiResponse): Playlist {
     name: playlistItem.name,
     userId: playlistItem.userId,
     type: playlistItem.type,
-    items: [],
   };
 }
 
@@ -76,5 +78,7 @@ export function toPlaylistItem(
 ): PlaylistItem {
   return {
     mediaId: playlistItem.mediaId,
+    season: playlistItem.season,
+    episode: playlistItem.episode,
   };
 }

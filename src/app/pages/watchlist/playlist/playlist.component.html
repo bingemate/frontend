@@ -22,15 +22,24 @@
   [nzLoading]="false"
   cdkDropList
   (cdkDropListDropped)="itemMoved($event)">
-  <nz-list-item *ngFor="let item of playlist?.items" cdkDrag>
+  <nz-list-item *ngFor="let item of playlistItems" cdkDrag>
     <nz-list-item-meta>
       <nz-list-item-meta-title>
-        <img
-          width="160"
-          height="90"
-          alt="logo"
-          ngSrc="https://thumbor.comeup.com/unsafe/fit-in/630x354/filters:quality(90):no_upscale()/uploads/media/picture/2022-01-10/miniature-youtube-5-euros-61db6e98249f3.png" />
-        <a href="https://ng.ant.design">{{ item.mediaId }}</a>
+        <nz-space>
+          <img
+            width="160"
+            height="90"
+            alt="logo"
+            ngSrc="{{ item.media.imageUrl }}" />
+          <nz-space nzDirection="vertical">
+            <a [routerLink]="['/media', item.playlistItem.mediaId]">
+              {{ item.media.name }}
+            </a>
+            <span>
+              {{ item.playlistItem.season }}x{{ item.playlistItem.episode }}
+            </span>
+          </nz-space>
+        </nz-space>
       </nz-list-item-meta-title>
     </nz-list-item-meta>
     <ul nz-list-item-actions>
@@ -38,6 +47,6 @@
     </ul>
   </nz-list-item>
   <nz-list-empty
-    *ngIf="(playlists$ | async)?.length === 0"
+    *ngIf="playlistItems.length === 0"
     nzNoResult="Aucun média"></nz-list-empty>
 </nz-list>
