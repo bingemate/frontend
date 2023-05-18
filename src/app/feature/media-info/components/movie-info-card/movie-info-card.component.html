@@ -1,0 +1,17 @@
+<nz-card nzHoverable class="movie-poster" [nzCover]="cover">
+  <nz-card-meta
+    [routerLink]="movieViewPath"
+    nzTitle="{{ movie?.title }}"
+    [nzDescription]="description"></nz-card-meta>
+</nz-card>
+
+<ng-template #cover>
+  <img nz-image [nzSrc]="movie?.posterUrl!" alt="" />
+</ng-template>
+
+<ng-template #description>
+  {{ movie?.releaseDate | date : 'yyyy' }}
+  <br />
+  <nz-rate [ngModel]="getRate()" nzAllowHalf nzDisabled></nz-rate>
+  {{ movie?.voteAverage }}
+</ng-template>

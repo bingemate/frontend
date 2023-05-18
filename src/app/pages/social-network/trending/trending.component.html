@@ -1,0 +1,51 @@
+<nz-page-header nzTitle="Tendances"> </nz-page-header>
+
+<nz-collapse [nzBordered]="true">
+  <nz-collapse-panel
+    [nzActive]="true"
+    nzHeader="Films populaires"
+    [nzExtra]="popularMoviesPagination">
+    <nz-skeleton
+      *ngIf="popularMovies.length === 0"
+      [nzActive]="true"
+      [nzParagraph]="{ rows: 10 }"></nz-skeleton>
+    <app-movie-list [movies]="popularMovies"></app-movie-list>
+  </nz-collapse-panel>
+  <nz-collapse-panel [nzActive]="false" nzHeader="Films récents">
+    <app-movie-list [movies]="recentMovies"></app-movie-list>
+  </nz-collapse-panel>
+  <nz-collapse-panel
+    [nzActive]="true"
+    nzHeader="Séries populaires"
+    [nzExtra]="popularTvShowsPagination">
+    <nz-skeleton
+      *ngIf="popularTvShows.length === 0"
+      [nzActive]="true"
+      [nzParagraph]="{ rows: 10 }"></nz-skeleton>
+    <app-tv-list [tvShows]="popularTvShows"></app-tv-list>
+  </nz-collapse-panel>
+  <nz-collapse-panel [nzActive]="false" nzHeader="Séries récentes">
+    <app-tv-list [tvShows]="recentTvShows"></app-tv-list>
+  </nz-collapse-panel>
+</nz-collapse>
+
+<ng-template #popularMoviesPagination>
+  <div (click)="$event.stopPropagation()">
+    <nz-pagination
+      [nzPageIndex]="popularMoviesPage"
+      [nzTotal]="Math.min(popularMoviesTotalResults, 1000)"
+      [nzPageSize]="20"
+      (nzPageIndexChange)="onPopularMoviesPageChange($event)">
+    </nz-pagination>
+  </div>
+</ng-template>
+<ng-template #popularTvShowsPagination>
+  <div (click)="$event.stopPropagation()">
+    <nz-pagination
+      [nzPageIndex]="popularTvShowsPage"
+      [nzTotal]="Math.min(popularTvShowsTotalResults, 1000)"
+      [nzPageSize]="20"
+      (nzPageIndexChange)="onPopularTvShowsPageChange($event)">
+    </nz-pagination>
+  </div>
+</ng-template>
