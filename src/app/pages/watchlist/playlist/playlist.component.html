@@ -22,11 +22,15 @@
   [nzLoading]="false"
   cdkDropList
   (cdkDropListDropped)="itemMoved($event)">
-  <nz-list-item *ngFor="let item of playlistItems" cdkDrag>
+  <nz-list-item *ngFor="let item of playlistItems; let index = index" cdkDrag>
     <nz-list-item-meta>
       <nz-list-item-meta-title>
         <nz-space>
+          <nz-space nzAlign="center">
+            <span *nzSpaceItem> {{ index }}. </span>
+          </nz-space>
           <img
+            class="media-image"
             width="160"
             height="90"
             alt="logo"
