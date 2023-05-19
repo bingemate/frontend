@@ -19,9 +19,10 @@
       <vg-time-display vgProperty="left" vgFormat="mm:ss"></vg-time-display>
       <vg-time-display vgProperty="total" vgFormat="mm:ss"></vg-time-display>
 
-      <vg-track-selector></vg-track-selector>
+      <vg-track-selector *ngIf="subtitleList.length > 0"></vg-track-selector>
 
       <vg-quality-selector
+        *ngIf="audioOptions.length > 1"
         (onBitrateChange)="onSelectedAudio($event)"
         [bitrates]="audioOptions">
       </vg-quality-selector>
@@ -46,6 +47,7 @@
 
       <track
         *ngFor="let subtitle of subtitleList"
+        [default]="subtitle.default"
         label="{{ subtitle.label }}"
         kind="subtitles"
         src="{{ subtitle.url }}" />

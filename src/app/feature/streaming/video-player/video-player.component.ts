@@ -16,7 +16,7 @@ export class VideoPlayerComponent implements OnInit {
   audioOptions: BitrateOptions[] = [];
   audioList: string[] = [];
 
-  subtitleList: { label: string; url: string }[] = [];
+  subtitleList: { label: string; url: string; default: boolean }[] = [];
 
   videoUrl = '';
   currentAudio = '';
@@ -44,12 +44,15 @@ export class VideoPlayerComponent implements OnInit {
         audioTrack =>
           `${API_RESOURCE_URI.STREAMING}/${this.mediaId}/${audioTrack.filename}`
       );
-      this.subtitleList = this.mediaFile.subtitleTracks.map(subtitleTrack => {
-        return {
-          label: subtitleTrack.language,
-          url: `${API_RESOURCE_URI.STREAMING}/${this.mediaId}/${subtitleTrack.filename}`,
-        };
-      });
+      this.subtitleList = this.mediaFile.subtitleTracks.map(
+        (subtitleTrack, index) => {
+          return {
+            label: subtitleTrack.language,
+            url: `${API_RESOURCE_URI.STREAMING}/${this.mediaId}/${subtitleTrack.filename}`,
+            default: index === 0,
+          };
+        }
+      );
       this.currentAudio = this.audioList[0];
     }
   }
