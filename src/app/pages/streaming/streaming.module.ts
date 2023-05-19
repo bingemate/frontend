@@ -2,9 +2,10 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StreamingRoutingModule } from './streaming-routing.module';
 import { StreamComponent } from './stream/stream.component';
+import { VideoPlayerModule } from '../../feature/streaming/video-player.module';
 
 @NgModule({
   declarations: [StreamComponent],
-  imports: [CommonModule, StreamingRoutingModule],
+  imports: [CommonModule, StreamingRoutingModule, VideoPlayerModule],
 })
 export class StreamingModule {}

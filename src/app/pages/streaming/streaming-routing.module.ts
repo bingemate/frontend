@@ -16,6 +16,11 @@ const routes: Routes = [
     component: StreamComponent,
     data: { title: streamingLinks.stream.name },
   },
+  {
+    path: '',
+    pathMatch: 'full',
+    redirectTo: streamingLinks.stream.path,
+  },
 ];
 
 @NgModule({
