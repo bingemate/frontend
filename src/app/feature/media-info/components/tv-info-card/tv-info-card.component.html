@@ -1,0 +1,15 @@
+<nz-card class="movie-poster" [nzCover]="cover">
+  <nz-card-meta
+    nzTitle="{{ tv?.title }}"
+    [nzDescription]="description"></nz-card-meta>
+</nz-card>
+
+<ng-template #cover>
+  <img nz-image [nzSrc]="tv?.posterUrl!" alt="" />
+</ng-template>
+
+<ng-template #description>
+  {{ tv?.releaseDate | date : 'yyyy' }}
+  <br />
+  <span nz-icon nzType="star" nzTheme="fill"></span> {{ tv?.voteAverage }}
+</ng-template>
