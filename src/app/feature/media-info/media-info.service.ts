@@ -8,6 +8,7 @@ import {
 } from '../../shared/models/media.models';
 import { Observable } from 'rxjs';
 import { API_RESOURCE_URI } from '../../shared/api-resource-uri/api-resources-uri';
+import { MediaFile } from '../../shared/models/media-file.models';
 
 @Injectable({
   providedIn: 'root',
@@ -59,6 +60,12 @@ export class MediaInfoService {
         tmdbId +
         '/' +
         seasonNumber
+    );
+  }
+
+  getFileInfos(mediaId: number): Observable<MediaFile> {
+    return this.http.get<MediaFile>(
+      API_RESOURCE_URI.MEDIA_INFO + '/media-file/file-tmdb/' + mediaId
     );
   }
 }
