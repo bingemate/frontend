@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { MediaFile } from '../../../shared/models/mdeia-file.model';
+import { MediaFile } from '../../../shared/models/media-file.models';
 import { BitrateOptions } from '@videogular/ngx-videogular/core';
 import { API_RESOURCE_URI } from '../../../shared/api-resource-uri/api-resources-uri';
 
@@ -9,45 +9,40 @@ import { API_RESOURCE_URI } from '../../../shared/api-resource-uri/api-resources
   styleUrls: ['./video-player.component.less'],
 })
 export class VideoPlayerComponent implements OnInit {
-  @Input() mediaId = 'undefined';
-  @Input() mediaName = 'undefined';
+  @Input() mediaTitle = 'undefined';
+  @Input() mediaId: number | undefined;
   @Input() mediaFile: MediaFile | undefined;
 
   audioOptions: BitrateOptions[] = [];
   audioList: string[] = [];
 
-  subtitleList: { label: string; url: string; default: boolean }[] = [];
+  subtitleList: { srcLang: string; url: string; default: boolean }[] = [];
 
   videoUrl = '';
   currentAudio = '';
 
   ngOnInit() {
-    console.log(this.mediaId);
-    console.log(this.mediaName);
-    console.log(this.mediaFile);
-
     if (this.mediaFile) {
       this.videoUrl = `${API_RESOURCE_URI.STREAMING}/${this.mediaId}/${this.mediaFile.filename}`;
-      this.audioOptions = this.mediaFile.audioTracks.map(
-        (audioTrack, index) => {
-          return {
-            qualityIndex: index,
-            width: 0,
-            height: 0,
-            bitrate: 0,
-            mediaType: 'audio',
-            label: audioTrack.language,
-          };
-        }
-      );
-      this.audioList = this.mediaFile.audioTracks.map(
+      console.log(this.videoUrl);
+      this.audioOptions = this.mediaFile.audios.map((audioTrack, index) => {
+        return {
+          qualityIndex: index,
+          width: 0,
+          height: 0,
+          bitrate: 0,
+          mediaType: 'audio',
+          label: audioTrack.language,
+        };
+      });
+      this.audioList = this.mediaFile.audios.map(
         audioTrack =>
           `${API_RESOURCE_URI.STREAMING}/${this.mediaId}/${audioTrack.filename}`
       );
-      this.subtitleList = this.mediaFile.subtitleTracks.map(
+      this.subtitleList = this.mediaFile.subtitles.map(
         (subtitleTrack, index) => {
           return {
-            label: subtitleTrack.language,
+            srcLang: subtitleTrack.language.toLowerCase(),
             url: `${API_RESOURCE_URI.STREAMING}/${this.mediaId}/${subtitleTrack.filename}`,
             default: index === 0,
           };
@@ -59,5 +54,22 @@ export class VideoPlayerComponent implements OnInit {
 
   onSelectedAudio(event: BitrateOptions) {
     this.currentAudio = this.audioList[event.qualityIndex];
+  }
+
+  mapLang(srcLang: string): string {
+    switch (srcLang.toLowerCase()) {
+      case 'fra':
+      case 'fre':
+      case 'fr':
+        return 'Français';
+      case 'eng':
+      case 'en':
+        return 'Anglais';
+      case 'jpn':
+      case 'jp':
+        return 'Japonais';
+      default:
+        return srcLang;
+    }
   }
 }

@@ -1,9 +1,9 @@
-<nz-card [nzTitle]="mediaName">
+<nz-card [nzTitle]="mediaTitle">
   <vg-player>
     <vg-overlay-play></vg-overlay-play>
     <vg-buffering></vg-buffering>
 
-    <vg-scrub-bar [vgSlider]="true">
+    <vg-scrub-bar [vgSlider]="true" style="height: 15px">
       <vg-scrub-bar-current-time [vgSlider]="true"></vg-scrub-bar-current-time>
       <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
     </vg-scrub-bar>
@@ -48,9 +48,10 @@
       <track
         *ngFor="let subtitle of subtitleList"
         [default]="subtitle.default"
-        label="{{ subtitle.label }}"
+        [srclang]="subtitle.srcLang"
+        [label]="mapLang(subtitle.srcLang)"
         kind="subtitles"
-        src="{{ subtitle.url }}" />
+        [src]="subtitle.url" />
     </video>
   </vg-player>
 </nz-card>
