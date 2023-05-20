@@ -23,7 +23,12 @@ export class AuthState {
 
   @Selector()
   static isAdmin(state: AuthStateModel) {
-    return !!state.user && state.user.roles.includes('admin');
+    return !!state.user && state.user.roles.includes('bingemate-admin');
+  }
+
+  @Selector()
+  static isSubscribed(state: AuthStateModel) {
+    return !!state.user && state.user.roles.includes('bingemate-subscribed');
   }
 
   @Action(AuthActions.LoggedIn)
