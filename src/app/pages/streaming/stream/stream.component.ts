@@ -1,28 +1,50 @@
-import { Component } from '@angular/core';
-import { MediaFile } from '../../../shared/models/mdeia-file.model';
+import { Component, OnInit } from '@angular/core';
+import { MediaFile } from '../../../shared/models/media-file.models';
+import { ActivatedRoute } from '@angular/router';
+import { MediaInfoService } from '../../../feature/media-info/media-info.service';
+import { MediaResponse } from '../../../shared/models/media.models';
 
 @Component({
   selector: 'app-stream',
   templateUrl: './stream.component.html',
   styleUrls: ['./stream.component.less'],
 })
-export class StreamComponent {
-  mediaId = '123456';
-  mediaName = "La croix de Jesus (Oui, j'avais pas d'idées ...)";
-  mediaFile: MediaFile = {
-    filename: 'index.m3u8',
-    duration: 1200,
-    audioTracks: [
-      {
-        filename: 'audio_1.m3u8',
-        language: 'JPN',
+export class StreamComponent implements OnInit {
+  mediaId = 123456;
+  mediaFile: MediaFile | undefined;
+  error: string | undefined;
+  mediaTitle = 'undefined';
+
+  constructor(
+    private route: ActivatedRoute,
+    private mediaInfoService: MediaInfoService
+  ) {}
+
+  ngOnInit(): void {
+    this.mediaId = Number.parseInt(
+      this.route.snapshot.paramMap.get('id') || ''
+    );
+    if (isNaN(this.mediaId)) {
+      this.error = "L'id n'est pas valide";
+      return;
+    }
+    this.mediaInfoService.getFileInfos(this.mediaId).subscribe({
+      next: (mediaFile: MediaFile) => {
+        this.mediaFile = mediaFile;
       },
-    ],
-    subtitleTracks: [
-      {
-        filename: 'subtitle_2.vtt',
-        language: 'FRA',
+      error: (err: any) => {
+        console.error(err.error.error);
+        this.error = err.error.error;
       },
-    ],
-  };
+    });
+    this.mediaInfoService.getMediaInfo(this.mediaId).subscribe({
+      next: (mediaInfo: MediaResponse) => {
+        this.mediaTitle = mediaInfo.name;
+      },
+      error: (err: any) => {
+        console.error(err.error.error);
+        this.error = err.error.error;
+      },
+    });
+  }
 }

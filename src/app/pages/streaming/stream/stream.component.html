@@ -1,8 +1,20 @@
-<nz-row [nzGutter]="16">
-  <nz-col [nzSpan]="24">
+<nz-row [nzGutter]="[16, 16]">
+  <nz-col *ngIf="mediaFile" [nzSpan]="24">
     <app-video-player
+      [mediaTitle]="mediaTitle"
       [mediaId]="mediaId"
-      [mediaName]="mediaName"
       [mediaFile]="mediaFile"></app-video-player>
+  </nz-col>
+  <nz-col *ngIf="!mediaFile && !error" [nzSpan]="24">
+    <nz-spin
+      style="padding: 30px 50px"
+      nzSpinning
+      nzSize="large"
+      nzTip="Chargement du média..."></nz-spin>
+  </nz-col>
+  <nz-col *ngIf="error" [nzSpan]="24">
+    <nz-alert
+      nzType="error"
+      [nzMessage]="'Erreur lors du chargement du média : ' + error"></nz-alert>
   </nz-col>
 </nz-row>
