@@ -19,6 +19,7 @@ export interface Genre {
 export interface MediaResponse {
   createdAt: string;
   id: number;
+  name: string;
   mediaType: MediaType;
   releaseDate: string;
   updatedAt: string;

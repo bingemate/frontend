@@ -1,23 +1,16 @@
-export interface AudioResponse {
-  bitrate: number;
-  codec: string;
-  language: string;
-}
-
-export interface SubtitleResponse {
-  code: string;
-  language: string;
-}
-
-export interface MediaFileResponse {
-  audios: AudioResponse[];
-  codec: string;
-  createdAt: string;
-  duration: number;
+export interface AudioTrack {
   filename: string;
-  id: string;
-  mimeType: string;
-  size: number;
-  subtitles?: SubtitleResponse[];
-  updatedAt: string;
+  language: string;
+}
+
+export interface SubtitleTrack {
+  filename: string;
+  language: string;
+}
+
+export interface MediaFile {
+  filename: string;
+  duration: number;
+  audios: AudioTrack[];
+  subtitles: SubtitleTrack[];
 }
