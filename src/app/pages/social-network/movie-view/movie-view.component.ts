@@ -22,10 +22,8 @@ export class MovieViewComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.mediaInfoService
-      .getMovieInfoByTmdbId(this.movieId ?? 0)
-      .subscribe(movie => {
-        this.movie = movie;
-      });
+    this.mediaInfoService.getMovieInfo(this.movieId ?? 0).subscribe(movie => {
+      this.movie = movie;
+    });
   }
 }
