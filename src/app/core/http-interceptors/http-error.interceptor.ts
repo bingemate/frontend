@@ -8,11 +8,15 @@ import {
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { NotificationsService } from '../notifications/notifications.service';
 
 /** Passes HttpErrorResponse to application-wide error handler */
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {
-  constructor(private injector: Injector) {}
+  constructor(
+    private injector: Injector,
+    private notificationsService: NotificationsService
+  ) {}
 
   intercept(
     request: HttpRequest<unknown>,
@@ -24,6 +28,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
           if (err instanceof HttpErrorResponse && err.status !== 404) {
             const appErrorHandler = this.injector.get(ErrorHandler);
             appErrorHandler.handleError(err);
+            this.notificationsService.error('An error occurred', err.message);
           }
         },
       })
