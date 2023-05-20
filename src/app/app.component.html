@@ -176,6 +176,15 @@
         <nz-page-header-extra>
           <nz-space nzAlign="baseline" nzSize="large">
             <button
+              [hidden]="!isAdmin"
+              *nzSpaceItem
+              nz-button
+              nz-tooltip="Ajouter de nouveaux médias"
+              nzShape="circle"
+              [routerLink]="'/' + navigationRoot.upload.path">
+              <span nz-icon nzType="upload"></span>
+            </button>
+            <button
               *nzSpaceItem
               nz-button
               nzShape="circle"

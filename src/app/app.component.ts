@@ -17,6 +17,7 @@ import { AuthActions } from './core/auth/store/auth.actions';
 import { AuthState } from './core/auth/store/auth.state';
 import { isMatchingRoles, UserModel } from './shared/models/user.models';
 import { KeycloakService } from 'keycloak-angular';
+import { uploadLinks } from './pages/upload/upload-routing.module';
 
 @Component({
   selector: 'app-root',
@@ -51,6 +52,9 @@ export class AppComponent implements OnInit {
   @Select(AuthState.isAdmin)
   isAdmin$!: Observable<boolean>;
   isAdmin = false;
+  @Select(AuthState.isSubscribed)
+  isSubscribed$!: Observable<boolean>;
+  isSubscribed = false;
   @Select(AuthState.user)
   user$!: Observable<UserModel>;
   user: UserModel | null = null;
@@ -61,6 +65,9 @@ export class AppComponent implements OnInit {
     });
     this.isAdmin$.subscribe(isAdmin => {
       this.isAdmin = isAdmin;
+    });
+    this.isSubscribed$.subscribe(isSubscribed => {
+      this.isSubscribed = isSubscribed;
     });
     this.user$.subscribe(user => {
       this.user = user;
@@ -176,4 +183,5 @@ export class AppComponent implements OnInit {
       path: `${navigationRoot.statistics.path}/${link.path}`,
     };
   });
+  protected readonly uploadLinks = uploadLinks;
 }
