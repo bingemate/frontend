@@ -1,4 +1,4 @@
-<nz-card [nzTitle]="mediaTitle">
+<nz-card [nzTitle]="title">
   <vg-player (onPlayerReady)="onPlayerReady($event)">
     <vg-overlay-play></vg-overlay-play>
     <vg-buffering></vg-buffering>
@@ -61,3 +61,9 @@
     </video>
   </vg-player>
 </nz-card>
+
+<ng-template #title>
+  <a [routerLink]="mediaViewLink">
+    {{ mediaTitle }}
+  </a>
+</ng-template>

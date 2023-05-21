@@ -10,6 +10,7 @@ import { NzCardModule } from 'ng-zorro-antd/card';
 import { VgModuloModule } from '@videogular/ngx-videogular/modulo';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzSelectModule } from 'ng-zorro-antd/select';
+import { RouterLink } from '@angular/router';
 
 @NgModule({
   declarations: [VideoPlayerComponent],
@@ -28,6 +29,7 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
     VgModuloModule,
     NzIconModule,
     NzSelectModule,
+    RouterLink,
   ],
   exports: [VideoPlayerComponent],
 })

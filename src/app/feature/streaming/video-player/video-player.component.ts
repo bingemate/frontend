@@ -3,6 +3,9 @@ import { MediaFile } from '../../../shared/models/media-file.models';
 import { BitrateOptions, VgApiService } from '@videogular/ngx-videogular/core';
 import { API_RESOURCE_URI } from '../../../shared/api-resource-uri/api-resources-uri';
 import { interval, Subject, takeUntil } from 'rxjs';
+import { navigationRoot } from '../../../app-routing.module';
+import { MediaInfoService } from '../../media-info/media-info.service';
+import { mediasLinks } from '../../../pages/medias/medias-routing.module';
 
 @Component({
   selector: 'app-video-player',
@@ -10,6 +13,8 @@ import { interval, Subject, takeUntil } from 'rxjs';
   styleUrls: ['./video-player.component.less'],
 })
 export class VideoPlayerComponent implements OnInit, OnDestroy {
+  mediaViewLink = `/${navigationRoot.medias.path}/`;
+
   @Input() mediaTitle = 'undefined';
   @Input() mediaId: number | undefined;
   @Input() mediaFile: MediaFile | undefined;
@@ -26,7 +31,26 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
   videoUrl = '';
   currentAudio = '';
 
+  constructor(private mediaInfoService: MediaInfoService) {}
+
   ngOnInit() {
+    if (this.mediaId) {
+      this.mediaInfoService.getMediaInfo(this.mediaId).subscribe(media => {
+        switch (media.mediaType) {
+          case 'Movie':
+            this.mediaViewLink += `${mediasLinks.movie_view.path}/${this.mediaId}`;
+            break;
+          case 'Episode':
+            this.mediaInfoService
+              .getTvShowEpisodeInfoById(media.id)
+              .subscribe(episode => {
+                this.mediaViewLink += `${mediasLinks.tv_show_view.path}/${episode.tvShowId}`;
+              });
+            break;
+        }
+      });
+    }
+
     if (this.mediaFile) {
       this.videoUrl = `${API_RESOURCE_URI.STREAMING}/${this.mediaId}/${this.mediaFile.filename}`;
       console.log(this.videoUrl);
