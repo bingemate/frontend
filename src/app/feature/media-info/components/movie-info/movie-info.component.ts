@@ -12,6 +12,8 @@ import { mediasLinks } from '../../../../pages/medias/medias-routing.module';
 export class MovieInfoComponent {
   readonly streamPath = `/${navigationRoot.streaming.path}/${streamingLinks.stream.path}/`;
   readonly moviesByGenrePath = `/${navigationRoot.medias.path}/${mediasLinks.movies_by_genre.path}/`;
+  readonly moviesByActorPath = `/${navigationRoot.medias.path}/${mediasLinks.movies_by_actor.path}/`;
+  readonly moviesByStudioPath = `/${navigationRoot.medias.path}/${mediasLinks.movies_by_studio.path}/`;
 
   @Input() movie: MovieResponse | undefined;
   actorsCurrentPage = 1;

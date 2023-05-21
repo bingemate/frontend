@@ -35,9 +35,9 @@
             <nz-tag
               *ngFor="let genre of movie.genres"
               [routerLink]="moviesByGenrePath + genre.id"
+              nzMode="checkable"
               nzColor="green"
               nzChecked
-              nzMode="checkable"
               >{{ genre.name }}</nz-tag
             >
           </nz-descriptions-item>
@@ -47,6 +47,8 @@
           <nz-descriptions-item nzTitle="Studios">
             <nz-tag
               *ngFor="let studio of movie.studios"
+              [routerLink]="moviesByStudioPath + studio.id"
+              nzMode="checkable"
               nzColor="magenta"
               nzChecked
               >{{ studio.name }}</nz-tag
@@ -62,7 +64,10 @@
         [nzPagination]="actorListPagination"
         [nzBordered]="false"
         [nzGrid]="{ gutter: 16, xs: 2, sm: 3, md: 4, lg: 6, xl: 6, xxl: 6 }">
-        <nz-list-item *ngFor="let actor of getActorsSlice()">
+        <nz-list-item
+          *ngFor="let actor of getActorsSlice()"
+          style="cursor: pointer"
+          [routerLink]="moviesByActorPath + actor.id">
           <nz-list-item-meta
             [nzAvatar]="actor.profileUrl"
             nzTitle="{{ actor.name }}"
