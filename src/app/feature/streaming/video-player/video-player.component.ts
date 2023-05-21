@@ -1,17 +1,22 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MediaFile } from '../../../shared/models/media-file.models';
-import { BitrateOptions } from '@videogular/ngx-videogular/core';
+import { BitrateOptions, VgApiService } from '@videogular/ngx-videogular/core';
 import { API_RESOURCE_URI } from '../../../shared/api-resource-uri/api-resources-uri';
+import { interval, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-video-player',
   templateUrl: './video-player.component.html',
   styleUrls: ['./video-player.component.less'],
 })
-export class VideoPlayerComponent implements OnInit {
+export class VideoPlayerComponent implements OnInit, OnDestroy {
   @Input() mediaTitle = 'undefined';
   @Input() mediaId: number | undefined;
   @Input() mediaFile: MediaFile | undefined;
+  @Input() timeSeek = 0;
+
+  intervalId: any;
+  componentDestroyed$ = new Subject();
 
   audioOptions: BitrateOptions[] = [];
   audioList: string[] = [];
@@ -50,6 +55,29 @@ export class VideoPlayerComponent implements OnInit {
       );
       this.currentAudio = this.audioList[0];
     }
+  }
+
+  ngOnDestroy() {
+    this.componentDestroyed$.next(true);
+    this.componentDestroyed$.complete();
+  }
+
+  onPlayerReady(api: VgApiService) {
+    this.intervalId = interval(5000)
+      .pipe(takeUntil(this.componentDestroyed$))
+      .subscribe(() => {
+        const totalSeconds = Math.floor(api.currentTime);
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+
+        console.log(
+          `Position dans la vidéo ${minutes}:${
+            seconds < 10 ? '0' : ''
+          }${seconds}`
+        );
+      });
+
+    api.seekTime(this.timeSeek);
   }
 
   onSelectedAudio(event: BitrateOptions) {
