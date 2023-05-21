@@ -11,6 +11,8 @@ import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 import { MovieViewComponent } from './movie-view/movie-view.component';
 import { MovieByGenreComponent } from './movie-by-genre/movie-by-genre.component';
 import { NzCardModule } from 'ng-zorro-antd/card';
+import { MovieByActorComponent } from './movie-by-actor/movie-by-actor.component';
+import { MovieByStudioComponent } from './movie-by-studio/movie-by-studio.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +20,8 @@ import { NzCardModule } from 'ng-zorro-antd/card';
     TrendingComponent,
     MovieViewComponent,
     MovieByGenreComponent,
+    MovieByActorComponent,
+    MovieByStudioComponent,
   ],
   imports: [
     CommonModule,

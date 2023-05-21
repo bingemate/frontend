@@ -159,7 +159,19 @@ export class AppComponent implements OnInit {
     });
 
   readonly mediasLinks = Object.values(mediasLinks)
-    .filter(media => !['view', 'movie-view'].includes(media.path))
+    .filter(
+      media =>
+        ![
+          'view',
+          'movie-view',
+          'movies-by-genre',
+          'movies-by-actor',
+          'movies-by-studio',
+          'tv-shows-by-genre',
+          'tv-shows-by-actor',
+          'tv-shows-by-network',
+        ].includes(media.path)
+    )
     .map(link => {
       return {
         ...link,
