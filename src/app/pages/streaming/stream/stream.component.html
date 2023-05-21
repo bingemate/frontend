@@ -1,6 +1,7 @@
 <nz-row [nzGutter]="[16, 16]">
   <nz-col *ngIf="mediaFile" [nzSpan]="24">
     <app-video-player
+      [timeSeek]="0"
       [mediaTitle]="mediaTitle"
       [mediaId]="mediaId"
       [mediaFile]="mediaFile"></app-video-player>
