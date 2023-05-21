@@ -8,9 +8,17 @@ import { NzCollapseModule } from 'ng-zorro-antd/collapse';
 import { NzSkeletonModule } from 'ng-zorro-antd/skeleton';
 import { MediaInfoModule } from '../../feature/media-info/media-info.module';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
+import { MovieViewComponent } from './movie-view/movie-view.component';
+import { MovieByGenreComponent } from './movie-by-genre/movie-by-genre.component';
+import { NzCardModule } from 'ng-zorro-antd/card';
 
 @NgModule({
-  declarations: [MediasMediaListComponent, TrendingComponent],
+  declarations: [
+    MediasMediaListComponent,
+    TrendingComponent,
+    MovieViewComponent,
+    MovieByGenreComponent,
+  ],
   imports: [
     CommonModule,
     MediasRoutingModule,
@@ -19,6 +27,7 @@ import { NzPaginationModule } from 'ng-zorro-antd/pagination';
     NzSkeletonModule,
     MediaInfoModule,
     NzPaginationModule,
+    NzCardModule,
   ],
 })
 export class MediasModule {}

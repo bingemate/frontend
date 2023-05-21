@@ -10,10 +10,10 @@ import { NzPageHeaderModule } from 'ng-zorro-antd/page-header';
 import { NzCollapseModule } from 'ng-zorro-antd/collapse';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 import { NzSkeletonModule } from 'ng-zorro-antd/skeleton';
-import { MovieViewComponent } from './movie-view/movie-view.component';
+import { MovieViewComponent } from '../medias/movie-view/movie-view.component';
 
 @NgModule({
-  declarations: [SocialNetworkHomeComponent, MovieViewComponent],
+  declarations: [SocialNetworkHomeComponent],
   imports: [
     CommonModule,
     SocialNetworkRoutingModule,
