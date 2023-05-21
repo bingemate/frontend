@@ -26,6 +26,7 @@ export interface MediaResponse {
 }
 
 export interface MovieResponse {
+  present: boolean;
   actors: Person[];
   backdropUrl: string;
   crew: Crew[];
@@ -60,6 +61,7 @@ export interface Studio {
 }
 
 export interface TvEpisodeResponse {
+  present: boolean;
   airDate: string;
   episodeNumber: number;
   id: number;
@@ -71,6 +73,7 @@ export interface TvEpisodeResponse {
 }
 
 export interface TvShowResponse {
+  present: boolean;
   actors: Person[];
   backdropUrl: string;
   crew: Crew[];
