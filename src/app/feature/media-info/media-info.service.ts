@@ -52,7 +52,7 @@ export class MediaInfoService {
 
   getTvShowEpisodeInfoById(tmdbId: number): Observable<TvEpisodeResponse> {
     return this.http.get<TvEpisodeResponse>(
-      API_RESOURCE_URI.MEDIA_INFO + '/media/tvshow-episode-tmdb/' + tmdbId
+      API_RESOURCE_URI.MEDIA_INFO + '/media/episode-tmdb/' + tmdbId
     );
   }
 
