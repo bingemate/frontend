@@ -100,4 +100,8 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
         return srcLang;
     }
   }
+
+  timeFormat(): string {
+    return this.mediaFile?.duration ?? 0 > 3600 ? 'hh:mm:ss' : 'mm:ss';
+  }
 }
