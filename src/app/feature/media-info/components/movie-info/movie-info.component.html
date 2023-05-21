@@ -34,8 +34,10 @@
           <nz-descriptions-item nzTitle="Genres">
             <nz-tag
               *ngFor="let genre of movie.genres"
+              [routerLink]="moviesByGenrePath + genre.id"
               nzColor="green"
               nzChecked
+              nzMode="checkable"
               >{{ genre.name }}</nz-tag
             >
           </nz-descriptions-item>
