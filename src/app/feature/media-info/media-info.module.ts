@@ -25,6 +25,7 @@ import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 import { NzBadgeModule } from 'ng-zorro-antd/badge';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { ActorInfoComponent } from './components/actor-info/actor-info.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
     EpisodeInfoCardComponent,
     MovieListComponent,
     TvListComponent,
+    ActorInfoComponent,
   ],
   imports: [
     CommonModule,
@@ -66,6 +68,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
     MovieListComponent,
     TvListComponent,
     MovieInfoComponent,
+    ActorInfoComponent,
   ],
 })
 export class MediaInfoModule {}
