@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { movieViewPath } from 'src/app/pages/medias/medias-routing.module';
 import { MovieResponse } from '../../../../shared/models/media.models';
+import { navigationRoot } from '../../../../app-routing.module';
+import { streamingLinks } from '../../../../pages/streaming/streaming-routing.module';
 
 @Component({
   selector: 'app-movie-info-card',

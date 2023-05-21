@@ -1,5 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { MovieResponse, Person } from '../../../../shared/models/media.models';
+import { navigationRoot } from '../../../../app-routing.module';
+import { streamingLinks } from '../../../../pages/streaming/streaming-routing.module';
 
 @Component({
   selector: 'app-movie-info',
@@ -7,6 +9,8 @@ import { MovieResponse, Person } from '../../../../shared/models/media.models';
   styleUrls: ['./movie-info.component.less'],
 })
 export class MovieInfoComponent {
+  readonly streamPath = `/${navigationRoot.streaming.path}/${streamingLinks.stream.path}/`;
+
   @Input() movie: MovieResponse | undefined;
   actorsCurrentPage = 1;
   actorsPageSize = 5;

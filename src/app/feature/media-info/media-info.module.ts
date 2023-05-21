@@ -23,6 +23,8 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzListModule } from 'ng-zorro-antd/list';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
+import { NzBadgeModule } from 'ng-zorro-antd/badge';
+import { NzButtonModule } from 'ng-zorro-antd/button';
 
 @NgModule({
   declarations: [
@@ -53,6 +55,8 @@ import { NzPaginationModule } from 'ng-zorro-antd/pagination';
     NzListModule,
     NzAvatarModule,
     NzPaginationModule,
+    NzBadgeModule,
+    NzButtonModule,
   ],
   exports: [
     MediaInfoComponent,

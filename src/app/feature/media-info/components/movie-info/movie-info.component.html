@@ -11,6 +11,17 @@
     <div class="movie-info" nz-col [nzMd]="24" [nzXl]="16">
       <nz-row [nzGutter]="[24, 24]">
         <h1 class="movie-title" nz-col nzSpan="24">{{ movie.title }}</h1>
+        <!--        Play button if media is present -->
+        <div *ngIf="movie.present" nz-col nzSpan="24">
+          <button
+            [routerLink]="streamPath + movie.id"
+            nz-button
+            nzType="primary"
+            nzShape="round">
+            <span nz-icon nzType="play-circle" nzTheme="fill"></span
+            >&nbsp;Regarder
+          </button>
+        </div>
         <div class="movie-rating" nz-col nzSpan="24">
           <nz-rate [ngModel]="getRate()" nzDisabled nzAllowHalf></nz-rate>
           &nbsp;{{ movie.voteAverage.toFixed(2) }}
