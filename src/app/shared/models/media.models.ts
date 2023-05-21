@@ -18,10 +18,10 @@ export interface Genre {
 
 export interface MediaResponse {
   createdAt: string;
-  id: string;
+  id: number;
+  name: string;
   mediaType: MediaType;
   releaseDate: string;
-  tmdbId: number;
   updatedAt: string;
 }
 

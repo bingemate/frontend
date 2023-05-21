@@ -59,7 +59,7 @@ export class PlaylistComponent implements OnInit {
           forkJoin(
             items.map(item =>
               this.mediaService
-                .getTvShowEpisodeInfoByTmdbId(1, item.season, item.episode)
+                .getTvShowEpisodeInfo(1, item.season, item.episode)
                 .pipe(
                   map(media => {
                     return {
@@ -85,7 +85,7 @@ export class PlaylistComponent implements OnInit {
         mergeMap(items =>
           forkJoin(
             items.map(item =>
-              this.mediaService.getMovieInfoByTmdbId(1).pipe(
+              this.mediaService.getMovieInfo(1).pipe(
                 map(media => {
                   return {
                     media: {
