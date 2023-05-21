@@ -167,6 +167,7 @@ export class AppComponent implements OnInit {
           'movies-by-genre',
           'movies-by-actor',
           'movies-by-studio',
+          'tv-show-view',
           'tv-shows-by-genre',
           'tv-shows-by-actor',
           'tv-shows-by-network',

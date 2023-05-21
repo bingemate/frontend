@@ -4,6 +4,12 @@ export enum MediaType {
   Episode = 'Episode',
 }
 
+export interface Actor {
+  id: number;
+  name: string;
+  overview: string;
+  profileUrl: string;
+}
 export interface Crew {
   id: number;
   name: string;
