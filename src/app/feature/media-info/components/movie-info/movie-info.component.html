@@ -21,20 +21,31 @@
             movie.releaseDate | date : 'dd/MM/yyyy'
           }}</nz-descriptions-item>
           <nz-descriptions-item nzTitle="Genres">
-            <nz-tag *ngFor="let genre of movie.genres" nzChecked>{{
-              genre.name
-            }}</nz-tag>
+            <nz-tag
+              *ngFor="let genre of movie.genres"
+              nzColor="green"
+              nzChecked
+              >{{ genre.name }}</nz-tag
+            >
           </nz-descriptions-item>
-          <nz-descriptions-item nzTitle="Overview" [nzSpan]="24">{{
+          <nz-descriptions-item nzTitle="Résumé" [nzSpan]="24">{{
             movie.overview
           }}</nz-descriptions-item>
-          <nz-descriptions-item nzTitle="Studio">TODO</nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Studios">
+            <nz-tag
+              *ngFor="let studio of movie.studios"
+              nzColor="magenta"
+              nzChecked
+              >{{ studio.name }}</nz-tag
+            >
+          </nz-descriptions-item>
         </nz-descriptions>
       </nz-row>
     </div>
     <div class="actors" nz-col nzSpan="24">
-      <h2>Cast</h2>
+      <h2>Acteurs</h2>
       <nz-list
+        nzSize="large"
         [nzPagination]="actorListPagination"
         [nzBordered]="false"
         [nzGrid]="{ gutter: 16, xs: 2, sm: 3, md: 4, lg: 6, xl: 6, xxl: 6 }">
