@@ -1,0 +1,23 @@
+<nz-page-header
+  nzTitle="Films par acteur (TODO, implement actor service request)">
+</nz-page-header>
+
+<nz-skeleton
+  *ngIf="movies.length === 0"
+  [nzActive]="true"
+  [nzParagraph]="{ rows: 10 }"></nz-skeleton>
+
+<nz-card *ngIf="movies.length > 0" [nzExtra]="moviesPagination">
+  <app-movie-list [movies]="movies"></app-movie-list>
+</nz-card>
+
+<ng-template #moviesPagination>
+  <div (click)="$event.stopPropagation()">
+    <nz-pagination
+      [nzPageIndex]="moviesPage"
+      [nzTotal]="Math.min(moviesTotalResults, 1000)"
+      [nzPageSize]="20"
+      (nzPageIndexChange)="onMoviesPageChange($event)">
+    </nz-pagination>
+  </div>
+</ng-template>
