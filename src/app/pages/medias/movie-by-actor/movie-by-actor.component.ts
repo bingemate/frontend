@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { MovieResponse } from '../../../shared/models/media.models';
+import { Actor, MovieResponse } from '../../../shared/models/media.models';
 import { ActivatedRoute } from '@angular/router';
 import { MediaDiscoverService } from '../../../feature/media-info/media-discover.service';
+import { MediaAssetsService } from '../../../feature/media-info/media-assets.service';
 
 @Component({
   selector: 'app-movie-by-actor',
@@ -10,6 +11,7 @@ import { MediaDiscoverService } from '../../../feature/media-info/media-discover
 })
 export class MovieByActorComponent implements OnInit {
   actorId = 0;
+  actor: Actor | undefined;
 
   movies: MovieResponse[] = [];
   moviesPage = 1;
@@ -18,7 +20,8 @@ export class MovieByActorComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private mediaDiscoverService: MediaDiscoverService
+    private mediaDiscoverService: MediaDiscoverService,
+    private mediaAssetsService: MediaAssetsService
   ) {
     this.route.params.subscribe(params => {
       this.actorId = params['id'];
@@ -27,6 +30,7 @@ export class MovieByActorComponent implements OnInit {
 
   ngOnInit(): void {
     this.getMovies();
+    this.getActor();
   }
 
   getMovies(): void {
@@ -37,6 +41,12 @@ export class MovieByActorComponent implements OnInit {
         this.moviesTotalResults = movies.totalResult;
         this.movies = movies.results;
       });
+  }
+
+  getActor(): void {
+    this.mediaAssetsService.getActor(this.actorId).subscribe(actor => {
+      this.actor = actor;
+    });
   }
 
   onMoviesPageChange(page: number): void {
