@@ -159,7 +159,7 @@ export class AppComponent implements OnInit {
     });
 
   readonly mediasLinks = Object.values(mediasLinks)
-    .filter(media => !['view'].includes(media.path))
+    .filter(media => !['view', 'movie-view'].includes(media.path))
     .map(link => {
       return {
         ...link,

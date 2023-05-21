@@ -2,32 +2,12 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { NavigationLinks, navigationRoot } from '../../app-routing.module';
 import { SocialNetworkHomeComponent } from './social-network-home/social-network-home.component';
-import { TrendingComponent } from './trending/trending.component';
+import { TrendingComponent } from '../medias/trending/trending.component';
 import { MovieViewComponent } from './movie-view/movie-view.component';
 
 export const socialNetworkLinks: NavigationLinks<
-  | 'trending'
-  | 'social_network_home'
-  | 'search_media'
-  | 'search_user'
-  | 'media'
-  | 'user_profile'
-  | 'chat'
-  | 'relations'
-  | 'movie_view'
+  'search_user' | 'media' | 'user_profile' | 'chat' | 'relations'
 > = {
-  trending: {
-    path: 'trending',
-    name: 'Tendances',
-  },
-  social_network_home: {
-    path: 'home',
-    name: 'Réseau social',
-  },
-  search_media: {
-    path: 'search-media',
-    name: 'Rechercher un média',
-  },
   search_user: {
     path: 'search-user',
     name: 'Rechercher un utilisateur',
@@ -48,30 +28,9 @@ export const socialNetworkLinks: NavigationLinks<
     path: 'relations',
     name: 'Mes relations',
   },
-  movie_view: {
-    path: 'movie-view',
-    name: 'Film',
-  },
 };
 
-export const movieViewPath =
-  '/' +
-  navigationRoot.socialNetwork.path +
-  '/' +
-  socialNetworkLinks.movie_view.path;
-
 const routes: Routes = [
-  {
-    path: socialNetworkLinks.social_network_home.path,
-    pathMatch: 'full',
-    component: SocialNetworkHomeComponent,
-    data: { title: socialNetworkLinks.social_network_home.name },
-  },
-  {
-    path: socialNetworkLinks.search_media.path,
-    component: SocialNetworkHomeComponent,
-    data: { title: socialNetworkLinks.search_media.name },
-  },
   {
     path: socialNetworkLinks.search_user.path,
     component: SocialNetworkHomeComponent,
@@ -96,16 +55,6 @@ const routes: Routes = [
     path: socialNetworkLinks.relations.path,
     component: SocialNetworkHomeComponent,
     data: { title: socialNetworkLinks.relations.name },
-  },
-  {
-    path: socialNetworkLinks.trending.path,
-    component: TrendingComponent,
-    data: { title: socialNetworkLinks.trending.name },
-  },
-  {
-    path: socialNetworkLinks.movie_view.path + '/:id',
-    component: MovieViewComponent,
-    data: { title: socialNetworkLinks.movie_view.name },
   },
 ];
 

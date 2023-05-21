@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SocialNetworkRoutingModule } from './social-network-routing.module';
 import { SocialNetworkHomeComponent } from './social-network-home/social-network-home.component';
-import { TrendingComponent } from './trending/trending.component';
 import { MediaInfoModule } from '../../feature/media-info/media-info.module';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
@@ -14,11 +13,7 @@ import { NzSkeletonModule } from 'ng-zorro-antd/skeleton';
 import { MovieViewComponent } from './movie-view/movie-view.component';
 
 @NgModule({
-  declarations: [
-    SocialNetworkHomeComponent,
-    TrendingComponent,
-    MovieViewComponent,
-  ],
+  declarations: [SocialNetworkHomeComponent, MovieViewComponent],
   imports: [
     CommonModule,
     SocialNetworkRoutingModule,
