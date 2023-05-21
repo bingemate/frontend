@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MovieResponse } from '../../../shared/models/media.models';
 import { ActivatedRoute } from '@angular/router';
 import { MediaDiscoverService } from '../../../feature/media-info/media-discover.service';
+import { MediaAssetsService } from '../../../feature/media-info/media-assets.service';
 
 @Component({
   selector: 'app-movie-by-studio',
@@ -10,6 +11,7 @@ import { MediaDiscoverService } from '../../../feature/media-info/media-discover
 })
 export class MovieByStudioComponent implements OnInit {
   studioId = 0;
+  studioName = '';
 
   movies: MovieResponse[] = [];
   moviesPage = 1;
@@ -18,7 +20,8 @@ export class MovieByStudioComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private mediaDiscoverService: MediaDiscoverService
+    private mediaDiscoverService: MediaDiscoverService,
+    private mediaAssetsService: MediaAssetsService
   ) {
     this.route.params.subscribe(params => {
       this.studioId = params['id'];
@@ -27,6 +30,7 @@ export class MovieByStudioComponent implements OnInit {
 
   ngOnInit(): void {
     this.getMovies();
+    this.getStudioName();
   }
 
   getMovies(): void {
@@ -37,6 +41,12 @@ export class MovieByStudioComponent implements OnInit {
         this.moviesTotalResults = movies.totalResult;
         this.movies = movies.results;
       });
+  }
+
+  getStudioName(): void {
+    this.mediaAssetsService.getStudio(this.studioId).subscribe(studio => {
+      this.studioName = studio.name;
+    });
   }
 
   onMoviesPageChange(page: number): void {

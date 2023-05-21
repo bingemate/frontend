@@ -13,6 +13,7 @@ import { MovieByGenreComponent } from './movie-by-genre/movie-by-genre.component
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { MovieByActorComponent } from './movie-by-actor/movie-by-actor.component';
 import { MovieByStudioComponent } from './movie-by-studio/movie-by-studio.component';
+import { NzGridModule } from 'ng-zorro-antd/grid';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { MovieByStudioComponent } from './movie-by-studio/movie-by-studio.compon
     MediaInfoModule,
     NzPaginationModule,
     NzCardModule,
+    NzGridModule,
   ],
 })
 export class MediasModule {}
