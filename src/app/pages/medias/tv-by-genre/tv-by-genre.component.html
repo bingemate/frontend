@@ -1,0 +1,21 @@
+<nz-page-header nzTitle="Séries de genre {{ genreName }}"></nz-page-header>
+
+<nz-skeleton
+  *ngIf="tvShows.length === 0"
+  [nzActive]="true"
+  [nzParagraph]="{ rows: 10 }"></nz-skeleton>
+
+<nz-card *ngIf="tvShows.length > 0" [nzExtra]="tvPagination">
+  <app-tv-list [tvShows]="tvShows"></app-tv-list>
+</nz-card>
+
+<ng-template #tvPagination>
+  <div (click)="$event.stopPropagation()">
+    <nz-pagination
+      [nzPageIndex]="tvShowsPage"
+      [nzTotal]="Math.min(tvShowsTotalPages, 1000)"
+      [nzPageSize]="20"
+      (nzPageIndexChange)="onTvShowsPageChange($event)">
+    </nz-pagination>
+  </div>
+</ng-template>
