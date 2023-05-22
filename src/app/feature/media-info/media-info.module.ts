@@ -69,6 +69,7 @@ import { ActorInfoComponent } from './components/actor-info/actor-info.component
     TvListComponent,
     MovieInfoComponent,
     ActorInfoComponent,
+    TvInfoComponent,
   ],
 })
 export class MediaInfoModule {}
