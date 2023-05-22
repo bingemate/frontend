@@ -4,14 +4,13 @@
   [nzParagraph]="{ rows: 20 }"></nz-skeleton>
 <div class="movie-details-container" *ngIf="movie">
   <nz-row [nzGutter]="[24, 24]" class="movie-details">
-    <div class="movie-poster" nz-col nzSpan="8">
+    <div class="movie-poster" nz-col nzSpan="6">
       <img nz-image [nzSrc]="movie.posterUrl" alt="Movie Poster" width="100%" />
     </div>
 
-    <div class="movie-info" nz-col [nzMd]="24" [nzXl]="16">
+    <div class="movie-info" nz-col [nzMd]="24" [nzXl]="18">
       <nz-row [nzGutter]="[24, 24]">
         <h1 class="movie-title" nz-col nzSpan="24">{{ movie.title }}</h1>
-        <!--        Play button if media is present -->
         <div *ngIf="movie.present" nz-col nzSpan="24">
           <button
             [routerLink]="streamPath + movie.id"
