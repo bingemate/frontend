@@ -1,9 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { NavigationLinks, navigationRoot } from '../../app-routing.module';
+import { NavigationLinks } from '../../app-routing.module';
 import { SocialNetworkHomeComponent } from './social-network-home/social-network-home.component';
-import { TrendingComponent } from '../medias/trending/trending.component';
-import { MovieViewComponent } from '../medias/movie-view/movie-view.component';
 
 export const socialNetworkLinks: NavigationLinks<
   'search_user' | 'media' | 'user_profile' | 'chat' | 'relations'

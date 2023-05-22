@@ -4,7 +4,6 @@ import {
   TvShowResponse,
 } from '../../../shared/models/media.models';
 import { MediaDiscoverService } from '../../../feature/media-info/media-discover.service';
-import { max } from 'rxjs';
 
 @Component({
   selector: 'app-trending',
