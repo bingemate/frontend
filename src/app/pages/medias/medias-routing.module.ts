@@ -7,6 +7,9 @@ import { MovieViewComponent } from './movie-view/movie-view.component';
 import { MovieByGenreComponent } from './movie-by-genre/movie-by-genre.component';
 import { MovieByActorComponent } from './movie-by-actor/movie-by-actor.component';
 import { MovieByStudioComponent } from './movie-by-studio/movie-by-studio.component';
+import { TvViewComponent } from './tv-view/tv-view.component';
+import { TvByGenreComponent } from './tv-by-genre/tv-by-genre.component';
+import { TvByNetworkComponent } from './tv-by-network/tv-by-network.component';
 
 export const mediasLinks: NavigationLinks<
   | 'list'
@@ -18,7 +21,6 @@ export const mediasLinks: NavigationLinks<
   | 'movies_by_studio'
   | 'tv_show_view'
   | 'tv_shows_by_genre'
-  | 'tv_shows_by_actor'
   | 'tv_shows_by_network'
 > = {
   list: {
@@ -57,10 +59,6 @@ export const mediasLinks: NavigationLinks<
     path: 'tv-shows-by-genre',
     name: 'Séries par genre',
   },
-  tv_shows_by_actor: {
-    path: 'tv-shows-by-actor',
-    name: 'Séries par acteur',
-  },
   tv_shows_by_network: {
     path: 'tv-shows-by-network',
     name: 'Séries par network',
@@ -69,6 +67,9 @@ export const mediasLinks: NavigationLinks<
 
 export const movieViewPath =
   '/' + navigationRoot.medias.path + '/' + mediasLinks.movie_view.path;
+
+export const tvShowViewPath =
+  '/' + navigationRoot.medias.path + '/' + mediasLinks.tv_show_view.path;
 
 const routes: Routes = [
   {
@@ -105,6 +106,21 @@ const routes: Routes = [
     path: mediasLinks.movies_by_studio.path + '/:id',
     component: MovieByStudioComponent,
     data: { title: mediasLinks.movies_by_studio.name },
+  },
+  {
+    path: mediasLinks.tv_show_view.path + '/:id',
+    component: TvViewComponent,
+    data: { title: mediasLinks.tv_show_view.name },
+  },
+  {
+    path: mediasLinks.tv_shows_by_genre.path + '/:id',
+    component: TvByGenreComponent,
+    data: { title: mediasLinks.tv_shows_by_genre.name },
+  },
+  {
+    path: mediasLinks.tv_shows_by_network.path + '/:id',
+    component: TvByNetworkComponent,
+    data: { title: mediasLinks.tv_shows_by_network.name },
   },
 ];
 

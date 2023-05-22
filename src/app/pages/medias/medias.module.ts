@@ -14,6 +14,9 @@ import { NzCardModule } from 'ng-zorro-antd/card';
 import { MovieByActorComponent } from './movie-by-actor/movie-by-actor.component';
 import { MovieByStudioComponent } from './movie-by-studio/movie-by-studio.component';
 import { NzGridModule } from 'ng-zorro-antd/grid';
+import { TvViewComponent } from './tv-view/tv-view.component';
+import { TvByGenreComponent } from './tv-by-genre/tv-by-genre.component';
+import { TvByNetworkComponent } from './tv-by-network/tv-by-network.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +26,9 @@ import { NzGridModule } from 'ng-zorro-antd/grid';
     MovieByGenreComponent,
     MovieByActorComponent,
     MovieByStudioComponent,
+    TvViewComponent,
+    TvByGenreComponent,
+    TvByNetworkComponent,
   ],
   imports: [
     CommonModule,
