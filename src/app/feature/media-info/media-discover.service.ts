@@ -26,6 +26,17 @@ export class MediaDiscoverService {
     );
   }
 
+  getTvShowsByActor(actorId: number, page = 1): Observable<TvShowResults> {
+    const params = new HttpParams()
+      .set('actor', actorId)
+      .set('page', page.toString());
+
+    return this.http.get<TvShowResults>(
+      API_RESOURCE_URI.MEDIA_INFO + '/discover/tv/actor',
+      { params }
+    );
+  }
+
   getMovieByDirector(directorId: number, page = 1): Observable<MovieResults> {
     const params = new HttpParams()
       .set('director', directorId)
