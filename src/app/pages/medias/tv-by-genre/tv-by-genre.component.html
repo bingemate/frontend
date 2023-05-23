@@ -5,7 +5,10 @@
   [nzActive]="true"
   [nzParagraph]="{ rows: 10 }"></nz-skeleton>
 
-<nz-card *ngIf="tvShows.length > 0" [nzExtra]="tvPagination">
+<nz-card
+  *ngIf="tvShows.length > 0"
+  [nzExtra]="tvPagination"
+  [nzActions]="[tvPagination]">
   <app-tv-list [tvShows]="tvShows"></app-tv-list>
 </nz-card>
 

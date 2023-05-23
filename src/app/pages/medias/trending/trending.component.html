@@ -6,7 +6,9 @@
       *ngIf="popularMovies.length === 0"
       [nzActive]="true"
       [nzParagraph]="{ rows: 10 }"></nz-skeleton>
-    <nz-card [nzExtra]="popularMoviesPagination">
+    <nz-card
+      [nzExtra]="popularMoviesPagination"
+      [nzActions]="[popularMoviesPagination]">
       <app-movie-list [movies]="popularMovies"></app-movie-list>
     </nz-card>
   </nz-tab>
@@ -20,7 +22,9 @@
       *ngIf="popularTvShows.length === 0"
       [nzActive]="true"
       [nzParagraph]="{ rows: 10 }"></nz-skeleton>
-    <nz-card [nzExtra]="popularTvShowsPagination">
+    <nz-card
+      [nzExtra]="popularTvShowsPagination"
+      [nzActions]="[popularTvShowsPagination]">
       <app-tv-list [tvShows]="popularTvShows"></app-tv-list>
     </nz-card>
   </nz-tab>
