@@ -1,1 +1,6 @@
-<app-movie-info [movie]="movie"></app-movie-info>
+<nz-space nzSize="large" nzDirection="vertical">
+  <app-movie-info *nzSpaceItem [movie]="movie"></app-movie-info>
+  <nz-divider *nzSpaceItem></nz-divider>
+  <h2 *nzSpaceItem>Recommendations</h2>
+</nz-space>
+<app-movie-list [movies]="movieRecommendations"></app-movie-list>
