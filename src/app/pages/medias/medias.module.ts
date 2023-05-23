@@ -27,6 +27,13 @@ import {
 import { NzListModule } from 'ng-zorro-antd/list';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
+import { MediaSearchComponent } from './media-search/media-search.component';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { FormsModule } from '@angular/forms';
+import { NzProgressModule } from 'ng-zorro-antd/progress';
+import { NzEmptyModule } from 'ng-zorro-antd/empty';
 
 @NgModule({
   declarations: [
@@ -40,6 +47,7 @@ import { NzTabsModule } from 'ng-zorro-antd/tabs';
     TvByGenreComponent,
     TvByNetworkComponent,
     TvByActorComponent,
+    MediaSearchComponent,
   ],
   imports: [
     CommonModule,
@@ -58,6 +66,12 @@ import { NzTabsModule } from 'ng-zorro-antd/tabs';
     CdkVirtualForOf,
     NzDividerModule,
     NzTabsModule,
+    NzInputModule,
+    NzButtonModule,
+    NzIconModule,
+    FormsModule,
+    NzProgressModule,
+    NzEmptyModule,
   ],
 })
 export class MediasModule {}

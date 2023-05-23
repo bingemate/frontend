@@ -11,6 +11,7 @@ import { TvViewComponent } from './tv-view/tv-view.component';
 import { TvByGenreComponent } from './tv-by-genre/tv-by-genre.component';
 import { TvByNetworkComponent } from './tv-by-network/tv-by-network.component';
 import { TvByActorComponent } from './tv-by-actor/tv-by-actor.component';
+import { MediaSearchComponent } from './media-search/media-search.component';
 
 export const mediasLinks: NavigationLinks<
   | 'list'
@@ -85,7 +86,7 @@ const routes: Routes = [
   },
   {
     path: mediasLinks.search.path,
-    component: MediasMediaListComponent,
+    component: MediaSearchComponent,
     data: { title: mediasLinks.search.name },
   },
   {
