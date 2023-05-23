@@ -9,7 +9,7 @@
 <ng-template #card>
   <nz-card nzHoverable class="tv-poster" [nzCover]="cover">
     <nz-card-meta
-      [routerLink]="tvShowViewPath"
+      (click)="onViewTvShow()"
       nzTitle="{{ tv?.title }}"
       [nzDescription]="description"></nz-card-meta>
   </nz-card>
