@@ -12,6 +12,7 @@ import { Person, TvShowResponse } from '../../../../shared/models/media.models';
 export class TvInfoComponent {
   readonly streamPath = `/${navigationRoot.streaming.path}/${streamingLinks.stream.path}/`;
   readonly tvsByGenrePath = `/${navigationRoot.medias.path}/${mediasLinks.tv_shows_by_genre.path}/`;
+  readonly tvsByActorPath = `/${navigationRoot.medias.path}/${mediasLinks.tv_show_by_actor.path}/`;
   readonly tvsByNetworkPath = `/${navigationRoot.medias.path}/${mediasLinks.tv_shows_by_network.path}/`;
 
   @Input() tv: TvShowResponse | undefined;

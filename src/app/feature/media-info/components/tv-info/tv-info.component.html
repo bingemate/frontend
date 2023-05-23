@@ -53,7 +53,10 @@
         [nzPagination]="actorListPagination"
         [nzBordered]="false"
         [nzGrid]="{ gutter: 16, xs: 2, sm: 3, md: 4, lg: 6, xl: 6, xxl: 6 }">
-        <nz-list-item *ngFor="let actor of getActorsSlice()">
+        <nz-list-item
+          *ngFor="let actor of getActorsSlice()"
+          style="cursor: pointer"
+          [routerLink]="tvsByActorPath + actor.id">
           <nz-list-item-meta
             [nzAvatar]="actor.profileUrl"
             nzTitle="{{ actor.name }}"
