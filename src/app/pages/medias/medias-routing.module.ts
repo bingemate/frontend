@@ -10,6 +10,7 @@ import { MovieByStudioComponent } from './movie-by-studio/movie-by-studio.compon
 import { TvViewComponent } from './tv-view/tv-view.component';
 import { TvByGenreComponent } from './tv-by-genre/tv-by-genre.component';
 import { TvByNetworkComponent } from './tv-by-network/tv-by-network.component';
+import { TvByActorComponent } from './tv-by-actor/tv-by-actor.component';
 
 export const mediasLinks: NavigationLinks<
   | 'list'
@@ -21,6 +22,7 @@ export const mediasLinks: NavigationLinks<
   | 'movies_by_studio'
   | 'tv_show_view'
   | 'tv_shows_by_genre'
+  | 'tv_show_by_actor'
   | 'tv_shows_by_network'
 > = {
   list: {
@@ -58,6 +60,10 @@ export const mediasLinks: NavigationLinks<
   tv_shows_by_genre: {
     path: 'tv-shows-by-genre',
     name: 'Séries par genre',
+  },
+  tv_show_by_actor: {
+    path: 'tv-shows-by-actor',
+    name: 'Séries par acteur',
   },
   tv_shows_by_network: {
     path: 'tv-shows-by-network',
@@ -116,6 +122,11 @@ const routes: Routes = [
     path: mediasLinks.tv_shows_by_genre.path + '/:id',
     component: TvByGenreComponent,
     data: { title: mediasLinks.tv_shows_by_genre.name },
+  },
+  {
+    path: mediasLinks.tv_show_by_actor.path + '/:id',
+    component: TvByActorComponent,
+    data: { title: mediasLinks.tv_show_by_actor.name },
   },
   {
     path: mediasLinks.tv_shows_by_network.path + '/:id',
