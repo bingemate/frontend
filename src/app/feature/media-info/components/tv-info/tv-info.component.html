@@ -46,6 +46,26 @@
         </nz-descriptions>
       </nz-row>
     </div>
+
+    <nz-col nzSpan="24">
+      <nz-card>
+        <nz-tabset
+          nzTabPosition="left"
+          nzSize="large"
+          style="max-height: 500px">
+          <nz-tab
+            *ngFor="let seasonNumber of getSeasons()"
+            [nzTitle]="'Saison ' + seasonNumber">
+            <ng-template nz-tab>
+              <app-episode-info-list
+                [seasonNumber]="seasonNumber"
+                [tvShowId]="tv.id!"></app-episode-info-list>
+            </ng-template>
+          </nz-tab>
+        </nz-tabset>
+      </nz-card>
+    </nz-col>
+
     <div class="actors" nz-col nzSpan="24">
       <h2>Acteurs</h2>
       <nz-list
