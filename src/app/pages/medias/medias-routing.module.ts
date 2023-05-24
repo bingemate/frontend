@@ -72,6 +72,9 @@ export const mediasLinks: NavigationLinks<
   },
 };
 
+export const mediaSearchPath =
+  '/' + navigationRoot.medias.path + '/' + mediasLinks.search.path;
+
 export const movieViewPath =
   '/' + navigationRoot.medias.path + '/' + mediasLinks.movie_view.path;
 

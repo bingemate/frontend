@@ -4,7 +4,10 @@ import { accountLinks } from './pages/auth/auth-routing.module';
 import { socialNetworkLinks } from './pages/social-network/social-network-routing.module';
 import { ActivatedRoute, Router } from '@angular/router';
 import { subscriptionLinks } from './pages/subscription/subscriptions-routing.module';
-import { mediasLinks } from './pages/medias/medias-routing.module';
+import {
+  mediaSearchPath,
+  mediasLinks,
+} from './pages/medias/medias-routing.module';
 import { watchlistLinks } from './pages/watchlist/watchlist-routing.module';
 import { statisticsLinks } from './pages/statistics/statistics-routing.module';
 import { NotificationsService } from './core/notifications/notifications.service';
@@ -193,4 +196,5 @@ export class AppComponent implements OnInit {
       path: `${navigationRoot.statistics.path}/${link.path}`,
     };
   });
+  protected readonly mediaSearchPath = mediaSearchPath;
 }
