@@ -10,12 +10,14 @@ import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { StatsDailyViewedMediasComponent } from '../../shared/components/stats-daily-viewed-medias/stats-daily-viewed-medias.component';
 import { StatisticsService } from './statistics.service';
 
 @NgModule({
   declarations: [
     StatisticsWatchStatsComponent,
     StatisticsHistoryComponent,
+    StatsDailyViewedMediasComponent,
     StatsDailyViewsComponent,
   ],
   imports: [
