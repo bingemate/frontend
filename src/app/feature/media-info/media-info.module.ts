@@ -5,8 +5,7 @@ import { MovieInfoComponent } from './components/movie-info/movie-info.component
 import { MovieInfoCardComponent } from './components/movie-info-card/movie-info-card.component';
 import { TvInfoComponent } from './components/tv-info/tv-info.component';
 import { TvInfoCardComponent } from './components/tv-info-card/tv-info-card.component';
-import { EpisodeInfoComponent } from './components/episode-info/episode-info.component';
-import { EpisodeInfoCardComponent } from './components/episode-info-card/episode-info-card.component';
+import { EpisodeInfoListComponent } from './components/episode-info-list/episode-info-list.component';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzImageModule } from 'ng-zorro-antd/image';
@@ -26,6 +25,13 @@ import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 import { NzBadgeModule } from 'ng-zorro-antd/badge';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { ActorInfoComponent } from './components/actor-info/actor-info.component';
+import { NzTabsModule } from 'ng-zorro-antd/tabs';
+import {
+  CdkFixedSizeVirtualScroll,
+  CdkVirtualForOf,
+  CdkVirtualScrollViewport,
+} from '@angular/cdk/scrolling';
+import { NzSpaceModule } from 'ng-zorro-antd/space';
 
 @NgModule({
   declarations: [
@@ -34,8 +40,7 @@ import { ActorInfoComponent } from './components/actor-info/actor-info.component
     MovieInfoCardComponent,
     TvInfoComponent,
     TvInfoCardComponent,
-    EpisodeInfoComponent,
-    EpisodeInfoCardComponent,
+    EpisodeInfoListComponent,
     MovieListComponent,
     TvListComponent,
     ActorInfoComponent,
@@ -59,12 +64,17 @@ import { ActorInfoComponent } from './components/actor-info/actor-info.component
     NzPaginationModule,
     NzBadgeModule,
     NzButtonModule,
+    NzTabsModule,
+    CdkVirtualForOf,
+    CdkVirtualScrollViewport,
+    CdkFixedSizeVirtualScroll,
+    NzSpaceModule,
   ],
   exports: [
     MediaInfoComponent,
     MovieInfoCardComponent,
     TvInfoCardComponent,
-    EpisodeInfoCardComponent,
+    EpisodeInfoListComponent,
     MovieListComponent,
     TvListComponent,
     MovieInfoComponent,
