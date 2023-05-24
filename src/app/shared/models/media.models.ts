@@ -10,6 +10,7 @@ export interface Actor {
   overview: string;
   profileUrl: string;
 }
+
 export interface Crew {
   id: number;
   name: string;
@@ -101,4 +102,18 @@ export interface TvShowResults {
   results: TvShowResponse[];
   totalPage: number;
   totalResult: number;
+}
+
+export interface MediaSearchStateModel {
+  query: string;
+  movies: MovieResults;
+  tvShows: TvShowResults;
+  moviesCurrentPage: number;
+  tvShowsCurrentPage: number;
+  moviesError: string;
+  tvShowsError: string;
+  moviesLoading: boolean;
+  tvShowsLoading: boolean;
+  hasMoviesError: boolean;
+  hasTvShowsError: boolean;
 }
