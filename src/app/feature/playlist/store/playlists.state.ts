@@ -8,8 +8,6 @@ import { PlaylistStateModel } from '../../../shared/models/playlist.model';
 import CreatePlaylist = PlaylistsActions.CreatePlaylist;
 import DeletePlaylist = PlaylistsActions.DeletePlaylist;
 import GetUserPlaylists = PlaylistsActions.GetUserPlaylists;
-import GetPlaylistItems = PlaylistsActions.GetPlaylistItems;
-import ReorderPlaylistItems = PlaylistsActions.ReorderPlaylistItems;
 
 @State<PlaylistStateModel>({
   name: 'playlists',
@@ -75,70 +73,9 @@ export class PlaylistsState {
                 name: payload.createPlaylistApiRequest.name,
                 userId: '',
                 type: payload.createPlaylistApiRequest.type,
-                items: [],
               },
             ],
           });
-        })
-      );
-  }
-
-  @Action(PlaylistsActions.GetPlaylistItems)
-  getPlaylistItems(
-    ctx: StateContext<PlaylistStateModel>,
-    payload: GetPlaylistItems
-  ) {
-    return this.playlistsService.getPlaylistItems(payload.playlistId).pipe(
-      tap(items => {
-        const playlist = ctx
-          .getState()
-          .playlists.find(playlist => playlist.id === payload.playlistId);
-        const playlists = ctx
-          .getState()
-          .playlists.filter(playlist => playlist.id !== payload.playlistId);
-
-        if (playlist) {
-          ctx.patchState({
-            playlists: [
-              {
-                ...playlist,
-                items,
-              },
-              ...playlists,
-            ],
-          });
-        }
-      })
-    );
-  }
-
-  @Action(PlaylistsActions.ReorderPlaylistItems)
-  reorderPlaylist(
-    ctx: StateContext<PlaylistStateModel>,
-    payload: ReorderPlaylistItems
-  ) {
-    return this.playlistsService
-      .updatePlaylistOrder(payload.id, {
-        items: payload.playlistItems,
-      })
-      .pipe(
-        tap(() => {
-          let playlist = ctx
-            .getState()
-            .playlists.find(playlist => playlist.id === payload.id);
-          const playlists = ctx
-            .getState()
-            .playlists.filter(playlist => playlist.id !== payload.id);
-          if (playlist) {
-            playlist = {
-              ...playlist,
-              items: payload.playlistItems,
-            };
-
-            ctx.patchState({
-              playlists: [playlist, ...playlists],
-            });
-          }
         })
       );
   }

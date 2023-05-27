@@ -12,9 +12,14 @@ export const streamingLinks: NavigationLinks<'stream'> = {
 
 const routes: Routes = [
   {
-    path: streamingLinks.stream.path,
+    path: streamingLinks.stream.path + '/:id',
     component: StreamComponent,
     data: { title: streamingLinks.stream.name },
+  },
+  {
+    path: '',
+    pathMatch: 'full',
+    redirectTo: streamingLinks.stream.path,
   },
 ];
 

@@ -1,0 +1,13 @@
+<nz-row [nzGutter]="[32, 32]">
+  <div
+    nz-col
+    [nzSm]="12"
+    [nzMd]="6"
+    [nzXl]="4"
+    [nzXXl]="3"
+    *ngFor="let movie of movies">
+    <app-movie-info-card
+      [movie]="movie"
+      [title]="movie.title"></app-movie-info-card>
+  </div>
+</nz-row>

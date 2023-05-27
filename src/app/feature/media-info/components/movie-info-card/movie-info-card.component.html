@@ -1,0 +1,35 @@
+<nz-ribbon [nzText]="present" *ngIf="movie?.present">
+  <ng-container *ngTemplateOutlet="card"></ng-container>
+</nz-ribbon>
+
+<ng-container *ngIf="!movie?.present">
+  <ng-container *ngTemplateOutlet="card"></ng-container>
+</ng-container>
+
+<ng-template #card>
+  <nz-card nzHoverable class="movie-poster" [nzCover]="cover">
+    <nz-card-meta
+      (click)="onViewMovie()"
+      nzTitle="{{ movie?.title }}"
+      [nzDescription]="description"></nz-card-meta>
+  </nz-card>
+</ng-template>
+
+<ng-template #cover>
+  <img nz-image [nzSrc]="movie?.posterUrl!" alt="" />
+</ng-template>
+
+<ng-template #description>
+  {{ movie?.releaseDate | date : 'yyyy' }}
+  <br />
+  <nz-rate [ngModel]="getRate()" nzAllowHalf nzDisabled></nz-rate>
+  {{ movie?.voteAverage }}
+</ng-template>
+
+<ng-template #present>
+  <span
+    nz-icon
+    nzType="video-camera"
+    nzTheme="fill"
+    nzTwotoneColor="white"></span>
+</ng-template>

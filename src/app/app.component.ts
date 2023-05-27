@@ -2,9 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { Link, navigationRoot } from './app-routing.module';
 import { accountLinks } from './pages/auth/auth-routing.module';
 import { socialNetworkLinks } from './pages/social-network/social-network-routing.module';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { subscriptionLinks } from './pages/subscription/subscriptions-routing.module';
-import { mediasLinks } from './pages/medias/medias-routing.module';
+import {
+  mediaSearchPath,
+  mediasLinks,
+} from './pages/medias/medias-routing.module';
 import { watchlistLinks } from './pages/watchlist/watchlist-routing.module';
 import { statisticsLinks } from './pages/statistics/statistics-routing.module';
 import { NotificationsService } from './core/notifications/notifications.service';
@@ -29,6 +32,7 @@ export class AppComponent implements OnInit {
 
   constructor(
     private readonly router: Router,
+    private route: ActivatedRoute,
     public readonly notificationsService: NotificationsService,
     private readonly store: Store,
     private readonly actions: Actions,
@@ -153,7 +157,10 @@ export class AppComponent implements OnInit {
     });
 
   readonly socialNetworkLinks = Object.values(socialNetworkLinks)
-    .filter(link => !['media', 'user-profile', 'chat'].includes(link.path))
+    .filter(
+      link =>
+        !['media', 'user-profile', 'chat', 'movie-view'].includes(link.path)
+    )
     .map(link => {
       return {
         ...link,
@@ -162,7 +169,20 @@ export class AppComponent implements OnInit {
     });
 
   readonly mediasLinks = Object.values(mediasLinks)
-    .filter(media => !['view'].includes(media.path))
+    .filter(
+      media =>
+        ![
+          'view',
+          'movie-view',
+          'movies-by-genre',
+          'movies-by-actor',
+          'movies-by-studio',
+          'tv-show-view',
+          'tv-shows-by-genre',
+          'tv-shows-by-actor',
+          'tv-shows-by-network',
+        ].includes(media.path)
+    )
     .map(link => {
       return {
         ...link,
@@ -184,4 +204,5 @@ export class AppComponent implements OnInit {
     };
   });
   protected readonly uploadLinks = uploadLinks;
+  protected readonly mediaSearchPath = mediaSearchPath;
 }
