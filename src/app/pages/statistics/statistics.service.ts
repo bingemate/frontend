@@ -1,17 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
-import {
-  CreatePlaylistApiRequest,
-  Playlist,
-  PlaylistIdDto,
-  PlaylistItem,
-  PlaylistItemsApiResponse,
-  PlaylistsApiResponse,
-  toPlaylistItems,
-  toPlaylists,
-  UpdatePlaylistOrderApiRequest,
-} from '../../shared/models/playlist.model';
 import { environment } from '../../../environments/environment';
 import {
   Statistic,

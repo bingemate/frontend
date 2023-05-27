@@ -1,0 +1,42 @@
+<nz-skeleton
+  *ngIf="loading"
+  [nzActive]="true"
+  [nzParagraph]="{ rows: 10 }"></nz-skeleton>
+
+<cdk-virtual-scroll-viewport itemSize="73" class="infinite-container">
+  <nz-list>
+    <nz-list-item *cdkVirtualFor="let episode of seasonEpisodes">
+      <nz-list-item-meta>
+        <nz-list-item-meta-title>
+          {{ episode.seasonNumber }}x{{
+            episode.episodeNumber | number : '2.0'
+          }}
+          -
+          {{ episode.name }}
+        </nz-list-item-meta-title>
+        <nz-list-item-meta-description>
+          <nz-space nzSize="middle">
+            <img
+              *nzSpaceItem
+              nz-image
+              [nzSrc]="episode.posterUrl"
+              height="50px"
+              alt="" />
+            <button
+              *nzSpaceItem
+              [hidden]="!episode.present"
+              [routerLink]="[streamPath, episode.id]"
+              nz-button
+              nzType="primary"
+              nzShape="circle">
+              <span nz-icon nzType="play-circle" nzTheme="fill"></span>
+            </button>
+            <span *nzSpaceItem>
+              {{ episode.overview }}
+            </span>
+          </nz-space>
+        </nz-list-item-meta-description>
+      </nz-list-item-meta>
+    </nz-list-item>
+  </nz-list>
+</cdk-virtual-scroll-viewport>

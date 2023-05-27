@@ -4,27 +4,8 @@ import { NavigationLinks } from '../../app-routing.module';
 import { SocialNetworkHomeComponent } from './social-network-home/social-network-home.component';
 
 export const socialNetworkLinks: NavigationLinks<
-  | 'trending'
-  | 'social_network_home'
-  | 'search_media'
-  | 'search_user'
-  | 'media'
-  | 'user_profile'
-  | 'chat'
-  | 'relations'
+  'search_user' | 'media' | 'user_profile' | 'chat' | 'relations'
 > = {
-  trending: {
-    path: 'trending',
-    name: 'Tendances',
-  },
-  social_network_home: {
-    path: 'home',
-    name: 'Réseau social',
-  },
-  search_media: {
-    path: 'search-media',
-    name: 'Rechercher un média',
-  },
   search_user: {
     path: 'search-user',
     name: 'Rechercher un utilisateur',
@@ -49,17 +30,6 @@ export const socialNetworkLinks: NavigationLinks<
 
 const routes: Routes = [
   {
-    path: socialNetworkLinks.social_network_home.path,
-    pathMatch: 'full',
-    component: SocialNetworkHomeComponent,
-    data: { title: socialNetworkLinks.social_network_home.name },
-  },
-  {
-    path: socialNetworkLinks.search_media.path,
-    component: SocialNetworkHomeComponent,
-    data: { title: socialNetworkLinks.search_media.name },
-  },
-  {
     path: socialNetworkLinks.search_user.path,
     component: SocialNetworkHomeComponent,
     data: { title: socialNetworkLinks.search_user.name },
@@ -83,11 +53,6 @@ const routes: Routes = [
     path: socialNetworkLinks.relations.path,
     component: SocialNetworkHomeComponent,
     data: { title: socialNetworkLinks.relations.name },
-  },
-  {
-    path: socialNetworkLinks.trending.path,
-    component: SocialNetworkHomeComponent,
-    data: { title: socialNetworkLinks.trending.name },
   },
 ];
 

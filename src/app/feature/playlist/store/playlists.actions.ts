@@ -1,7 +1,4 @@
-import {
-  CreatePlaylistApiRequest,
-  PlaylistItem,
-} from '../../../shared/models/playlist.model';
+import { CreatePlaylistApiRequest } from '../../../shared/models/playlist.model';
 
 export namespace PlaylistsActions {
   export class GetUserPlaylists {
@@ -15,13 +12,5 @@ export namespace PlaylistsActions {
   export class CreatePlaylist {
     static readonly type = '[Playlists] Create Playlist';
     constructor(public createPlaylistApiRequest: CreatePlaylistApiRequest) {}
-  }
-  export class GetPlaylistItems {
-    static readonly type = '[Playlists] Get Playlist Items';
-    constructor(public playlistId: string) {}
-  }
-  export class ReorderPlaylistItems {
-    static readonly type = '[Playlists] Update Playlist Items Order';
-    constructor(public id: string, public playlistItems: PlaylistItem[]) {}
   }
 }

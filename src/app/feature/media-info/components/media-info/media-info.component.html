@@ -1,0 +1,14 @@
+<p>media-info works!</p>
+<ng-template [ngIf]="mediaInfo">
+  <ul>
+    <li>
+      <p>id: {{ mediaInfo.id }}</p>
+    </li>
+    <li>
+      <p>type: {{ mediaInfo.mediaType }}</p>
+    </li>
+  </ul>
+</ng-template>
+<ng-template [ngIf]="!mediaInfo">
+  <p>no media info</p>
+</ng-template>

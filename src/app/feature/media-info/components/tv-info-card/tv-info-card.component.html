@@ -1,0 +1,34 @@
+<nz-ribbon [nzText]="present" *ngIf="tv?.present">
+  <ng-container *ngTemplateOutlet="card"></ng-container>
+</nz-ribbon>
+
+<ng-container *ngIf="!tv?.present">
+  <ng-container *ngTemplateOutlet="card"></ng-container>
+</ng-container>
+
+<ng-template #card>
+  <nz-card nzHoverable class="tv-poster" [nzCover]="cover">
+    <nz-card-meta
+      (click)="onViewTvShow()"
+      nzTitle="{{ tv?.title }}"
+      [nzDescription]="description"></nz-card-meta>
+  </nz-card>
+</ng-template>
+
+<ng-template #cover>
+  <img nz-image [nzSrc]="tv?.posterUrl!" [alt]="" />
+</ng-template>
+<ng-template #description>
+  {{ tv?.releaseDate | date : 'yyyy' }}
+  <br />
+  <nz-rate [ngModel]="getRate()" nzAllowHalf nzDisabled></nz-rate>
+  {{ tv?.voteAverage }}
+</ng-template>
+
+<ng-template #present>
+  <span
+    nz-icon
+    nzType="video-camera"
+    nzTheme="fill"
+    nzTwotoneColor="white"></span>
+</ng-template>
