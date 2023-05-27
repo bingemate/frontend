@@ -28,7 +28,14 @@ export class HttpErrorInterceptor implements HttpInterceptor {
           if (err instanceof HttpErrorResponse && err.status !== 404) {
             const appErrorHandler = this.injector.get(ErrorHandler);
             appErrorHandler.handleError(err);
-            this.notificationsService.error('An error occurred', err.message);
+            if (err.error.error) {
+              this.notificationsService.error(
+                'An error occurred',
+                err.error.error
+              );
+            } else {
+              this.notificationsService.error('An error occurred', err.message);
+            }
           }
         },
       })
