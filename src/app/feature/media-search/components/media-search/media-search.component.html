@@ -28,11 +28,11 @@
         <nz-card [nzExtra]="moviesPagination" [nzActions]="[moviesPagination]">
           <nz-empty
             *ngIf="
-              (movieResults$ | async)!.results.length === 0 &&
+              (movieResults$ | async)?.results.length === 0 &&
               (searchingMovie$ | async) === false
             "></nz-empty>
           <app-movie-list
-            [movies]="(movieResults$ | async)!.results"></app-movie-list>
+            [movies]="(movieResults$ | async)?.results ?? []"></app-movie-list>
         </nz-card>
       </nz-tab>
       <nz-tab nzTitle="Séries">
@@ -41,10 +41,11 @@
           [nzActions]="[tvShowsPagination]">
           <nz-empty
             *ngIf="
-              (tvResults$ | async)!.results.length === 0 &&
+              (tvResults$ | async)?.results.length === 0 &&
               (searchingTv$ | async) === false
             "></nz-empty>
-          <app-tv-list [tvShows]="(tvResults$ | async)!.results"></app-tv-list>
+          <app-tv-list
+            [tvShows]="(tvResults$ | async)?.results ?? []"></app-tv-list>
         </nz-card>
       </nz-tab>
     </nz-tabset>
@@ -54,7 +55,7 @@
 <ng-template #moviesPagination>
   <nz-pagination
     [nzPageIndex]="movieResultsPage$ | async"
-    [nzTotal]="Math.min((movieResults$ | async)!.totalResult, 1000)"
+    [nzTotal]="Math.min((movieResults$ | async)?.totalResult ?? 0, 1000)"
     [nzPageSize]="20"
     (nzPageIndexChange)="onMoviesPageChange($event)">
   </nz-pagination>
@@ -62,7 +63,7 @@
 <ng-template #tvShowsPagination>
   <nz-pagination
     [nzPageIndex]="tvResultsPage$ | async"
-    [nzTotal]="Math.min((tvResults$ | async)!.totalResult, 1000)"
+    [nzTotal]="Math.min((tvResults$ | async)?.totalResult ?? 0, 1000)"
     [nzPageSize]="20"
     (nzPageIndexChange)="onTvShowsPageChange($event)">
   </nz-pagination>
