@@ -28,7 +28,7 @@
         <nz-card [nzExtra]="moviesPagination" [nzActions]="[moviesPagination]">
           <nz-empty
             *ngIf="
-              (movieResults$ | async)?.results.length === 0 &&
+              ((movieResults$ | async)?.results?.length === 0 ?? 0) &&
               (searchingMovie$ | async) === false
             "></nz-empty>
           <app-movie-list
@@ -41,7 +41,7 @@
           [nzActions]="[tvShowsPagination]">
           <nz-empty
             *ngIf="
-              (tvResults$ | async)?.results.length === 0 &&
+              ((tvResults$ | async)?.results?.length ?? 0 === 0) &&
               (searchingTv$ | async) === false
             "></nz-empty>
           <app-tv-list
