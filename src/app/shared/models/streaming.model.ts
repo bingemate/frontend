@@ -5,3 +5,14 @@ export interface StreamingStateModel {
   position: number;
   autoplay: boolean;
 }
+
+export enum StreamStatusEnum {
+  STARTED = 'STARTED',
+  PLAYING = 'PLAYING',
+  STOPPED = 'STOPPED',
+}
+
+export interface StreamUpdateEvent {
+  watchStatus: StreamStatusEnum;
+  stoppedAt: number;
+}

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Select, Store } from '@ngxs/store';
-import { forkJoin, map, mergeMap, Observable } from 'rxjs';
+import { Store } from '@ngxs/store';
+import { forkJoin, map, mergeMap } from 'rxjs';
 import {
   Playlist,
   PlaylistItem,

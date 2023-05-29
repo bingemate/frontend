@@ -1,11 +1,22 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { MediaFile } from '../../../shared/models/media-file.models';
 import { BitrateOptions, VgApiService } from '@videogular/ngx-videogular/core';
 import { API_RESOURCE_URI } from '../../../shared/api-resource-uri/api-resources-uri';
-import { interval, Subject, takeUntil } from 'rxjs';
+import { interval, Subject, takeUntil, throttleTime } from 'rxjs';
 import { navigationRoot } from '../../../app-routing.module';
 import { MediaInfoService } from '../../media-info/media-info.service';
 import { mediasLinks } from '../../../pages/medias/medias-routing.module';
+import {
+  StreamStatusEnum,
+  StreamUpdateEvent,
+} from '../../../shared/models/streaming.model';
 
 @Component({
   selector: 'app-video-player',
@@ -19,6 +30,7 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
   @Input() mediaId: number | undefined;
   @Input() mediaFile: MediaFile | undefined;
   @Input() timeSeek = 0;
+  @Output() streamUpdate = new EventEmitter<StreamUpdateEvent>();
 
   intervalId: any;
   componentDestroyed$ = new Subject();
@@ -100,7 +112,31 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
           }${seconds}`
         );
       });
-
+    api
+      .getDefaultMedia()
+      .subscriptions.timeUpdate.pipe(
+        throttleTime(5000, undefined, {
+          leading: true,
+        })
+      )
+      .subscribe(() =>
+        this.streamUpdate.emit({
+          watchStatus: StreamStatusEnum.PLAYING,
+          stoppedAt: api.currentTime / api.duration,
+        })
+      );
+    api.getDefaultMedia().subscriptions.pause.subscribe(() =>
+      this.streamUpdate.emit({
+        watchStatus: StreamStatusEnum.STOPPED,
+        stoppedAt: api.currentTime / api.duration,
+      })
+    );
+    api.getDefaultMedia().subscriptions.play.subscribe(() =>
+      this.streamUpdate.emit({
+        watchStatus: StreamStatusEnum.STARTED,
+        stoppedAt: api.currentTime / api.duration,
+      })
+    );
     api.seekTime(this.timeSeek);
   }
 

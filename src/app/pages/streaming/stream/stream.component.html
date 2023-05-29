@@ -1,6 +1,7 @@
 <nz-row [nzGutter]="[16, 16]">
   <nz-col *ngIf="mediaFile" [nzSpan]="24">
     <app-video-player
+      (streamUpdate)="onStreamUpdate($event)"
       [timeSeek]="progress"
       [mediaTitle]="mediaTitle"
       [mediaId]="mediaId"
