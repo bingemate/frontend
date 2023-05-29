@@ -98,11 +98,13 @@ export class MediaSearchState {
     ctx.dispatch(
       new MediaSearchActions.SearchMovie({
         page: 1,
+        onlyAvailable: action.payload.onlyAvailable,
       })
     );
     ctx.dispatch(
       new MediaSearchActions.SearchTv({
         page: 1,
+        onlyAvailable: action.payload.onlyAvailable,
       })
     );
   }
@@ -118,7 +120,11 @@ export class MediaSearchState {
       moviesCurrentPage: action.payload.page,
     });
     this.mediaDiscoverService
-      .searchMovies(ctx.getState().query, action.payload.page)
+      .searchMovies(
+        ctx.getState().query,
+        action.payload.page,
+        action.payload.onlyAvailable
+      )
       .subscribe({
         next: response => {
           ctx.patchState({
@@ -147,7 +153,11 @@ export class MediaSearchState {
       tvShowsCurrentPage: action.payload.page,
     });
     this.mediaDiscoverService
-      .searchTvShows(ctx.getState().query, action.payload.page)
+      .searchTvShows(
+        ctx.getState().query,
+        action.payload.page,
+        action.payload.onlyAvailable
+      )
       .subscribe({
         next: response => {
           ctx.patchState({

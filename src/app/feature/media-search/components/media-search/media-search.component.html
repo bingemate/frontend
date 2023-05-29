@@ -11,9 +11,20 @@
           placeholder="entrez le nom d'un média" />
       </nz-input-group>
       <ng-template #suffixIconButton>
-        <button nz-button nzType="primary" nzSearch>
-          <span nz-icon nzType="search"></span>
-        </button>
+        <nz-space
+          nzDirection="horizontal"
+          nzSize="large"
+          style="padding-left: 10px">
+          <label
+            *nzSpaceItem
+            nz-checkbox
+            (nzCheckedChange)="onOnlyAvailableChecked($event.valueOf())">
+            Disponibles
+          </label>
+          <button *nzSpaceItem nz-button nzType="primary" nzSearch>
+            <span nz-icon nzType="search"></span>
+          </button>
+        </nz-space>
       </ng-template>
       <nz-progress
         *ngIf="(searchingMovie$ | async) || (searchingTv$ | async)"
