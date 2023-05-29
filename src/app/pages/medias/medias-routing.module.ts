@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { NavigationLinks, navigationRoot } from '../../app-routing.module';
-import { MediasMediaListComponent } from './medias-media-list/medias-media-list.component';
 import { TrendingComponent } from './trending/trending.component';
 import { MovieViewComponent } from './movie-view/movie-view.component';
 import { MovieByGenreComponent } from './movie-by-genre/movie-by-genre.component';
@@ -14,7 +13,6 @@ import { TvByActorComponent } from './tv-by-actor/tv-by-actor.component';
 import { SearchComponent } from './media-search/search.component';
 
 export const mediasLinks: NavigationLinks<
-  | 'list'
   | 'search'
   | 'trending'
   | 'movie_view'
@@ -26,10 +24,6 @@ export const mediasLinks: NavigationLinks<
   | 'tv_show_by_actor'
   | 'tv_shows_by_network'
 > = {
-  list: {
-    path: 'list',
-    name: 'Liste des médias',
-  },
   trending: {
     path: 'trending',
     name: 'Tendances',
@@ -82,11 +76,6 @@ export const tvShowViewPath =
   '/' + navigationRoot.medias.path + '/' + mediasLinks.tv_show_view.path;
 
 const routes: Routes = [
-  {
-    path: mediasLinks.list.path,
-    component: MediasMediaListComponent,
-    data: { title: mediasLinks.list.name },
-  },
   {
     path: mediasLinks.search.path,
     component: SearchComponent,
