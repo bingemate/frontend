@@ -15,7 +15,7 @@ export interface Playlist {
 }
 
 export interface PlaylistItem {
-  mediaId: string;
+  mediaId: number;
   season: number;
   episode: number;
 }
@@ -36,7 +36,7 @@ export interface PlaylistItemsApiResponse {
 }
 
 export interface PlaylistItemApiResponse {
-  mediaId: string;
+  mediaId: number;
   season: number;
   episode: number;
 }
