@@ -1,0 +1,53 @@
+<nz-row [nzGutter]="[16, 16]">
+  <nz-col nzSpan="24">
+    <nz-upload
+      #upload
+      nzType="drag"
+      nzAction="https://jsonplaceholder.typicode.com/posts/"
+      nzMultiple
+      [nzShowUploadList]="false"
+      [nzBeforeUpload]="beforeUpload"
+      (nzChange)="handleChange($event)">
+      <p class="drag-text">
+        <i nz-icon nzType="inbox"></i>
+        Déposez des {{ type === 'movie' ? 'films' : 'séries' }} ici ou cliquez
+        pour les sélectionner
+      </p>
+    </nz-upload>
+  </nz-col>
+  <nz-col nzSpan="24" *ngIf="uploading">
+    <nz-progress
+      nzStatus="active"
+      [nzPercent]="getUploadProgress()"
+      [nzStrokeWidth]="4"></nz-progress>
+  </nz-col>
+  <nz-col nzSpan="24" *ngIf="previewFiles.length > 0">
+    <nz-list nzBordered>
+      <nz-list-item *ngFor="let item of previewFiles" [hidden]="item.done">
+        <nz-list-item-meta>
+          <nz-list-item-meta-title>
+            <span nz-icon [nzType]="getIcon(item)" nzTheme="outline"></span>
+            &nbsp;
+            <span>{{ item.name }}</span>
+          </nz-list-item-meta-title>
+        </nz-list-item-meta>
+        <nz-space nzSize="large" nzAlign="center">
+          <span *nzSpaceItem>{{ item.file.size | nzBytes }}</span>
+          <span *nzSpaceItem
+            ><nz-spin *ngIf="item.progress" nzSpinning></nz-spin
+          ></span>
+        </nz-space>
+        <ul nz-list-item-actions>
+          <nz-list-item-action>
+            <button nz-button nzType="link" (click)="removeFile(item)">
+              Supprimer
+            </button>
+          </nz-list-item-action>
+        </ul>
+      </nz-list-item>
+    </nz-list>
+  </nz-col>
+  <nz-col nzSpan="24">
+    <button nz-button nzType="primary" (click)="uploadFiles()">Envoyer</button>
+  </nz-col>
+</nz-row>
