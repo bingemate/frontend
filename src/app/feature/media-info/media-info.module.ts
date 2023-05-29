@@ -32,6 +32,7 @@ import {
   CdkVirtualScrollViewport,
 } from '@angular/cdk/scrolling';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
+import { NzTypographyModule } from 'ng-zorro-antd/typography';
 
 @NgModule({
   declarations: [
@@ -69,6 +70,7 @@ import { NzSpaceModule } from 'ng-zorro-antd/space';
     CdkVirtualScrollViewport,
     CdkFixedSizeVirtualScroll,
     NzSpaceModule,
+    NzTypographyModule,
   ],
   exports: [
     MediaInfoComponent,

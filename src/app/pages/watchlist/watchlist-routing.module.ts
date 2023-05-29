@@ -5,10 +5,9 @@ import { WatchlistComponent } from './watchtlist/watchlist.component';
 import { WatchtlistCalendarComponent } from './watchtlist-calendar/watchtlist-calendar.component';
 import { PlaylistsComponent } from './playlists/playlists.component';
 import { PlaylistComponent } from './playlist/playlist.component';
-import { HistoryComponent } from './history/history.component';
 
 export const watchlistLinks: NavigationLinks<
-  'lists' | 'calendar' | 'playlists' | 'history'
+  'lists' | 'calendar' | 'playlists'
 > = {
   lists: {
     name: 'Mes listes',
@@ -21,10 +20,6 @@ export const watchlistLinks: NavigationLinks<
   playlists: {
     name: 'Playlists',
     path: 'playlists',
-  },
-  history: {
-    name: 'Historique',
-    path: 'history',
   },
 };
 
@@ -44,10 +39,6 @@ const routes: Routes = [
   {
     path: watchlistLinks.playlists.path + '/:id',
     component: PlaylistComponent,
-  },
-  {
-    path: watchlistLinks.history.path,
-    component: HistoryComponent,
   },
 ];
 

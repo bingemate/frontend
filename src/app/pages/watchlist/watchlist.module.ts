@@ -25,9 +25,10 @@ import { FormsModule } from '@angular/forms';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzSelectModule } from 'ng-zorro-antd/select';
-import { HistoryComponent } from './history/history.component';
 import { HistoryModule } from '../../feature/history/history.module';
 import { PlaylistModule } from '../../feature/playlist/playlist.module';
+import { NzProgressModule } from 'ng-zorro-antd/progress';
+import { MediaInfoModule } from '../../feature/media-info/media-info.module';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,6 @@ import { PlaylistModule } from '../../feature/playlist/playlist.module';
     WatchtlistCalendarComponent,
     PlaylistsComponent,
     PlaylistComponent,
-    HistoryComponent,
   ],
   imports: [
     CommonModule,
@@ -64,6 +64,8 @@ import { PlaylistModule } from '../../feature/playlist/playlist.module';
     NzInputModule,
     NzIconModule,
     NzSelectModule,
+    NzProgressModule,
+    MediaInfoModule,
   ],
 })
 export class WatchlistModule {}

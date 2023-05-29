@@ -1,8 +1,18 @@
+import { MediaType } from './media.models';
+
 export interface HistoryModel {
   userId: string;
   mediaId: string;
   stoppedAt: number;
   viewedAt: Date;
+}
+
+export interface MediaHistoryModel {
+  mediaId: string;
+  mediaTitle: string;
+  mediaType: MediaType;
+  stoppedAt: number;
+  backgroundImage: string;
 }
 
 export interface HistoryStateModel {
