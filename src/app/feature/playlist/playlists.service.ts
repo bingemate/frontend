@@ -45,13 +45,13 @@ export class PlaylistsService {
     );
   }
 
-  createPlaylist(
-    createPlaylist: CreatePlaylistApiRequest
-  ): Observable<PlaylistIdDto> {
-    return this.http.post<PlaylistIdDto>(
-      `${environment.apiUrl}/watch-service/playlist`,
-      createPlaylist
-    );
+  createPlaylist(createPlaylist: CreatePlaylistApiRequest): Observable<string> {
+    return this.http
+      .post<PlaylistIdDto>(
+        `${environment.apiUrl}/watch-service/playlist`,
+        createPlaylist
+      )
+      .pipe(map(idDto => idDto.id));
   }
 
   updatePlaylistOrder(

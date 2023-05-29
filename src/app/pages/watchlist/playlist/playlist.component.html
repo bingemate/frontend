@@ -1,22 +1,6 @@
-<nz-breadcrumb>
-  <nz-breadcrumb-item>
-    <a [routerLink]="['..']">Playlists</a>
-  </nz-breadcrumb-item>
-  <nz-breadcrumb-item [nzOverlay]="menu">{{
-    playlist?.name
-  }}</nz-breadcrumb-item>
-</nz-breadcrumb>
-<nz-dropdown-menu #menu="nzDropdownMenu">
-  <ul nz-menu nzSelectable>
-    <li
-      *ngFor="let playlistItem of playlists$ | async"
-      nz-menu-item
-      [nzSelected]="playlistItem.id === playlist?.id"
-      [routerLink]="['..', playlistItem.id]">
-      {{ playlistItem.name }}
-    </li>
-  </ul>
-</nz-dropdown-menu>
+<h2>
+  {{ playlist?.name }}
+</h2>
 <nz-list
   nzItemLayout="vertical"
   [nzLoading]="false"

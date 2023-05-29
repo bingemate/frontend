@@ -6,7 +6,6 @@ import {
   PlaylistItem,
   PlaylistType,
 } from '../../../shared/models/playlist.model';
-import { PlaylistsState } from '../../../feature/playlist/store/playlists.state';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ActivatedRoute } from '@angular/router';
 import { PlaylistsService } from '../../../feature/playlist/playlists.service';
@@ -19,7 +18,6 @@ import { StreamingActions } from '../../../feature/streaming/store/streaming.act
   styleUrls: ['./playlist.component.less'],
 })
 export class PlaylistComponent implements OnInit {
-  @Select(PlaylistsState.playlists) playlists$!: Observable<Playlist[]>;
   playlist?: Playlist;
 
   playlistItems: {
@@ -63,7 +61,7 @@ export class PlaylistComponent implements OnInit {
             return {
               media: {
                 name: media.title,
-                imageUrl: media.posterUrl,
+                imageUrl: media.backdropUrl,
               },
               playlistItem: item,
             };
