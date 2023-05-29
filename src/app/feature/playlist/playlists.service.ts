@@ -6,11 +6,8 @@ import {
   Playlist,
   PlaylistApiResponse,
   PlaylistIdDto,
-  PlaylistItem,
-  PlaylistItemsApiResponse,
   PlaylistsApiResponse,
   toPlaylist,
-  toPlaylistItems,
   toPlaylists,
   UpdatePlaylistOrderApiRequest,
 } from '../../shared/models/playlist.model';

@@ -11,8 +11,6 @@ import { VgModuloModule } from '@videogular/ngx-videogular/modulo';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { RouterLink } from '@angular/router';
-import { NgxsModule } from '@ngxs/store';
-import { StreamingState } from './store/streaming.state';
 
 @NgModule({
   declarations: [VideoPlayerComponent],
