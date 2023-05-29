@@ -7,16 +7,19 @@
 </ng-container>
 
 <ng-template #card>
-  <nz-card nzHoverable class="tv-poster" [nzCover]="cover">
+  <nz-card
+    nzHoverable
+    class="tv-poster"
+    (click)="onViewTvShow()"
+    [nzCover]="cover">
     <nz-card-meta
-      (click)="onViewTvShow()"
       nzTitle="{{ tv?.title }}"
       [nzDescription]="description"></nz-card-meta>
   </nz-card>
 </ng-template>
 
 <ng-template #cover>
-  <img nz-image [nzSrc]="tv?.posterUrl!" [alt]="" />
+  <img nz-image nzDisablePreview [nzSrc]="tv?.posterUrl!" [alt]="" />
 </ng-template>
 <ng-template #description>
   {{ tv?.releaseDate | date : 'yyyy' }}
