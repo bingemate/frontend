@@ -1,0 +1,98 @@
+<nz-skeleton
+  *ngIf="tv === undefined"
+  [nzActive]="true"
+  [nzParagraph]="{ rows: 20 }"></nz-skeleton>
+<div class="tv-details-container" *ngIf="tv">
+  <nz-row [nzGutter]="[24, 24]" class="tv-details">
+    <div class="tv-poster" nz-col nzSpan="6">
+      <img nz-image [nzSrc]="tv.posterUrl" alt="Movie Poster" width="100%" />
+    </div>
+
+    <div class="tv-info" nz-col [nzMd]="24" [nzXl]="18">
+      <nz-row [nzGutter]="[24, 24]">
+        <h1 class="tv-title" nz-col nzSpan="24">{{ tv.title }}</h1>
+        <div class="tv-rating" nz-col nzSpan="24">
+          <nz-rate [ngModel]="getRate()" nzDisabled nzAllowHalf></nz-rate>
+          &nbsp;{{ tv.voteAverage.toFixed(2) }}
+        </div>
+
+        <nz-descriptions nzBordered [nzColumn]="1" nz-col nzSpan="24">
+          <nz-descriptions-item nzTitle="Date de sortie">{{
+            tv.releaseDate | date : 'dd/MM/yyyy'
+          }}</nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Genres">
+            <nz-tag
+              *ngFor="let genre of tv.genres"
+              [routerLink]="tvsByGenrePath + genre.id"
+              nzMode="checkable"
+              nzColor="green"
+              nzChecked
+              >{{ genre.name }}</nz-tag
+            >
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Résumé" [nzSpan]="24">{{
+            tv.overview
+          }}</nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Plateformes de diffusion">
+            <nz-tag
+              *ngFor="let network of tv.networks"
+              [routerLink]="tvsByNetworkPath + network.id"
+              nzMode="checkable"
+              nzColor="magenta"
+              nzChecked
+              >{{ network.name }}</nz-tag
+            >
+          </nz-descriptions-item>
+        </nz-descriptions>
+      </nz-row>
+    </div>
+
+    <nz-col nzSpan="24">
+      <nz-card>
+        <nz-tabset
+          nzTabPosition="left"
+          nzSize="large"
+          style="max-height: 500px">
+          <nz-tab
+            *ngFor="let seasonNumber of getSeasons()"
+            [nzTitle]="'Saison ' + seasonNumber">
+            <ng-template nz-tab>
+              <app-episode-info-list
+                [seasonNumber]="seasonNumber"
+                [tvShowId]="tv.id!"></app-episode-info-list>
+            </ng-template>
+          </nz-tab>
+        </nz-tabset>
+      </nz-card>
+    </nz-col>
+
+    <div class="actors" nz-col nzSpan="24">
+      <h2>Acteurs</h2>
+      <nz-list
+        nzSize="large"
+        [nzPagination]="actorListPagination"
+        [nzBordered]="false"
+        [nzGrid]="{ gutter: 16, xs: 2, sm: 3, md: 4, lg: 6, xl: 6, xxl: 6 }">
+        <nz-list-item
+          *ngFor="let actor of getActorsSlice()"
+          style="cursor: pointer"
+          [routerLink]="tvsByActorPath + actor.id">
+          <nz-list-item-meta
+            [nzAvatar]="actor.profileUrl"
+            nzTitle="{{ actor.name }}"
+            nzDescription="{{ actor.character }}"></nz-list-item-meta>
+        </nz-list-item>
+      </nz-list>
+    </div>
+  </nz-row>
+</div>
+
+<ng-template #actorListPagination>
+  <nz-pagination
+    [nzPageIndex]="actorsCurrentPage"
+    [nzTotal]="tv?.actors?.length ?? 0"
+    [nzPageSize]="6"
+    [nzShowSizeChanger]="false"
+    [nzSize]="'small'"
+    (nzPageIndexChange)="onActorsPageChange($event)"></nz-pagination>
+</ng-template>
