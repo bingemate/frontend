@@ -7,6 +7,8 @@ import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzAlertModule } from 'ng-zorro-antd/alert';
 import { NzCardModule } from 'ng-zorro-antd/card';
+import { NgxsModule } from '@ngxs/store';
+import { StreamingState } from '../../feature/streaming/store/streaming.state';
 
 @NgModule({
   declarations: [StreamComponent],

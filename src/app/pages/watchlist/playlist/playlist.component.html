@@ -29,7 +29,7 @@
           <nz-space nzAlign="center">
             <span *nzSpaceItem> {{ index }}. </span>
           </nz-space>
-          <a [routerLink]="['/streaming/stream', item.playlistItem.mediaId]">
+          <a (click)="watchMedia(index)">
             <img
               class="media-image"
               width="160"

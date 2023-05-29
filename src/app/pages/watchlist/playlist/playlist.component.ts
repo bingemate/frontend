@@ -11,6 +11,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ActivatedRoute } from '@angular/router';
 import { PlaylistsService } from '../../../feature/playlist/playlists.service';
 import { MediaInfoService } from '../../../feature/media-info/media-info.service';
+import { StreamingActions } from '../../../feature/streaming/store/streaming.actions';
 
 @Component({
   selector: 'app-playlist',
@@ -116,5 +117,14 @@ export class PlaylistComponent implements OnInit {
           item => item.playlistItem.mediaId !== deletedItem.mediaId
         );
       });
+  }
+
+  watchMedia(index: number) {
+    if (!this.playlist) {
+      return;
+    }
+    this.store.dispatch(
+      new StreamingActions.WatchPlaylist(this.playlist, index)
+    );
   }
 }
