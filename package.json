@@ -36,7 +36,7 @@
     "chart.js": "^3.6.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^4.2.1",
-    "hls.js": "^1.4.3",
+    "hls.js": "^1.4.4",
     "keycloak-angular": "^13.0.0",
     "mux.js": "^6.3.0",
     "ng-zorro-antd": "^15.1.0",
