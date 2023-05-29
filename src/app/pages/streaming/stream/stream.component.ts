@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MediaFile } from '../../../shared/models/media-file.models';
 import { ActivatedRoute } from '@angular/router';
 import { MediaInfoService } from '../../../feature/media-info/media-info.service';
-import { MediaResponse } from '../../../shared/models/media.models';
+import { forkJoin, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-stream',
@@ -22,37 +22,32 @@ export class StreamComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.mediaId = Number.parseInt(
-      this.route.snapshot.paramMap.get('id') || ''
-    );
-    if (isNaN(this.mediaId)) {
-      this.error = "L'id n'est pas valide";
-      return;
-    }
-    this.mediaInfoService.getFileInfos(this.mediaId).subscribe({
-      next: (mediaFile: MediaFile) => {
-        if (this.route.snapshot.queryParamMap.has('progress')) {
-          this.progress =
-            mediaFile.duration *
-            Number.parseFloat(
-              this.route.snapshot.queryParamMap.get('progress') || '0'
-            );
-        }
-        this.mediaFile = mediaFile;
-      },
-      error: (err: any) => {
-        console.error(err.error.error);
-        this.error = err.error.error;
-      },
-    });
-    this.mediaInfoService.getMediaInfo(this.mediaId).subscribe({
-      next: (mediaInfo: MediaResponse) => {
-        this.mediaTitle = mediaInfo.name;
-      },
-      error: (err: any) => {
-        console.error(err.error.error);
-        this.error = err.error.error;
-      },
-    });
+    this.route.params
+      .pipe(
+        switchMap(params => {
+          this.mediaId = parseInt(params['id']);
+          return forkJoin([
+            this.mediaInfoService.getFileInfos(this.mediaId),
+            this.mediaInfoService.getMediaInfo(this.mediaId),
+          ]);
+        })
+      )
+      .subscribe({
+        next: ([mediaFile, mediaInfo]) => {
+          this.mediaFile = mediaFile;
+          if (this.route.snapshot.queryParamMap.has('progress')) {
+            this.progress =
+              mediaFile.duration *
+              Number.parseFloat(
+                this.route.snapshot.queryParamMap.get('progress') || '0'
+              );
+          }
+          this.mediaTitle = mediaInfo.name;
+        },
+        error: err => {
+          console.error(err.error.error);
+          this.error = err.error.error;
+        },
+      });
   }
 }
