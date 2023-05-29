@@ -1,0 +1,29 @@
+<nz-row [nzGutter]="[16, 16]">
+  <nz-col [nzSpan]="24">
+    <app-actor-info [actor]="actor"></app-actor-info>
+  </nz-col>
+  <nz-col [nzSpan]="24">
+    <nz-skeleton
+      *ngIf="tvShows.length === 0"
+      [nzActive]="true"
+      [nzParagraph]="{ rows: 10 }"></nz-skeleton>
+
+    <nz-card
+      *ngIf="tvShows.length > 0"
+      [nzExtra]="moviesPagination"
+      [nzActions]="[moviesPagination]">
+      <app-tv-list [tvShows]="tvShows"></app-tv-list>
+    </nz-card>
+  </nz-col>
+</nz-row>
+
+<ng-template #moviesPagination>
+  <div (click)="$event.stopPropagation()">
+    <nz-pagination
+      [nzPageIndex]="tvShowsPage"
+      [nzTotal]="Math.min(tvShowsTotalResults, 1000)"
+      [nzPageSize]="20"
+      (nzPageIndexChange)="onTvShowsPageChange($event)">
+    </nz-pagination>
+  </div>
+</ng-template>

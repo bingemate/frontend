@@ -42,6 +42,7 @@ import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { NzListModule } from 'ng-zorro-antd/list';
 import { AuthState } from './core/auth/store/auth.state';
 import { KeycloakAngularModule } from 'keycloak-angular';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 
 registerLocaleData(fr);
 
@@ -111,6 +112,7 @@ const ngZorroConfig: NzConfig = {
     }),
     NzListModule,
     NzMenuModule,
+    NzToolTipModule,
   ],
   providers: [
     KeycloakInitializerProvider,

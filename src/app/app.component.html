@@ -168,21 +168,28 @@
               nz-icon
               [nzType]="isNavbarCollapsed ? 'menu-unfold' : 'menu-fold'"></span>
           </span>
-          Current section : {{ currentSection }}
-        </nz-page-header-title>
-        <nz-page-header-subtitle>
           {{ currentSectionName }}
-        </nz-page-header-subtitle>
+        </nz-page-header-title>
         <nz-page-header-extra>
           <nz-space nzAlign="baseline" nzSize="large">
             <button
+              [hidden]="!isAdmin"
               *nzSpaceItem
               nz-button
+              nz-tooltip="Ajouter de nouveaux médias"
               nzShape="circle"
-              nz-popover="Something is processing ..."
-              nzPopoverPlacement="bottomRight"
-              (click)="notificationsService.success('Coucou', 'Ca va ?')">
-              <span nz-icon nzType="sync" nzSpin></span>
+              [routerLink]="'/' + navigationRoot.upload.path">
+              <span nz-icon nzType="upload"></span>
+            </button>
+            <button
+              *nzSpaceItem
+              [routerLink]="mediaSearchPath"
+              nz-button
+              nzShape="circle"
+              nz-tooltip
+              nzTooltipTitle="Rechercher un média"
+              nzTooltipPlacement="bottomRight">
+              <span nz-icon nzType="search"></span>
             </button>
             <nz-badge *nzSpaceItem [nzCount]="6">
               <button nz-button nzShape="circle" [routerLink]="chatLink">

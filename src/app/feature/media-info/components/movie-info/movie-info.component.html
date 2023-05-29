@@ -1,0 +1,88 @@
+<nz-skeleton
+  *ngIf="movie === undefined"
+  [nzActive]="true"
+  [nzParagraph]="{ rows: 20 }"></nz-skeleton>
+<div class="movie-details-container" *ngIf="movie">
+  <nz-row [nzGutter]="[24, 24]" class="movie-details">
+    <div class="movie-poster" nz-col nzSpan="6">
+      <img nz-image [nzSrc]="movie.posterUrl" alt="Movie Poster" width="100%" />
+    </div>
+
+    <div class="movie-info" nz-col [nzMd]="24" [nzXl]="18">
+      <nz-row [nzGutter]="[24, 24]">
+        <h1 class="movie-title" nz-col nzSpan="24">{{ movie.title }}</h1>
+        <div *ngIf="movie.present" nz-col nzSpan="24">
+          <button
+            [routerLink]="streamPath + movie.id"
+            nz-button
+            nzType="primary"
+            nzShape="round">
+            <span nz-icon nzType="play-circle" nzTheme="fill"></span
+            >&nbsp;Regarder
+          </button>
+        </div>
+        <div class="movie-rating" nz-col nzSpan="24">
+          <nz-rate [ngModel]="getRate()" nzDisabled nzAllowHalf></nz-rate>
+          &nbsp;{{ movie.voteAverage.toFixed(2) }}
+        </div>
+
+        <nz-descriptions nzBordered [nzColumn]="1" nz-col nzSpan="24">
+          <nz-descriptions-item nzTitle="Date de sortie">{{
+            movie.releaseDate | date : 'dd/MM/yyyy'
+          }}</nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Genres">
+            <nz-tag
+              *ngFor="let genre of movie.genres"
+              [routerLink]="moviesByGenrePath + genre.id"
+              nzMode="checkable"
+              nzColor="green"
+              nzChecked
+              >{{ genre.name }}</nz-tag
+            >
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Résumé" [nzSpan]="24">{{
+            movie.overview
+          }}</nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Studios">
+            <nz-tag
+              *ngFor="let studio of movie.studios"
+              [routerLink]="moviesByStudioPath + studio.id"
+              nzMode="checkable"
+              nzColor="magenta"
+              nzChecked
+              >{{ studio.name }}</nz-tag
+            >
+          </nz-descriptions-item>
+        </nz-descriptions>
+      </nz-row>
+    </div>
+    <div class="actors" nz-col nzSpan="24">
+      <h2>Acteurs</h2>
+      <nz-list
+        nzSize="large"
+        [nzPagination]="actorListPagination"
+        [nzBordered]="false"
+        [nzGrid]="{ gutter: 16, xs: 2, sm: 3, md: 4, lg: 6, xl: 6, xxl: 6 }">
+        <nz-list-item
+          *ngFor="let actor of getActorsSlice()"
+          style="cursor: pointer"
+          [routerLink]="moviesByActorPath + actor.id">
+          <nz-list-item-meta
+            [nzAvatar]="actor.profileUrl"
+            nzTitle="{{ actor.name }}"
+            nzDescription="{{ actor.character }}"></nz-list-item-meta>
+        </nz-list-item>
+      </nz-list>
+    </div>
+  </nz-row>
+</div>
+
+<ng-template #actorListPagination>
+  <nz-pagination
+    [nzPageIndex]="actorsCurrentPage"
+    [nzTotal]="movie?.actors?.length ?? 0"
+    [nzPageSize]="6"
+    [nzShowSizeChanger]="false"
+    [nzSize]="'small'"
+    (nzPageIndexChange)="onActorsPageChange($event)"></nz-pagination>
+</ng-template>
