@@ -58,19 +58,17 @@ export class PlaylistComponent implements OnInit {
         mergeMap(items =>
           forkJoin(
             items.map(item =>
-              this.mediaService
-                .getTvShowEpisodeInfo(1, item.season, item.episode)
-                .pipe(
-                  map(media => {
-                    return {
-                      media: {
-                        name: media.name,
-                        imageUrl: media.posterUrl,
-                      },
-                      playlistItem: item,
-                    };
-                  })
-                )
+              this.mediaService.getMovieInfo(1).pipe(
+                map(media => {
+                  return {
+                    media: {
+                      name: media.title,
+                      imageUrl: media.posterUrl,
+                    },
+                    playlistItem: item,
+                  };
+                })
+              )
             )
           )
         )
@@ -85,17 +83,19 @@ export class PlaylistComponent implements OnInit {
         mergeMap(items =>
           forkJoin(
             items.map(item =>
-              this.mediaService.getMovieInfo(1).pipe(
-                map(media => {
-                  return {
-                    media: {
-                      name: media.title,
-                      imageUrl: media.posterUrl,
-                    },
-                    playlistItem: item,
-                  };
-                })
-              )
+              this.mediaService
+                .getTvShowEpisodeInfo(1, item.season, item.episode)
+                .pipe(
+                  map(media => {
+                    return {
+                      media: {
+                        name: media.name,
+                        imageUrl: media.posterUrl,
+                      },
+                      playlistItem: item,
+                    };
+                  })
+                )
             )
           )
         )
