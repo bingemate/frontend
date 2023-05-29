@@ -109,8 +109,10 @@ export class PlaylistComponent implements OnInit {
     }
     const items = [...this.playlistItems];
     moveItemInArray(items, event.previousIndex, event.currentIndex);
-    this.playlistsService.updatePlaylistOrder(this.playlist.id, {
-      items: this.playlistItems.map(item => item.playlistItem),
-    });
+    this.playlistsService
+      .updatePlaylistOrder(this.playlist.id, {
+        items: this.playlistItems.map(item => item.playlistItem),
+      })
+      .subscribe(() => (this.playlistItems = items));
   }
 }
