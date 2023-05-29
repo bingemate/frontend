@@ -13,6 +13,10 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { StatsDailyViewedMediasComponent } from '../../shared/components/stats-daily-viewed-medias/stats-daily-viewed-medias.component';
 import { StatisticsService } from './statistics.service';
 import { StatsDailyViewedGenreComponent } from '../../shared/components/stats-daily-viewed-genre/stats-daily-viewed-genre.component';
+import { MediaInfoModule } from '../../feature/media-info/media-info.module';
+import { NzListModule } from 'ng-zorro-antd/list';
+import { NzProgressModule } from 'ng-zorro-antd/progress';
+import { NzTypographyModule } from 'ng-zorro-antd/typography';
 
 @NgModule({
   declarations: [
@@ -31,6 +35,10 @@ import { StatsDailyViewedGenreComponent } from '../../shared/components/stats-da
     NzDropDownModule,
     NzIconModule,
     NzButtonModule,
+    MediaInfoModule,
+    NzListModule,
+    NzProgressModule,
+    NzTypographyModule,
   ],
   providers: [StatisticsService],
 })
