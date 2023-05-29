@@ -22,6 +22,9 @@ export class TrendingComponent implements OnInit {
   popularTvShowsTotalPages = 0;
   popularTvShowsTotalResults = 0;
   recentTvShows: TvShowResponse[] = [];
+
+  onlyAvailable = false;
+
   constructor(private mediaDiscoverService: MediaDiscoverService) {}
 
   ngOnInit(): void {
@@ -33,7 +36,7 @@ export class TrendingComponent implements OnInit {
 
   getPopularMovies(): void {
     this.mediaDiscoverService
-      .getPopularMovies(this.popularMoviesPage)
+      .getPopularMovies(this.popularMoviesPage, this.onlyAvailable)
       .subscribe(movies => {
         this.popularMoviesTotalPages = movies.totalPage;
         this.popularMoviesTotalResults = movies.totalResult;
@@ -42,14 +45,16 @@ export class TrendingComponent implements OnInit {
   }
 
   getRecentMovies(): void {
-    this.mediaDiscoverService.getRecentMovies().subscribe(movies => {
-      this.recentMovies = movies;
-    });
+    this.mediaDiscoverService
+      .getRecentMovies(this.onlyAvailable)
+      .subscribe(movies => {
+        this.recentMovies = movies;
+      });
   }
 
   getPopularTvShows(): void {
     this.mediaDiscoverService
-      .getPopularTvShows(this.popularTvShowsPage)
+      .getPopularTvShows(this.popularTvShowsPage, this.onlyAvailable)
       .subscribe(tvShows => {
         this.popularTvShowsTotalPages = tvShows.totalPage;
         this.popularTvShowsTotalResults = tvShows.totalResult;
@@ -58,9 +63,11 @@ export class TrendingComponent implements OnInit {
   }
 
   getRecentTvShows(): void {
-    this.mediaDiscoverService.getRecentTvShows().subscribe(tvShows => {
-      this.recentTvShows = tvShows;
-    });
+    this.mediaDiscoverService
+      .getRecentTvShows(this.onlyAvailable)
+      .subscribe(tvShows => {
+        this.recentTvShows = tvShows;
+      });
   }
 
   onPopularMoviesPageChange(page: number): void {
@@ -71,6 +78,11 @@ export class TrendingComponent implements OnInit {
   onPopularTvShowsPageChange(page: number): void {
     this.popularTvShowsPage = page;
     this.getPopularTvShows();
+  }
+
+  onOnlyAvailableChecked(checked: boolean) {
+    this.onlyAvailable = checked;
+    this.ngOnInit();
   }
 
   protected readonly Math = Math;

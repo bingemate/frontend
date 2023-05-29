@@ -1,6 +1,6 @@
 <nz-page-header nzTitle="Tendances"></nz-page-header>
 
-<nz-tabset nzSize="large">
+<nz-tabset nzSize="large" [nzTabBarExtraContent]="onlyAvailable">
   <nz-tab nzTitle="Films populaires">
     <nz-skeleton
       *ngIf="popularMovies.length === 0"
@@ -54,4 +54,12 @@
       (nzPageIndexChange)="onPopularTvShowsPageChange($event)">
     </nz-pagination>
   </div>
+</ng-template>
+
+<ng-template #onlyAvailable>
+  <label
+    nz-checkbox
+    (nzCheckedChange)="onOnlyAvailableChecked($event.valueOf())">
+    Disponibles
+  </label>
 </ng-template>
