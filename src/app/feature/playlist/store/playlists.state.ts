@@ -73,6 +73,7 @@ export class PlaylistsState {
                 name: payload.createPlaylistApiRequest.name,
                 userId: '',
                 type: payload.createPlaylistApiRequest.type,
+                items: [],
               },
             ],
           });

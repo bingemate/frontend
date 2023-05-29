@@ -29,17 +29,19 @@
           <nz-space nzAlign="center">
             <span *nzSpaceItem> {{ index }}. </span>
           </nz-space>
-          <img
-            class="media-image"
-            width="160"
-            height="90"
-            alt="logo"
-            ngSrc="{{ item.media.imageUrl }}" />
+          <a [routerLink]="['/streaming/stream', item.playlistItem.mediaId]">
+            <img
+              class="media-image"
+              width="160"
+              height="90"
+              alt="logo"
+              ngSrc="{{ item.media.imageUrl }}" />
+          </a>
           <nz-space nzDirection="vertical">
-            <a [routerLink]="['/media', item.playlistItem.mediaId]">
+            <a [routerLink]="['/medias/movie-view', item.playlistItem.mediaId]">
               {{ item.media.name }}
             </a>
-            <span>
+            <span *ngIf="playlist && playlist.type === 'EPISODE'">
               {{ item.playlistItem.season }}x{{ item.playlistItem.episode }}
             </span>
           </nz-space>
@@ -47,7 +49,11 @@
       </nz-list-item-meta-title>
     </nz-list-item-meta>
     <ul nz-list-item-actions>
-      <nz-list-item-action><a>Supprimer</a></nz-list-item-action>
+      <nz-list-item-action
+        ><a (click)="removeItem(item.playlistItem)"
+          >Supprimer</a
+        ></nz-list-item-action
+      >
     </ul>
   </nz-list-item>
   <nz-list-empty

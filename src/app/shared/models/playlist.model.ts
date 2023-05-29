@@ -12,6 +12,7 @@ export interface Playlist {
   name: string;
   userId: string;
   type: PlaylistType;
+  items: PlaylistItem[];
 }
 
 export interface PlaylistItem {
@@ -29,6 +30,7 @@ export interface PlaylistApiResponse {
   name: string;
   userId: string;
   type: PlaylistType;
+  items: PlaylistItemApiResponse[];
 }
 
 export interface PlaylistItemsApiResponse {
@@ -64,6 +66,7 @@ export function toPlaylist(playlistItem: PlaylistApiResponse): Playlist {
     name: playlistItem.name,
     userId: playlistItem.userId,
     type: playlistItem.type,
+    items: toPlaylistItems(playlistItem),
   };
 }
 

@@ -41,66 +41,55 @@ export class PlaylistComponent implements OnInit {
   }
 
   private updatePlaylist(id: string): void {
-    this.playlist = this.store
-      .selectSnapshot(PlaylistsState.playlists)
-      .find(playlist => playlist.id === id);
-    if (this.playlist) {
-      this.playlist.type === PlaylistType.MOVIE
-        ? this.getMovies(this.playlist.id)
-        : this.getEpisodes(this.playlist.id);
-    }
-  }
-
-  private getMovies(id: string) {
     this.playlistsService
-      .getPlaylistItems(id)
+      .getPlaylistById(id)
       .pipe(
-        mergeMap(items =>
-          forkJoin(
-            items.map(item =>
-              this.mediaService.getMovieInfo(item.mediaId).pipe(
-                map(media => {
-                  return {
-                    media: {
-                      name: media.title,
-                      imageUrl: media.posterUrl,
-                    },
-                    playlistItem: item,
-                  };
-                })
-              )
-            )
-          )
-        )
+        mergeMap(playlist => {
+          this.playlist = playlist;
+          return this.playlist.type === PlaylistType.MOVIE
+            ? this.getMovies(playlist.items)
+            : this.getEpisodes(playlist.items);
+        })
       )
       .subscribe(items => (this.playlistItems = items));
   }
 
-  private getEpisodes(id: string) {
-    this.playlistsService
-      .getPlaylistItems(id)
-      .pipe(
-        mergeMap(items =>
-          forkJoin(
-            items.map(item =>
-              this.mediaService
-                .getTvShowEpisodeInfo(item.mediaId, item.season, item.episode)
-                .pipe(
-                  map(media => {
-                    return {
-                      media: {
-                        name: media.name,
-                        imageUrl: media.posterUrl,
-                      },
-                      playlistItem: item,
-                    };
-                  })
-                )
-            )
-          )
+  private getMovies(items: PlaylistItem[]) {
+    return forkJoin(
+      items.map(item =>
+        this.mediaService.getMovieInfo(item.mediaId).pipe(
+          map(media => {
+            return {
+              media: {
+                name: media.title,
+                imageUrl: media.posterUrl,
+              },
+              playlistItem: item,
+            };
+          })
         )
       )
-      .subscribe(items => (this.playlistItems = items));
+    );
+  }
+
+  private getEpisodes(items: PlaylistItem[]) {
+    return forkJoin(
+      items.map(item =>
+        this.mediaService
+          .getTvShowEpisodeInfo(item.mediaId, item.season, item.episode)
+          .pipe(
+            map(media => {
+              return {
+                media: {
+                  name: media.name,
+                  imageUrl: media.posterUrl,
+                },
+                playlistItem: item,
+              };
+            })
+          )
+      )
+    );
   }
 
   itemMoved(event: CdkDragDrop<PlaylistItem[]>) {
@@ -114,5 +103,18 @@ export class PlaylistComponent implements OnInit {
         items: this.playlistItems.map(item => item.playlistItem),
       })
       .subscribe(() => (this.playlistItems = items));
+  }
+
+  removeItem(deletedItem: PlaylistItem): void {
+    if (!this.playlist) {
+      return;
+    }
+    this.playlistsService
+      .deletePlaylistMedia(this.playlist.id, deletedItem.mediaId)
+      .subscribe(() => {
+        this.playlistItems = this.playlistItems.filter(
+          item => item.playlistItem.mediaId !== deletedItem.mediaId
+        );
+      });
   }
 }

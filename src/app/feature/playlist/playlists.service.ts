@@ -4,10 +4,12 @@ import { map, Observable } from 'rxjs';
 import {
   CreatePlaylistApiRequest,
   Playlist,
+  PlaylistApiResponse,
   PlaylistIdDto,
   PlaylistItem,
   PlaylistItemsApiResponse,
   PlaylistsApiResponse,
+  toPlaylist,
   toPlaylistItems,
   toPlaylists,
   UpdatePlaylistOrderApiRequest,
@@ -18,12 +20,12 @@ import { environment } from '../../../environments/environment';
 export class PlaylistsService {
   constructor(private readonly http: HttpClient) {}
 
-  getPlaylistItems(playlistId: string): Observable<PlaylistItem[]> {
+  getPlaylistById(playlistId: string): Observable<Playlist> {
     return this.http
-      .get<PlaylistItemsApiResponse>(
+      .get<PlaylistApiResponse>(
         `${environment.apiUrl}/watch-service/playlist/${playlistId}`
       )
-      .pipe(map(response => toPlaylistItems(response)));
+      .pipe(map(response => toPlaylist(response)));
   }
 
   getPlaylists(userId: string): Observable<Playlist[]> {
@@ -37,6 +39,12 @@ export class PlaylistsService {
   deletePlaylist(playlistId: string): Observable<void> {
     return this.http.delete<void>(
       `${environment.apiUrl}/watch-service/playlist/${playlistId}`
+    );
+  }
+
+  deletePlaylistMedia(playlistId: string, mediaId: number): Observable<void> {
+    return this.http.delete<void>(
+      `${environment.apiUrl}/watch-service/playlist/${playlistId}/${mediaId}`
     );
   }
 
