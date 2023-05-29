@@ -14,6 +14,7 @@ export class StreamComponent implements OnInit {
   mediaFile: MediaFile | undefined;
   error: string | undefined;
   mediaTitle = 'undefined';
+  progress = 0;
 
   constructor(
     private route: ActivatedRoute,
@@ -30,6 +31,13 @@ export class StreamComponent implements OnInit {
     }
     this.mediaInfoService.getFileInfos(this.mediaId).subscribe({
       next: (mediaFile: MediaFile) => {
+        if (this.route.snapshot.queryParamMap.has('progress')) {
+          this.progress =
+            mediaFile.duration *
+            Number.parseFloat(
+              this.route.snapshot.queryParamMap.get('progress') || '0'
+            );
+        }
         this.mediaFile = mediaFile;
       },
       error: (err: any) => {
