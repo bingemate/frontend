@@ -11,12 +11,14 @@ import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { StatisticsService } from './statistics.service';
+import { StatsDailyViewedGenreComponent } from '../../shared/components/stats-daily-viewed-genre/stats-daily-viewed-genre.component';
 
 @NgModule({
   declarations: [
     StatisticsWatchStatsComponent,
     StatisticsHistoryComponent,
     StatsDailyViewsComponent,
+    StatsDailyViewedGenreComponent,
   ],
   imports: [
     CommonModule,
