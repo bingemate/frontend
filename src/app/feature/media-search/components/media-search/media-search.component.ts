@@ -23,6 +23,8 @@ export class MediaSearchComponent implements OnDestroy {
   @Select(MediaSearchState.tvShowsLoading)
   searchingTv$!: Observable<boolean>;
 
+  onlyAvailable = false;
+
   inputSubject: Subject<string> = new Subject<string>();
   private subscription: Subscription;
 
@@ -63,7 +65,12 @@ export class MediaSearchComponent implements OnDestroy {
 
   search() {
     if (this.query.length > 0) {
-      this.store.dispatch(new MediaSearchActions.Search({ query: this.query }));
+      this.store.dispatch(
+        new MediaSearchActions.Search({
+          query: this.query,
+          onlyAvailable: this.onlyAvailable,
+        })
+      );
     }
   }
 
@@ -71,6 +78,7 @@ export class MediaSearchComponent implements OnDestroy {
     this.store.dispatch(
       new MediaSearchActions.SearchMovie({
         page,
+        onlyAvailable: this.onlyAvailable,
       })
     );
   }
@@ -79,8 +87,14 @@ export class MediaSearchComponent implements OnDestroy {
     this.store.dispatch(
       new MediaSearchActions.SearchTv({
         page,
+        onlyAvailable: this.onlyAvailable,
       })
     );
+  }
+
+  onOnlyAvailableChecked(checked: boolean) {
+    this.onlyAvailable = checked;
+    this.manualSearch();
   }
 
   ngOnDestroy() {

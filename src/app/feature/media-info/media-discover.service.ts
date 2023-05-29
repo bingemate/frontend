@@ -70,8 +70,10 @@ export class MediaDiscoverService {
     );
   }
 
-  getPopularMovies(page = 1): Observable<MovieResults> {
-    const params = new HttpParams().set('page', page.toString());
+  getPopularMovies(page = 1, available = false): Observable<MovieResults> {
+    const params = new HttpParams()
+      .set('page', page)
+      .set('available', available);
 
     return this.http.get<MovieResults>(
       API_RESOURCE_URI.MEDIA_INFO + '/discover/movie/popular',
@@ -79,9 +81,11 @@ export class MediaDiscoverService {
     );
   }
 
-  getRecentMovies(): Observable<MovieResponse[]> {
+  getRecentMovies(available = false): Observable<MovieResponse[]> {
+    const params = new HttpParams().set('available', available);
     return this.http.get<MovieResponse[]>(
-      API_RESOURCE_URI.MEDIA_INFO + '/discover/movie/recent'
+      API_RESOURCE_URI.MEDIA_INFO + '/discover/movie/recent',
+      { params }
     );
   }
 
@@ -91,10 +95,15 @@ export class MediaDiscoverService {
     );
   }
 
-  searchMovies(query: string, page = 1): Observable<MovieResults> {
+  searchMovies(
+    query: string,
+    page = 1,
+    available = false
+  ): Observable<MovieResults> {
     const params = new HttpParams()
       .set('query', query)
-      .set('page', page.toString());
+      .set('page', page)
+      .set('available', available);
 
     return this.http.get<MovieResults>(
       API_RESOURCE_URI.MEDIA_INFO + '/discover/movie/search',
@@ -124,8 +133,10 @@ export class MediaDiscoverService {
     );
   }
 
-  getPopularTvShows(page = 1): Observable<TvShowResults> {
-    const params = new HttpParams().set('page', page.toString());
+  getPopularTvShows(page = 1, available = false): Observable<TvShowResults> {
+    const params = new HttpParams()
+      .set('page', page)
+      .set('available', available);
 
     return this.http.get<TvShowResults>(
       API_RESOURCE_URI.MEDIA_INFO + '/discover/tv/popular',
@@ -133,9 +144,11 @@ export class MediaDiscoverService {
     );
   }
 
-  getRecentTvShows(): Observable<TvShowResponse[]> {
+  getRecentTvShows(available = false): Observable<TvShowResponse[]> {
+    const params = new HttpParams().set('available', available);
     return this.http.get<TvShowResponse[]>(
-      API_RESOURCE_URI.MEDIA_INFO + '/discover/tv/recent'
+      API_RESOURCE_URI.MEDIA_INFO + '/discover/tv/recent',
+      { params }
     );
   }
 
@@ -145,10 +158,15 @@ export class MediaDiscoverService {
     );
   }
 
-  searchTvShows(query: string, page = 1): Observable<TvShowResults> {
+  searchTvShows(
+    query: string,
+    page = 1,
+    available = false
+  ): Observable<TvShowResults> {
     const params = new HttpParams()
       .set('query', query)
-      .set('page', page.toString());
+      .set('page', page)
+      .set('available', available);
 
     return this.http.get<TvShowResults>(
       API_RESOURCE_URI.MEDIA_INFO + '/discover/tv/search',

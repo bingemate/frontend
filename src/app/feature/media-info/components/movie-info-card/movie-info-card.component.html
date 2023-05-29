@@ -7,16 +7,19 @@
 </ng-container>
 
 <ng-template #card>
-  <nz-card nzHoverable class="movie-poster" [nzCover]="cover">
+  <nz-card
+    nzHoverable
+    class="movie-poster"
+    [nzCover]="cover"
+    (click)="onViewMovie()">
     <nz-card-meta
-      (click)="onViewMovie()"
       nzTitle="{{ movie?.title }}"
       [nzDescription]="description"></nz-card-meta>
   </nz-card>
 </ng-template>
 
 <ng-template #cover>
-  <img nz-image [nzSrc]="movie?.posterUrl!" alt="" />
+  <img nz-image nzDisablePreview [nzSrc]="movie?.posterUrl!" alt="" />
 </ng-template>
 
 <ng-template #description>

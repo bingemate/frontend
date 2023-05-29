@@ -14,6 +14,8 @@ import { MediaInfoModule } from '../media-info/media-info.module';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 import { MediaSearchState } from './store/media-search.state';
 import { NgxsModule } from '@ngxs/store';
+import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
+import { NzSpaceModule } from 'ng-zorro-antd/space';
 
 @NgModule({
   declarations: [MediaSearchComponent],
@@ -31,6 +33,8 @@ import { NgxsModule } from '@ngxs/store';
     MediaInfoModule,
     NzPaginationModule,
     NgxsModule.forFeature([MediaSearchState]),
+    NzCheckboxModule,
+    NzSpaceModule,
   ],
   exports: [MediaSearchComponent],
 })
