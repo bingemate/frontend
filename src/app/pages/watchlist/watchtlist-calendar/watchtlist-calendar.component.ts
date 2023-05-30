@@ -5,6 +5,7 @@ import {
   movieViewPath,
   tvShowViewPath,
 } from '../../medias/medias-routing.module';
+import { MediaEvent } from '../../../shared/models/event.models';
 
 @Component({
   selector: 'app-watchtlist-calendar',
@@ -12,7 +13,7 @@ import {
   styleUrls: ['./watchtlist-calendar.component.less'],
 })
 export class WatchtlistCalendarComponent implements OnInit {
-  events: Event[] = [];
+  events: MediaEvent[] = [];
   tvShows: Map<number, string> = new Map<number, string>();
   currentMonth = new Date().getMonth() + 1;
 
@@ -53,8 +54,7 @@ export class WatchtlistCalendarComponent implements OnInit {
     });
   }
 
-  onMonthChange(date: Date): void {
-    const month = date.getMonth() + 1;
+  onMonthChange(month: number): void {
     if (month === this.currentMonth) {
       return;
     }
@@ -62,37 +62,29 @@ export class WatchtlistCalendarComponent implements OnInit {
     this.refresh(month);
   }
 
-  getEventTitle(event: Event): string {
+  getEventTitle(event: MediaEvent): string {
     return event.episode ? `${event.title} - ${event.episode}` : event.title;
   }
 
-  getRouterLink(event: Event): string[] {
+  getRouterLink(event: MediaEvent): string[] {
     return event.type === MediaType.Movie
       ? [movieViewPath, event.id.toString()]
       : [tvShowViewPath, event.id.toString()];
   }
 
-  getEventColor(event: Event): string {
+  getEventColor(event: MediaEvent): string {
     return badgeColors[
       event.title.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) %
         badgeColors.length
     ];
   }
 
-  getEventsFromDate(date: Date): Event[] {
+  getEventsFromDate(date: Date): MediaEvent[] {
     return this.events.filter(
       event => event.date.toDateString() === date.toDateString()
     );
   }
 }
-
-type Event = {
-  title: string;
-  episode?: string;
-  date: Date;
-  type: MediaType;
-  id: number;
-};
 
 const badgeColors = [
   'pink',
