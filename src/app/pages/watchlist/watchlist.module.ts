@@ -30,6 +30,7 @@ import { PlaylistModule } from '../../feature/playlist/playlist.module';
 import { NzProgressModule } from 'ng-zorro-antd/progress';
 import { MediaInfoModule } from '../../feature/media-info/media-info.module';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { CalendarModule } from '../../feature/calendar/calendar.module';
 
 @NgModule({
   declarations: [
@@ -68,6 +69,7 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
     NzProgressModule,
     MediaInfoModule,
     NzToolTipModule,
+    CalendarModule,
   ],
 })
 export class WatchlistModule {}
