@@ -1,12 +1,14 @@
 <nz-page-header>
   <nz-page-header-title>Calendrier des médias suivis</nz-page-header-title>
   <nz-page-header-content>
-    <nz-calendar nzMode="month">
+    <nz-calendar nzMode="month" (nzValueChange)="onMonthChange($event)">
       <ul *nzDateCell="let date" class="events">
         <li
           *ngFor="let event of getEventsFromDate(date)"
-          [nz-popover]="getEventTitle(event)"
-          [nzPopoverContent]="event.date.toLocaleString()">
+          [routerLink]="getRouterLink(event)"
+          nz-tooltip
+          nzTooltipPlacement="left"
+          [nzTooltipTitle]="getEventTitle(event)">
           <nz-badge
             [nzColor]="getEventColor(event)"
             [nzText]="getEventTitle(event)"></nz-badge>
