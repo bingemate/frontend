@@ -1,72 +1,76 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { CalendarService } from '../../../feature/calendar/calendar.service';
+import { MediaType, TvShowResponse } from '../../../shared/models/media.models';
+import {
+  movieViewPath,
+  tvShowViewPath,
+} from '../../medias/medias-routing.module';
 
 @Component({
   selector: 'app-watchtlist-calendar',
   templateUrl: './watchtlist-calendar.component.html',
   styleUrls: ['./watchtlist-calendar.component.less'],
 })
-export class WatchtlistCalendarComponent {
-  events: Event[] = [
-    {
-      title: 'The Mandalorian',
-      episode: '3x1',
-      date: new Date('2023-03-01'),
-    },
-    {
-      title: 'The Bad Batch',
-      episode: '2x9',
-      date: new Date('2023-02-15'),
-    },
-    {
-      title: 'The Bad Batch',
-      episode: '2x10',
-      date: new Date('2023-02-22'),
-    },
-    {
-      title: 'South Park',
-      episode: '26x1',
-      date: new Date('2023-02-09'),
-    },
-    {
-      title: 'South Park',
-      episode: '26x2',
-      date: new Date('2023-02-16'),
-    },
-    {
-      title: 'South Park',
-      episode: '26x3',
-      date: new Date('2023-03-02'),
-    },
-    {
-      title: 'The Last Of Us',
-      episode: '1x3',
-      date: new Date('2023-01-30'),
-    },
-    {
-      title: 'The Last Of Us',
-      episode: '1x4',
-      date: new Date('2023-02-06'),
-    },
-    {
-      title: 'The Last Of Us',
-      episode: '1x5',
-      date: new Date('2023-02-13'),
-    },
-    {
-      title: 'The Last Of Us',
-      episode: '1x6',
-      date: new Date('2023-02-20'),
-    },
-    {
-      title: 'The Last Of Us',
-      episode: '1x7',
-      date: new Date('2023-02-27'),
-    },
-    {
-      title: 'Avatar 3: The Last Airbender',
-      date: new Date('2023-03-01'),
-    },
-  ];
+export class WatchtlistCalendarComponent implements OnInit {
+  events: Event[] = [];
+  tvShows: Map<number, string> = new Map<number, string>();
+  currentMonth = new Date().getMonth() + 1;
+
+  constructor(private calendarService: CalendarService) {}
+
+  ngOnInit(): void {
+    this.refresh(new Date().getMonth() + 1);
+  }
+
+  refresh(month: number): void {
+    this.tvShows.clear();
+    this.events = [];
+    this.calendarService.getFollowedMoviesReleases(month).subscribe(events => {
+      this.events.push(
+        ...events.map(event => ({
+          title: event.title,
+          date: new Date(event.releaseDate),
+          type: MediaType.Movie,
+          id: event.id,
+        }))
+      );
+    });
+    this.calendarService.getFollowedShowsReleases(month).subscribe(events => {
+      events.tvShows.forEach((tvShow: TvShowResponse) => {
+        this.tvShows.set(tvShow.id, tvShow.title);
+      });
+      this.events.push(
+        ...events.episodes.map(event => ({
+          title: this.tvShows.get(event.tvShowId) ?? '',
+          episode: `${event.seasonNumber}x${event.episodeNumber
+            .toString()
+            .padStart(2, '0')} - ${event.name}`,
+          date: new Date(event.airDate),
+          type: MediaType.Episode,
+          id: event.tvShowId,
+        }))
+      );
+    });
+  }
+
+  onMonthChange(date: Date): void {
+    const month = date.getMonth() + 1;
+    if (month === this.currentMonth) {
+      return;
+    }
+    this.currentMonth = month;
+    this.refresh(month);
+  }
+
+  getEventTitle(event: Event): string {
+    return event.episode ? `${event.title} - ${event.episode}` : event.title;
+  }
+
+  getRouterLink(event: Event): string[] {
+    return event.type === MediaType.Movie
+      ? [movieViewPath, event.id.toString()]
+      : [tvShowViewPath, event.id.toString()];
+  }
 
   getEventColor(event: Event): string {
     return badgeColors[
@@ -80,16 +84,14 @@ export class WatchtlistCalendarComponent {
       event => event.date.toDateString() === date.toDateString()
     );
   }
-
-  getEventTitle(event: Event): string {
-    return event.episode ? `${event.title} - ${event.episode}` : event.title;
-  }
 }
 
 type Event = {
   title: string;
   episode?: string;
   date: Date;
+  type: MediaType;
+  id: number;
 };
 
 const badgeColors = [
