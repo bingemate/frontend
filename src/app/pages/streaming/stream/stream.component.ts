@@ -7,6 +7,7 @@ import { StreamUpdateEvent } from '../../../shared/models/streaming.model';
 import { io, Socket } from 'socket.io-client';
 import { environment } from '../../../../environments/environment';
 import { KeycloakEventType, KeycloakService } from 'keycloak-angular';
+import { MediaResponse } from '../../../shared/models/media.models';
 
 @Component({
   selector: 'app-stream',
@@ -16,8 +17,8 @@ import { KeycloakEventType, KeycloakService } from 'keycloak-angular';
 export class StreamComponent implements OnInit, OnDestroy {
   mediaId = 0;
   mediaFile: MediaFile | undefined;
+  mediaInfo: MediaResponse | undefined;
   error: string | undefined;
-  mediaTitle = 'undefined';
   progress = 0;
   socket?: Socket;
 
@@ -40,8 +41,9 @@ export class StreamComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: async ([mediaFile, mediaInfo]) => {
-          await this.openSocketConnection();
+          this.mediaInfo = mediaInfo;
           this.mediaFile = mediaFile;
+          await this.openSocketConnection();
           if (this.route.snapshot.queryParamMap.has('progress')) {
             this.progress =
               mediaFile.duration *
@@ -49,7 +51,6 @@ export class StreamComponent implements OnInit, OnDestroy {
                 this.route.snapshot.queryParamMap.get('progress') || '0'
               );
           }
-          this.mediaTitle = mediaInfo.name;
         },
         error: err => {
           console.error(err.error.error);
@@ -78,7 +79,6 @@ export class StreamComponent implements OnInit, OnDestroy {
     });
     this.keycloak.keycloakEvents$.subscribe(async event => {
       if (event.type === KeycloakEventType.OnTokenExpired && this.socket) {
-        await this.keycloak.updateToken(120);
         const key = await this.keycloak.getToken();
         this.socket.auth = { Authorization: `Bearer ${key}` };
       }

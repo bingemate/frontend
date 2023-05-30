@@ -1,6 +1,6 @@
 import { Action, State, StateContext } from '@ngxs/store';
 import { StreamingStateModel } from '../../../shared/models/streaming.model';
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { StreamingActions } from './streaming.actions';
 
@@ -14,7 +14,10 @@ import { StreamingActions } from './streaming.actions';
 })
 @Injectable()
 export class StreamingState {
-  constructor(private readonly router: Router) {}
+  constructor(
+    private readonly router: Router,
+    private readonly ngZone: NgZone
+  ) {}
 
   @Action(StreamingActions.WatchPlaylist)
   watchPlaylist(
@@ -51,14 +54,22 @@ export class StreamingState {
   @Action(StreamingActions.MediaEndedPlaylist)
   mediaEnded(ctx: StateContext<StreamingStateModel>) {
     const position = ctx.getState().position + 1;
+    if (
+      !ctx.getState().playlist ||
+      position === ctx.getState().playlist?.items.length
+    ) {
+      return;
+    }
     ctx.patchState({
       position,
     });
-    this.router
-      .navigate([
-        '/streaming/stream',
-        ctx.getState().playlist?.items[position].mediaId,
-      ])
-      .then();
+    this.ngZone.run(() => {
+      this.router
+        .navigate([
+          '/streaming/stream',
+          ctx.getState().playlist?.items[position].mediaId,
+        ])
+        .then();
+    });
   }
 }
