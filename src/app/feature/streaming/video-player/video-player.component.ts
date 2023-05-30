@@ -3,6 +3,7 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   Output,
   SimpleChanges,
@@ -27,7 +28,7 @@ import { MediaResponse } from '../../../shared/models/media.models';
   templateUrl: './video-player.component.html',
   styleUrls: ['./video-player.component.less'],
 })
-export class VideoPlayerComponent implements OnInit, OnChanges {
+export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
   mediaViewLink = `/${navigationRoot.medias.path}/`;
 
   @Input() mediaId: number | undefined;
@@ -53,6 +54,10 @@ export class VideoPlayerComponent implements OnInit, OnChanges {
   ngOnInit() {
     this.loadMediaInfo();
     this.loadMediaFileInfo();
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   ngOnChanges(changes: SimpleChanges): void {

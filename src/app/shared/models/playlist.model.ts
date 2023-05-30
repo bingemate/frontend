@@ -1,7 +1,3 @@
-export interface PlaylistStateModel {
-  playlists: Playlist[];
-}
-
 export enum PlaylistType {
   MOVIE = 'MOVIE',
   EPISODE = 'EPISODE',

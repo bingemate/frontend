@@ -12,4 +12,8 @@ export namespace StreamingActions {
   export class MediaEndedPlaylist {
     static readonly type = '[Streaming] Playlist Media Ended';
   }
+  export class AutoplayToggle {
+    static readonly type = '[Streaming] Toggle Autoplay';
+    constructor(public autoplay: boolean) {}
+  }
 }

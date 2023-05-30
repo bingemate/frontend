@@ -2,12 +2,15 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MediaFile } from '../../../shared/models/media-file.models';
 import { ActivatedRoute } from '@angular/router';
 import { MediaInfoService } from '../../../feature/media-info/media-info.service';
-import { forkJoin, switchMap } from 'rxjs';
+import { forkJoin, Observable, switchMap } from 'rxjs';
 import { StreamUpdateEvent } from '../../../shared/models/streaming.model';
 import { io, Socket } from 'socket.io-client';
 import { environment } from '../../../../environments/environment';
 import { KeycloakEventType, KeycloakService } from 'keycloak-angular';
 import { MediaResponse } from '../../../shared/models/media.models';
+import { Select } from '@ngxs/store';
+import { StreamingState } from '../../../feature/streaming/store/streaming.state';
+import { Playlist } from '../../../shared/models/playlist.model';
 
 @Component({
   selector: 'app-stream',
@@ -15,6 +18,8 @@ import { MediaResponse } from '../../../shared/models/media.models';
   styleUrls: ['./stream.component.less'],
 })
 export class StreamComponent implements OnInit, OnDestroy {
+  @Select(StreamingState.playlist)
+  playlist$!: Observable<Playlist>;
   mediaId = 0;
   mediaFile: MediaFile | undefined;
   mediaInfo: MediaResponse | undefined;

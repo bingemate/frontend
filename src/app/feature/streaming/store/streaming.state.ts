@@ -1,8 +1,9 @@
-import { Action, State, StateContext } from '@ngxs/store';
+import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { StreamingStateModel } from '../../../shared/models/streaming.model';
 import { Injectable, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { StreamingActions } from './streaming.actions';
+import { ThemeStateModel } from '../../../shared/models/theme.models';
 
 @State<StreamingStateModel>({
   name: 'streaming',
@@ -19,6 +20,21 @@ export class StreamingState {
     private readonly ngZone: NgZone
   ) {}
 
+  @Selector()
+  static playlist(state: StreamingStateModel) {
+    return state.playlist;
+  }
+
+  @Selector()
+  static autoplay(state: StreamingStateModel) {
+    return state.autoplay;
+  }
+
+  @Selector()
+  static position(state: StreamingStateModel) {
+    return state.position;
+  }
+
   @Action(StreamingActions.WatchPlaylist)
   watchPlaylist(
     ctx: StateContext<StreamingStateModel>,
@@ -28,13 +44,16 @@ export class StreamingState {
       playlist: payload.playlist,
       position: payload.position,
     });
-    this.router
-      .navigate([
-        '/streaming/stream',
-        ctx.getState().playlist?.items[payload.position].mediaId,
-      ])
-      .then();
+    this.ngZone.run(() => {
+      this.router
+        .navigate([
+          '/streaming/stream',
+          ctx.getState().playlist?.items[payload.position].mediaId,
+        ])
+        .then();
+    });
   }
+
   @Action(StreamingActions.SeekMediaPlaylist)
   seekMedia(
     ctx: StateContext<StreamingStateModel>,
@@ -43,18 +62,21 @@ export class StreamingState {
     ctx.patchState({
       position: payload.position,
     });
-    this.router
-      .navigate([
-        '/streaming/stream',
-        ctx.getState().playlist?.items[payload.position].mediaId,
-      ])
-      .then();
+    this.ngZone.run(() => {
+      this.router
+        .navigate([
+          '/streaming/stream',
+          ctx.getState().playlist?.items[payload.position].mediaId,
+        ])
+        .then();
+    });
   }
 
   @Action(StreamingActions.MediaEndedPlaylist)
   mediaEnded(ctx: StateContext<StreamingStateModel>) {
     const position = ctx.getState().position + 1;
     if (
+      !ctx.getState().autoplay ||
       !ctx.getState().playlist ||
       position === ctx.getState().playlist?.items.length
     ) {
@@ -70,6 +92,16 @@ export class StreamingState {
           ctx.getState().playlist?.items[position].mediaId,
         ])
         .then();
+    });
+  }
+
+  @Action(StreamingActions.AutoplayToggle)
+  autoplayToggle(
+    ctx: StateContext<StreamingStateModel>,
+    payload: StreamingActions.AutoplayToggle
+  ) {
+    ctx.patchState({
+      autoplay: payload.autoplay,
     });
   }
 }
