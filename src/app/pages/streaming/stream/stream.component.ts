@@ -6,7 +6,7 @@ import { forkJoin, switchMap } from 'rxjs';
 import { StreamUpdateEvent } from '../../../shared/models/streaming.model';
 import { io, Socket } from 'socket.io-client';
 import { environment } from '../../../../environments/environment';
-import { KeycloakService } from 'keycloak-angular';
+import { KeycloakEventType, KeycloakService } from 'keycloak-angular';
 
 @Component({
   selector: 'app-stream',
@@ -39,7 +39,8 @@ export class StreamComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe({
-        next: ([mediaFile, mediaInfo]) => {
+        next: async ([mediaFile, mediaInfo]) => {
+          await this.openSocketConnection();
           this.mediaFile = mediaFile;
           if (this.route.snapshot.queryParamMap.has('progress')) {
             this.progress =
@@ -49,7 +50,6 @@ export class StreamComponent implements OnInit, OnDestroy {
               );
           }
           this.mediaTitle = mediaInfo.name;
-          this.openSocketConnection();
         },
         error: err => {
           console.error(err.error.error);
@@ -65,18 +65,24 @@ export class StreamComponent implements OnInit, OnDestroy {
     this.socket?.emit('updateMediaHistory', event);
   }
 
-  private openSocketConnection() {
+  private async openSocketConnection() {
     if (this.socket) {
       this.socket.close();
     }
-    this.keycloak.getToken().then(
-      key =>
-        (this.socket = io(`${environment.apiUrl}`, {
-          transports: ['polling'],
-          extraHeaders: { Authorization: `Bearer ${key}` },
-          path: '/dev/watch-service/socket.io',
-          query: { mediaId: this.mediaId },
-        }))
-    );
+    const key = await this.keycloak.getToken();
+    this.socket = io(`${environment.websocketUrl}`, {
+      transports: ['polling'],
+      extraHeaders: { Authorization: `Bearer ${key}` },
+      path: '/dev/watch-service/socket.io',
+      query: { mediaId: this.mediaId },
+    });
+    this.keycloak.keycloakEvents$.subscribe(async event => {
+      if (event.type === KeycloakEventType.OnTokenExpired && this.socket) {
+        await this.keycloak.updateToken(120);
+        const key = await this.keycloak.getToken();
+        this.socket.auth = { Authorization: `Bearer ${key}` };
+      }
+    });
+    this.socket.connect();
   }
 }
