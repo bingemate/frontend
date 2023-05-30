@@ -1,27 +1,41 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import { MediaFile } from '../../../shared/models/media-file.models';
 import { BitrateOptions, VgApiService } from '@videogular/ngx-videogular/core';
 import { API_RESOURCE_URI } from '../../../shared/api-resource-uri/api-resources-uri';
-import { interval, Subject, takeUntil } from 'rxjs';
+import { Subscription, throttleTime } from 'rxjs';
 import { navigationRoot } from '../../../app-routing.module';
 import { MediaInfoService } from '../../media-info/media-info.service';
 import { mediasLinks } from '../../../pages/medias/medias-routing.module';
+import {
+  StreamStatusEnum,
+  StreamUpdateEvent,
+} from '../../../shared/models/streaming.model';
+import { StreamingActions } from '../store/streaming.actions';
+import { Store } from '@ngxs/store';
+import { MediaResponse } from '../../../shared/models/media.models';
 
 @Component({
   selector: 'app-video-player',
   templateUrl: './video-player.component.html',
   styleUrls: ['./video-player.component.less'],
 })
-export class VideoPlayerComponent implements OnInit, OnDestroy {
+export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
   mediaViewLink = `/${navigationRoot.medias.path}/`;
 
-  @Input() mediaTitle = 'undefined';
   @Input() mediaId: number | undefined;
+  @Input() mediaInfo: MediaResponse | undefined;
   @Input() mediaFile: MediaFile | undefined;
   @Input() timeSeek = 0;
-
-  intervalId: any;
-  componentDestroyed$ = new Subject();
+  @Output() streamUpdate = new EventEmitter<StreamUpdateEvent>();
 
   audioOptions: BitrateOptions[] = [];
   audioList: string[] = [];
@@ -30,27 +44,58 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
 
   videoUrl = '';
   currentAudio = '';
+  subscriptions: Subscription[] = [];
 
-  constructor(private mediaInfoService: MediaInfoService) {}
+  constructor(
+    private mediaInfoService: MediaInfoService,
+    private readonly store: Store
+  ) {}
 
   ngOnInit() {
-    if (this.mediaId) {
-      this.mediaInfoService.getMediaInfo(this.mediaId).subscribe(media => {
-        switch (media.mediaType) {
-          case 'Movie':
-            this.mediaViewLink += `${mediasLinks.movie_view.path}/${this.mediaId}`;
-            break;
-          case 'Episode':
+    this.loadMediaInfo();
+    this.loadMediaFileInfo();
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (
+      changes['mediaFile'] &&
+      !changes['mediaFile'].isFirstChange() &&
+      changes['mediaFile'].previousValue !== changes['mediaFile'].currentValue
+    ) {
+      this.loadMediaFileInfo();
+    }
+    if (
+      changes['mediaId'] &&
+      !changes['mediaId'].isFirstChange() &&
+      changes['mediaId'].previousValue !== changes['mediaId'].currentValue
+    ) {
+      this.loadMediaInfo();
+    }
+  }
+
+  private loadMediaInfo() {
+    if (this.mediaInfo) {
+      switch (this.mediaInfo.mediaType) {
+        case 'Movie':
+          this.mediaViewLink += `${mediasLinks.movie_view.path}/${this.mediaId}`;
+          break;
+        case 'Episode':
+          this.subscriptions.push(
             this.mediaInfoService
-              .getTvShowEpisodeInfoById(media.id)
+              .getTvShowEpisodeInfoById(this.mediaInfo.id)
               .subscribe(episode => {
                 this.mediaViewLink += `${mediasLinks.tv_show_view.path}/${episode.tvShowId}`;
-              });
-            break;
-        }
-      });
+              })
+          );
+          break;
+      }
     }
-
+  }
+  private loadMediaFileInfo() {
     if (this.mediaFile) {
       this.videoUrl = `${API_RESOURCE_URI.STREAMING}/${this.mediaId}/${this.mediaFile.filename}`;
       console.log(this.videoUrl);
@@ -81,26 +126,45 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnDestroy() {
-    this.componentDestroyed$.next(true);
-    this.componentDestroyed$.complete();
-  }
-
   onPlayerReady(api: VgApiService) {
-    this.intervalId = interval(5000)
-      .pipe(takeUntil(this.componentDestroyed$))
-      .subscribe(() => {
-        const totalSeconds = Math.floor(api.currentTime);
-        const minutes = Math.floor(totalSeconds / 60);
-        const seconds = totalSeconds % 60;
-
-        console.log(
-          `Position dans la vidéo ${minutes}:${
-            seconds < 10 ? '0' : ''
-          }${seconds}`
-        );
-      });
-
+    this.subscriptions.push(
+      api
+        .getDefaultMedia()
+        .subscriptions.timeUpdate.pipe(
+          throttleTime(5000, undefined, {
+            leading: true,
+          })
+        )
+        .subscribe(() =>
+          this.streamUpdate.emit({
+            watchStatus: StreamStatusEnum.PLAYING,
+            stoppedAt: api.currentTime / api.duration,
+          })
+        )
+    );
+    this.subscriptions.push(
+      api.getDefaultMedia().subscriptions.pause.subscribe(() =>
+        this.streamUpdate.emit({
+          watchStatus: StreamStatusEnum.STOPPED,
+          stoppedAt: api.currentTime / api.duration,
+        })
+      )
+    );
+    this.subscriptions.push(
+      api.getDefaultMedia().subscriptions.play.subscribe(() =>
+        this.streamUpdate.emit({
+          watchStatus: StreamStatusEnum.STARTED,
+          stoppedAt: api.currentTime / api.duration,
+        })
+      )
+    );
+    this.subscriptions.push(
+      api
+        .getDefaultMedia()
+        .subscriptions.ended.subscribe(() =>
+          this.store.dispatch(new StreamingActions.MediaEndedPlaylist())
+        )
+    );
     api.seekTime(this.timeSeek);
   }
 

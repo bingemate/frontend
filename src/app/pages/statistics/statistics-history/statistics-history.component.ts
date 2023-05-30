@@ -23,7 +23,7 @@ export class StatisticsHistoryComponent implements OnInit {
     this.store.dispatch(new HistoryActions.GetAll());
   }
 
-  deleteMedia(mediaId: string) {
+  deleteMedia(mediaId: number) {
     this.store.dispatch(new HistoryActions.DeleteFromHistory(mediaId));
   }
 

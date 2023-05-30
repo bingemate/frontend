@@ -8,7 +8,7 @@
             progress: item.stoppedAt > 0.95 ? 0 : item.stoppedAt
           }"
           style="cursor: pointer"
-          [mediaId]="Number.parseInt(item.mediaId)"></app-media-info>
+          [mediaId]="item.mediaId"></app-media-info>
         <nz-progress
           [nzPercent]="
             (item.stoppedAt > 0.95 ? 1 : item.stoppedAt) * 100
