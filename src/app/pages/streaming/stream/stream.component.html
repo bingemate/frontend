@@ -1,10 +1,14 @@
 <nz-row [nzGutter]="[16, 16]">
-  <nz-col *ngIf="mediaFile" [nzSpan]="24">
+  <nz-col *ngIf="mediaFile" [nzSpan]="(playlist$ | async) ? 18 : 24">
     <app-video-player
+      (streamUpdate)="onStreamUpdate($event)"
       [timeSeek]="progress"
-      [mediaTitle]="mediaTitle"
+      [mediaInfo]="mediaInfo"
       [mediaId]="mediaId"
       [mediaFile]="mediaFile"></app-video-player>
+  </nz-col>
+  <nz-col *ngIf="playlist$ | async" [nzSpan]="6">
+    <app-playlist-stream></app-playlist-stream>
   </nz-col>
   <nz-col *ngIf="!mediaFile && !error" [nzSpan]="24">
     <nz-spin

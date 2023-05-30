@@ -4,11 +4,10 @@ import { map, Observable } from 'rxjs';
 import {
   CreatePlaylistApiRequest,
   Playlist,
+  PlaylistApiResponse,
   PlaylistIdDto,
-  PlaylistItem,
-  PlaylistItemsApiResponse,
   PlaylistsApiResponse,
-  toPlaylistItems,
+  toPlaylist,
   toPlaylists,
   UpdatePlaylistOrderApiRequest,
 } from '../../shared/models/playlist.model';
@@ -18,12 +17,12 @@ import { environment } from '../../../environments/environment';
 export class PlaylistsService {
   constructor(private readonly http: HttpClient) {}
 
-  getPlaylistItems(playlistId: string): Observable<PlaylistItem[]> {
+  getPlaylistById(playlistId: string): Observable<Playlist> {
     return this.http
-      .get<PlaylistItemsApiResponse>(
+      .get<PlaylistApiResponse>(
         `${environment.apiUrl}/watch-service/playlist/${playlistId}`
       )
-      .pipe(map(response => toPlaylistItems(response)));
+      .pipe(map(response => toPlaylist(response)));
   }
 
   getPlaylists(userId: string): Observable<Playlist[]> {
@@ -40,13 +39,19 @@ export class PlaylistsService {
     );
   }
 
-  createPlaylist(
-    createPlaylist: CreatePlaylistApiRequest
-  ): Observable<PlaylistIdDto> {
-    return this.http.post<PlaylistIdDto>(
-      `${environment.apiUrl}/watch-service/playlist`,
-      createPlaylist
+  deletePlaylistMedia(playlistId: string, mediaId: number): Observable<void> {
+    return this.http.delete<void>(
+      `${environment.apiUrl}/watch-service/playlist/${playlistId}/${mediaId}`
     );
+  }
+
+  createPlaylist(createPlaylist: CreatePlaylistApiRequest): Observable<string> {
+    return this.http
+      .post<PlaylistIdDto>(
+        `${environment.apiUrl}/watch-service/playlist`,
+        createPlaylist
+      )
+      .pipe(map(idDto => idDto.id));
   }
 
   updatePlaylistOrder(

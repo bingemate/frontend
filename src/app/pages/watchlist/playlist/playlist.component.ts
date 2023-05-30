@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { Select, Store } from '@ngxs/store';
-import { forkJoin, map, mergeMap, Observable } from 'rxjs';
+import { Store } from '@ngxs/store';
+import { forkJoin, map, mergeMap } from 'rxjs';
 import {
   Playlist,
   PlaylistItem,
   PlaylistType,
 } from '../../../shared/models/playlist.model';
-import { PlaylistsState } from '../../../feature/playlist/store/playlists.state';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ActivatedRoute } from '@angular/router';
 import { PlaylistsService } from '../../../feature/playlist/playlists.service';
 import { MediaInfoService } from '../../../feature/media-info/media-info.service';
+import { StreamingActions } from '../../../feature/streaming/store/streaming.actions';
 
 @Component({
   selector: 'app-playlist',
@@ -18,7 +18,6 @@ import { MediaInfoService } from '../../../feature/media-info/media-info.service
   styleUrls: ['./playlist.component.less'],
 })
 export class PlaylistComponent implements OnInit {
-  @Select(PlaylistsState.playlists) playlists$!: Observable<Playlist[]>;
   playlist?: Playlist;
 
   playlistItems: {
@@ -41,66 +40,55 @@ export class PlaylistComponent implements OnInit {
   }
 
   private updatePlaylist(id: string): void {
-    this.playlist = this.store
-      .selectSnapshot(PlaylistsState.playlists)
-      .find(playlist => playlist.id === id);
-    if (this.playlist) {
-      this.playlist.type === PlaylistType.MOVIE
-        ? this.getMovies(this.playlist.id)
-        : this.getEpisodes(this.playlist.id);
-    }
-  }
-
-  private getMovies(id: string) {
     this.playlistsService
-      .getPlaylistItems(id)
+      .getPlaylistById(id)
       .pipe(
-        mergeMap(items =>
-          forkJoin(
-            items.map(item =>
-              this.mediaService
-                .getTvShowEpisodeInfo(1, item.season, item.episode)
-                .pipe(
-                  map(media => {
-                    return {
-                      media: {
-                        name: media.name,
-                        imageUrl: media.posterUrl,
-                      },
-                      playlistItem: item,
-                    };
-                  })
-                )
-            )
-          )
-        )
+        mergeMap(playlist => {
+          this.playlist = playlist;
+          return this.playlist.type === PlaylistType.MOVIE
+            ? this.getMovies(playlist.items)
+            : this.getEpisodes(playlist.items);
+        })
       )
       .subscribe(items => (this.playlistItems = items));
   }
 
-  private getEpisodes(id: string) {
-    this.playlistsService
-      .getPlaylistItems(id)
-      .pipe(
-        mergeMap(items =>
-          forkJoin(
-            items.map(item =>
-              this.mediaService.getMovieInfo(1).pipe(
-                map(media => {
-                  return {
-                    media: {
-                      name: media.title,
-                      imageUrl: media.posterUrl,
-                    },
-                    playlistItem: item,
-                  };
-                })
-              )
-            )
-          )
+  private getMovies(items: PlaylistItem[]) {
+    return forkJoin(
+      items.map(item =>
+        this.mediaService.getMovieInfo(item.mediaId).pipe(
+          map(media => {
+            return {
+              media: {
+                name: media.title,
+                imageUrl: media.backdropUrl,
+              },
+              playlistItem: item,
+            };
+          })
         )
       )
-      .subscribe(items => (this.playlistItems = items));
+    );
+  }
+
+  private getEpisodes(items: PlaylistItem[]) {
+    return forkJoin(
+      items.map(item =>
+        this.mediaService
+          .getTvShowEpisodeInfo(item.mediaId, item.season, item.episode)
+          .pipe(
+            map(media => {
+              return {
+                media: {
+                  name: media.name,
+                  imageUrl: media.posterUrl,
+                },
+                playlistItem: item,
+              };
+            })
+          )
+      )
+    );
   }
 
   itemMoved(event: CdkDragDrop<PlaylistItem[]>) {
@@ -109,8 +97,32 @@ export class PlaylistComponent implements OnInit {
     }
     const items = [...this.playlistItems];
     moveItemInArray(items, event.previousIndex, event.currentIndex);
-    this.playlistsService.updatePlaylistOrder(this.playlist.id, {
-      items: this.playlistItems.map(item => item.playlistItem),
-    });
+    this.playlistsService
+      .updatePlaylistOrder(this.playlist.id, {
+        items: this.playlistItems.map(item => item.playlistItem),
+      })
+      .subscribe(() => (this.playlistItems = items));
+  }
+
+  removeItem(deletedItem: PlaylistItem): void {
+    if (!this.playlist) {
+      return;
+    }
+    this.playlistsService
+      .deletePlaylistMedia(this.playlist.id, deletedItem.mediaId)
+      .subscribe(() => {
+        this.playlistItems = this.playlistItems.filter(
+          item => item.playlistItem.mediaId !== deletedItem.mediaId
+        );
+      });
+  }
+
+  watchMedia(index: number) {
+    if (!this.playlist) {
+      return;
+    }
+    this.store.dispatch(
+      new StreamingActions.WatchPlaylist(this.playlist, index)
+    );
   }
 }

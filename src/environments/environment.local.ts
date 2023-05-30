@@ -9,6 +9,7 @@ export const environment: EnvironmentType = {
   envName: 'LOCAL',
   appVersion: packageJson.version,
   apiUrl: 'http://localhost:8080',
+  websocketUrl: 'http://localhost:8080',
   auth: {
     clientId: 'angular-frontend',
     realm: 'bingemate-local',
