@@ -15,3 +15,8 @@ export interface CommentResults {
   results: CommentResponse[];
   totalResult: number;
 }
+
+export const emptyCommentResults: CommentResults = {
+  results: [],
+  totalResult: 0,
+};
