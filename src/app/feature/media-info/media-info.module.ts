@@ -33,6 +33,11 @@ import {
 } from '@angular/cdk/scrolling';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
+import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 
 @NgModule({
   declarations: [
@@ -71,6 +76,11 @@ import { NzTypographyModule } from 'ng-zorro-antd/typography';
     CdkFixedSizeVirtualScroll,
     NzSpaceModule,
     NzTypographyModule,
+    NzInputModule,
+    NzModalModule,
+    NzSelectModule,
+    NzDropDownModule,
+    NzCheckboxModule,
   ],
   exports: [
     MediaInfoComponent,

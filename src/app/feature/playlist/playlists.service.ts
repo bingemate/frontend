@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 import {
+  AddMediaRequest,
   CreatePlaylistApiRequest,
   Playlist,
   PlaylistApiResponse,
@@ -59,8 +60,15 @@ export class PlaylistsService {
     playlistItems: UpdatePlaylistOrderApiRequest
   ): Observable<void> {
     return this.http.put<void>(
-      `${environment.apiUrl}/playlist/${playlistId}`,
+      `${environment.apiUrl}/watch-service/playlist/${playlistId}`,
       playlistItems
+    );
+  }
+
+  addToPlaylist(playlistId: string, request: AddMediaRequest) {
+    return this.http.patch<void>(
+      `${environment.apiUrl}/watch-service/playlist/${playlistId}`,
+      request
     );
   }
 }
