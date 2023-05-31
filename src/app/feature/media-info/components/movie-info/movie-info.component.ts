@@ -59,7 +59,7 @@ export class MovieInfoComponent implements OnInit {
           mediaId: this.movie.id,
         })
         .subscribe(() =>
-          this.notificationsService.info('Episode ajouté à la playlist')
+          this.notificationsService.success('Film ajouté à la playlist')
         );
     }
   }

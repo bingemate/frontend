@@ -68,7 +68,7 @@ export class EpisodeInfoListComponent implements OnInit {
           season: this.selectedEpisode.seasonNumber,
         })
         .subscribe(() =>
-          this.notificationsService.info('Episode ajouté à la playlist')
+          this.notificationsService.success('Episode ajouté à la playlist')
         );
     }
   }
