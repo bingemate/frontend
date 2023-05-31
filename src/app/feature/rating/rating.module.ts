@@ -16,6 +16,8 @@ import { NzWaveModule } from 'ng-zorro-antd/core/wave';
 import { NzRateModule } from 'ng-zorro-antd/rate';
 import { FormsModule } from '@angular/forms';
 import { RatingViewComponent } from './components/rating-view/rating-view.component';
+import { SharedModule } from '../../shared/shared.module';
+import { RouterLink } from '@angular/router';
 
 @NgModule({
   declarations: [RatingListComponent, RatingViewComponent],
@@ -33,6 +35,8 @@ import { RatingViewComponent } from './components/rating-view/rating-view.compon
     NzWaveModule,
     NzRateModule,
     FormsModule,
+    SharedModule,
+    RouterLink,
   ],
   exports: [RatingListComponent, RatingViewComponent],
 })
