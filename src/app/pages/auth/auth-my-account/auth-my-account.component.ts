@@ -5,6 +5,11 @@ import { Observable } from 'rxjs';
 import { UserModel } from '../../../shared/models/user.models';
 import { HttpClient } from '@angular/common/http';
 import { API_RESOURCE_URI } from '../../../shared/api-resource-uri/api-resources-uri';
+import { CommentService } from '../../../feature/comment/comment.service';
+import {
+  CommentResults,
+  emptyCommentResults,
+} from '../../../shared/models/comment.models';
 
 @Component({
   selector: 'app-auth-my-account',
@@ -18,7 +23,13 @@ export class AuthMyAccountComponent implements OnInit {
 
   httpbinResponse = '{}';
 
-  constructor(private readonly httpClient: HttpClient) {}
+  comments: CommentResults = emptyCommentResults;
+  commentsCurrentPage = 1;
+
+  constructor(
+    private readonly httpClient: HttpClient,
+    private readonly commentService: CommentService
+  ) {}
 
   ngOnInit() {
     this.subscribeForAuthEvents();
@@ -40,5 +51,23 @@ export class AuthMyAccountComponent implements OnInit {
       .subscribe((response: unknown) => {
         this.httpbinResponse = JSON.stringify(response, null, 2);
       });
+  }
+
+  onGetUserComments() {
+    this.commentService
+      .getUserComments(this.user?.id ?? '', this.commentsCurrentPage)
+      .subscribe(comments => {
+        this.comments = comments;
+      });
+  }
+
+  onCommentsPageChange(page: number): void {
+    this.commentsCurrentPage = page;
+    this.onGetUserComments();
+  }
+
+  onRefreshComments(): void {
+    this.commentsCurrentPage = 1;
+    this.onGetUserComments();
   }
 }
