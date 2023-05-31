@@ -3,6 +3,11 @@ import { ActivatedRoute } from '@angular/router';
 import { MovieResponse } from '../../../shared/models/media.models';
 import { MediaInfoService } from '../../../feature/media-info/media-info.service';
 import { MediaDiscoverService } from '../../../feature/media-info/media-discover.service';
+import { CommentService } from '../../../feature/comment/comment.service';
+import {
+  CommentResults,
+  emptyCommentResults,
+} from '../../../shared/models/comment.models';
 
 @Component({
   selector: 'app-movie-view',
@@ -14,14 +19,19 @@ export class MovieViewComponent {
   movie?: MovieResponse;
   movieRecommendations: MovieResponse[] = [];
 
+  comments: CommentResults = emptyCommentResults;
+  commentsCurrentPage = 1;
+
   constructor(
     currentRoute: ActivatedRoute,
     private mediaInfoService: MediaInfoService,
-    private mediaDiscoverService: MediaDiscoverService
+    private mediaDiscoverService: MediaDiscoverService,
+    private commentService: CommentService
   ) {
     currentRoute.params.subscribe(params => {
       this.movieId = params['id'];
       this.onGetMovie();
+      this.onGetMediaComments();
     });
   }
   onGetMovie() {
@@ -33,5 +43,23 @@ export class MovieViewComponent {
       .subscribe(movieRecommendations => {
         this.movieRecommendations = movieRecommendations;
       });
+  }
+
+  onGetMediaComments() {
+    this.commentService
+      .getMediaComments(this.movieId ?? 0, this.commentsCurrentPage)
+      .subscribe(comments => {
+        this.comments = comments;
+      });
+  }
+
+  onCommentsPageChange(page: number): void {
+    this.commentsCurrentPage = page;
+    this.onGetMediaComments();
+  }
+
+  onRefreshComments(): void {
+    this.commentsCurrentPage = 1;
+    this.onGetMediaComments();
   }
 }

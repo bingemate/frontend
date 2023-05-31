@@ -35,6 +35,7 @@ import { NzProgressModule } from 'ng-zorro-antd/progress';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
 import { MediaSearchModule } from '../../feature/media-search/media-search.module';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
+import { CommentModule } from '../../feature/comment/comment.module';
 
 @NgModule({
   declarations: [
@@ -74,6 +75,7 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
     NzEmptyModule,
     MediaSearchModule,
     NzCheckboxModule,
+    CommentModule,
   ],
 })
 export class MediasModule {}

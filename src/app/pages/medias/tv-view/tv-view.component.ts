@@ -3,6 +3,11 @@ import { TvShowResponse } from '../../../shared/models/media.models';
 import { ActivatedRoute } from '@angular/router';
 import { MediaInfoService } from '../../../feature/media-info/media-info.service';
 import { MediaDiscoverService } from '../../../feature/media-info/media-discover.service';
+import { CommentService } from '../../../feature/comment/comment.service';
+import {
+  CommentResults,
+  emptyCommentResults,
+} from '../../../shared/models/comment.models';
 
 @Component({
   selector: 'app-tv-view',
@@ -14,14 +19,19 @@ export class TvViewComponent {
   tv?: TvShowResponse;
   tvRecommendations: TvShowResponse[] = [];
 
+  comments: CommentResults = emptyCommentResults;
+  commentsCurrentPage = 1;
+
   constructor(
     currentRoute: ActivatedRoute,
     private mediaInfoService: MediaInfoService,
-    private mediaDiscoverService: MediaDiscoverService
+    private mediaDiscoverService: MediaDiscoverService,
+    private commentService: CommentService
   ) {
     currentRoute.params.subscribe(params => {
       this.tvId = params['id'];
       this.onGetTvShow();
+      this.onGetMediaComments();
     });
   }
 
@@ -34,5 +44,23 @@ export class TvViewComponent {
       .subscribe(tvRecommendations => {
         this.tvRecommendations = tvRecommendations;
       });
+  }
+
+  onGetMediaComments() {
+    this.commentService
+      .getMediaComments(this.tvId ?? 0, this.commentsCurrentPage)
+      .subscribe(comments => {
+        this.comments = comments;
+      });
+  }
+
+  onCommentsPageChange(page: number): void {
+    this.commentsCurrentPage = page;
+    this.onGetMediaComments();
+  }
+
+  onRefreshComments(): void {
+    this.commentsCurrentPage = 1;
+    this.onGetMediaComments();
   }
 }
