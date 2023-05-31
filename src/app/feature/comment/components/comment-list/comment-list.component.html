@@ -2,7 +2,7 @@
   <nz-list nzBordered nzSize="small" nzItemLayout="vertical">
     <nz-list-item *cdkVirtualFor="let comment of comments">
       <nz-comment
-        [nzAuthor]="comment.userId"
+        [nzAuthor]="getAuthor(comment)"
         nzDatetime="{{ comment.createdAt | date : 'dd/MM/yyyy HH:mm' }}">
         <nz-comment-content>
           <p

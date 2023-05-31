@@ -14,6 +14,7 @@ import { NotificationsService } from '../../../../core/notifications/notificatio
 })
 export class CommentListComponent {
   @Input() comments: CommentResponse[] = [];
+  @Input() showMedia = false;
 
   @Select(AuthState.user)
   user$!: Observable<UserModel>;
@@ -33,6 +34,10 @@ export class CommentListComponent {
     this.isAdmin$.subscribe(isAdmin => {
       this.isAdmin = isAdmin;
     });
+  }
+
+  getAuthor(comment: CommentResponse) {
+    return this.showMedia ? comment.mediaId.toString() : comment.userId;
   }
 
   canUpdateOrDeleteComment(comment: CommentResponse): boolean {
