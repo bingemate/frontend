@@ -13,7 +13,7 @@
         <h1 class="tv-title" nz-col nzSpan="24">{{ tv.title }}</h1>
         <div class="tv-rating" nz-col nzSpan="24">
           <nz-rate [ngModel]="getRate()" nzDisabled nzAllowHalf></nz-rate>
-          &nbsp;{{ tv.voteAverage.toFixed(2) }}
+          &nbsp;{{ (tv.voteAverage / 2).toFixed(2) }}
         </div>
 
         <nz-descriptions nzBordered [nzColumn]="1" nz-col nzSpan="24">

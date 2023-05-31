@@ -25,7 +25,7 @@
   {{ tv?.releaseDate | date : 'yyyy' }}
   <br />
   <nz-rate [ngModel]="getRate()" nzAllowHalf nzDisabled></nz-rate>
-  {{ tv?.voteAverage }}
+  {{ ((tv?.voteAverage ?? 0) / 2).toFixed(2) }}
 </ng-template>
 
 <ng-template #present>

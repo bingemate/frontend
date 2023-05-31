@@ -23,7 +23,7 @@
         </div>
         <div class="movie-rating" nz-col nzSpan="24">
           <nz-rate [ngModel]="getRate()" nzDisabled nzAllowHalf></nz-rate>
-          &nbsp;{{ movie.voteAverage.toFixed(2) }}
+          &nbsp;{{ (movie.voteAverage / 2).toFixed(2) }}
         </div>
 
         <nz-descriptions nzBordered [nzColumn]="1" nz-col nzSpan="24">
