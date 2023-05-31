@@ -42,7 +42,6 @@ import { CalendarModule } from '../../feature/calendar/calendar.module';
   imports: [
     CommonModule,
     HistoryModule,
-    PlaylistModule,
     WatchlistRoutingModule,
     NzPageHeaderModule,
     NzBreadCrumbModule,

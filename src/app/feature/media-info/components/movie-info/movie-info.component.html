@@ -12,14 +12,27 @@
       <nz-row [nzGutter]="[24, 24]">
         <h1 class="movie-title" nz-col nzSpan="24">{{ movie.title }}</h1>
         <div *ngIf="movie.present" nz-col nzSpan="24">
-          <button
-            [routerLink]="streamPath + movie.id"
-            nz-button
-            nzType="primary"
-            nzShape="round">
-            <span nz-icon nzType="play-circle" nzTheme="fill"></span
-            >&nbsp;Regarder
-          </button>
+          <nz-space nzSize="small">
+            <button
+              *nzSpaceItem
+              [routerLink]="streamPath + movie.id"
+              nz-button
+              nzType="primary"
+              nzShape="round">
+              <span nz-icon nzType="play-circle" nzTheme="fill"></span
+              >&nbsp;Regarder
+            </button>
+            <button
+              *nzSpaceItem
+              nz-button
+              nzType="default"
+              nzShape="round"
+              nz-dropdown
+              [nzDropdownMenu]="playlistMenu">
+              Ajouter à une playlist
+              <span nz-icon nzType="down"></span>
+            </button>
+          </nz-space>
         </div>
         <div class="movie-rating" nz-col nzSpan="24">
           <nz-rate [ngModel]="getRate()" nzDisabled nzAllowHalf></nz-rate>
@@ -86,3 +99,11 @@
     [nzSize]="'small'"
     (nzPageIndexChange)="onActorsPageChange($event)"></nz-pagination>
 </ng-template>
+
+<nz-dropdown-menu #playlistMenu="nzDropdownMenu">
+  <ul nz-menu>
+    <li nz-menu-item *ngFor="let playlist of playlists$ | async">
+      <a (click)="addToPlaylist(playlist.id)">{{ playlist.name }}</a>
+    </li>
+  </ul>
+</nz-dropdown-menu>

@@ -1,3 +1,6 @@
+export interface PlaylistStateModel {
+  playlists: Playlist[];
+}
 export enum PlaylistType {
   MOVIE = 'MOVIE',
   EPISODE = 'EPISODE',
@@ -50,6 +53,11 @@ export interface UpdatePlaylistOrderApiRequest {
 
 export interface PlaylistIdDto {
   id: string;
+}
+export interface AddMediaRequest {
+  mediaId: number;
+  season?: number;
+  episode?: number;
 }
 
 export function toPlaylists(playlist: PlaylistsApiResponse): Playlist[] {
