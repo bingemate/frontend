@@ -23,10 +23,10 @@ export class TvViewComponent {
   commentsCurrentPage = 1;
 
   constructor(
-    currentRoute: ActivatedRoute,
-    private mediaInfoService: MediaInfoService,
-    private mediaDiscoverService: MediaDiscoverService,
-    private commentService: CommentService
+    readonly currentRoute: ActivatedRoute,
+    private readonly mediaInfoService: MediaInfoService,
+    private readonly mediaDiscoverService: MediaDiscoverService,
+    private readonly commentService: CommentService
   ) {
     currentRoute.params.subscribe(params => {
       this.tvId = params['id'];

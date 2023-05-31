@@ -9,14 +9,11 @@
           [nzActions]="[newComment]"
           nzTitle="Commentaires"
           [nzExtra]="commentsListPagination">
-          <app-comment-list
-            nz-col
-            nzSpan="24"
-            [comments]="comments.results"></app-comment-list>
+          <app-comment-list [comments]="comments.results"></app-comment-list>
         </nz-card>
       </ng-template>
-    </nz-tab> </nz-tabset
-  >g
+    </nz-tab>
+  </nz-tabset>
   <nz-divider *nzSpaceItem></nz-divider>
   <h2 *nzSpaceItem>Recommendations</h2>
   <app-tv-list *nzSpaceItem [tvShows]="tvRecommendations"></app-tv-list>
