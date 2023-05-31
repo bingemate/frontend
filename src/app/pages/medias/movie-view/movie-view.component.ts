@@ -8,6 +8,16 @@ import {
   CommentResults,
   emptyCommentResults,
 } from '../../../shared/models/comment.models';
+import { Select } from '@ngxs/store';
+import { AuthState } from '../../../core/auth/store/auth.state';
+import { Observable } from 'rxjs';
+import { UserModel } from '../../../shared/models/user.models';
+import {
+  emptyRatingResults,
+  RatingResponse,
+  RatingResults,
+} from '../../../shared/models/rating.models';
+import { RatingService } from '../../../feature/rating/rating.service';
 
 @Component({
   selector: 'app-movie-view',
@@ -15,6 +25,10 @@ import {
   styleUrls: ['./movie-view.component.less'],
 })
 export class MovieViewComponent {
+  @Select(AuthState.user)
+  user$!: Observable<UserModel>;
+  user: UserModel | null = null;
+
   movieId?: number;
   movie?: MovieResponse;
   movieRecommendations: MovieResponse[] = [];
@@ -22,16 +36,27 @@ export class MovieViewComponent {
   comments: CommentResults = emptyCommentResults;
   commentsCurrentPage = 1;
 
+  userRating: RatingResponse | undefined;
+
+  ratings: RatingResults = emptyRatingResults;
+  ratingsCurrentPage = 1;
+
   constructor(
     currentRoute: ActivatedRoute,
-    private mediaInfoService: MediaInfoService,
-    private mediaDiscoverService: MediaDiscoverService,
-    private commentService: CommentService
+    private readonly mediaInfoService: MediaInfoService,
+    private readonly mediaDiscoverService: MediaDiscoverService,
+    private readonly commentService: CommentService,
+    private readonly ratingService: RatingService
   ) {
     currentRoute.params.subscribe(params => {
       this.movieId = params['id'];
       this.onGetMovie();
       this.onGetMediaComments();
+      this.onGetMediaRatings();
+      this.onGetUserRating();
+    });
+    this.user$.subscribe(user => {
+      this.user = user;
     });
   }
   onGetMovie() {
@@ -61,5 +86,32 @@ export class MovieViewComponent {
   onRefreshComments(): void {
     this.commentsCurrentPage = 1;
     this.onGetMediaComments();
+  }
+
+  onGetUserRating() {
+    this.ratingService
+      .getUserMediaRating(this.user?.id ?? '', this.movieId ?? 0)
+      .subscribe(rating => {
+        this.userRating = rating;
+      });
+  }
+
+  onGetMediaRatings() {
+    this.ratingService
+      .getMediaRating(this.movieId ?? 0, this.ratingsCurrentPage)
+      .subscribe(ratings => {
+        this.ratings = ratings;
+        console.log(ratings);
+      });
+  }
+
+  onRatingsPageChange(page: number): void {
+    this.ratingsCurrentPage = page;
+    this.onGetMediaRatings();
+  }
+
+  onRefreshRatings(): void {
+    this.ratingsCurrentPage = 1;
+    this.onGetMediaRatings();
   }
 }
