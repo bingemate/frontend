@@ -1,0 +1,17 @@
+<form nz-form [formGroup]="form" nzLayout="vertical">
+  <nz-form-item>
+    <nz-form-control [nzExtra]="submit">
+      <nz-textarea-count [nzMaxCharacterCount]="1000">
+        <textarea
+          rows="4"
+          formControlName="comment"
+          nz-input
+          placeholder="Ajouter un commentaire"></textarea>
+      </nz-textarea-count>
+    </nz-form-control>
+  </nz-form-item>
+</form>
+
+<ng-template #submit>
+  <button nz-button nzType="primary" (click)="onSubmit()">Envoyer</button>
+</ng-template>
