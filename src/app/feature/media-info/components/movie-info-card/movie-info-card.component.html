@@ -26,7 +26,7 @@
   {{ movie?.releaseDate | date : 'yyyy' }}
   <br />
   <nz-rate [ngModel]="getRate()" nzAllowHalf nzDisabled></nz-rate>
-  {{ movie?.voteAverage }}
+  {{ ((movie?.voteAverage ?? 0) / 2).toFixed(2) }}
 </ng-template>
 
 <ng-template #present>

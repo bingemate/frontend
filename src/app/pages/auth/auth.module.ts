@@ -8,6 +8,12 @@ import { AuthLogoutComponent } from './auth-logout/auth-logout.component';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
+import { NzTabsModule } from 'ng-zorro-antd/tabs';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzPaginationModule } from 'ng-zorro-antd/pagination';
+import { CommentModule } from '../../feature/comment/comment.module';
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { RatingModule } from '../../feature/rating/rating.module';
 
 @NgModule({
   declarations: [
@@ -22,6 +28,12 @@ import { NzSpaceModule } from 'ng-zorro-antd/space';
     NzDividerModule,
     NzFormModule,
     NzSpaceModule,
+    NzTabsModule,
+    NzIconModule,
+    NzPaginationModule,
+    CommentModule,
+    NzCardModule,
+    RatingModule,
   ],
 })
 export class AuthModule {}

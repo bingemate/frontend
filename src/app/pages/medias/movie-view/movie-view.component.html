@@ -1,6 +1,91 @@
 <nz-space nzSize="large" nzDirection="vertical">
-  <app-movie-info *nzSpaceItem [movie]="movie"></app-movie-info>
+  <nz-tabset *nzSpaceItem nzSize="large">
+    <nz-tab nzTitle="Informations">
+      <app-movie-info [movie]="movie"></app-movie-info>
+    </nz-tab>
+    <nz-tab nzTitle="Communauté">
+      <ng-template nz-tab>
+        <nz-space nzDirection="vertical" nzSize="large" style="width: 100%">
+          <nz-card
+            *nzSpaceItem
+            nzTitle="Notes"
+            [nzExtra]="ratingsListPagination">
+            <nz-space nzDirection="vertical" nzSize="large" style="width: 100%">
+              <app-rating-view
+                *nzSpaceItem
+                [editable]="true"
+                [rating]="userRating"
+                (updateRating)="onRefreshRatings()"></app-rating-view>
+              <app-rating-list
+                *nzSpaceItem
+                [ratings]="ratings.results"></app-rating-list>
+            </nz-space>
+          </nz-card>
+          <nz-card
+            *nzSpaceItem
+            [nzActions]="[newComment]"
+            nzTitle="Commentaires"
+            [nzExtra]="commentsListPagination">
+            <app-comment-list
+              nz-col
+              nzSpan="24"
+              [comments]="comments.results"></app-comment-list>
+          </nz-card>
+        </nz-space>
+      </ng-template>
+    </nz-tab>
+  </nz-tabset>
   <nz-divider *nzSpaceItem></nz-divider>
   <h2 *nzSpaceItem>Recommendations</h2>
+  <app-movie-list *nzSpaceItem [movies]="movieRecommendations"></app-movie-list>
 </nz-space>
-<app-movie-list [movies]="movieRecommendations"></app-movie-list>
+
+<ng-template #commentsListPagination>
+  <nz-space>
+    <nz-pagination
+      *nzSpaceItem
+      [nzPageIndex]="commentsCurrentPage"
+      [nzTotal]="comments.totalResult"
+      [nzPageSize]="5"
+      [nzShowSizeChanger]="false"
+      [nzSize]="'small'"
+      (nzPageIndexChange)="onCommentsPageChange($event)"></nz-pagination>
+    <button
+      *nzSpaceItem
+      nz-button
+      nzType="primary"
+      nzShape="circle"
+      nzSize="small"
+      (click)="onRefreshComments()">
+      <i nz-icon nzType="sync"></i>
+    </button>
+  </nz-space>
+</ng-template>
+
+<ng-template #newComment>
+  <app-new-comment
+    [mediaId]="movieId ?? 0"
+    (newComment)="onRefreshComments()"></app-new-comment>
+</ng-template>
+
+<ng-template #ratingsListPagination>
+  <nz-space>
+    <nz-pagination
+      *nzSpaceItem
+      [nzPageIndex]="ratingsCurrentPage"
+      [nzTotal]="ratings.totalResult"
+      [nzPageSize]="5"
+      [nzShowSizeChanger]="false"
+      [nzSize]="'small'"
+      (nzPageIndexChange)="onRatingsPageChange($event)"></nz-pagination>
+    <button
+      *nzSpaceItem
+      nz-button
+      nzType="primary"
+      nzShape="circle"
+      nzSize="small"
+      (click)="onRefreshRatings()">
+      <i nz-icon nzType="sync"></i>
+    </button>
+  </nz-space>
+</ng-template>

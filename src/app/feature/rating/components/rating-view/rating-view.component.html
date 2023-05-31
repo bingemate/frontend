@@ -1,0 +1,6 @@
+<nz-rate
+  [ngModel]="(rating?.rating ?? 0) / 2"
+  [nzDisabled]="!editable"
+  (ngModelChange)="onUpdateRating(rating!, $event * 2)"
+  nzAllowHalf></nz-rate>
+&nbsp;{{ ((rating?.rating ?? 0) / 2).toFixed(2) }}
