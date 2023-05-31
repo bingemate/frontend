@@ -10,6 +10,11 @@ import {
   CommentResults,
   emptyCommentResults,
 } from '../../../shared/models/comment.models';
+import {
+  emptyRatingResults,
+  RatingResults,
+} from '../../../shared/models/rating.models';
+import { RatingService } from '../../../feature/rating/rating.service';
 
 @Component({
   selector: 'app-auth-my-account',
@@ -26,9 +31,13 @@ export class AuthMyAccountComponent implements OnInit {
   comments: CommentResults = emptyCommentResults;
   commentsCurrentPage = 1;
 
+  ratings: RatingResults = emptyRatingResults;
+  ratingsCurrentPage = 1;
+
   constructor(
     private readonly httpClient: HttpClient,
-    private readonly commentService: CommentService
+    private readonly commentService: CommentService,
+    private readonly ratingService: RatingService
   ) {}
 
   ngOnInit() {
@@ -69,5 +78,23 @@ export class AuthMyAccountComponent implements OnInit {
   onRefreshComments(): void {
     this.commentsCurrentPage = 1;
     this.onGetUserComments();
+  }
+
+  onGetUserRatings() {
+    this.ratingService
+      .getUserRating(this.user?.id ?? '', this.ratingsCurrentPage)
+      .subscribe(ratings => {
+        this.ratings = ratings;
+      });
+  }
+
+  onRatingsPageChange(page: number): void {
+    this.ratingsCurrentPage = page;
+    this.onGetUserRatings();
+  }
+
+  onRefreshRatings(): void {
+    this.ratingsCurrentPage = 1;
+    this.onGetUserRatings();
   }
 }
