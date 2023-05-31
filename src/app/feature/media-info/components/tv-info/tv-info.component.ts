@@ -1,14 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { navigationRoot } from '../../../../app-routing.module';
-import { streamingLinks } from '../../../../pages/streaming/streaming-routing.module';
 import { mediasLinks } from '../../../../pages/medias/medias-routing.module';
-import {
-  Person,
-  TvEpisodeResponse,
-  TvShowResponse,
-} from '../../../../shared/models/media.models';
-import { MediaInfoService } from '../../media-info.service';
-import { Observable } from 'rxjs';
+import { Person, TvShowResponse } from '../../../../shared/models/media.models';
 
 @Component({
   selector: 'app-tv-info',
