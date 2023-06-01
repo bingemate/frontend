@@ -10,7 +10,7 @@ export const watchlistLinks: NavigationLinks<
   'lists' | 'calendar' | 'playlists'
 > = {
   lists: {
-    name: 'Mes listes',
+    name: 'Liste de suivie',
     path: 'lists',
   },
   calendar: {
