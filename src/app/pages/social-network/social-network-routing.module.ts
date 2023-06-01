@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { NavigationLinks, navigationRoot } from '../../app-routing.module';
 import { SocialNetworkHomeComponent } from './social-network-home/social-network-home.component';
 import { UserSearchComponent } from './user-search/user-search.component';
+import { UserViewComponent } from './user-view/user-view.component';
 
 export const socialNetworkLinks: NavigationLinks<
   'search_user' | 'media' | 'user_profile' | 'chat' | 'relations'
@@ -44,7 +45,7 @@ const routes: Routes = [
   },
   {
     path: socialNetworkLinks.user_profile.path + '/:id',
-    component: SocialNetworkHomeComponent,
+    component: UserViewComponent,
     data: { title: socialNetworkLinks.user_profile.name },
   },
   {
