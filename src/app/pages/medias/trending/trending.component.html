@@ -3,35 +3,68 @@
 <nz-tabset nzSize="large" [nzTabBarExtraContent]="onlyAvailable">
   <nz-tab nzTitle="Films populaires">
     <nz-skeleton
-      *ngIf="popularMovies.length === 0"
+      *ngIf="popularMoviesLoading"
       [nzActive]="true"
       [nzParagraph]="{ rows: 10 }"></nz-skeleton>
+    <nz-empty
+      *ngIf="!popularMoviesLoading && popularMovies.length === 0"></nz-empty>
     <nz-card
+      *ngIf="!popularMoviesLoading"
       [nzExtra]="popularMoviesPagination"
       [nzActions]="[popularMoviesPagination]">
       <app-movie-list [movies]="popularMovies"></app-movie-list>
     </nz-card>
   </nz-tab>
   <nz-tab nzTitle="Films récents">
-    <nz-card>
+    <nz-skeleton
+      *ngIf="recentMoviesLoading"
+      [nzActive]="true"
+      [nzParagraph]="{ rows: 10 }"></nz-skeleton>
+    <nz-empty
+      *ngIf="!recentMoviesLoading && recentMovies.length === 0"></nz-empty>
+    <nz-card *ngIf="!recentMoviesLoading">
       <app-movie-list [movies]="recentMovies"></app-movie-list>
     </nz-card>
   </nz-tab>
   <nz-tab nzTitle="Séries populaires">
     <nz-skeleton
-      *ngIf="popularTvShows.length === 0"
+      *ngIf="popularTvShowsLoading"
       [nzActive]="true"
       [nzParagraph]="{ rows: 10 }"></nz-skeleton>
+    <nz-empty
+      *ngIf="!popularTvShowsLoading && popularTvShows.length === 0"></nz-empty>
     <nz-card
+      *ngIf="!popularTvShowsLoading"
       [nzExtra]="popularTvShowsPagination"
       [nzActions]="[popularTvShowsPagination]">
       <app-tv-list [tvShows]="popularTvShows"></app-tv-list>
     </nz-card>
   </nz-tab>
   <nz-tab nzTitle="Séries récentes">
-    <nz-card>
+    <nz-skeleton
+      *ngIf="recentTvShowsLoading"
+      [nzActive]="true"
+      [nzParagraph]="{ rows: 10 }"></nz-skeleton>
+    <nz-empty
+      *ngIf="!recentTvShowsLoading && recentTvShows.length === 0"></nz-empty>
+    <nz-card *ngIf="!recentTvShowsLoading">
       <app-tv-list [tvShows]="recentTvShows"></app-tv-list>
     </nz-card>
+  </nz-tab>
+  <nz-tab nzTitle="Les plus commentés">
+    <ng-template nz-tab>
+      <nz-skeleton
+        *ngIf="mediaByCommentsLoading"
+        [nzActive]="true"
+        [nzParagraph]="{ rows: 10 }"></nz-skeleton>
+      <nz-empty
+        *ngIf="
+          !mediaByCommentsLoading && mediaByComments.length === 0
+        "></nz-empty>
+      <nz-card *ngIf="!mediaByCommentsLoading">
+        <app-media-list [mediaIds]="mediaByComments"></app-media-list>
+      </nz-card>
+    </ng-template>
   </nz-tab>
 </nz-tabset>
 

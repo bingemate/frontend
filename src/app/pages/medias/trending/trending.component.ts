@@ -13,15 +13,20 @@ import { MediaDiscoverService } from '../../../feature/media-info/media-discover
 export class TrendingComponent implements OnInit {
   popularMovies: MovieResponse[] = [];
   popularMoviesPage = 1;
-  popularMoviesTotalPages = 0;
+  popularMoviesLoading = false;
   popularMoviesTotalResults = 0;
   recentMovies: MovieResponse[] = [];
+  recentMoviesLoading = false;
 
   popularTvShows: TvShowResponse[] = [];
   popularTvShowsPage = 1;
-  popularTvShowsTotalPages = 0;
+  popularTvShowsLoading = false;
   popularTvShowsTotalResults = 0;
   recentTvShows: TvShowResponse[] = [];
+  recentTvShowsLoading = false;
+
+  mediaByComments: number[] = [];
+  mediaByCommentsLoading = false;
 
   onlyAvailable = false;
 
@@ -32,40 +37,47 @@ export class TrendingComponent implements OnInit {
     this.getRecentMovies();
     this.getPopularTvShows();
     this.getRecentTvShows();
+    this.onGetMediaByComments();
   }
 
   getPopularMovies(): void {
+    this.popularMoviesLoading = true;
     this.mediaDiscoverService
       .getPopularMovies(this.popularMoviesPage, this.onlyAvailable)
       .subscribe(movies => {
-        this.popularMoviesTotalPages = movies.totalPage;
+        this.popularMoviesLoading = false;
         this.popularMoviesTotalResults = movies.totalResult;
         this.popularMovies = movies.results;
       });
   }
 
   getRecentMovies(): void {
+    this.recentMoviesLoading = true;
     this.mediaDiscoverService
       .getRecentMovies(this.onlyAvailable)
       .subscribe(movies => {
+        this.recentMoviesLoading = false;
         this.recentMovies = movies;
       });
   }
 
   getPopularTvShows(): void {
+    this.popularTvShowsLoading = true;
     this.mediaDiscoverService
       .getPopularTvShows(this.popularTvShowsPage, this.onlyAvailable)
       .subscribe(tvShows => {
-        this.popularTvShowsTotalPages = tvShows.totalPage;
+        this.popularTvShowsLoading = false;
         this.popularTvShowsTotalResults = tvShows.totalResult;
         this.popularTvShows = tvShows.results;
       });
   }
 
   getRecentTvShows(): void {
+    this.recentTvShowsLoading = true;
     this.mediaDiscoverService
       .getRecentTvShows(this.onlyAvailable)
       .subscribe(tvShows => {
+        this.recentTvShowsLoading = false;
         this.recentTvShows = tvShows;
       });
   }
@@ -83,6 +95,16 @@ export class TrendingComponent implements OnInit {
   onOnlyAvailableChecked(checked: boolean) {
     this.onlyAvailable = checked;
     this.ngOnInit();
+  }
+
+  onGetMediaByComments() {
+    this.mediaByCommentsLoading = true;
+    this.mediaDiscoverService
+      .getMediasByComments(this.onlyAvailable)
+      .subscribe(media => {
+        this.mediaByCommentsLoading = false;
+        this.mediaByComments = media;
+      });
   }
 
   protected readonly Math = Math;

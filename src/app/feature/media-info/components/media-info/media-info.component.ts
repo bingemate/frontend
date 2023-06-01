@@ -22,7 +22,6 @@ export class MediaInfoComponent implements OnInit {
   ngOnInit(): void {
     this.mediaInfoService.getMediaInfo(this.mediaId).subscribe({
       next: (media: MediaResponse) => {
-        console.log(media);
         this.media = media;
         if (media.mediaType === MediaType.Episode) {
           this.mediaInfoService
