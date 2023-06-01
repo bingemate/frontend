@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import {
+  CreateWatchlistItem,
   WatchlistItem,
   WatchlistResponse,
 } from '../../shared/models/watchlist.models';
@@ -19,7 +20,7 @@ export class WatchlistService {
       .pipe(map(watchlist => watchlist.watchListItems));
   }
 
-  createWatchlistItem(item: WatchlistItem) {
+  createWatchlistItem(item: CreateWatchlistItem) {
     return this.http.post(
       `${environment.apiUrl}/watch-service/watch-list/${item.mediaId}`,
       item
@@ -30,6 +31,12 @@ export class WatchlistService {
     return this.http.put(
       `${environment.apiUrl}/watch-service/watch-list/${item.mediaId}`,
       item
+    );
+  }
+
+  getWatchlistItem(mediaId: number) {
+    return this.http.get<WatchlistResponse>(
+      `${environment.apiUrl}/watch-service/watch-list/${mediaId}/item`
     );
   }
 }
