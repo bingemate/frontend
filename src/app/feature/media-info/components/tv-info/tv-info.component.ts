@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { navigationRoot } from '../../../../app-routing.module';
 import { mediasLinks } from '../../../../pages/medias/medias-routing.module';
 import { Person, TvShowResponse } from '../../../../shared/models/media.models';
@@ -14,7 +14,7 @@ import { NotificationsService } from '../../../../core/notifications/notificatio
   templateUrl: './tv-info.component.html',
   styleUrls: ['./tv-info.component.less'],
 })
-export class TvInfoComponent {
+export class TvInfoComponent implements OnChanges {
   readonly tvsByGenrePath = `/${navigationRoot.medias.path}/${mediasLinks.tv_shows_by_genre.path}/`;
   readonly tvsByActorPath = `/${navigationRoot.medias.path}/${mediasLinks.tv_show_by_actor.path}/`;
   readonly tvsByNetworkPath = `/${navigationRoot.medias.path}/${mediasLinks.tv_shows_by_network.path}/`;
@@ -34,6 +34,21 @@ export class TvInfoComponent {
     private readonly notificationsService: NotificationsService,
     private watchlistService: WatchlistService
   ) {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (
+      changes['tv'].currentValue &&
+      changes['tv'].currentValue !== changes['tv'].previousValue &&
+      this.tv
+    ) {
+      this.watchlistService.getWatchlistItem(this.tv.id).subscribe(item => {
+        if (!item) {
+          this.isMediaInWatchList = false;
+        }
+      });
+    }
+  }
+
   getSeasons(): number[] {
     return Array.from({ length: this.tv?.seasonsCount ?? 0 }, (_, i) => i + 1);
   }
