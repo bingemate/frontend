@@ -28,4 +28,10 @@ export class UserService {
       { params }
     );
   }
+
+  getUser(userId: string): Observable<UserResponse> {
+    return this.http.get<UserResponse>(
+      `${API_RESOURCE_URI.KEYCLOAK_SERVICE}/user-info/${userId}`
+    );
+  }
 }
