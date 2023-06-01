@@ -19,6 +19,21 @@ export interface UserAPIResponse {
 export interface UsernameResponse {
   username: string;
 }
+export interface UserResponse {
+  id: string;
+  createdTimestamp: number;
+  username: string;
+  firstname: string;
+  lastname: string;
+  email: string;
+  roles: string[];
+}
+
+export interface UserSearchStateModel {
+  query: string;
+  users: UserResponse[];
+  userSearchLoading: boolean;
+}
 
 export function isMatchingRoles(
   user: UserModel | null,
