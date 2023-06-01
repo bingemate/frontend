@@ -26,11 +26,13 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { HistoryModule } from '../../feature/history/history.module';
-import { PlaylistModule } from '../../feature/playlist/playlist.module';
 import { NzProgressModule } from 'ng-zorro-antd/progress';
 import { MediaInfoModule } from '../../feature/media-info/media-info.module';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { CalendarModule } from '../../feature/calendar/calendar.module';
+import { NzCollapseModule } from 'ng-zorro-antd/collapse';
+import { NzTabsModule } from 'ng-zorro-antd/tabs';
+import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 
 @NgModule({
   declarations: [
@@ -69,6 +71,9 @@ import { CalendarModule } from '../../feature/calendar/calendar.module';
     MediaInfoModule,
     NzToolTipModule,
     CalendarModule,
+    NzCollapseModule,
+    NzTabsModule,
+    NzInputNumberModule,
   ],
 })
 export class WatchlistModule {}
