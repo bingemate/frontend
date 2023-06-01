@@ -18,6 +18,13 @@ export class TvInfoComponent {
   readonly tvsByGenrePath = `/${navigationRoot.medias.path}/${mediasLinks.tv_shows_by_genre.path}/`;
   readonly tvsByActorPath = `/${navigationRoot.medias.path}/${mediasLinks.tv_show_by_actor.path}/`;
   readonly tvsByNetworkPath = `/${navigationRoot.medias.path}/${mediasLinks.tv_shows_by_network.path}/`;
+  readonly statusNames = Object.values(WatchListStatus);
+  readonly statusMap = {
+    WATCHING: 'En cours',
+    PLAN_TO_WATCH: 'Prévu',
+    FINISHED: 'Terminé',
+    ABANDONED: 'Abandonné',
+  };
 
   @Input() tv: TvShowResponse | undefined;
   actorsCurrentPage = 1;
