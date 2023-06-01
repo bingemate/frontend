@@ -1,4 +1,12 @@
-<nz-layout class="app-layout">
+<nz-spin nzSpinning *ngIf="isLoading" [nzIndicator]="customSpinnerTemplate">
+  <div class="loading-screen">
+    <div class="logo">
+      <img src="favicon.ico" alt="Logo" />
+    </div>
+    <h2>Veuillez patienter...</h2>
+  </div>
+</nz-spin>
+<nz-layout *ngIf="!isLoading" class="app-layout">
   <nz-sider
     class="menu-sidebar"
     nzCollapsible
@@ -147,17 +155,17 @@
   <nz-layout>
     <nz-header>
       <!--      <div class="app-header">
-        <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
-          <span
-            class="trigger"
-            nz-icon
-            [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"></span>
-        </span>
+      <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
         <span
-          >Current section : {{ currentSection }} -
-          {{ currentSectionName }}</span
-        >
-      </div>-->
+          class="trigger"
+          nz-icon
+          [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"></span>
+      </span>
+      <span
+        >Current section : {{ currentSection }} -
+        {{ currentSectionName }}</span
+      >
+    </div>-->
       <nz-page-header class="app-header">
         <nz-page-header-title>
           <span
@@ -218,6 +226,7 @@
     </nz-content>
   </nz-layout>
 </nz-layout>
+
 <nz-dropdown-menu #notifications="nzDropdownMenu">
   <ul nz-menu>
     <nz-space nzDirection="vertical">
@@ -237,3 +246,9 @@
     </nz-space>
   </ul>
 </nz-dropdown-menu>
+
+<ng-template #customSpinnerTemplate>
+  <div class="custom-spinner">
+    <nz-spin [nzSpinning]="true" [nzSize]="'large'"></nz-spin>
+  </div>
+</ng-template>
