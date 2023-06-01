@@ -39,4 +39,10 @@ export class WatchlistService {
       `${environment.apiUrl}/watch-service/watch-list/${mediaId}/item`
     );
   }
+
+  removeFromWatchlist(mediaId: number) {
+    return this.http.delete(
+      `${environment.apiUrl}/watch-service/watch-list/${mediaId}`
+    );
+  }
 }

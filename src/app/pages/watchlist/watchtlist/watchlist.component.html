@@ -56,6 +56,9 @@
                     (click)="changeShowStatus(item, status)">
                     {{ statusMap[status] }}
                   </li>
+                  <li nz-menu-item (click)="removeShowWatchlist(item)">
+                    Retirer
+                  </li>
                 </ul>
               </nz-dropdown-menu>
             </nz-list-item>
@@ -110,6 +113,9 @@
                     *ngFor="let status of statusNames"
                     (click)="changeMovieStatus(item, status)">
                     {{ statusMap[status] }}
+                  </li>
+                  <li nz-menu-item (click)="removeMovieWatchlist(item)">
+                    Retirer
                   </li>
                 </ul>
               </nz-dropdown-menu>
