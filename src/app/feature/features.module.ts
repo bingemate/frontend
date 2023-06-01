@@ -3,8 +3,8 @@ import { NgxsModule } from '@ngxs/store';
 import { AlbumsState } from './albums/store/albums.state';
 import { AlbumsService } from './albums/albums.service';
 import { StreamingState } from './streaming/store/streaming.state';
-import { PlaylistState } from './playlist/store/playlist.state';
 import { PlaylistModule } from './playlist/playlist.module';
+import { WatchlistModule } from './watchlist/watchlist.module';
 
 @NgModule({
   declarations: [],
@@ -12,6 +12,7 @@ import { PlaylistModule } from './playlist/playlist.module';
     NgxsModule.forFeature([AlbumsState]),
     NgxsModule.forFeature([StreamingState]),
     PlaylistModule,
+    WatchlistModule,
   ],
   providers: [AlbumsService],
 })
