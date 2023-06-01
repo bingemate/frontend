@@ -1,12 +1,41 @@
 <nz-tabset nzSize="large" nzDirection="vertical">
   <nz-tab nzTitle="Mes informations">
-    <h2>Keycloak Account info</h2>
-    <p>ID : {{ user?.id }}</p>
-    <p>Username : {{ user?.username }}</p>
-    <p>Email : {{ user?.email }}</p>
-    <p>First Name : {{ user?.firstname }}</p>
-    <p>Last Name : {{ user?.lastname }}</p>
-    <p>Role : {{ user?.roles?.join(' | ') }}</p>
+    <nz-card>
+      <nz-descriptions nzBordered>
+        <nz-descriptions-item nzTitle="Pseudo" [nzSpan]="3">
+          {{ user?.username }}
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Nom" [nzSpan]="2">
+          {{ user?.lastname }}
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Prénom" [nzSpan]="2">
+          {{ user?.firstname }}
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Email" [nzSpan]="3">
+          {{ user?.email }}
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Status" [nzSpan]="3">
+          <nz-tag
+            nzChecked
+            nzColor="blue"
+            *ngIf="user?.roles?.includes('default-roles-bingemate-local')"
+            >Actif
+          </nz-tag>
+          <nz-tag
+            nzChecked
+            nzColor="green"
+            *ngIf="user?.roles?.includes('bingemate-subscribed')"
+            >Abonné(e)
+          </nz-tag>
+          <nz-tag
+            nzChecked
+            nzColor="red"
+            *ngIf="user?.roles?.includes('bingemate-admin')"
+            >Administrateur
+          </nz-tag>
+        </nz-descriptions-item>
+      </nz-descriptions>
+    </nz-card>
   </nz-tab>
   <nz-tab nzTitle="HttpBin">
     <nz-space nzDirection="vertical" nzSize="large">
