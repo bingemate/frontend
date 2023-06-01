@@ -11,4 +11,5 @@ export const API_RESOURCE_URI = {
   // Users
   USERS: `${env.apiUrl}/users`,
   USERS_SEARCH: `${env.apiUrl}/users/search`,
+  // KEYCLOAK_SERVICE: `${env.apiUrl}/keycloak-service`,
 };
