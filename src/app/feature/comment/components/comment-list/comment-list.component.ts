@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { UserModel } from '../../../../shared/models/user.models';
 import { CommentService } from '../../comment.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
+import { navigationRoot } from '../../../../app-routing.module';
 
 @Component({
   selector: 'app-comment-list',
@@ -24,6 +25,8 @@ export class CommentListComponent {
   isAdmin$!: Observable<boolean>;
   isAdmin = false;
 
+  readonly userViewLink = '/'; // TODO
+
   constructor(
     private commentService: CommentService,
     private notificationsService: NotificationsService
@@ -34,10 +37,6 @@ export class CommentListComponent {
     this.isAdmin$.subscribe(isAdmin => {
       this.isAdmin = isAdmin;
     });
-  }
-
-  getAuthor(comment: CommentResponse) {
-    return this.showMedia ? comment.mediaId.toString() : comment.userId;
   }
 
   canUpdateOrDeleteComment(comment: CommentResponse): boolean {

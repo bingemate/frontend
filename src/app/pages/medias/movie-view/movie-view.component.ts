@@ -51,8 +51,6 @@ export class MovieViewComponent {
     currentRoute.params.subscribe(params => {
       this.movieId = params['id'];
       this.onGetMovie();
-      this.onGetMediaComments();
-      this.onGetMediaRatings();
       this.onGetUserRating();
     });
     this.user$.subscribe(user => {

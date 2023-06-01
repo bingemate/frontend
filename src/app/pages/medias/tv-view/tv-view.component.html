@@ -3,32 +3,30 @@
     <nz-tab nzTitle="Informations">
       <app-tv-info [tv]="tv"></app-tv-info>
     </nz-tab>
-    <nz-tab nzTitle="Communauté">
+    <nz-tab nzTitle="Notes" (nzClick)="onRefreshRatings()">
       <ng-template nz-tab>
-        <nz-space nzDirection="vertical" nzSize="large" style="width: 100%">
-          <nz-card
-            *nzSpaceItem
-            nzTitle="Notes"
-            [nzExtra]="ratingsListPagination">
-            <nz-space nzDirection="vertical" nzSize="large" style="width: 100%">
-              <app-rating-view
-                *nzSpaceItem
-                [editable]="true"
-                [rating]="userRating"
-                (updateRating)="onRefreshRatings()"></app-rating-view>
-              <app-rating-list
-                *nzSpaceItem
-                [ratings]="ratings.results"></app-rating-list>
-            </nz-space>
-          </nz-card>
-          <nz-card
-            *nzSpaceItem
-            [nzActions]="[newComment]"
-            nzTitle="Commentaires"
-            [nzExtra]="commentsListPagination">
-            <app-comment-list [comments]="comments.results"></app-comment-list>
-          </nz-card>
-        </nz-space>
+        <nz-card nzTitle="Notes" [nzExtra]="ratingsListPagination">
+          <nz-space nzDirection="vertical" nzSize="large" style="width: 100%">
+            <app-rating-view
+              *nzSpaceItem
+              [editable]="true"
+              [rating]="userRating"
+              (updateRating)="onRefreshRatings()"></app-rating-view>
+            <app-rating-list
+              *nzSpaceItem
+              [ratings]="ratings.results"></app-rating-list>
+          </nz-space>
+        </nz-card>
+      </ng-template>
+    </nz-tab>
+    <nz-tab nzTitle="Commentaires" (nzClick)="onRefreshComments()">
+      <ng-template nz-tab>
+        <nz-card
+          [nzActions]="[newComment]"
+          nzTitle="Commentaires"
+          [nzExtra]="commentsListPagination">
+          <app-comment-list [comments]="comments.results"></app-comment-list>
+        </nz-card>
       </ng-template>
     </nz-tab>
   </nz-tabset>

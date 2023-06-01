@@ -10,8 +10,5 @@ export class RatingListComponent {
   @Input() ratings: RatingResponse[] = [];
   @Input() showMedia = false;
   @Input() editable = false;
-
-  getAuthor(rating: RatingResponse) {
-    return this.showMedia ? rating.mediaId.toString() : rating.userId;
-  }
+  readonly userViewLink = '/'; // TODO
 }

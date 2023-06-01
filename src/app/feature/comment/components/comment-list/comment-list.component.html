@@ -2,7 +2,11 @@
   <nz-list nzBordered nzSize="small" nzItemLayout="vertical">
     <nz-list-item *cdkVirtualFor="let comment of comments">
       <nz-comment
-        [nzAuthor]="getAuthor(comment)"
+        [nzAuthor]="
+          showMedia
+            ? (comment.mediaId | mediaName | async) ?? 'No name'
+            : (comment.userId | username | async) ?? 'No name'
+        "
         nzDatetime="{{ comment.createdAt | date : 'dd/MM/yyyy HH:mm' }}">
         <nz-comment-content>
           <p
@@ -14,6 +18,24 @@
             [(nzContent)]="comment.content"></p>
         </nz-comment-content>
         <nz-comment-action>
+          <button
+            *ngIf="showMedia"
+            [routerLink]="
+              showMedia ? (comment.mediaId | mediaLink | async) ?? '' : '/'
+            "
+            nz-button
+            nzType="link"
+            nzSize="small">
+            <i nz-icon nzType="eye"></i>
+          </button>
+          <button
+            *ngIf="!showMedia"
+            [routerLink]="[userViewLink, comment.userId]"
+            nz-button
+            nzType="link"
+            nzSize="small">
+            <i nz-icon nzType="eye"></i>
+          </button>
           <button
             *ngIf="canUpdateOrDeleteComment(comment)"
             nz-popconfirm

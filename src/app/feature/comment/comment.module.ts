@@ -17,6 +17,9 @@ import { NewCommentComponent } from './components/new-comment/new-comment.compon
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MediaNamePipe } from '../../shared/pipes/media-name.pipe';
+import { SharedModule } from '../../shared/shared.module';
+import { RouterLink } from '@angular/router';
 
 @NgModule({
   declarations: [CommentListComponent, NewCommentComponent],
@@ -35,6 +38,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     NzFormModule,
     NzInputModule,
     ReactiveFormsModule,
+    SharedModule,
+    RouterLink,
   ],
   exports: [CommentListComponent, NewCommentComponent],
 })

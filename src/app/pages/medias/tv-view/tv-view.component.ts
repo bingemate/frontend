@@ -51,8 +51,6 @@ export class TvViewComponent {
     currentRoute.params.subscribe(params => {
       this.tvId = params['id'];
       this.onGetTvShow();
-      this.onGetMediaComments();
-      this.onGetMediaRatings();
       this.onGetUserRating();
     });
     this.user$.subscribe(user => {
