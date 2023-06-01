@@ -2,6 +2,12 @@ import { Component, Input } from '@angular/core';
 import { navigationRoot } from '../../../../app-routing.module';
 import { mediasLinks } from '../../../../pages/medias/medias-routing.module';
 import { Person, TvShowResponse } from '../../../../shared/models/media.models';
+import {
+  WatchListStatus,
+  WatchListType,
+} from '../../../../shared/models/watchlist.models';
+import { WatchlistService } from '../../../watchlist/watchlist.service';
+import { NotificationsService } from '../../../../core/notifications/notifications.service';
 
 @Component({
   selector: 'app-tv-info',
@@ -16,7 +22,11 @@ export class TvInfoComponent {
   @Input() tv: TvShowResponse | undefined;
   actorsCurrentPage = 1;
   actorsPageSize = 5;
-
+  isMediaInWatchList = true;
+  constructor(
+    private readonly notificationsService: NotificationsService,
+    private watchlistService: WatchlistService
+  ) {}
   getSeasons(): number[] {
     return Array.from({ length: this.tv?.seasonsCount ?? 0 }, (_, i) => i + 1);
   }
@@ -36,4 +46,21 @@ export class TvInfoComponent {
   }
 
   protected readonly Array = Array;
+
+  addToWatchlist(status: WatchListStatus) {
+    if (this.tv) {
+      this.watchlistService
+        .createWatchlistItem({
+          status,
+          mediaId: this.tv.id,
+          mediaType: WatchListType.SHOW,
+        })
+        .subscribe(() => {
+          this.notificationsService.info(
+            'La série a été ajouté aux films suivis'
+          );
+          this.isMediaInWatchList = true;
+        });
+    }
+  }
 }
