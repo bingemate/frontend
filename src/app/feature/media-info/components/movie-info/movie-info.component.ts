@@ -107,11 +107,12 @@ export class MovieInfoComponent implements OnInit, OnChanges {
           mediaId: this.movie.id,
           mediaType: WatchListType.MOVIE,
         })
-        .subscribe(() =>
+        .subscribe(() => {
           this.notificationsService.info(
             'Le film a été ajouté aux films suivis'
-          )
-        );
+          );
+          this.isMediaInWatchList = true;
+        });
     }
   }
 }
