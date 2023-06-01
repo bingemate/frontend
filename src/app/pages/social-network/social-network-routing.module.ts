@@ -40,7 +40,7 @@ const routes: Routes = [
     data: { title: socialNetworkLinks.media.name },
   },
   {
-    path: socialNetworkLinks.user_profile.path,
+    path: socialNetworkLinks.user_profile.path + '/:id',
     component: SocialNetworkHomeComponent,
     data: { title: socialNetworkLinks.user_profile.name },
   },

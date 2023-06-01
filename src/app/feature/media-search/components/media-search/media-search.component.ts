@@ -53,7 +53,6 @@ export class MediaSearchComponent implements OnDestroy {
   }
 
   manualSearch() {
-    console.log('Manual Search');
     this.subscription.unsubscribe();
     this.search();
     this.subscription = this.inputSubject

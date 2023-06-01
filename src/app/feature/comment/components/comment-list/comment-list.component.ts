@@ -7,6 +7,7 @@ import { UserModel } from '../../../../shared/models/user.models';
 import { CommentService } from '../../comment.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 import { navigationRoot } from '../../../../app-routing.module';
+import { userProfilViewLinks } from '../../../../pages/social-network/social-network-routing.module';
 
 @Component({
   selector: 'app-comment-list',
@@ -25,7 +26,7 @@ export class CommentListComponent {
   isAdmin$!: Observable<boolean>;
   isAdmin = false;
 
-  readonly userViewLink = '/'; // TODO
+  readonly userViewLink = userProfilViewLinks;
 
   constructor(
     private commentService: CommentService,
