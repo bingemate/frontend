@@ -38,6 +38,7 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
+import { MediaListComponent } from './components/media-list/media-list.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
     MovieListComponent,
     TvListComponent,
     ActorInfoComponent,
+    MediaListComponent,
   ],
   imports: [
     CommonModule,
@@ -92,6 +94,7 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
     MovieInfoComponent,
     ActorInfoComponent,
     TvInfoComponent,
+    MediaListComponent,
   ],
 })
 export class MediaInfoModule {}
