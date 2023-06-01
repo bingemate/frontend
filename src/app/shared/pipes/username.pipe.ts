@@ -1,11 +1,16 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { map, Observable } from 'rxjs';
+import { UserService } from '../../feature/user/user.service';
 
 @Pipe({
   name: 'username',
 })
 export class UsernamePipe implements PipeTransform {
-  transform(value: string): Observable<string> {
-    return of(value);
+  constructor(private readonly userService: UserService) {}
+
+  transform(userID: string): Observable<string> {
+    return this.userService
+      .getUsername(userID)
+      .pipe(map(username => username.username));
   }
 }
