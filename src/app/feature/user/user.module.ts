@@ -8,5 +8,6 @@ import { CommonModule } from '@angular/common';
   imports: [
     CommonModule
   ]
+    NgxsModule.forFeature([UserSearchState]),
 })
 export class UserModule { }
