@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import {
   UpdateUserRequest,
   UserResponse,
@@ -9,13 +9,18 @@ import { Select } from '@ngxs/store';
 import { AuthState } from '../../../../core/auth/store/auth.state';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
+import { FriendshipService } from '../../../friendship/friendship.service';
+import {
+  FriendResponse,
+  FriendState,
+} from '../../../../shared/models/friendship.models';
 
 @Component({
   selector: 'app-user-info',
   templateUrl: './user-info.component.html',
   styleUrls: ['./user-info.component.less'],
 })
-export class UserInfoComponent {
+export class UserInfoComponent implements OnInit {
   @Select(AuthState.user) user$!: Observable<UserResponse>;
   authUser: UserResponse | null = null;
 
@@ -28,10 +33,13 @@ export class UserInfoComponent {
   userForm: FormGroup | null = null;
   editMode = false;
 
+  relationShip: FriendResponse | null = null;
+
   constructor(
     private readonly userService: UserService,
     private readonly fb: FormBuilder,
-    private readonly notificationsService: NotificationsService
+    private readonly notificationsService: NotificationsService,
+    private friendShipService: FriendshipService
   ) {
     this.user$.subscribe(user => {
       this.authUser = user;
@@ -46,6 +54,89 @@ export class UserInfoComponent {
         });
       }
     });
+  }
+
+  ngOnInit() {
+    if (this.user?.id !== this.authUser?.id) {
+      this.friendShipService
+        .getRelationShip(this.user?.id ?? 'empty')
+        .subscribe({
+          next: relationShip => {
+            this.relationShip = relationShip;
+          },
+        });
+    }
+  }
+
+  mapStateToLabel(state: FriendState): string {
+    switch (state) {
+      case FriendState.REQUESTED:
+        return 'Demande en attente';
+      case FriendState.ACCEPTED:
+        return 'Ami';
+      case FriendState.REJECTED:
+        return 'Demande rejetée';
+      case FriendState.BLOCKED:
+        return 'Bloqué';
+      default:
+        return '';
+    }
+  }
+
+  sendFriendRequest() {
+    this.friendShipService
+      .addFriend({
+        friendId: this.user?.id ?? 'empty',
+      })
+      .subscribe(friendRequest => {
+        this.relationShip = friendRequest;
+        this.notificationsService.success('Demande envoyée');
+      });
+  }
+
+  acceptFriend() {
+    this.friendShipService
+      .updateFriend({
+        friendId: this.user?.id ?? 'empty',
+        state: FriendState.ACCEPTED,
+      })
+      .subscribe(response => {
+        this.notificationsService.success('Demande acceptée');
+        this.relationShip = response;
+      });
+  }
+
+  rejectFriend() {
+    this.friendShipService
+      .updateFriend({
+        friendId: this.user?.id ?? 'empty',
+        state: FriendState.REJECTED,
+      })
+      .subscribe(response => {
+        this.notificationsService.success('Demande rejetée');
+        this.relationShip = response;
+      });
+  }
+
+  blockFriend() {
+    this.friendShipService
+      .updateFriend({
+        friendId: this.user?.id ?? 'empty',
+        state: FriendState.BLOCKED,
+      })
+      .subscribe(response => {
+        this.notificationsService.success('Utilisateur bloqué');
+        this.relationShip = response;
+      });
+  }
+
+  deleteFriend() {
+    this.friendShipService
+      .deleteFriend(this.user?.id ?? 'empty')
+      .subscribe(() => {
+        this.notificationsService.success('Ami supprimé');
+        this.relationShip = null;
+      });
   }
 
   canEdit(): boolean {
@@ -131,6 +222,8 @@ export class UserInfoComponent {
       });
     }
   }
+
+  protected readonly FriendState = FriendState;
 }
 
 const badgeColors = [
