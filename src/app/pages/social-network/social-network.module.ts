@@ -27,12 +27,17 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
 import { CommentModule } from '../../feature/comment/comment.module';
 import { RatingModule } from '../../feature/rating/rating.module';
 import { UserViewComponent } from './user-view/user-view.component';
+import { FriendshipComponent } from './friendship/friendship.component';
+import { FriendshipModule } from '../../feature/friendship/friendship.module';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzListModule } from 'ng-zorro-antd/list';
 
 @NgModule({
   declarations: [
     SocialNetworkHomeComponent,
     UserSearchComponent,
     UserViewComponent,
+    FriendshipComponent,
   ],
   imports: [
     CommonModule,
@@ -61,6 +66,9 @@ import { UserViewComponent } from './user-view/user-view.component';
     NzTagModule,
     CommentModule,
     RatingModule,
+    FriendshipModule,
+    NzSpinModule,
+    NzListModule,
   ],
 })
 export class SocialNetworkModule {}

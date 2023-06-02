@@ -9,8 +9,7 @@ export const API_RESOURCE_URI = {
   // Media info
   MEDIA_INFO: `${env.apiUrl}/media-service`,
   // Users
-  USERS: `${env.apiUrl}/users`,
-  USERS_SEARCH: `${env.apiUrl}/users/search`,
+  USER_SERVICE: `${env.apiUrl}/user-service`,
   KEYCLOAK_SERVICE: `${env.apiUrl}/keycloak-service`,
   // KEYCLOAK_SERVICE: `http://localhost:8081/keycloak-service`,
 };

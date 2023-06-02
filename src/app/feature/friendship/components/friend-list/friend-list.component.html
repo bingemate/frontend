@@ -1,0 +1,59 @@
+<nz-list>
+  <nz-list-item *ngFor="let friend of friends">
+    <nz-list-item-meta>
+      <nz-list-item-meta-title>
+        <a [routerLink]="[userProfilViewLinks, friend.friendId]">{{
+          friend.friendId | username | async
+        }}</a>
+      </nz-list-item-meta-title>
+      <nz-list-item-meta-description>
+        {{ mapStateToLabel(friend.state) }}
+      </nz-list-item-meta-description>
+    </nz-list-item-meta>
+    <ul nz-list-item-actions>
+      <nz-list-item-action
+        *ngIf="canAccept && friend.state !== FriendState.ACCEPTED">
+        <button
+          nz-button
+          nzType="primary"
+          nzSize="small"
+          (click)="acceptFriend(friend.friendId)">
+          <i nz-icon nzType="check"></i>
+          Accepter
+        </button>
+      </nz-list-item-action>
+      <nz-list-item-action
+        *ngIf="canReject && friend.state !== FriendState.REJECTED">
+        <button
+          nz-button
+          nzDanger
+          nzSize="small"
+          (click)="rejectFriend(friend.friendId)">
+          <i nz-icon nzType="close"></i>
+          Refuser
+        </button>
+      </nz-list-item-action>
+      <nz-list-item-action
+        *ngIf="canBlock && friend.state !== FriendState.BLOCKED">
+        <button
+          nz-button
+          nzDanger
+          nzSize="small"
+          (click)="blockFriend(friend.friendId)">
+          <i nz-icon nzType="stop"></i>
+          Bloquer
+        </button>
+      </nz-list-item-action>
+      <nz-list-item-action *ngIf="canDelete && friend.state">
+        <button
+          nz-button
+          nzDanger
+          nzSize="small"
+          (click)="deleteFriend(friend.friendId)">
+          <i nz-icon nzType="delete"></i>
+          Supprimer
+        </button>
+      </nz-list-item-action>
+    </ul>
+  </nz-list-item>
+</nz-list>

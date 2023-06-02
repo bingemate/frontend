@@ -4,6 +4,7 @@ import { NavigationLinks, navigationRoot } from '../../app-routing.module';
 import { SocialNetworkHomeComponent } from './social-network-home/social-network-home.component';
 import { UserSearchComponent } from './user-search/user-search.component';
 import { UserViewComponent } from './user-view/user-view.component';
+import { FriendshipComponent } from './friendship/friendship.component';
 
 export const socialNetworkLinks: NavigationLinks<
   'search_user' | 'media' | 'user_profile' | 'chat' | 'relations'
@@ -55,7 +56,7 @@ const routes: Routes = [
   },
   {
     path: socialNetworkLinks.relations.path,
-    component: SocialNetworkHomeComponent,
+    component: FriendshipComponent,
     data: { title: socialNetworkLinks.relations.name },
   },
 ];

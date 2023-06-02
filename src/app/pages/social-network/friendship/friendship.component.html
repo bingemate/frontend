@@ -1,0 +1,51 @@
+<nz-tabset title="Relations" nzSize="large" [nzTabBarExtraContent]="reload">
+  <nz-tab nzTitle="Amis">
+    <nz-spin
+      nzSpinning
+      nzSize="large"
+      style="padding: 20px"
+      *ngIf="loading"></nz-spin>
+    <app-friend-list
+      *ngIf="!loading"
+      (friendUpdated)="getRelationship()"
+      [friends]="friends"
+      [canDelete]="true"></app-friend-list>
+  </nz-tab>
+  <nz-tab nzTitle="Demandes envoyées">
+    <nz-spin
+      nzSpinning
+      nzSize="large"
+      style="padding: 20px"
+      *ngIf="loading"></nz-spin>
+    <app-friend-list
+      *ngIf="!loading"
+      (friendUpdated)="getRelationship()"
+      [canDelete]="true"
+      [friends]="pendingFriends"></app-friend-list>
+  </nz-tab>
+  <nz-tab nzTitle="Demande reçues">
+    <nz-spin
+      nzSpinning
+      nzSize="large"
+      style="padding: 20px"
+      *ngIf="loading"></nz-spin>
+    <app-friend-list
+      *ngIf="!loading"
+      (friendUpdated)="getRelationship()"
+      [canDelete]="true"
+      [canAccept]="true"
+      [canReject]="true"
+      [friends]="friendRequests"></app-friend-list>
+  </nz-tab>
+</nz-tabset>
+
+<ng-template #reload>
+  <button
+    nz-button
+    nzType="primary"
+    nzSize="small"
+    nzShape="circle"
+    (click)="getRelationship()">
+    <i nz-icon nzType="reload"></i>
+  </button>
+</ng-template>
