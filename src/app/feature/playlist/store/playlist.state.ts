@@ -1,9 +1,6 @@
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { Injectable } from '@angular/core';
-import {
-  PlaylistStateModel,
-  PlaylistType,
-} from '../../../shared/models/playlist.model';
+import { PlaylistStateModel, PlaylistType } from '../../../shared/models/playlist.model';
 import { PlaylistActions } from './playlist.actions';
 import { AuthState } from '../../../core/auth/store/auth.state';
 import { PlaylistsService } from '../playlists.service';

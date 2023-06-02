@@ -1,18 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  WatchlistItem,
-  WatchListStatus,
-  WatchListType,
-} from '../../../shared/models/watchlist.models';
+import { WatchlistItem, WatchListStatus, WatchListType } from '../../../shared/models/watchlist.models';
 import { MediaInfoService } from '../../../feature/media-info/media-info.service';
 import { WatchlistService } from '../../../feature/watchlist/watchlist.service';
 import { AuthState } from '../../../core/auth/store/auth.state';
 import { Store } from '@ngxs/store';
 import { forkJoin, map, mergeMap } from 'rxjs';
-import {
-  MovieResponse,
-  TvShowResponse,
-} from '../../../shared/models/media.models';
+import { MovieResponse, TvShowResponse } from '../../../shared/models/media.models';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 
 @Component({

@@ -3,11 +3,10 @@ import { CommentResponse } from '../../../../shared/models/comment.models';
 import { AuthState } from '../../../../core/auth/store/auth.state';
 import { Select } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { UserModel } from '../../../../shared/models/user.models';
 import { CommentService } from '../../comment.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
-import { navigationRoot } from '../../../../app-routing.module';
 import { userProfilViewLinks } from '../../../../pages/social-network/social-network-routing.module';
+import { UserResponse } from '../../../../shared/models/user.models';
 
 @Component({
   selector: 'app-comment-list',
@@ -19,8 +18,8 @@ export class CommentListComponent {
   @Input() showMedia = false;
 
   @Select(AuthState.user)
-  user$!: Observable<UserModel>;
-  user: UserModel | null = null;
+  user$!: Observable<UserResponse>;
+  user: UserResponse | null = null;
 
   @Select(AuthState.isAdmin)
   isAdmin$!: Observable<boolean>;

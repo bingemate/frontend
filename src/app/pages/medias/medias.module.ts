@@ -18,11 +18,7 @@ import { TvByGenreComponent } from './tv-by-genre/tv-by-genre.component';
 import { TvByNetworkComponent } from './tv-by-network/tv-by-network.component';
 import { TvByActorComponent } from './tv-by-actor/tv-by-actor.component';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
-import {
-  CdkFixedSizeVirtualScroll,
-  CdkVirtualForOf,
-  CdkVirtualScrollViewport,
-} from '@angular/cdk/scrolling';
+import { CdkFixedSizeVirtualScroll, CdkVirtualForOf, CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { NzListModule } from 'ng-zorro-antd/list';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';

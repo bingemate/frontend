@@ -1,5 +1,5 @@
-import { UserModel } from './user.models';
+import { UserResponse } from './user.models';
 
 export interface AuthStateModel {
-  user: UserModel | null;
+  user: UserResponse | null;
 }

@@ -1,0 +1,120 @@
+<nz-card>
+  <nz-descriptions nzBordered [nzExtra]="toggleEdit" *ngIf="!editMode">
+    <nz-descriptions-item nzTitle="Pseudo" [nzSpan]="3">
+      {{ user?.username }}
+    </nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Nom" [nzSpan]="2">
+      {{ user?.lastname }}
+    </nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Prénom" [nzSpan]="2">
+      {{ user?.firstname }}
+    </nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Email" [nzSpan]="3">
+      {{ user?.email }}
+    </nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Inscris depuis le" [nzSpan]="3">
+      {{ user?.createdTimestamp | date : 'dd/MM/yyyy' }}
+    </nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Status" [nzSpan]="3">
+      <nz-tag
+        nzChecked
+        nzColor="blue"
+        *ngIf="user?.roles?.includes('bingemate-user')"
+        >Actif
+      </nz-tag>
+      <nz-tag
+        nzChecked
+        nzColor="green"
+        *ngIf="user?.roles?.includes('bingemate-subscribed')"
+        >Abonné(e)
+      </nz-tag>
+      <nz-tag
+        nzChecked
+        nzColor="red"
+        *ngIf="user?.roles?.includes('bingemate-admin')"
+        >Administrateur
+      </nz-tag>
+    </nz-descriptions-item>
+  </nz-descriptions>
+  <nz-descriptions
+    nz-form
+    nzBordered
+    [formGroup]="userForm!"
+    *ngIf="editMode"
+    [nzExtra]="toggleSave">
+    <nz-descriptions-item nzTitle="Pseudo" [nzSpan]="3">
+      <nz-form-control nzErrorTip="Ce champ est requis">
+        <input
+          nz-input
+          formControlName="username"
+          placeholder="Pseudo"
+          type="text" />
+      </nz-form-control>
+    </nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Nom" [nzSpan]="2">
+      <nz-form-control nzErrorTip="Ce champ est requis">
+        <input
+          nz-input
+          formControlName="lastname"
+          placeholder="Nom"
+          type="text" />
+      </nz-form-control>
+    </nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Prénom" [nzSpan]="2">
+      <nz-form-control nzErrorTip="Ce champ est requis">
+        <input
+          nz-input
+          formControlName="firstname"
+          placeholder="Prénom"
+          type="text" />
+      </nz-form-control>
+    </nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Email" [nzSpan]="3">
+      <nz-form-control nzErrorTip="Ce champ est requis" et doit être valide>
+        <input
+          nz-input
+          formControlName="email"
+          placeholder="Email"
+          type="email" />
+      </nz-form-control>
+    </nz-descriptions-item>
+    <nz-descriptions-item *ngIf="isAdmin" nzTitle="Roles">
+      <nz-row [nzGutter]="[16, 16]">
+        <nz-col *ngFor="let role of roles">
+          <label
+            nz-checkbox
+            [nzChecked]="user?.roles?.includes(role)"
+            (nzCheckedChange)="onRoleChange(role, $event)">
+            {{ role }}
+          </label>
+        </nz-col>
+      </nz-row>
+    </nz-descriptions-item>
+  </nz-descriptions>
+</nz-card>
+
+<ng-template #toggleEdit>
+  <button
+    *ngIf="canEdit()"
+    nz-button
+    nzType="primary"
+    (click)="toggleEditMode()">
+    Modifier
+  </button>
+</ng-template>
+
+<ng-template #toggleSave>
+  <nz-space nzDirection="horizontal">
+    <button
+      *nzSpaceItem
+      nz-button
+      nzType="primary"
+      (click)="updateUser()"
+      [disabled]="userForm?.invalid">
+      Enregistrer
+    </button>
+    <button *nzSpaceItem nz-button nzType="default" (click)="toggleEditMode()">
+      Annuler
+    </button>
+  </nz-space>
+</ng-template>

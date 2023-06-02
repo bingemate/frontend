@@ -4,19 +4,12 @@ import { ActivatedRoute } from '@angular/router';
 import { MediaInfoService } from '../../../feature/media-info/media-info.service';
 import { MediaDiscoverService } from '../../../feature/media-info/media-discover.service';
 import { CommentService } from '../../../feature/comment/comment.service';
-import {
-  CommentResults,
-  emptyCommentResults,
-} from '../../../shared/models/comment.models';
-import {
-  emptyRatingResults,
-  RatingResponse,
-  RatingResults,
-} from '../../../shared/models/rating.models';
+import { CommentResults, emptyCommentResults } from '../../../shared/models/comment.models';
+import { emptyRatingResults, RatingResponse, RatingResults } from '../../../shared/models/rating.models';
 import { RatingService } from '../../../feature/rating/rating.service';
 import { Select } from '@ngxs/store';
 import { AuthState } from '../../../core/auth/store/auth.state';
-import { UserModel } from '../../../shared/models/user.models';
+import { UserResponse } from '../../../shared/models/user.models';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -26,8 +19,8 @@ import { Observable } from 'rxjs';
 })
 export class TvViewComponent {
   @Select(AuthState.user)
-  user$!: Observable<UserModel>;
-  user: UserModel | null = null;
+  user$!: Observable<UserResponse>;
+  user: UserResponse | null = null;
 
   tvId?: number;
   tv?: TvShowResponse;
