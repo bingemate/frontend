@@ -27,11 +27,13 @@ import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { CommentModule } from '../../feature/comment/comment.module';
 import { RatingModule } from '../../feature/rating/rating.module';
+import { MessagingComponent } from './messaging/messaging.component';
 
 @NgModule({
   declarations: [
     SocialNetworkHomeComponent,
     UserSearchComponent,
+    MessagingComponent,
     UserViewComponent,
   ],
   imports: [
