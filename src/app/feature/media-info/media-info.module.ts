@@ -38,6 +38,7 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { MediaListComponent } from './components/media-list/media-list.component';
 
 @NgModule({
@@ -83,6 +84,7 @@ import { MediaListComponent } from './components/media-list/media-list.component
     NzSelectModule,
     NzDropDownModule,
     NzCheckboxModule,
+    NzToolTipModule,
   ],
   exports: [
     MediaInfoComponent,

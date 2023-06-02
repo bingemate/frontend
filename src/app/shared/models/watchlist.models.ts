@@ -1,7 +1,13 @@
 export interface WatchlistItem {
   mediaId: number;
   userId: string;
-  viewedEpisodes: number;
+  viewedEpisodes?: number;
+  status: WatchListStatus;
+  mediaType: WatchListType;
+}
+export interface CreateWatchlistItem {
+  mediaId: number;
+  viewedEpisodes?: number;
   status: WatchListStatus;
   mediaType: WatchListType;
 }

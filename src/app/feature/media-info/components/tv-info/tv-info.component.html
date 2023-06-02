@@ -11,6 +11,26 @@
     <div class="tv-info" nz-col [nzMd]="24" [nzXl]="18">
       <nz-row [nzGutter]="[24, 24]">
         <h1 class="tv-title" nz-col nzSpan="24">{{ tv.title }}</h1>
+        <div nz-col nzSpan="24">
+          <nz-space nzSize="small">
+            <button
+              *nzSpaceItem
+              nz-button
+              nzType="default"
+              nzShape="round"
+              nz-dropdown
+              nzTooltipTitle="Série déjà suivi"
+              nzTooltipPlacement="top"
+              nz-tooltip
+              [nzTooltipTrigger]="isMediaInWatchList ? 'hover' : null"
+              [nzDisabled]="isMediaInWatchList"
+              [disabled]="isMediaInWatchList"
+              [nzDropdownMenu]="watchlistMenu">
+              Suivre ce film
+              <span nz-icon nzType="down"></span>
+            </button>
+          </nz-space>
+        </div>
         <div class="tv-rating" nz-col nzSpan="24">
           <nz-rate [ngModel]="getRate()" nzDisabled nzAllowHalf></nz-rate>
           &nbsp;{{ (tv.voteAverage / 2).toFixed(2) }}
@@ -96,3 +116,11 @@
     [nzSize]="'small'"
     (nzPageIndexChange)="onActorsPageChange($event)"></nz-pagination>
 </ng-template>
+
+<nz-dropdown-menu #watchlistMenu="nzDropdownMenu">
+  <ul nz-menu>
+    <li nz-menu-item *ngFor="let status of statusNames">
+      <a (click)="addToWatchlist(status)">{{ statusMap[status] }}</a>
+    </li>
+  </ul>
+</nz-dropdown-menu>

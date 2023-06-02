@@ -102,4 +102,37 @@ export class WatchlistComponent implements OnInit {
         )
       );
   }
+
+  removeMovieWatchlist(item: {
+    media: MovieResponse;
+    watchlist: WatchlistItem;
+  }) {
+    this.watchlistService
+      .removeFromWatchlist(item.watchlist.mediaId)
+      .subscribe(() => {
+        this.movieWatchlist = this.movieWatchlist.filter(
+          wlLtem => item.media.id !== wlLtem.media.id
+        );
+        this.notifService.info(
+          'Liste de suivie modifié',
+          `${item.media.title} a été retiré`
+        );
+      });
+  }
+  removeShowWatchlist(item: {
+    media: TvShowResponse;
+    watchlist: WatchlistItem;
+  }) {
+    this.watchlistService
+      .removeFromWatchlist(item.watchlist.mediaId)
+      .subscribe(() => {
+        this.showWatchlist = this.showWatchlist.filter(
+          wlLtem => item.media.id !== wlLtem.media.id
+        );
+        this.notifService.info(
+          'Liste de suivie modifié',
+          `${item.media.title} a été retiré`
+        );
+      });
+  }
 }
