@@ -23,6 +23,9 @@ import { RouterLink } from '@angular/router';
 import { UserInfoComponent } from './components/user-info/user-info.component';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzSpaceModule } from 'ng-zorro-antd/space';
+import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 
 @NgModule({
   declarations: [UserSearchComponent, UserListComponent, UserInfoComponent],
@@ -46,6 +49,9 @@ import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
     RouterLink,
     NzTagModule,
     NzDescriptionsModule,
+    NzFormModule,
+    NzSpaceModule,
+    NzCheckboxModule,
   ],
   exports: [UserSearchComponent, UserInfoComponent],
 })
