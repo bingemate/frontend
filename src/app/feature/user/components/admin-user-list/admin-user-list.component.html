@@ -37,6 +37,7 @@
         (nzPageIndexChange)="onPageIndexChange($event)">
         <thead>
           <tr>
+            <th>Identifiant</th>
             <th>Pseudo</th>
             <th>Prénom</th>
             <th>Nom</th>
@@ -50,6 +51,7 @@
             *ngFor="let user of userTable.data"
             style="cursor: pointer"
             [routerLink]="[userProfilViewLinks, user.id]">
+            <td>{{ user.id }}</td>
             <td>{{ user.username }}</td>
             <td>{{ user.firstname }}</td>
             <td>{{ user.lastname }}</td>
