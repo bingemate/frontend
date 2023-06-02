@@ -39,6 +39,12 @@
         </nz-descriptions-item>
       </nz-descriptions>
     </nz-card>
+    <button
+      nz-button
+      nzShape="round"
+      [routerLink]="['/social-network/chat', userID]">
+      Envoyer un message
+    </button>
   </nz-tab>
   <nz-tab nzTitle="Commentaires" (nzClick)="onRefreshUserComments()">
     <ng-template nz-tab>

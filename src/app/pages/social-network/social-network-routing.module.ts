@@ -55,6 +55,11 @@ const routes: Routes = [
     data: { title: socialNetworkLinks.chat.name },
   },
   {
+    path: socialNetworkLinks.chat.path + '/:id',
+    component: MessagingComponent,
+    data: { title: socialNetworkLinks.chat.name },
+  },
+  {
     path: socialNetworkLinks.relations.path,
     component: SocialNetworkHomeComponent,
     data: { title: socialNetworkLinks.relations.name },

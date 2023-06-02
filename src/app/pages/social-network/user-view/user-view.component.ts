@@ -13,6 +13,7 @@ import { RatingService } from '../../../feature/rating/rating.service';
 import { UserService } from '../../../feature/user/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { userProfilViewLinks } from '../social-network-routing.module';
+import { navigationRoot } from '../../../app-routing.module';
 
 @Component({
   selector: 'app-user-view',
@@ -94,4 +95,6 @@ export class UserViewComponent {
       })
       .then();
   }
+
+  protected readonly navigationRoot = navigationRoot;
 }

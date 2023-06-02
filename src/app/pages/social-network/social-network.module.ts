@@ -28,6 +28,7 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
 import { CommentModule } from '../../feature/comment/comment.module';
 import { RatingModule } from '../../feature/rating/rating.module';
 import { MessagingComponent } from './messaging/messaging.component';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 
 @NgModule({
   declarations: [
@@ -63,6 +64,7 @@ import { MessagingComponent } from './messaging/messaging.component';
     NzTagModule,
     CommentModule,
     RatingModule,
+    NzToolTipModule,
   ],
 })
 export class SocialNetworkModule {}

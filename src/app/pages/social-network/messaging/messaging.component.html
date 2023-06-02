@@ -1,0 +1,56 @@
+<div nz-row class="container">
+  <div nz-col nzSpan="8">
+    <div class="user-list">
+      <h2>Utilisateurs</h2>
+      <ul>
+        <li *ngFor="let user of userList">
+          {{ user }}
+        </li>
+      </ul>
+    </div>
+  </div>
+  <nz-divider nzType="vertical" class="divider-chat"></nz-divider>
+  <div nz-col nzSpan="14">
+    <div class="message-content">
+      <h2>Conversation</h2>
+      <ul class="message-list">
+        <li
+          *ngFor="let message of messageList"
+          [ngClass]="{
+            received: message.receiverId === (user$ | async)?.id,
+            sent: message.senderId === (user$ | async)?.id
+          }">
+          <div class="message-info">
+            <span class="message-sender">{{ message.senderId }}</span>
+            <span class="message-date">{{
+              message.createdAt | date : 'dd/MM/yyyy HH:mm'
+            }}</span>
+          </div>
+          <div class="message-body">
+            {{ message.text }}
+          </div>
+        </li>
+      </ul>
+      <div class="message-input">
+        <nz-input-group [nzAddOnAfter]="suffixButton" nzSearch nzSize="large">
+          <input
+            nz-input
+            [disabled]="!activeUser"
+            [(ngModel)]="newMessage"
+            placeholder="Saisissez votre message" />
+        </nz-input-group>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-template #suffixButton>
+  <button
+    nz-button
+    nzType="primary"
+    nzSize="large"
+    nzSearch
+    [disabled]="!activeUser"
+    (click)="sendMessage()">
+    Envoyer
+  </button>
+</ng-template>
