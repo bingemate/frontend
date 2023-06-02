@@ -108,7 +108,7 @@ export class MovieInfoComponent implements OnInit, OnChanges {
           mediaType: WatchListType.MOVIE,
         })
         .subscribe(() => {
-          this.notificationsService.info(
+          this.notificationsService.success(
             'Le film a été ajouté aux films suivis'
           );
           this.isMediaInWatchList = true;

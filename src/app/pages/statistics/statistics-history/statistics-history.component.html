@@ -11,7 +11,7 @@
           [mediaId]="item.mediaId"></app-media-info>
         <nz-progress
           [nzPercent]="
-            (item.stoppedAt > 0.95 ? 1 : item.stoppedAt) * 100
+            ((item.stoppedAt > 0.95 ? 1 : item.stoppedAt) * 100).toFixed(2)
           "></nz-progress>
       </nz-list-item-meta-description>
     </nz-list-item-meta>
