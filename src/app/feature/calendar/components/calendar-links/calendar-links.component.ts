@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Select } from '@ngxs/store';
 import { AuthState } from '../../../../core/auth/store/auth.state';
 import { Observable } from 'rxjs';
-import { UserModel } from '../../../../shared/models/user.models';
+import { UserResponse } from '../../../../shared/models/user.models';
 import { API_RESOURCE_URI } from '../../../../shared/api-resource-uri/api-resources-uri';
 
 @Component({
@@ -11,8 +11,8 @@ import { API_RESOURCE_URI } from '../../../../shared/api-resource-uri/api-resour
   styleUrls: ['./calendar-links.component.less'],
 })
 export class CalendarLinksComponent {
-  @Select(AuthState.user) user$!: Observable<UserModel>;
-  user: UserModel | null = null;
+  @Select(AuthState.user) user$!: Observable<UserResponse>;
+  user: UserResponse | null = null;
 
   calendarLinks = {
     tvShows: API_RESOURCE_URI.MEDIA_INFO + '/calendar/tvshows/ical/',

@@ -1,11 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RatingListComponent } from './components/rating-list/rating-list.component';
-import {
-  CdkFixedSizeVirtualScroll,
-  CdkVirtualForOf,
-  CdkVirtualScrollViewport,
-} from '@angular/cdk/scrolling';
+import { CdkFixedSizeVirtualScroll, CdkVirtualForOf, CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzCommentModule } from 'ng-zorro-antd/comment';
 import { NzIconModule } from 'ng-zorro-antd/icon';

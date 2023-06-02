@@ -1,18 +1,10 @@
-export interface UserModel {
-  id: string;
-  username: string;
-  firstname: string;
-  lastname: string;
-  email: string;
-  roles: string[];
-}
-
 export interface UserAPIResponse {
   id: string;
   username: string;
   firstname: string;
   lastname: string;
   email: string;
+  createdTimestamp: number;
   roles: string[];
 }
 
@@ -36,7 +28,7 @@ export interface UserSearchStateModel {
 }
 
 export function isMatchingRoles(
-  user: UserModel | null,
+  user: UserResponse | null,
   requiredRoles: string[]
 ): boolean {
   return (
@@ -45,7 +37,7 @@ export function isMatchingRoles(
   );
 }
 
-export function toUserModel(response: UserAPIResponse): UserModel {
+export function toUserResponse(response: UserAPIResponse): UserResponse {
   return {
     id: response.id,
     username: response.username,
@@ -53,10 +45,11 @@ export function toUserModel(response: UserAPIResponse): UserModel {
     lastname: response.lastname,
     email: response.email,
     roles: response.roles,
+    createdTimestamp: response.createdTimestamp,
   };
 }
 
-export function toUserAPIResponse(model: UserModel): UserAPIResponse {
+export function toUserAPIResponse(model: UserResponse): UserAPIResponse {
   return {
     id: model.id,
     username: model.username,
@@ -64,13 +57,14 @@ export function toUserAPIResponse(model: UserModel): UserAPIResponse {
     lastname: model.lastname,
     email: model.email,
     roles: model.roles,
+    createdTimestamp: model.createdTimestamp,
   };
 }
 
-export function toUsersModel(response: UserAPIResponse[]): UserModel[] {
-  return response.map(toUserModel);
+export function toUsersModel(response: UserAPIResponse[]): UserResponse[] {
+  return response.map(toUserResponse);
 }
 
-export function toUsersAPIResponse(model: UserModel[]): UserAPIResponse[] {
+export function toUsersAPIResponse(model: UserResponse[]): UserAPIResponse[] {
   return model.map(toUserAPIResponse);
 }

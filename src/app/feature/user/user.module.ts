@@ -20,9 +20,12 @@ import {
 } from '@angular/cdk/scrolling';
 import { NzListModule } from 'ng-zorro-antd/list';
 import { RouterLink } from '@angular/router';
+import { UserInfoComponent } from './components/user-info/user-info.component';
+import { NzTagModule } from 'ng-zorro-antd/tag';
+import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
 
 @NgModule({
-  declarations: [UserSearchComponent, UserListComponent],
+  declarations: [UserSearchComponent, UserListComponent, UserInfoComponent],
   imports: [
     CommonModule,
     NzButtonModule,
@@ -41,7 +44,9 @@ import { RouterLink } from '@angular/router';
     CdkVirtualScrollViewport,
     CdkFixedSizeVirtualScroll,
     RouterLink,
+    NzTagModule,
+    NzDescriptionsModule,
   ],
-  exports: [UserSearchComponent],
+  exports: [UserSearchComponent, UserInfoComponent],
 })
 export class UserModule {}

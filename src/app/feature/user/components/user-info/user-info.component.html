@@ -1,0 +1,39 @@
+<nz-card>
+  <nz-descriptions nzBordered>
+    <nz-descriptions-item nzTitle="Pseudo" [nzSpan]="3">
+      {{ user?.username }}
+    </nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Nom" [nzSpan]="2">
+      {{ user?.lastname }}
+    </nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Prénom" [nzSpan]="2">
+      {{ user?.firstname }}
+    </nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Email" [nzSpan]="3">
+      {{ user?.email }}
+    </nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Inscris depuis le" [nzSpan]="3">
+      {{ user?.createdTimestamp | date : 'dd/MM/yyyy' }}
+    </nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Status" [nzSpan]="3">
+      <nz-tag
+        nzChecked
+        nzColor="blue"
+        *ngIf="user?.roles?.includes('bingemate-user')"
+        >Actif
+      </nz-tag>
+      <nz-tag
+        nzChecked
+        nzColor="green"
+        *ngIf="user?.roles?.includes('bingemate-subscribed')"
+        >Abonné(e)
+      </nz-tag>
+      <nz-tag
+        nzChecked
+        nzColor="red"
+        *ngIf="user?.roles?.includes('bingemate-admin')"
+        >Administrateur
+      </nz-tag>
+    </nz-descriptions-item>
+  </nz-descriptions>
+</nz-card>

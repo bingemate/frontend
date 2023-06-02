@@ -1,23 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MovieResponse } from '../../../shared/models/media.models';
 import { MediaInfoService } from '../../../feature/media-info/media-info.service';
 import { MediaDiscoverService } from '../../../feature/media-info/media-discover.service';
 import { CommentService } from '../../../feature/comment/comment.service';
-import {
-  CommentResults,
-  emptyCommentResults,
-} from '../../../shared/models/comment.models';
+import { CommentResults, emptyCommentResults } from '../../../shared/models/comment.models';
 import { Select } from '@ngxs/store';
 import { AuthState } from '../../../core/auth/store/auth.state';
 import { Observable } from 'rxjs';
-import { UserModel } from '../../../shared/models/user.models';
-import {
-  emptyRatingResults,
-  RatingResponse,
-  RatingResults,
-} from '../../../shared/models/rating.models';
+import { emptyRatingResults, RatingResponse, RatingResults } from '../../../shared/models/rating.models';
 import { RatingService } from '../../../feature/rating/rating.service';
+import { UserResponse } from '../../../shared/models/user.models';
 
 @Component({
   selector: 'app-movie-view',
@@ -26,8 +19,8 @@ import { RatingService } from '../../../feature/rating/rating.service';
 })
 export class MovieViewComponent {
   @Select(AuthState.user)
-  user$!: Observable<UserModel>;
-  user: UserModel | null = null;
+  user$!: Observable<UserResponse>;
+  user: UserResponse | null = null;
 
   movieId?: number;
   movie?: MovieResponse;

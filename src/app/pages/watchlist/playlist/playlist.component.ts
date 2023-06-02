@@ -1,11 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { forkJoin, map, mergeMap } from 'rxjs';
-import {
-  Playlist,
-  PlaylistItem,
-  PlaylistType,
-} from '../../../shared/models/playlist.model';
+import { Playlist, PlaylistItem, PlaylistType } from '../../../shared/models/playlist.model';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ActivatedRoute } from '@angular/router';
 import { PlaylistsService } from '../../../feature/playlist/playlists.service';

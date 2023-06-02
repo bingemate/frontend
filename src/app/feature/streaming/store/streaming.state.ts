@@ -3,7 +3,6 @@ import { StreamingStateModel } from '../../../shared/models/streaming.model';
 import { Injectable, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { StreamingActions } from './streaming.actions';
-import { ThemeStateModel } from '../../../shared/models/theme.models';
 
 @State<StreamingStateModel>({
   name: 'streaming',
