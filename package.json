@@ -1,6 +1,6 @@
 {
   "name": "binge-mate",
-  "version": "0.18.0",
+  "version": "0.18.3",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --configuration local",
