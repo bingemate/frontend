@@ -35,6 +35,88 @@
         >Administrateur
       </nz-tag>
     </nz-descriptions-item>
+    <nz-descriptions-item *ngIf="user?.id !== authUser?.id" nzTitle="Amitié">
+      <nz-space nzDirection="horizontal">
+        <ng-container *ngIf="relationShip !== null">
+          <span *nzSpaceItem>
+            {{ mapStateToLabel(relationShip.state) }}
+          </span>
+        </ng-container>
+        <ng-container *ngIf="relationShip === null">
+          <button
+            *nzSpaceItem
+            nz-button
+            nzType="primary"
+            (click)="sendFriendRequest()">
+            Ajouter
+          </button>
+        </ng-container>
+        <ng-container
+          *ngIf="
+            relationShip?.state === FriendState.REQUESTED &&
+            !relationShip?.requester
+          ">
+          <button
+            *nzSpaceItem
+            nz-button
+            nzType="primary"
+            (click)="acceptFriend()">
+            Accepter
+          </button>
+          <button
+            *nzSpaceItem
+            nz-button
+            nzType="default"
+            (click)="rejectFriend()">
+            Refuser
+          </button>
+        </ng-container>
+        <ng-container
+          *ngIf="
+            relationShip?.state === FriendState.REQUESTED &&
+            relationShip?.requester
+          ">
+          <button
+            *nzSpaceItem
+            nz-button
+            nzType="default"
+            (click)="deleteFriend()">
+            Annuler
+          </button>
+        </ng-container>
+        <ng-container *ngIf="relationShip?.state === FriendState.ACCEPTED">
+          <button
+            *nzSpaceItem
+            nz-button
+            nzType="default"
+            (click)="deleteFriend()">
+            Supprimer
+          </button>
+        </ng-container>
+        <ng-container
+          *ngIf="
+            relationShip?.state === FriendState.REJECTED &&
+            !relationShip?.requester
+          ">
+          <button
+            *nzSpaceItem
+            nz-button
+            nzType="primary"
+            (click)="acceptFriend()">
+            Accepter
+          </button>
+        </ng-container>
+        <ng-container *ngIf="relationShip?.state === FriendState.REJECTED">
+          <button
+            *nzSpaceItem
+            nz-button
+            nzType="default"
+            (click)="deleteFriend()">
+            Supprimer
+          </button>
+        </ng-container>
+      </nz-space>
+    </nz-descriptions-item>
   </nz-descriptions>
   <nz-descriptions
     nz-form

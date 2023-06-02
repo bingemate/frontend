@@ -1,6 +1,6 @@
 <nz-tabset nzSize="large" nzDirection="vertical">
   <nz-tab nzTitle="Informations">
-    <app-user-info [user]="user"></app-user-info>
+    <app-user-info *ngIf="user !== null" [user]="user"></app-user-info>
   </nz-tab>
   <nz-tab nzTitle="Commentaires" (nzClick)="onRefreshUserComments()">
     <ng-template nz-tab>
