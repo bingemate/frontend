@@ -33,7 +33,7 @@
       </nz-list-item-meta-title>
     </nz-list-item-meta>
     <ul nz-list-item-actions>
-      <nz-list-item-action
+      <nz-list-item-action *ngIf="playlist?.userId === user?.id || isAdmin"
         ><a (click)="removeItem(item.playlistItem)"
           >Supprimer</a
         ></nz-list-item-action

@@ -1,12 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngxs/store';
-import { forkJoin, map, mergeMap } from 'rxjs';
-import { Playlist, PlaylistItem, PlaylistType } from '../../../shared/models/playlist.model';
+import { Select, Store } from '@ngxs/store';
+import { forkJoin, map, mergeMap, Observable } from 'rxjs';
+import {
+  Playlist,
+  PlaylistItem,
+  PlaylistType,
+} from '../../../shared/models/playlist.model';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ActivatedRoute } from '@angular/router';
 import { PlaylistsService } from '../../../feature/playlist/playlists.service';
 import { MediaInfoService } from '../../../feature/media-info/media-info.service';
 import { StreamingActions } from '../../../feature/streaming/store/streaming.actions';
+import { AuthState } from '../../../core/auth/store/auth.state';
+import { UserResponse } from '../../../shared/models/user.models';
 
 @Component({
   selector: 'app-playlist',
@@ -15,6 +21,14 @@ import { StreamingActions } from '../../../feature/streaming/store/streaming.act
 })
 export class PlaylistComponent implements OnInit {
   playlist?: Playlist;
+
+  @Select(AuthState.user)
+  user$!: Observable<UserResponse>;
+  user: UserResponse | undefined;
+
+  @Select(AuthState.isAdmin)
+  isAdmin$!: Observable<boolean>;
+  isAdmin: boolean | undefined;
 
   playlistItems: {
     playlistItem: PlaylistItem;
@@ -29,7 +43,10 @@ export class PlaylistComponent implements OnInit {
     private store: Store,
     private playlistsService: PlaylistsService,
     private mediaService: MediaInfoService
-  ) {}
+  ) {
+    this.user$.subscribe(user => (this.user = user));
+    this.isAdmin$.subscribe(isAdmin => (this.isAdmin = isAdmin));
+  }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => this.updatePlaylist(params['id']));
