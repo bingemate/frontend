@@ -21,6 +21,26 @@ export interface UserResponse {
   roles: string[];
 }
 
+export interface UserResults {
+  results: UserResponse[];
+  total: number;
+}
+
+export interface UpdateUserRequest {
+  email: string;
+  firstname: string;
+  lastname: string;
+  username: string;
+}
+
+export interface UpdateUserPasswordRequest {
+  password: string;
+}
+
+export interface RoleRequest {
+  role: string;
+}
+
 export interface UserSearchStateModel {
   query: string;
   users: UserResponse[];
