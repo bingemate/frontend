@@ -26,9 +26,17 @@ import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
+import { AdminUserListComponent } from './components/admin-user-list/admin-user-list.component';
+import { NzTabsModule } from 'ng-zorro-antd/tabs';
+import { NzTableModule } from 'ng-zorro-antd/table';
 
 @NgModule({
-  declarations: [UserSearchComponent, UserListComponent, UserInfoComponent],
+  declarations: [
+    UserSearchComponent,
+    UserListComponent,
+    UserInfoComponent,
+    AdminUserListComponent,
+  ],
   imports: [
     CommonModule,
     NzButtonModule,
@@ -52,7 +60,9 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
     NzFormModule,
     NzSpaceModule,
     NzCheckboxModule,
+    NzTabsModule,
+    NzTableModule,
   ],
-  exports: [UserSearchComponent, UserInfoComponent],
+  exports: [UserSearchComponent, UserInfoComponent, AdminUserListComponent],
 })
 export class UserModule {}
