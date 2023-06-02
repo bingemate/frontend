@@ -1,126 +1,129 @@
-<nz-tabset>
-  <nz-tab [nzTitle]="serieTemplate">
-    <ng-template #serieTemplate>Séries</ng-template>
+<nz-tabset nzSize="large">
+  <nz-tab nzTitle="Séries">
     <nz-collapse>
       <nz-collapse-panel
         nzActive="true"
         *ngFor="let status of statusNames"
         [nzHeader]="statusMap[status]">
-        <nz-list nzItemLayout="vertical" [nzLoading]="false">
-          <div *ngFor="let item of showWatchlist">
+        <nz-list nzItemLayout="vertical" [nzLoading]="false" nzBordered>
+          <ng-container *ngFor="let item of showWatchlist">
             <nz-list-item *ngIf="item.watchlist.status === status">
               <nz-list-item-meta>
                 <nz-list-item-meta-title>
-                  <nz-space>
-                    <a
-                      [routerLink]="[
-                        '/medias/movie-view',
-                        item.watchlist.mediaId
-                      ]">
+                  <a [routerLink]="[tvShowViewPath, item.watchlist.mediaId]">
+                    <nz-space nzDirection="horizontal" nzSize="large">
                       <img
+                        *nzSpaceItem
+                        nz-image
+                        nzDisablePreview
                         class="media-image"
-                        width="110"
-                        height="170"
+                        width="90"
                         alt="logo"
-                        ngSrc="{{ item.media.posterUrl }}" />
-                      <nz-space nzDirection="vertical">
-                        {{ item.watchlist.mediaId }}
-                      </nz-space>
-                    </a>
-                  </nz-space>
+                        [nzSrc]="item.media.posterUrl" />
+                      <span *nzSpaceItem>
+                        {{ item.watchlist.mediaId | tvName | async }}
+                      </span>
+                    </nz-space>
+                  </a>
                 </nz-list-item-meta-title>
               </nz-list-item-meta>
-              <span>
-                <nz-input-number
-                  nzBorderless
-                  [nzSize]="'small'"
-                  [nzMin]="0"
-                  [nzMax]="item.media.seasonsCount"
-                  [(ngModel)]="item.watchlist.viewedEpisodes"></nz-input-number>
-                /
-                {{ item.media.seasonsCount }}
-              </span>
-              <button
-                nz-button
-                nz-dropdown
-                [nzDropdownMenu]="menu"
-                [nzPlacement]="'bottomLeft'">
-                {{ statusMap[item.watchlist.status] }}
-              </button>
-              <nz-dropdown-menu #menu="nzDropdownMenu">
-                <ul nz-menu>
-                  <li
-                    nz-menu-item
-                    [nzSelected]="item.watchlist.status === status"
-                    *ngFor="let status of statusNames"
-                    (click)="changeShowStatus(item, status)">
-                    {{ statusMap[status] }}
-                  </li>
-                  <li nz-menu-item (click)="removeShowWatchlist(item)">
-                    Retirer
-                  </li>
-                </ul>
-              </nz-dropdown-menu>
+              <nz-list-item-extra>
+                <nz-space nzDirection="horizontal">
+                  <span *nzSpaceItem>
+                    <nz-input-number
+                      nzBorderless
+                      [nzSize]="'small'"
+                      [nzMin]="0"
+                      [nzMax]="item.media.seasonsCount"
+                      [(ngModel)]="
+                        item.watchlist.viewedEpisodes
+                      "></nz-input-number>
+                    /
+                    {{ item.media.seasonsCount }}
+                  </span>
+                  <button
+                    *nzSpaceItem
+                    nz-button
+                    nz-dropdown
+                    [nzDropdownMenu]="menu"
+                    [nzPlacement]="'bottomLeft'">
+                    {{ statusMap[item.watchlist.status] }}
+                  </button>
+                  <nz-dropdown-menu #menu="nzDropdownMenu">
+                    <ul nz-menu>
+                      <li
+                        nz-menu-item
+                        [nzSelected]="item.watchlist.status === status"
+                        *ngFor="let status of statusNames"
+                        (click)="changeShowStatus(item, status)">
+                        {{ statusMap[status] }}
+                      </li>
+                      <li nz-menu-item (click)="removeShowWatchlist(item)">
+                        Retirer
+                      </li>
+                    </ul>
+                  </nz-dropdown-menu>
+                </nz-space>
+              </nz-list-item-extra>
             </nz-list-item>
-          </div>
+          </ng-container>
         </nz-list>
       </nz-collapse-panel>
     </nz-collapse>
   </nz-tab>
-  <nz-tab [nzTitle]="filmTemplate">
-    <ng-template #filmTemplate>Films</ng-template>
+  <nz-tab nzTitle="Films">
     <nz-collapse>
       <nz-collapse-panel
         nzActive="true"
         *ngFor="let status of statusNames"
         [nzHeader]="statusMap[status]">
-        <nz-list nzItemLayout="vertical" [nzLoading]="false">
-          <div *ngFor="let item of movieWatchlist">
+        <nz-list nzItemLayout="vertical" [nzLoading]="false" nzBordered>
+          <ng-container *ngFor="let item of movieWatchlist">
             <nz-list-item *ngIf="item.watchlist.status === status">
               <nz-list-item-meta>
                 <nz-list-item-meta-title>
-                  <nz-space>
-                    <a
-                      [routerLink]="[
-                        '/medias/movie-view',
-                        item.watchlist.mediaId
-                      ]">
+                  <a [routerLink]="[movieViewPath, item.watchlist.mediaId]">
+                    <nz-space nzDirection="horizontal" nzSize="large">
                       <img
+                        *nzSpaceItem
+                        nz-image
+                        nzDisablePreview
                         class="media-image"
+                        width="90"
                         alt="logo"
-                        width="110"
-                        height="170"
-                        ngSrc="{{ item.media.posterUrl }}" />
-                      <nz-space nzDirection="vertical">
-                        {{ item.watchlist.mediaId }}
-                      </nz-space>
-                    </a>
-                  </nz-space>
+                        [nzSrc]="item.media.posterUrl" />
+                      <span *nzSpaceItem>
+                        {{ item.watchlist.mediaId | movieName | async }}
+                      </span>
+                    </nz-space>
+                  </a>
                 </nz-list-item-meta-title>
               </nz-list-item-meta>
-              <button
-                nz-button
-                nz-dropdown
-                [nzDropdownMenu]="menu"
-                [nzPlacement]="'bottomLeft'">
-                {{ statusMap[item.watchlist.status] }}
-              </button>
-              <nz-dropdown-menu #menu="nzDropdownMenu">
-                <ul nz-menu>
-                  <li
-                    nz-menu-item
-                    [nzSelected]="item.watchlist.status === status"
-                    *ngFor="let status of statusNames"
-                    (click)="changeMovieStatus(item, status)">
-                    {{ statusMap[status] }}
-                  </li>
-                  <li nz-menu-item (click)="removeMovieWatchlist(item)">
-                    Retirer
-                  </li>
-                </ul>
-              </nz-dropdown-menu>
+              <nz-list-item-extra>
+                <button
+                  nz-button
+                  nz-dropdown
+                  [nzDropdownMenu]="menu"
+                  [nzPlacement]="'bottomLeft'">
+                  {{ statusMap[item.watchlist.status] }}
+                </button>
+                <nz-dropdown-menu #menu="nzDropdownMenu">
+                  <ul nz-menu>
+                    <li
+                      nz-menu-item
+                      [nzSelected]="item.watchlist.status === status"
+                      *ngFor="let status of statusNames"
+                      (click)="changeMovieStatus(item, status)">
+                      {{ statusMap[status] }}
+                    </li>
+                    <li nz-menu-item (click)="removeMovieWatchlist(item)">
+                      Retirer
+                    </li>
+                  </ul>
+                </nz-dropdown-menu>
+              </nz-list-item-extra>
             </nz-list-item>
-          </div>
+          </ng-container>
         </nz-list>
       </nz-collapse-panel>
     </nz-collapse>
