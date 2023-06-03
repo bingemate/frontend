@@ -35,7 +35,7 @@ export class WatchlistService {
   }
 
   getWatchlistItem(mediaId: number) {
-    return this.http.get<WatchlistResponse>(
+    return this.http.get<WatchlistItem>(
       `${environment.apiUrl}/watch-service/watch-list/${mediaId}/item`
     );
   }
