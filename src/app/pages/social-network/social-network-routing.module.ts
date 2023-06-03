@@ -5,6 +5,7 @@ import { SocialNetworkHomeComponent } from './social-network-home/social-network
 import { UserSearchComponent } from './user-search/user-search.component';
 import { UserViewComponent } from './user-view/user-view.component';
 import { FriendshipComponent } from './friendship/friendship.component';
+import { MessagingComponent } from './messaging/messaging.component';
 
 export const socialNetworkLinks: NavigationLinks<
   'search_user' | 'media' | 'user_profile' | 'chat' | 'relations'

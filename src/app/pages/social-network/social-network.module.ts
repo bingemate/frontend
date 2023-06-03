@@ -31,6 +31,7 @@ import { FriendshipComponent } from './friendship/friendship.component';
 import { FriendshipModule } from '../../feature/friendship/friendship.module';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzListModule } from 'ng-zorro-antd/list';
+import { MessagingComponent } from './messaging/messaging.component';
 
 @NgModule({
   declarations: [

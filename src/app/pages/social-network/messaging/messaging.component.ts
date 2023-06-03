@@ -2,12 +2,12 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { AuthState } from '../../../core/auth/store/auth.state';
 import { Observable } from 'rxjs';
-import { UserModel } from '../../../shared/models/user.models';
 import { Message } from '../../../shared/models/messaging.model';
 import { io, Socket } from 'socket.io-client';
 import { environment } from '../../../../environments/environment';
 import { KeycloakService } from 'keycloak-angular';
 import { ActivatedRoute } from '@angular/router';
+import { UserResponse } from '../../../shared/models/user.models';
 
 @Component({
   selector: 'app-messaging',
@@ -16,7 +16,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class MessagingComponent implements OnInit, OnDestroy {
   @Select(AuthState.user)
-  user$!: Observable<UserModel>;
+  user$!: Observable<UserResponse>;
   activeUser?: string;
   newMessage = '';
   userList = new Set<string>();
