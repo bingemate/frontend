@@ -35,6 +35,7 @@ import { MessagingComponent } from './messaging/messaging.component';
 import { SharedModule } from '../../shared/shared.module';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzCommentModule } from 'ng-zorro-antd/comment';
+import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 
 @NgModule({
   declarations: [
@@ -77,6 +78,7 @@ import { NzCommentModule } from 'ng-zorro-antd/comment';
     SharedModule,
     NzAvatarModule,
     NzCommentModule,
+    NzPopconfirmModule,
   ],
 })
 export class SocialNetworkModule {}

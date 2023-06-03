@@ -1,7 +1,13 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { AuthState } from '../../../core/auth/store/auth.state';
-import { Observable } from 'rxjs';
+import { Observable, timeout } from 'rxjs';
 import { Message } from '../../../shared/models/messaging.model';
 import { io, Socket } from 'socket.io-client';
 import { environment } from '../../../../environments/environment';
@@ -20,6 +26,8 @@ export class MessagingComponent implements OnInit, OnDestroy {
   @Select(AuthState.user)
   user$!: Observable<UserResponse>;
   authUserId = '';
+
+  @ViewChild('messages') messages!: ElementRef;
 
   activeFriendId?: string;
   newMessage = '';
@@ -68,16 +76,18 @@ export class MessagingComponent implements OnInit, OnDestroy {
     });
     this.socket.on('messages', message => {
       this.messageList = message;
+      this.scrollToBottom();
       this.updateUserList();
     });
     this.socket.on('newMessage', message => {
       this.messageList.push(message);
+      this.scrollToBottom();
       this.updateUserList();
     });
-    this.socket.on(
-      'deletedMessage',
-      message => (this.messageList = this.messageList.filter(message.messageId))
-    );
+    this.socket.on('deletedMessage', message => {
+      this.messageList = this.messageList.filter(message.messageId);
+      this.scrollToBottom();
+    });
     this.socket.emit('getMessages');
   }
 
@@ -95,20 +105,38 @@ export class MessagingComponent implements OnInit, OnDestroy {
     }
   }
 
+  deleteMessage(messageId: string) {
+    this.socket?.emit('deleteMessage', {
+      messageId,
+    });
+    this.messageList = this.messageList.filter(
+      message => message.id !== messageId
+    );
+  }
+
   private updateUserList() {
-    const userId = this.store.selectSnapshot(AuthState.user)?.id;
     this.messageList.forEach(message =>
       this.userList.add(
-        message.senderId === userId ? message.receiverId : message.senderId
+        message.senderId === this.authUserId
+          ? message.receiverId
+          : message.senderId
       )
     );
   }
 
   selectFriend(userId: string) {
     this.activeFriendId = userId;
+    this.scrollToBottom();
   }
 
   isSelected(userId: string) {
     return this.activeFriendId === userId;
+  }
+
+  scrollToBottom() {
+    setTimeout(() => {
+      this.messages.nativeElement.scrollTop =
+        this.messages.nativeElement.scrollHeight;
+    }, 300);
   }
 }

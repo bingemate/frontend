@@ -8,15 +8,11 @@ import { FriendshipComponent } from './friendship/friendship.component';
 import { MessagingComponent } from './messaging/messaging.component';
 
 export const socialNetworkLinks: NavigationLinks<
-  'search_user' | 'media' | 'user_profile' | 'chat' | 'relations'
+  'search_user' | 'user_profile' | 'chat' | 'relations'
 > = {
   search_user: {
     path: 'search-user',
     name: 'Rechercher un utilisateur',
-  },
-  media: {
-    path: 'media',
-    name: 'Média',
   },
   user_profile: {
     path: 'user-profile',
@@ -39,11 +35,6 @@ const routes: Routes = [
     path: socialNetworkLinks.search_user.path,
     component: UserSearchComponent,
     data: { title: socialNetworkLinks.search_user.name },
-  },
-  {
-    path: socialNetworkLinks.media.path,
-    component: SocialNetworkHomeComponent,
-    data: { title: socialNetworkLinks.media.name },
   },
   {
     path: socialNetworkLinks.user_profile.path + '/:id',

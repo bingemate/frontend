@@ -21,34 +21,13 @@
   <nz-col [nzMd]="{ span: 16 }" [nzSm]="{ span: 24 }">
     <nz-space nzDirection="vertical" nzSize="large" style="width: 100%">
       <h2 *nzSpaceItem>Conversation</h2>
-      <nz-row *nzSpaceItem class="message-list" [nzGutter]="[16, 16]">
+      <nz-row *nzSpaceItem class="message-list" [nzGutter]="[16, 16]" #messages>
         <ng-container *ngFor="let message of messageList">
           <ng-container
             *ngIf="
               activeFriendId === message.receiverId ||
               activeFriendId === message.senderId
             ">
-            <!--<li
-                *ngIf="
-                  activeFriendId === message.receiverId ||
-                  activeFriendId === message.senderId
-                "
-                [ngClass]="{
-                  received: message.receiverId === (user$ | async)?.id,
-                  sent: message.senderId === (user$ | async)?.id
-                }">
-                <div class="message-info">
-                  <span class="message-sender">{{
-                    message.senderId | username | async
-                  }}</span>
-                  <span class="message-date">{{
-                    message.createdAt | date : 'dd/MM/yyyy HH:mm'
-                  }}</span>
-                </div>
-                <div class="message-body">
-                  {{ message.text }}
-                </div>
-              </li>-->
             <nz-col
               [nzLg]="{ span: 4 }"
               [nzMd]="{ span: 0 }"
@@ -74,6 +53,16 @@
                 <nz-comment-content>
                   <p>{{ message.text }}</p>
                 </nz-comment-content>
+                <nz-comment-action *ngIf="message.senderId === authUserId">
+                  <i
+                    nz-icon
+                    nzType="delete"
+                    nzTheme="fill"
+                    nzOkDanger
+                    nz-popconfirm
+                    nzPopconfirmTitle="Êtes-vous sûr de vouloir supprimer ce message ?"
+                    (nzOnConfirm)="deleteMessage(message.id)"></i>
+                </nz-comment-action>
               </nz-comment>
             </nz-col>
             <nz-col
