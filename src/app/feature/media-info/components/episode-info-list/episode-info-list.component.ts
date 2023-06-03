@@ -10,6 +10,7 @@ import { Playlist } from '../../../../shared/models/playlist.model';
 import { PlaylistActions } from '../../../playlist/store/playlist.actions';
 import { PlaylistsService } from '../../../playlist/playlists.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
+import { AuthState } from '../../../../core/auth/store/auth.state';
 
 @Component({
   selector: 'app-episode-info-list',
@@ -17,6 +18,9 @@ import { NotificationsService } from '../../../../core/notifications/notificatio
   styleUrls: ['./episode-info-list.component.less'],
 })
 export class EpisodeInfoListComponent implements OnInit {
+  @Select(AuthState.isSubscribed)
+  isSubscribed$!: Observable<boolean>;
+
   readonly streamPath = `/${navigationRoot.streaming.path}/${streamingLinks.stream.path}/`;
 
   @Select(PlaylistState.episodePlaylists)

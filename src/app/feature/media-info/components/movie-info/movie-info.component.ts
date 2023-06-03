@@ -21,6 +21,7 @@ import {
   WatchListStatus,
   WatchListType,
 } from '../../../../shared/models/watchlist.models';
+import { AuthState } from '../../../../core/auth/store/auth.state';
 
 @Component({
   selector: 'app-movie-info',
@@ -28,6 +29,9 @@ import {
   styleUrls: ['./movie-info.component.less'],
 })
 export class MovieInfoComponent implements OnInit, OnChanges {
+  @Select(AuthState.isSubscribed)
+  isSubscribed$!: Observable<boolean>;
+
   readonly streamPath = `/${navigationRoot.streaming.path}/${streamingLinks.stream.path}/`;
   readonly moviesByGenrePath = `/${navigationRoot.medias.path}/${mediasLinks.movies_by_genre.path}/`;
   readonly moviesByActorPath = `/${navigationRoot.medias.path}/${mediasLinks.movies_by_actor.path}/`;

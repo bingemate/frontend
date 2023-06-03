@@ -8,6 +8,9 @@ import {
 } from '../../../../shared/models/watchlist.models';
 import { WatchlistService } from '../../../watchlist/watchlist.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
+import { Select } from '@ngxs/store';
+import { AuthState } from '../../../../core/auth/store/auth.state';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-tv-info',

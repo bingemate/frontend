@@ -17,7 +17,14 @@
               <button
                 *nzSpaceItem
                 [routerLink]="streamPath + movie.id"
+                [disabled]="(isSubscribed$ | async) === false"
                 nz-button
+                nz-tooltip
+                [nzTooltipTitle]="
+                  (isSubscribed$ | async) === false
+                    ? 'Vous devez être abonné pour regarder ce film'
+                    : ''
+                "
                 nzType="primary"
                 nzShape="round">
                 <span nz-icon nzType="play-circle" nzTheme="fill"></span
