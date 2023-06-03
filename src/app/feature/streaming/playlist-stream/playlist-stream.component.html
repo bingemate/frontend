@@ -10,18 +10,21 @@
             <a (click)="seekMedia(index)">
               <nz-space>
                 <img
+                  *nzSpaceItem
                   class="media-image"
                   width="160"
                   height="90"
                   alt="logo"
                   ngSrc="{{ item.media.imageUrl }}" />
-                <nz-space nzDirection="vertical" nzSize="small">
+                <nz-space *nzSpaceItem nzDirection="vertical" nzSize="small">
                   <span *nzSpaceItem>{{ item.media.name }}</span>
-                  <span *ngIf="playlist && playlist.type === 'EPISODE'">
-                    {{ item.playlistItem.season }}x{{
-                      item.playlistItem.episode
-                    }}
-                  </span>
+                  <ng-container *ngIf="playlist && playlist.type === 'EPISODE'">
+                    <span *nzSpaceItem>
+                      {{ item.playlistItem.season }}x{{
+                        item.playlistItem.episode
+                      }}
+                    </span>
+                  </ng-container>
                 </nz-space>
               </nz-space>
             </a>

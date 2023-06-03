@@ -6,6 +6,7 @@ import { HistoryState } from '../../../feature/history/store/history.state';
 import { Observable } from 'rxjs';
 import { HistoryModel } from '../../../shared/models/history.models';
 import { HistoryActions } from '../../../feature/history/store/history.actions';
+import { AuthState } from '../../../core/auth/store/auth.state';
 
 @Component({
   selector: 'app-statistics-history',
@@ -13,6 +14,9 @@ import { HistoryActions } from '../../../feature/history/store/history.actions';
   styleUrls: ['./statistics-history.component.less'],
 })
 export class StatisticsHistoryComponent implements OnInit {
+  @Select(AuthState.isSubscribed)
+  isSubscribed$!: Observable<boolean>;
+
   mediaStreamPath = `/${navigationRoot.streaming.path}/${streamingLinks.stream.path}/`;
 
   @Select(HistoryState.history) history$!: Observable<HistoryModel[]>;

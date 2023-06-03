@@ -89,7 +89,7 @@ const routes: Routes = [
   {
     path: navigationRoot.home.path,
     loadChildren: () =>
-      import('./pages/home/home.module').then(m => m.HomeModule),
+      import('./pages/home/homepage.module').then(m => m.HomepageModule),
   },
   {
     path: navigationRoot.auth.path,

@@ -31,6 +31,9 @@ import { UserResponse } from '../../../../shared/models/user.models';
   styleUrls: ['./movie-info.component.less'],
 })
 export class MovieInfoComponent implements OnInit, OnChanges {
+  @Select(AuthState.isSubscribed)
+  isSubscribed$!: Observable<boolean>;
+
   @Select(AuthState.user)
   readonly user$!: Observable<UserResponse>;
   userId = '';

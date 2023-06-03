@@ -8,7 +8,9 @@ import {
   toHistories,
 } from '../../shared/models/history.models';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class HistoryService {
   constructor(private readonly http: HttpClient) {}
 
