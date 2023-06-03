@@ -58,5 +58,11 @@ export class AuthHomeComponent implements OnInit {
     this.mediaDiscoverService.getPopularTvShows().subscribe(tvShows => {
       this.popularTvShows = tvShows.results;
     });
+    this.mediaDiscoverService.getRecentTvShows(true).subscribe(tvShows => {
+      this.recentTvShows = tvShows;
+    });
+    this.mediaDiscoverService.getRecentMovies(true).subscribe(movies => {
+      this.recentMovies = movies;
+    });
   }
 }
