@@ -1,15 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { API_RESOURCE_URI } from '../../shared/api-resource-uri/api-resources-uri';
-import {
-  RoleRequest,
-  UpdateUserPasswordRequest,
-  UpdateUserRequest,
-  UsernameResponse,
-  UserResponse,
-  UserResults,
-} from '../../shared/models/user.models';
 import {
   AddFriendRequest,
   FriendResponse,

@@ -211,12 +211,14 @@
               <span nz-icon nzType="search"></span>
               Rechercher
             </button>
-            <nz-badge *nzSpaceItem [nzCount]="6">
-              <button nz-button nzShape="circle" [routerLink]="chatLink">
-                <span nz-icon nzType="message"></span>
-              </button>
-            </nz-badge>
-            <nz-badge *nzSpaceItem [nzCount]="99" [nzOverflowCount]="15">
+            <button
+              *nzSpaceItem
+              nz-button
+              nzShape="round"
+              [routerLink]="chatLink">
+              <span nz-icon nzType="message"></span>&nbsp;Chat
+            </button>
+            <!--<nz-badge *nzSpaceItem [nzCount]="99" [nzOverflowCount]="15">
               <button
                 nz-button
                 nzShape="circle"
@@ -225,7 +227,7 @@
                 [nzDropdownMenu]="notifications">
                 <span nz-icon nzType="bell"></span>
               </button>
-            </nz-badge>
+            </nz-badge>-->
           </nz-space>
         </nz-page-header-extra>
       </nz-page-header>

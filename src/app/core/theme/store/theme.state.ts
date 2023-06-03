@@ -1,7 +1,10 @@
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { Injectable } from '@angular/core';
 import { ThemeAction } from './theme.actions';
-import { ThemeStateModel, ThemeType } from '../../../shared/models/theme.models';
+import {
+  ThemeStateModel,
+  ThemeType,
+} from '../../../shared/models/theme.models';
 import { ThemeService } from '../theme.service';
 
 @State<ThemeStateModel>({

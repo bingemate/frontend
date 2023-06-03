@@ -1,21 +1,17 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { NavigationLinks, navigationRoot } from '../../app-routing.module';
-import { SocialNetworkHomeComponent } from './social-network-home/social-network-home.component';
 import { UserSearchComponent } from './user-search/user-search.component';
 import { UserViewComponent } from './user-view/user-view.component';
 import { FriendshipComponent } from './friendship/friendship.component';
+import { MessagingComponent } from './messaging/messaging.component';
 
 export const socialNetworkLinks: NavigationLinks<
-  'search_user' | 'media' | 'user_profile' | 'chat' | 'relations'
+  'search_user' | 'user_profile' | 'chat' | 'relations'
 > = {
   search_user: {
     path: 'search-user',
     name: 'Rechercher un utilisateur',
-  },
-  media: {
-    path: 'media',
-    name: 'Média',
   },
   user_profile: {
     path: 'user-profile',
@@ -40,18 +36,18 @@ const routes: Routes = [
     data: { title: socialNetworkLinks.search_user.name },
   },
   {
-    path: socialNetworkLinks.media.path,
-    component: SocialNetworkHomeComponent,
-    data: { title: socialNetworkLinks.media.name },
-  },
-  {
     path: socialNetworkLinks.user_profile.path + '/:id',
     component: UserViewComponent,
     data: { title: socialNetworkLinks.user_profile.name },
   },
   {
     path: socialNetworkLinks.chat.path,
-    component: SocialNetworkHomeComponent,
+    component: MessagingComponent,
+    data: { title: socialNetworkLinks.chat.name },
+  },
+  {
+    path: socialNetworkLinks.chat.path + '/:id',
+    component: MessagingComponent,
     data: { title: socialNetworkLinks.chat.name },
   },
   {

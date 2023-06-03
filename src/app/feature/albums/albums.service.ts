@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { AlbumAPIResponse, AlbumModel, toAlbums } from '../../shared/models/album.models';
+import {
+  AlbumAPIResponse,
+  AlbumModel,
+  toAlbums,
+} from '../../shared/models/album.models';
 import { map, Observable } from 'rxjs';
 
 @Injectable()

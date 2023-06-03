@@ -1,0 +1,100 @@
+<nz-row [nzGutter]="[16, 16]">
+  <div nz-col [nzMd]="{ span: 8 }" [nzSm]="{ span: 24 }">
+    <h2>Utilisateurs</h2>
+    <nz-list nzItemLayout="vertical" [nzLoading]="friendLoading" nzBordered>
+      <nz-list-item
+        [class]="
+          isSelected(friend.friendId) ? 'friend-item-selected' : 'friend-item'
+        "
+        *ngFor="let friend of friendList"
+        (click)="selectFriend(friend.friendId)">
+        <nz-list-item-meta
+          [nzAvatar]="avatar"
+          nzTitle="{{ friend.friendId | username | async }}">
+        </nz-list-item-meta>
+      </nz-list-item>
+      <ng-template #avatar>
+        <nz-avatar nzIcon="user"></nz-avatar>
+      </ng-template>
+    </nz-list>
+  </div>
+  <nz-col [nzMd]="{ span: 16 }" [nzSm]="{ span: 24 }">
+    <nz-space nzDirection="vertical" nzSize="large" style="width: 100%">
+      <h2 *nzSpaceItem>Conversation</h2>
+      <nz-row *nzSpaceItem class="message-list" [nzGutter]="[16, 16]" #messages>
+        <ng-container *ngFor="let message of messageList">
+          <ng-container
+            *ngIf="
+              activeFriendId === message.receiverId ||
+              activeFriendId === message.senderId
+            ">
+            <nz-col
+              [nzLg]="{ span: 4 }"
+              [nzMd]="{ span: 0 }"
+              *ngIf="message.senderId === authUserId"></nz-col>
+            <nz-col [nzLg]="{ span: 20 }" [nzMd]="{ span: 24 }">
+              <nz-comment
+                [ngClass]="{
+                  received: message.receiverId === (user$ | async)?.id,
+                  sent: message.senderId === (user$ | async)?.id
+                }"
+                [nzAuthor]="author"
+                [nzDatetime]="datetime">
+                <ng-template #author>
+                  <span style="color: #fff">
+                    {{ message.senderId | username | async }}
+                  </span>
+                </ng-template>
+                <ng-template #datetime>
+                  <span style="color: #fff">
+                    {{ message.createdAt | date : 'dd/MM/yyyy à HH:mm' }}
+                  </span>
+                </ng-template>
+                <nz-comment-content>
+                  <p>{{ message.text }}</p>
+                </nz-comment-content>
+                <nz-comment-action *ngIf="message.senderId === authUserId">
+                  <i
+                    nz-icon
+                    nzType="delete"
+                    nzTheme="fill"
+                    nzOkDanger
+                    nz-popconfirm
+                    nzPopconfirmTitle="Êtes-vous sûr de vouloir supprimer ce message ?"
+                    (nzOnConfirm)="deleteMessage(message.id)"></i>
+                </nz-comment-action>
+              </nz-comment>
+            </nz-col>
+            <nz-col
+              [nzLg]="{ span: 4 }"
+              [nzMd]="{ span: 0 }"
+              *ngIf="message.receiverId === authUserId"></nz-col>
+          </ng-container>
+        </ng-container>
+      </nz-row>
+      <nz-input-group
+        *nzSpaceItem
+        [nzAddOnAfter]="suffixButton"
+        nzSearch
+        nzSize="large">
+        <input
+          nz-input
+          [disabled]="!activeFriendId"
+          [(ngModel)]="newMessage"
+          (keyup.enter)="sendMessage()"
+          placeholder="Saisissez votre message" />
+      </nz-input-group>
+    </nz-space>
+  </nz-col>
+</nz-row>
+<ng-template #suffixButton>
+  <button
+    nz-button
+    nzType="primary"
+    nzSize="large"
+    nzSearch
+    [disabled]="!activeFriendId || !newMessage || newMessage.length === 0"
+    (click)="sendMessage()">
+    Envoyer
+  </button>
+</ng-template>
