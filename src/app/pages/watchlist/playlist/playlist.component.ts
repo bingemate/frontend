@@ -20,6 +20,10 @@ import { UserResponse } from '../../../shared/models/user.models';
   styleUrls: ['./playlist.component.less'],
 })
 export class PlaylistComponent implements OnInit {
+  @Select(AuthState.isSubscribed)
+  isSubscribed$!: Observable<boolean>;
+  isSubscribed = false;
+
   playlist?: Playlist;
 
   @Select(AuthState.user)
@@ -46,6 +50,9 @@ export class PlaylistComponent implements OnInit {
   ) {
     this.user$.subscribe(user => (this.user = user));
     this.isAdmin$.subscribe(isAdmin => (this.isAdmin = isAdmin));
+    this.isSubscribed$.subscribe(
+      isSubscribed => (this.isSubscribed = isSubscribed)
+    );
   }
 
   ngOnInit(): void {
@@ -131,7 +138,7 @@ export class PlaylistComponent implements OnInit {
   }
 
   watchMedia(index: number) {
-    if (!this.playlist) {
+    if (!this.playlist || !this.isSubscribed) {
       return;
     }
     this.store.dispatch(
