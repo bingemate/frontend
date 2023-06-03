@@ -2,7 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { HistoryAPIResponse, HistoryModel, toHistories } from '../../shared/models/history.models';
+import {
+  HistoryAPIResponse,
+  HistoryModel,
+  toHistories,
+} from '../../shared/models/history.models';
 
 @Injectable()
 export class HistoryService {

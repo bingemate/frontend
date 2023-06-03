@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { MovieResponse, TvShowResponse } from '../../../shared/models/media.models';
+import {
+  MovieResponse,
+  TvShowResponse,
+} from '../../../shared/models/media.models';
 import { MediaDiscoverService } from '../../../feature/media-info/media-discover.service';
 
 @Component({

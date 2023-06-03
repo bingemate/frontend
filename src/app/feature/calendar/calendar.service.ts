@@ -1,7 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { MovieResponse, TvEpisodeResponse, TvShowResponse } from '../../shared/models/media.models';
+import {
+  MovieResponse,
+  TvEpisodeResponse,
+  TvShowResponse,
+} from '../../shared/models/media.models';
 import { API_RESOURCE_URI } from '../../shared/api-resource-uri/api-resources-uri';
 
 @Injectable({

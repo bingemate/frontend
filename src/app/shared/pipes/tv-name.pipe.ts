@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { MediaInfoService } from '../../feature/media-info/media-info.service';
-import { catchError, map, Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 @Pipe({
   name: 'tvName',
