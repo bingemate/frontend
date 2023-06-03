@@ -1,1 +1,2 @@
-Hello there !
+<app-noauth-home *ngIf="!isAuth"></app-noauth-home>
+<app-auth-home *ngIf="isAuth"></app-auth-home>
