@@ -1,4 +1,8 @@
-<nz-space nzDirection="horizontal" nzSize="large" nzAlign="center">
+<nz-space
+  *ngIf="!vertical"
+  nzDirection="horizontal"
+  nzSize="large"
+  nzAlign="center">
   <img
     *nzSpaceItem
     nzDisablePreview
@@ -7,6 +11,22 @@
     style="max-height: 100px"
     alt="" />
   <h5 nz-typography *nzSpaceItem>
+    {{ media?.name }}
+  </h5>
+</nz-space>
+<nz-space
+  *ngIf="vertical"
+  nzDirection="vertical"
+  nzSize="large"
+  nzAlign="center">
+  <img
+    *nzSpaceItem
+    nzDisablePreview
+    nz-image
+    [nzSrc]="posterUrl"
+    style="max-height: 100px"
+    alt="" />
+  <h5 *nzSpaceItem>
     {{ media?.name }}
   </h5>
 </nz-space>

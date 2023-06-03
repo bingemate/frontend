@@ -14,6 +14,9 @@ export class MediaInfoComponent implements OnInit {
   readonly emptyImage = '';
   @Input() mediaId = 0;
 
+  @Input()
+  vertical = false;
+
   media: MediaResponse | undefined;
   posterUrl = this.emptyImage;
 

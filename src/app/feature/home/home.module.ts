@@ -14,6 +14,11 @@ import { RouterLink } from '@angular/router';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { LottieComponent } from 'ngx-lottie';
 import { NzCommentModule } from 'ng-zorro-antd/comment';
+import { NzPageHeaderModule } from 'ng-zorro-antd/page-header';
+import { NzListModule } from 'ng-zorro-antd/list';
+import { MediaInfoModule } from '../media-info/media-info.module';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { NzProgressModule } from 'ng-zorro-antd/progress';
 
 @NgModule({
   declarations: [NoauthHomeComponent, AuthHomeComponent],
@@ -33,6 +38,11 @@ import { NzCommentModule } from 'ng-zorro-antd/comment';
     NzCardModule,
     LottieComponent,
     NzCommentModule,
+    NzPageHeaderModule,
+    NzListModule,
+    MediaInfoModule,
+    ScrollingModule,
+    NzProgressModule,
   ],
 })
 export class HomeModule {}
