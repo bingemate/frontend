@@ -14,6 +14,10 @@ import {
   TvShowResponse,
 } from '../../../shared/models/media.models';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
+import {
+  movieViewPath,
+  tvShowViewPath,
+} from '../../medias/medias-routing.module';
 
 @Component({
   selector: 'app-watchlist',
@@ -89,7 +93,7 @@ export class WatchlistComponent implements OnInit {
     this.watchlistService
       .updateWatchlistItem(item.watchlist)
       .subscribe(() =>
-        this.notifService.info(
+        this.notifService.success(
           'Liste de suivie modifié',
           `Suivi ${this.statusMap[status]} pour ${item.media.title}`
         )
@@ -103,7 +107,7 @@ export class WatchlistComponent implements OnInit {
     this.watchlistService
       .updateWatchlistItem(item.watchlist)
       .subscribe(() =>
-        this.notifService.info(
+        this.notifService.success(
           'Liste de suivie modifié',
           `Suivi ${this.statusMap[status]} pour ${item.media.title}`
         )
@@ -120,7 +124,7 @@ export class WatchlistComponent implements OnInit {
         this.movieWatchlist = this.movieWatchlist.filter(
           wlLtem => item.media.id !== wlLtem.media.id
         );
-        this.notifService.info(
+        this.notifService.success(
           'Liste de suivie modifié',
           `${item.media.title} a été retiré`
         );
@@ -136,10 +140,13 @@ export class WatchlistComponent implements OnInit {
         this.showWatchlist = this.showWatchlist.filter(
           wlLtem => item.media.id !== wlLtem.media.id
         );
-        this.notifService.info(
+        this.notifService.success(
           'Liste de suivie modifié',
           `${item.media.title} a été retiré`
         );
       });
   }
+
+  protected readonly movieViewPath = movieViewPath;
+  protected readonly tvShowViewPath = tvShowViewPath;
 }

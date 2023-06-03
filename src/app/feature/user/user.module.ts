@@ -20,9 +20,23 @@ import {
 } from '@angular/cdk/scrolling';
 import { NzListModule } from 'ng-zorro-antd/list';
 import { RouterLink } from '@angular/router';
+import { UserInfoComponent } from './components/user-info/user-info.component';
+import { NzTagModule } from 'ng-zorro-antd/tag';
+import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzSpaceModule } from 'ng-zorro-antd/space';
+import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
+import { AdminUserListComponent } from './components/admin-user-list/admin-user-list.component';
+import { NzTabsModule } from 'ng-zorro-antd/tabs';
+import { NzTableModule } from 'ng-zorro-antd/table';
 
 @NgModule({
-  declarations: [UserSearchComponent, UserListComponent],
+  declarations: [
+    UserSearchComponent,
+    UserListComponent,
+    UserInfoComponent,
+    AdminUserListComponent,
+  ],
   imports: [
     CommonModule,
     NzButtonModule,
@@ -41,7 +55,14 @@ import { RouterLink } from '@angular/router';
     CdkVirtualScrollViewport,
     CdkFixedSizeVirtualScroll,
     RouterLink,
+    NzTagModule,
+    NzDescriptionsModule,
+    NzFormModule,
+    NzSpaceModule,
+    NzCheckboxModule,
+    NzTabsModule,
+    NzTableModule,
   ],
-  exports: [UserSearchComponent],
+  exports: [UserSearchComponent, UserInfoComponent, AdminUserListComponent],
 })
 export class UserModule {}

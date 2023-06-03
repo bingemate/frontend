@@ -91,6 +91,17 @@
       <ul nz-menu nzMode="inline" [nzInlineCollapsed]="isNavbarCollapsed">
         <nz-divider></nz-divider>
         <li
+          *ngIf="isAdmin"
+          nz-submenu
+          nzTitle="Administration"
+          [nzIcon]="navigationRoot.admin.icon!">
+          <ul>
+            <li *ngFor="let adminLink of adminLinks" nz-menu-item nzMatchRouter>
+              <a [routerLink]="adminLink.path"> {{ adminLink.name }}</a>
+            </li>
+          </ul>
+        </li>
+        <li
           *ngIf="isAuthenticated"
           nz-submenu
           nzTitle="Abonnement"
@@ -186,7 +197,7 @@
               nz-button
               nz-tooltip="Ajouter de nouveaux médias"
               nzShape="circle"
-              [routerLink]="'/' + navigationRoot.upload.path">
+              [routerLink]="uploadLink">
               <span nz-icon nzType="upload"></span>
             </button>
             <button

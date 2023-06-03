@@ -33,6 +33,8 @@ import { CalendarModule } from '../../feature/calendar/calendar.module';
 import { NzCollapseModule } from 'ng-zorro-antd/collapse';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
+import { NzImageModule } from 'ng-zorro-antd/image';
+import { RouterLink } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -74,6 +76,8 @@ import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
     NzCollapseModule,
     NzTabsModule,
     NzInputNumberModule,
+    NzImageModule,
+    RouterLink,
   ],
 })
 export class WatchlistModule {}

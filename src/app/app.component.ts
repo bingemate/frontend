@@ -23,9 +23,9 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { AuthActions } from './core/auth/store/auth.actions';
 import { AuthState } from './core/auth/store/auth.state';
-import { isMatchingRoles, UserModel } from './shared/models/user.models';
+import { isMatchingRoles, UserResponse } from './shared/models/user.models';
 import { KeycloakService } from 'keycloak-angular';
-import { uploadLinks } from './pages/upload/upload-routing.module';
+import { adminLinks, uploadLink } from './pages/admin/admin-routing.module';
 
 @Component({
   selector: 'app-root',
@@ -73,8 +73,8 @@ export class AppComponent implements OnInit {
   isSubscribed$!: Observable<boolean>;
   isSubscribed = false;
   @Select(AuthState.user)
-  user$!: Observable<UserModel>;
-  user: UserModel | null = null;
+  user$!: Observable<UserResponse>;
+  user: UserResponse | null = null;
 
   subscribeForAuthEvents() {
     this.isAuthenticated$.subscribe(isAuthenticated => {
@@ -216,6 +216,14 @@ export class AppComponent implements OnInit {
       path: `${navigationRoot.statistics.path}/${link.path}`,
     };
   });
-  protected readonly uploadLinks = uploadLinks;
+
+  readonly adminLinks = Object.values(adminLinks).map(link => {
+    return {
+      ...link,
+      path: `${navigationRoot.admin.path}/${link.path}`,
+    };
+  });
+
+  protected readonly uploadLink = uploadLink;
   protected readonly mediaSearchPath = mediaSearchPath;
 }

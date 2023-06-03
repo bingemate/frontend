@@ -21,14 +21,16 @@ import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { NzWaveModule } from 'ng-zorro-antd/core/wave';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UserModule } from '../../feature/user/user.module';
-import { UserViewComponent } from './user-view/user-view.component';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { CommentModule } from '../../feature/comment/comment.module';
 import { RatingModule } from '../../feature/rating/rating.module';
-import { MessagingComponent } from './messaging/messaging.component';
-import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { UserViewComponent } from './user-view/user-view.component';
+import { FriendshipComponent } from './friendship/friendship.component';
+import { FriendshipModule } from '../../feature/friendship/friendship.module';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzListModule } from 'ng-zorro-antd/list';
 
 @NgModule({
   declarations: [
@@ -36,6 +38,7 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
     UserSearchComponent,
     MessagingComponent,
     UserViewComponent,
+    FriendshipComponent,
   ],
   imports: [
     CommonModule,
@@ -64,7 +67,9 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
     NzTagModule,
     CommentModule,
     RatingModule,
-    NzToolTipModule,
+    FriendshipModule,
+    NzSpinModule,
+    NzListModule,
   ],
 })
 export class SocialNetworkModule {}

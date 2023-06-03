@@ -78,7 +78,7 @@ export class TvInfoComponent implements OnChanges {
           mediaType: WatchListType.SHOW,
         })
         .subscribe(() => {
-          this.notificationsService.info(
+          this.notificationsService.success(
             'La série a été ajouté aux films suivis'
           );
           this.isMediaInWatchList = true;

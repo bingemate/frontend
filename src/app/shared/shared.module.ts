@@ -8,6 +8,8 @@ import { EmptyStringPipe } from './pipes/empty-string.pipe';
 import { MediaNamePipe } from './pipes/media-name.pipe';
 import { MediaLinkPipe } from './pipes/media-link.pipe';
 import { UsernamePipe } from './pipes/username.pipe';
+import { MovieNamePipe } from './pipes/movie-name.pipe';
+import { TvNamePipe } from './pipes/tv-name.pipe';
 
 @NgModule({
   declarations: [
@@ -17,6 +19,8 @@ import { UsernamePipe } from './pipes/username.pipe';
     MediaNamePipe,
     MediaLinkPipe,
     UsernamePipe,
+    MovieNamePipe,
+    TvNamePipe,
   ],
   imports: [CommonModule, NzCardModule, NzTabsModule],
   exports: [
@@ -26,6 +30,8 @@ import { UsernamePipe } from './pipes/username.pipe';
     MediaNamePipe,
     MediaLinkPipe,
     UsernamePipe,
+    MovieNamePipe,
+    TvNamePipe,
   ],
 })
 export class SharedModule {}

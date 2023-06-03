@@ -42,6 +42,7 @@ export class AuthState {
         email: profile.email ?? '',
         firstname: profile.firstName ?? '',
         lastname: profile.lastName ?? '',
+        createdTimestamp: profile.createdTimestamp ?? 0,
         roles: roles,
       },
     });

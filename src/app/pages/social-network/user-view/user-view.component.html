@@ -1,50 +1,6 @@
 <nz-tabset nzSize="large" nzDirection="vertical">
   <nz-tab nzTitle="Informations">
-    <nz-card>
-      <nz-descriptions nzBordered>
-        <nz-descriptions-item nzTitle="Pseudo" [nzSpan]="3">
-          {{ user?.username }}
-        </nz-descriptions-item>
-        <nz-descriptions-item nzTitle="Nom" [nzSpan]="2">
-          {{ user?.lastname }}
-        </nz-descriptions-item>
-        <nz-descriptions-item nzTitle="Prénom" [nzSpan]="2">
-          {{ user?.firstname }}
-        </nz-descriptions-item>
-        <nz-descriptions-item nzTitle="Email" [nzSpan]="3">
-          {{ user?.email }}
-        </nz-descriptions-item>
-        <nz-descriptions-item nzTitle="Inscris depuis le" [nzSpan]="3">
-          {{ user?.createdTimestamp | date : 'dd/MM/yyyy' }}
-        </nz-descriptions-item>
-        <nz-descriptions-item nzTitle="Status" [nzSpan]="3">
-          <nz-tag
-            nzChecked
-            nzColor="blue"
-            *ngIf="user?.roles?.includes('bingemate-user')"
-            >Actif
-          </nz-tag>
-          <nz-tag
-            nzChecked
-            nzColor="green"
-            *ngIf="user?.roles?.includes('bingemate-subscribed')"
-            >Abonné(e)
-          </nz-tag>
-          <nz-tag
-            nzChecked
-            nzColor="red"
-            *ngIf="user?.roles?.includes('bingemate-admin')"
-            >Administrateur
-          </nz-tag>
-        </nz-descriptions-item>
-      </nz-descriptions>
-    </nz-card>
-    <button
-      nz-button
-      nzShape="round"
-      [routerLink]="['/social-network/chat', userID]">
-      Envoyer un message
-    </button>
+    <app-user-info *ngIf="user !== null" [user]="user"></app-user-info>
   </nz-tab>
   <nz-tab nzTitle="Commentaires" (nzClick)="onRefreshUserComments()">
     <ng-template nz-tab>
@@ -65,8 +21,42 @@
       </nz-card>
     </ng-template>
   </nz-tab>
-  <nz-tab nzTitle="Listes de lecture">
-    <ng-template nz-tab> TODO </ng-template>
+  <nz-tab nzTitle="Listes de lecture" (nzClick)="onGetUserPlaylists()">
+    <ng-template nz-tab>
+      <nz-spin
+        nzSpinning
+        nzSize="large"
+        style="padding: 20px"
+        *ngIf="playlistsLoading"></nz-spin>
+      <nz-list
+        *ngIf="!playlistsLoading"
+        nzItemLayout="vertical"
+        [nzLoading]="false">
+        <nz-list-item *ngFor="let item of playlists; let index = index">
+          <nz-list-item-meta>
+            <nz-list-item-meta-title>
+              <a [routerLink]="[playlistViewLinks, item.id]">{{ item.name }}</a>
+            </nz-list-item-meta-title>
+          </nz-list-item-meta>
+        </nz-list-item>
+        <nz-list-empty
+          *ngIf="playlists.length === 0"
+          nzNoResult="Aucune playlist">
+        </nz-list-empty>
+      </nz-list>
+    </ng-template>
+  </nz-tab>
+  <nz-tab nzTitle="Amis" (nzClick)="onGetUserFriends()">
+    <ng-template nz-tab>
+      <nz-spin
+        nzSpinning
+        nzSize="large"
+        style="padding: 20px"
+        *ngIf="friendsLoading"></nz-spin>
+      <app-friend-list
+        *ngIf="!friendsLoading"
+        [friends]="friends"></app-friend-list>
+    </ng-template>
   </nz-tab>
 </nz-tabset>
 
