@@ -7,7 +7,7 @@ import { Message } from '../../../shared/models/messaging.model';
 import { io, Socket } from 'socket.io-client';
 import { environment } from '../../../../environments/environment';
 import { KeycloakService } from 'keycloak-angular';
-import { ActivatedRoute, Route } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-messaging',
