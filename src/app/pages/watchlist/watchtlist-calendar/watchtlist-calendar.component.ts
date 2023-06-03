@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CalendarService } from '../../../feature/calendar/calendar.service';
 import { MediaType, TvShowResponse } from '../../../shared/models/media.models';
-import { movieViewPath, tvShowViewPath } from '../../medias/medias-routing.module';
+import {
+  movieViewPath,
+  tvShowViewPath,
+} from '../../medias/medias-routing.module';
 import { MediaEvent } from '../../../shared/models/event.models';
 
 @Component({

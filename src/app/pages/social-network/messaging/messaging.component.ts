@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { AuthState } from '../../../core/auth/store/auth.state';
-import { Observable, timeout } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Message } from '../../../shared/models/messaging.model';
 import { io, Socket } from 'socket.io-client';
 import { environment } from '../../../../environments/environment';

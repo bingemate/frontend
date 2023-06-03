@@ -56,7 +56,7 @@ export class UploadComponent {
     }
   }
 
-  handleChange(event: any) {
+  handleChange(event: unknown) {
     console.log('UPLOAD EVENT');
     console.log(event);
   }

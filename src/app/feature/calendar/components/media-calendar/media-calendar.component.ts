@@ -1,7 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MediaEvent } from '../../../../shared/models/event.models';
 import { MediaType } from '../../../../shared/models/media.models';
-import { movieViewPath, tvShowViewPath } from '../../../../pages/medias/medias-routing.module';
+import {
+  movieViewPath,
+  tvShowViewPath,
+} from '../../../../pages/medias/medias-routing.module';
 
 @Component({
   selector: 'app-media-calendar',
