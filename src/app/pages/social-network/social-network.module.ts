@@ -32,6 +32,9 @@ import { FriendshipModule } from '../../feature/friendship/friendship.module';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzListModule } from 'ng-zorro-antd/list';
 import { MessagingComponent } from './messaging/messaging.component';
+import { SharedModule } from '../../shared/shared.module';
+import { NzAvatarModule } from 'ng-zorro-antd/avatar';
+import { NzCommentModule } from 'ng-zorro-antd/comment';
 
 @NgModule({
   declarations: [
@@ -71,6 +74,9 @@ import { MessagingComponent } from './messaging/messaging.component';
     FriendshipModule,
     NzSpinModule,
     NzListModule,
+    SharedModule,
+    NzAvatarModule,
+    NzCommentModule,
   ],
 })
 export class SocialNetworkModule {}

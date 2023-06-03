@@ -8,6 +8,8 @@ import { environment } from '../../../../environments/environment';
 import { KeycloakService } from 'keycloak-angular';
 import { ActivatedRoute } from '@angular/router';
 import { UserResponse } from '../../../shared/models/user.models';
+import { FriendshipService } from '../../../feature/friendship/friendship.service';
+import { FriendResponse } from '../../../shared/models/friendship.models';
 
 @Component({
   selector: 'app-messaging',
@@ -17,24 +19,47 @@ import { UserResponse } from '../../../shared/models/user.models';
 export class MessagingComponent implements OnInit, OnDestroy {
   @Select(AuthState.user)
   user$!: Observable<UserResponse>;
-  activeUser?: string;
+  authUserId = '';
+
+  activeFriendId?: string;
   newMessage = '';
   userList = new Set<string>();
   messageList: Message[] = [];
+
+  friendList: FriendResponse[] = [];
+  friendLoading = false;
+
   private socket?: Socket;
 
   constructor(
     private keycloak: KeycloakService,
+    private friendshipService: FriendshipService,
     private store: Store,
     private readonly currentRoute: ActivatedRoute
-  ) {}
-  async ngOnInit() {
+  ) {
+    this.user$.subscribe(user => {
+      this.authUserId = user.id;
+    });
+  }
+  ngOnInit() {
     this.currentRoute.params.subscribe(params => {
       if (params['id']) {
-        this.activeUser = params['id'];
-        this.userList.add(params['id']);
+        this.activeFriendId = params['id'];
       }
     });
+
+    this.user$.subscribe(user => {
+      this.friendLoading = true;
+      this.friendshipService.getUserFriends(user.id).subscribe(friends => {
+        this.friendLoading = false;
+        this.friendList = friends;
+      });
+    });
+
+    this.setupSocket().then();
+  }
+
+  private async setupSocket() {
     const key = await this.keycloak.getToken();
     this.socket = io(`${environment.websocketUrl}`, {
       transports: ['polling'],
@@ -55,16 +80,19 @@ export class MessagingComponent implements OnInit, OnDestroy {
     );
     this.socket.emit('getMessages');
   }
+
   ngOnDestroy() {
     this.socket?.disconnect();
   }
 
   sendMessage() {
-    this.socket?.emit('sendMessage', {
-      text: this.newMessage,
-      receiverId: this.activeUser,
-    });
-    this.newMessage = '';
+    if (this.newMessage.trim() !== '') {
+      this.socket?.emit('sendMessage', {
+        text: this.newMessage,
+        receiverId: this.activeFriendId,
+      });
+      this.newMessage = '';
+    }
   }
 
   private updateUserList() {
@@ -76,7 +104,11 @@ export class MessagingComponent implements OnInit, OnDestroy {
     );
   }
 
-  selectUser(user: string) {
-    this.activeUser = user;
+  selectFriend(userId: string) {
+    this.activeFriendId = userId;
+  }
+
+  isSelected(userId: string) {
+    return this.activeFriendId === userId;
   }
 }

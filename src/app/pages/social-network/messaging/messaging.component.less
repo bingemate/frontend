@@ -3,25 +3,19 @@
   padding: 0;
   overflow-y: auto;
   max-height: 70vh;
+  flex-grow: 1;
+  color: #fff !important;
 }
 
-.message-list li {
-  margin-bottom: 10px;
-}
-
-.message-list li .message-info {
-  font-weight: bold;
-}
-
-.message-list li.received {
-  background-color: #9b9b9b;
+.received {
+  background-color: #6f95f5;
   padding: 10px;
   border-radius: 5px;
   max-width: 50%;
   display: inline-block;
 }
 
-.message-list li.sent {
+.sent {
   background-color: #ff7118;
   padding: 10px;
   border-radius: 5px;
@@ -30,37 +24,11 @@
   float: right;
 }
 
-.message-list li .message-body {
-  margin-top: 5px;
-  word-wrap: break-word;
+.friend-item:hover {
+  background-color: rgba(255, 174, 24, 0.42);
+  cursor: pointer;
 }
 
-
-.container {
-  height: 100%;
-  display: flex;
-}
-
-.message-content {
-  padding-left: 2rem;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.message-list {
-  flex-grow: 1;
-  list-style: none;
-  padding: 0;
-  overflow-y: auto;
-  max-height: 70vh;
-}
-
-.message-input {
-  padding: 10px;
-}
-
-.divider-chat{
-  height: 100%;
+.friend-item-selected {
+  background-color: rgba(255, 174, 24, 0.42);
 }

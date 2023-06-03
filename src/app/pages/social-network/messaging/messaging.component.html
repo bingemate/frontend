@@ -1,60 +1,110 @@
-<div nz-row class="container">
-  <div nz-col nzSpan="8">
-    <div class="user-list">
-      <h2>Utilisateurs</h2>
-      <ul>
-        <li *ngFor="let user of userList">
-          <a (click)="selectUser(user)">{{ user }}</a>
-        </li>
-      </ul>
-    </div>
+<nz-row [nzGutter]="[16, 16]">
+  <div nz-col [nzMd]="{ span: 8 }" [nzSm]="{ span: 24 }">
+    <h2>Utilisateurs</h2>
+    <nz-list nzItemLayout="vertical" [nzLoading]="friendLoading" nzBordered>
+      <nz-list-item
+        [class]="
+          isSelected(friend.friendId) ? 'friend-item-selected' : 'friend-item'
+        "
+        *ngFor="let friend of friendList"
+        (click)="selectFriend(friend.friendId)">
+        <nz-list-item-meta
+          [nzAvatar]="avatar"
+          nzTitle="{{ friend.friendId | username | async }}">
+        </nz-list-item-meta>
+      </nz-list-item>
+      <ng-template #avatar>
+        <nz-avatar nzIcon="user"></nz-avatar>
+      </ng-template>
+    </nz-list>
   </div>
-  <nz-divider nzType="vertical" class="divider-chat"></nz-divider>
-  <div nz-col nzSpan="14">
-    <div class="message-content">
-      <h2>Conversation</h2>
-      <ul class="message-list">
+  <nz-col [nzMd]="{ span: 16 }" [nzSm]="{ span: 24 }">
+    <nz-space nzDirection="vertical" nzSize="large" style="width: 100%">
+      <h2 *nzSpaceItem>Conversation</h2>
+      <nz-row *nzSpaceItem class="message-list" [nzGutter]="[16, 16]">
         <ng-container *ngFor="let message of messageList">
-          <li
+          <ng-container
             *ngIf="
-              activeUser === message.receiverId ||
-              activeUser === message.senderId
-            "
-            [ngClass]="{
-              received: message.receiverId === (user$ | async)?.id,
-              sent: message.senderId === (user$ | async)?.id
-            }">
-            <div class="message-info">
-              <span class="message-sender">{{ message.senderId }}</span>
-              <span class="message-date">{{
-                message.createdAt | date : 'dd/MM/yyyy HH:mm'
-              }}</span>
-            </div>
-            <div class="message-body">
-              {{ message.text }}
-            </div>
-          </li>
+              activeFriendId === message.receiverId ||
+              activeFriendId === message.senderId
+            ">
+            <!--<li
+                *ngIf="
+                  activeFriendId === message.receiverId ||
+                  activeFriendId === message.senderId
+                "
+                [ngClass]="{
+                  received: message.receiverId === (user$ | async)?.id,
+                  sent: message.senderId === (user$ | async)?.id
+                }">
+                <div class="message-info">
+                  <span class="message-sender">{{
+                    message.senderId | username | async
+                  }}</span>
+                  <span class="message-date">{{
+                    message.createdAt | date : 'dd/MM/yyyy HH:mm'
+                  }}</span>
+                </div>
+                <div class="message-body">
+                  {{ message.text }}
+                </div>
+              </li>-->
+            <nz-col
+              [nzLg]="{ span: 4 }"
+              [nzMd]="{ span: 0 }"
+              *ngIf="message.senderId === authUserId"></nz-col>
+            <nz-col [nzLg]="{ span: 20 }" [nzMd]="{ span: 24 }">
+              <nz-comment
+                [ngClass]="{
+                  received: message.receiverId === (user$ | async)?.id,
+                  sent: message.senderId === (user$ | async)?.id
+                }"
+                [nzAuthor]="author"
+                [nzDatetime]="datetime">
+                <ng-template #author>
+                  <span style="color: #fff">
+                    {{ message.senderId | username | async }}
+                  </span>
+                </ng-template>
+                <ng-template #datetime>
+                  <span style="color: #fff">
+                    {{ message.createdAt | date : 'dd/MM/yyyy à HH:mm' }}
+                  </span>
+                </ng-template>
+                <nz-comment-content>
+                  <p>{{ message.text }}</p>
+                </nz-comment-content>
+              </nz-comment>
+            </nz-col>
+            <nz-col
+              [nzLg]="{ span: 4 }"
+              [nzMd]="{ span: 0 }"
+              *ngIf="message.receiverId === authUserId"></nz-col>
+          </ng-container>
         </ng-container>
-      </ul>
-      <div class="message-input">
-        <nz-input-group [nzAddOnAfter]="suffixButton" nzSearch nzSize="large">
-          <input
-            nz-input
-            [disabled]="!activeUser"
-            [(ngModel)]="newMessage"
-            placeholder="Saisissez votre message" />
-        </nz-input-group>
-      </div>
-    </div>
-  </div>
-</div>
+      </nz-row>
+      <nz-input-group
+        *nzSpaceItem
+        [nzAddOnAfter]="suffixButton"
+        nzSearch
+        nzSize="large">
+        <input
+          nz-input
+          [disabled]="!activeFriendId"
+          [(ngModel)]="newMessage"
+          (keyup.enter)="sendMessage()"
+          placeholder="Saisissez votre message" />
+      </nz-input-group>
+    </nz-space>
+  </nz-col>
+</nz-row>
 <ng-template #suffixButton>
   <button
     nz-button
     nzType="primary"
     nzSize="large"
     nzSearch
-    [disabled]="!activeUser || !newMessage || newMessage.length === 0"
+    [disabled]="!activeFriendId || !newMessage || newMessage.length === 0"
     (click)="sendMessage()">
     Envoyer
   </button>
