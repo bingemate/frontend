@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { loginLink } from '../../../../pages/auth/auth-routing.module';
+import { AnimationOptions } from 'ngx-lottie';
 
 interface Feature {
   title: string;
   description: string;
-  image: string;
+  animation: AnimationOptions;
 }
 
 interface Category {
@@ -19,22 +20,49 @@ interface Category {
   styleUrls: ['./noauth-home.component.less'],
 })
 export class NoauthHomeComponent {
+  readonly animation: AnimationOptions = {
+    path: 'assets/animations/watch-a-movie-with-popcorn.json',
+  };
+
   features: Feature[] = [
     {
       title: 'Regardez vos films préférés',
       description: 'Découvrez une large sélection de films de tous genres',
-      image: 'assets/media-banner.avif',
+      animation: {
+        path: 'assets/animations/movie.json',
+      },
     },
     {
       title: 'Découvrez des séries exclusives',
       description:
         'Des séries uniques que vous ne trouverez nulle part ailleurs',
-      image: 'assets/images/feature-series.jpg',
+      animation: {
+        path: 'assets/animations/tvshow.json',
+      },
     },
     {
-      title: 'Profitez sur tous vos appareils',
-      description: 'Regardez vos contenus préférés où que vous soyez',
-      image: 'assets/images/feature-devices.jpg',
+      title: 'Accédez à tout les films et séries',
+      description:
+        "Accédez à tout les films et séries, qu'ils soient disponibles sur notre plateforme ou non",
+      animation: {
+        path: 'assets/animations/mediatheque.json',
+      },
+    },
+    {
+      title: 'Vos propres listes de lecture',
+      description:
+        'Créez vos listes de lecture et suivez votre avancement dans vos séries et films préférés',
+      animation: {
+        path: 'assets/animations/streaming-platform.json',
+      },
+    },
+    {
+      title: 'Statistiques',
+      description:
+        'Suivez votre avancement dans vos séries et films préférés, regardez exactement combien de temps vous avez passer à regarder des films et séries',
+      animation: {
+        path: 'assets/animations/stats.json',
+      },
     },
   ];
 
@@ -47,7 +75,7 @@ export class NoauthHomeComponent {
     {
       title: 'Séries',
       description: 'Les meilleures séries du moment sont ici',
-      image: 'assets/tvshow_background.webp',
+      image: 'assets/tvshow_background.png',
     },
     {
       title: 'Listes de lectures & statistiques',

@@ -12,39 +12,41 @@
     </nz-space>
   </nz-col>
   <nz-divider nz-col [nzSpan]="24"></nz-divider>
-  <img
+  <ng-lottie
     nz-col
-    [nzXXl]="{ span: 4 }"
-    [nzXl]="{ span: 4 }"
+    [nzXXl]="{ span: 6 }"
+    [nzXl]="{ span: 6 }"
     [nzLg]="{ span: 6 }"
     [nzMd]="{ span: 8 }"
     [nzSm]="{ span: 12 }"
     [nzXs]="{ span: 24 }"
-    nz-image
-    nzDisablePreview
-    [nzSrc]="'assets/logo.png'"
-    alt="Bingemate Logo" />
+    [options]="animation" />
   <nz-col>
     <button nz-button nzType="primary" [routerLink]="loginLink">
       Se connecter
     </button>
   </nz-col>
 
-  <nz-carousel nz-col [nzSpan]="24" [nzAutoPlay]="true" nzEffect="scrollx">
-    <div nz-carousel-content *ngFor="let feature of features">
-      <nz-space nzSize="large">
-        <img
-          *nzSpaceItem
-          nz-image
-          [nzSrc]="feature.image"
-          [alt]="feature.title"
-          width="200px" />
-        <div *nzSpaceItem>
-          <h2>{{ feature.title }}</h2>
-          <p>{{ feature.description }}</p>
-        </div>
-      </nz-space>
-    </div>
+  <nz-carousel
+    nz-col
+    [nzSpan]="24"
+    [nzAutoPlay]="true"
+    style="height: 250px"
+    nzAutoPlaySpeed="4000">
+    <nz-comment nz-carousel-content *ngFor="let feature of features">
+      <nz-comment-content>
+        <nz-space nzSize="large" nzAlign="center" nzDirection="horizontal">
+          <ng-lottie
+            height="200px"
+            *nzSpaceItem
+            [options]="feature.animation"></ng-lottie>
+          <div *nzSpaceItem>
+            <h2>{{ feature.title }}</h2>
+            <p>{{ feature.description }}</p>
+          </div>
+        </nz-space>
+      </nz-comment-content>
+    </nz-comment>
   </nz-carousel>
 
   <nz-divider nz-col [nzSpan]="24"></nz-divider>
@@ -57,7 +59,6 @@
             <img
               nz-image
               style="padding: 10px"
-              height="200px"
               [nzSrc]="category.image"
               [alt]="category.title" />
           </ng-template>

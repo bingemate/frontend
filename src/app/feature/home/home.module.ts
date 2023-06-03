@@ -12,6 +12,8 @@ import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
 import { RouterLink } from '@angular/router';
 import { NzCardModule } from 'ng-zorro-antd/card';
+import { LottieComponent } from 'ngx-lottie';
+import { NzCommentModule } from 'ng-zorro-antd/comment';
 
 @NgModule({
   declarations: [NoauthHomeComponent, AuthHomeComponent],
@@ -29,6 +31,8 @@ import { NzCardModule } from 'ng-zorro-antd/card';
     NzTypographyModule,
     RouterLink,
     NzCardModule,
+    LottieComponent,
+    NzCommentModule,
   ],
 })
 export class HomeModule {}
