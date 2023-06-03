@@ -19,14 +19,14 @@
               nzType="default"
               nzShape="round"
               nz-dropdown
-              nzTooltipTitle="Série déjà suivi"
               nzTooltipPlacement="top"
               nz-tooltip
               [nzTooltipTrigger]="isMediaInWatchList ? 'hover' : null"
-              [nzDisabled]="isMediaInWatchList"
-              [disabled]="isMediaInWatchList"
               [nzDropdownMenu]="watchlistMenu">
-              Suivre cette série
+              <span *ngIf="!isMediaInWatchList">Suivre cette série</span>
+              <span *ngIf="isMediaInWatchList">{{
+                watchlistItem!.status | watchlistStatus
+              }}</span>
               <span nz-icon nzType="down"></span>
             </button>
           </nz-space>
@@ -119,8 +119,23 @@
 
 <nz-dropdown-menu #watchlistMenu="nzDropdownMenu">
   <ul nz-menu>
-    <li nz-menu-item *ngFor="let status of statusNames">
-      <a (click)="addToWatchlist(status)">{{ statusMap[status] }}</a>
-    </li>
+    <ng-container *ngIf="!isMediaInWatchList">
+      <li
+        nz-menu-item
+        *ngFor="let status of statusNames"
+        (click)="addToWatchlist(status)">
+        {{ status | watchlistStatus }}
+      </li>
+    </ng-container>
+    <ng-container *ngIf="isMediaInWatchList">
+      <li
+        nz-menu-item
+        *ngFor="let status of statusNames"
+        (click)="changeShowStatus(status)"
+        [nzDisabled]="status === watchlistItem?.status">
+        {{ status | watchlistStatus }}
+      </li>
+      <li nz-menu-item nzDanger (click)="removeShowWatchlist()">Retirer</li>
+    </ng-container>
   </ul>
 </nz-dropdown-menu>
