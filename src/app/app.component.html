@@ -189,7 +189,7 @@
           </span>
           {{ currentSectionName }}
         </nz-page-header-title>
-        <nz-page-header-extra>
+        <nz-page-header-extra *ngIf="isAuthenticated">
           <nz-space nzAlign="baseline" nzSize="large">
             <button
               [hidden]="!isAdmin"
