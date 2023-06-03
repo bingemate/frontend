@@ -4,11 +4,11 @@ import { AuthState } from '../../core/auth/store/auth.state';
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss'],
+  selector: 'app-homepage',
+  templateUrl: './home-page.component.html',
+  styleUrls: ['./home-page.component.scss'],
 })
-export class HomeComponent {
+export class HomePageComponent {
   @Select(AuthState.isAuthenticated)
   isAuthenticated$!: Observable<boolean>;
   isAuth = false;

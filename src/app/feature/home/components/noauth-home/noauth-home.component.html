@@ -1,1 +1,73 @@
-<p>noauth-home works!</p>
+<nz-row
+  class="home"
+  [nzGutter]="[16, 32]"
+  nzAlign="middle"
+  nzJustify="space-evenly">
+  <nz-col>
+    <nz-space nzAlign="center" nzDirection="vertical">
+      <h1 *nzSpaceItem>Bingemate</h1>
+      <h3 *nzSpaceItem>
+        Le meilleur endroit pour trouver des séries et des films à regarder.
+      </h3>
+    </nz-space>
+  </nz-col>
+  <nz-divider nz-col [nzSpan]="24"></nz-divider>
+  <img
+    nz-col
+    [nzXXl]="{ span: 4 }"
+    [nzXl]="{ span: 4 }"
+    [nzLg]="{ span: 6 }"
+    [nzMd]="{ span: 8 }"
+    [nzSm]="{ span: 12 }"
+    [nzXs]="{ span: 24 }"
+    nz-image
+    nzDisablePreview
+    [nzSrc]="'assets/logo.png'"
+    alt="Bingemate Logo" />
+  <nz-col>
+    <button nz-button nzType="primary" [routerLink]="loginLink">
+      Se connecter
+    </button>
+  </nz-col>
+
+  <nz-carousel nz-col [nzSpan]="24" [nzAutoPlay]="true" nzEffect="scrollx">
+    <div nz-carousel-content *ngFor="let feature of features">
+      <nz-space nzSize="large">
+        <img
+          *nzSpaceItem
+          nz-image
+          [nzSrc]="feature.image"
+          [alt]="feature.title"
+          width="200px" />
+        <div *nzSpaceItem>
+          <h2>{{ feature.title }}</h2>
+          <p>{{ feature.description }}</p>
+        </div>
+      </nz-space>
+    </div>
+  </nz-carousel>
+
+  <nz-divider nz-col [nzSpan]="24"></nz-divider>
+  <h2 nz-col>Rejoignez Bingemate</h2>
+  <nz-col [nzSpan]="24">
+    <nz-row nzGutter="16">
+      <nz-col nzSpan="8" *ngFor="let category of categories">
+        <nz-card [nzTitle]="category.title" [nzCover]="cardCover">
+          <ng-template #cardCover>
+            <img
+              nz-image
+              style="padding: 10px"
+              height="200px"
+              [nzSrc]="category.image"
+              [alt]="category.title" />
+          </ng-template>
+          <p>{{ category.description }}</p>
+        </nz-card>
+      </nz-col>
+    </nz-row>
+  </nz-col>
+
+  <nz-col [nzSpan]="24">
+    <span>&copy; 2023 Bingemate. Tous droits réservés.</span>
+  </nz-col>
+</nz-row>
