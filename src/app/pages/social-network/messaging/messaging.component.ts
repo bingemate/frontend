@@ -75,4 +75,8 @@ export class MessagingComponent implements OnInit, OnDestroy {
       )
     );
   }
+
+  selectUser(user: string) {
+    this.activeUser = user;
+  }
 }
