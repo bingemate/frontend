@@ -3,7 +3,9 @@
     <nz-list-item-meta>
       <nz-list-item-meta-description>
         <app-media-info
-          [routerLink]="[mediaStreamPath, item.mediaId]"
+          [routerLink]="
+            (isSubscribed$ | async) ? [mediaStreamPath, item.mediaId] : []
+          "
           [queryParams]="{
             progress: item.stoppedAt > 0.95 ? 0 : item.stoppedAt
           }"
