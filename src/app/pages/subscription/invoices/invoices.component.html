@@ -1,0 +1,12 @@
+<nz-timeline>
+  <nz-timeline-item
+    *ngFor="let invoice of invoices"
+    [nzColor]="mapStatus(invoice.status)">
+    <a [href]="invoice.invoiceUrl" target="_blank">
+      Facture du {{ invoice.created | date : 'dd/MM/yyyy' }}
+    </a>
+    <a [href]="invoice.invoicePdfUrl">
+      <span nz-icon nzType="download" nzTheme="outline"></span>
+    </a>
+  </nz-timeline-item>
+</nz-timeline>

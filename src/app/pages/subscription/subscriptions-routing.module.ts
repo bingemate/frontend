@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { NavigationLinks } from '../../app-routing.module';
-import { SubscriptionListComponent } from './subscription-list/subscription-list.component';
+import { SubscriptionComponent } from './subscription/subscription.component';
+import { InvoicesComponent } from './invoices/invoices.component';
 
 export const subscriptionLinks: NavigationLinks<
   'subscriptions' | 'my_subscription' | 'billing'
@@ -23,17 +24,17 @@ export const subscriptionLinks: NavigationLinks<
 const routes: Routes = [
   {
     path: subscriptionLinks.subscriptions.path,
-    component: SubscriptionListComponent,
+    component: SubscriptionComponent,
     data: { title: subscriptionLinks.subscriptions.name },
   },
   {
     path: subscriptionLinks.my_subscription.path,
-    component: SubscriptionListComponent,
+    component: SubscriptionComponent,
     data: { title: subscriptionLinks.my_subscription.name },
   },
   {
     path: subscriptionLinks.billing.path,
-    component: SubscriptionListComponent,
+    component: InvoicesComponent,
     data: { title: subscriptionLinks.billing.name },
   },
 ];
