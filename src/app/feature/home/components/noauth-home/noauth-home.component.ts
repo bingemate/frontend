@@ -57,9 +57,17 @@ export class NoauthHomeComponent {
       },
     },
     {
+      title: 'Votre calendrier de sorties personnalisé',
+      description:
+        'Suivez les sorties de vos séries et films préférés, grâce à un calendrier personnalisé, que vous pouvez synchroniser avec votre calendrier Google',
+      animation: {
+        path: 'assets/animations/calendar.json',
+      },
+    },
+    {
       title: 'Statistiques',
       description:
-        'Suivez votre avancement dans vos séries et films préférés, regardez exactement combien de temps vous avez passer à regarder des films et séries',
+        'Suivez votre avancement dans vos séries et films préférés, regardez exactement combien de temps vous avez passé à regarder des films et séries',
       animation: {
         path: 'assets/animations/stats.json',
       },
@@ -76,6 +84,12 @@ export class NoauthHomeComponent {
       title: 'Séries',
       description: 'Les meilleures séries du moment sont ici',
       image: 'assets/tvshow_background.png',
+    },
+    {
+      title: 'Calendrier des sorties',
+      description:
+        'Suivez les sorties de vos séries et films préférés, grâce à un calendrier personnalisé, que vous pouvez synchroniser avec votre calendrier Google',
+      image: 'assets/calendar_background.jpg',
     },
     {
       title: 'Listes de lectures & statistiques',
