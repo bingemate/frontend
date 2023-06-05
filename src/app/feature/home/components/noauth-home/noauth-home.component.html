@@ -5,8 +5,8 @@
   nzJustify="space-evenly">
   <nz-col>
     <nz-space nzAlign="center" nzDirection="vertical">
-      <h1 *nzSpaceItem>Bingemate</h1>
-      <h3 *nzSpaceItem>
+      <h1 nz-typography *nzSpaceItem>Bingemate</h1>
+      <h3 nz-typography *nzSpaceItem>
         Le meilleur endroit pour trouver des séries et des films à regarder.
       </h3>
     </nz-space>
@@ -55,7 +55,7 @@
   </nz-carousel>
 
   <nz-divider nz-col [nzSpan]="24"></nz-divider>
-  <h2 nz-col>Rejoignez Bingemate</h2>
+  <h2 nz-typography nz-col>Rejoignez Bingemate</h2>
   <nz-col [nzSpan]="24">
     <nz-row [nzGutter]="[16, 16]">
       <nz-col nzSpan="8" *ngFor="let category of categories">
