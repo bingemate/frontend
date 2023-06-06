@@ -19,7 +19,7 @@ export class UserService {
 
   getUsername(userId: string): Observable<UsernameResponse> {
     return this.http.get<UsernameResponse>(
-      `${API_RESOURCE_URI.KEYCLOAK_SERVICE}/user-info/${userId}/username`
+      `${API_RESOURCE_URI.KEYCLOAK_SERVICE}/user-info/username/${userId}`
     );
   }
 
