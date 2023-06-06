@@ -4,15 +4,11 @@ import { NavigationLinks } from '../../app-routing.module';
 import { SubscriptionListComponent } from './subscription-list/subscription-list.component';
 
 export const subscriptionLinks: NavigationLinks<
-  'subscriptions' | 'subscribe' | 'my_subscription' | 'billing'
+  'subscriptions' | 'my_subscription' | 'billing'
 > = {
   subscriptions: {
     path: 'subscriptions-list',
     name: 'Abonnements',
-  },
-  subscribe: {
-    path: 'subscribe',
-    name: 'Souscription',
   },
   my_subscription: {
     path: 'my-subscription',
@@ -29,11 +25,6 @@ const routes: Routes = [
     path: subscriptionLinks.subscriptions.path,
     component: SubscriptionListComponent,
     data: { title: subscriptionLinks.subscriptions.name },
-  },
-  {
-    path: subscriptionLinks.subscribe.path,
-    component: SubscriptionListComponent,
-    data: { title: subscriptionLinks.subscribe.name },
   },
   {
     path: subscriptionLinks.my_subscription.path,
