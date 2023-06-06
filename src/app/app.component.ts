@@ -43,7 +43,23 @@ export class AppComponent implements OnInit {
     private readonly store: Store,
     private readonly actions: Actions,
     private readonly keycloak: KeycloakService
-  ) {}
+  ) {
+    this.isSubscribed$.subscribe(isSubscribed => {
+      this.subscriptionLinks = Object.values(subscriptionLinks)
+        .filter(
+          link =>
+            ![isSubscribed ? 'subscriptions-list' : 'my-subscription'].includes(
+              link.path
+            )
+        )
+        .map(link => {
+          return {
+            ...link,
+            path: `${navigationRoot.subscriptions.path}/${link.path}`,
+          };
+        });
+    });
+  }
 
   ngOnInit(): void {
     this.router.events.subscribe(e => {
@@ -56,7 +72,7 @@ export class AppComponent implements OnInit {
     this.subscribeForRouterEvents();
     this.subscribeForAuthEvents();
     this.subscribeForThemeEvents();
-    this.isUserLoggedIn().then();
+    this.isUserLoggedIn();
   }
 
   ////////////////////////////////////////////////////////////////////////////
@@ -92,18 +108,34 @@ export class AppComponent implements OnInit {
     });
   }
 
-  async isUserLoggedIn() {
-    const logged = await this.keycloak.isLoggedIn();
-    if (logged) {
-      const profile = await this.keycloak.loadUserProfile();
-      const roles = this.keycloak.getUserRoles();
-      this.store.dispatch(
-        new AuthActions.LoggedIn({
-          profile,
-          roles,
-        })
-      );
-    }
+  isUserLoggedIn() {
+    this.keycloak
+      .isLoggedIn()
+      .then(logged => {
+        if (logged) {
+          this.keycloak
+            .loadUserProfile()
+            .then(profile => {
+              const roles = this.keycloak.getUserRoles();
+              this.store.dispatch(
+                new AuthActions.LoggedIn({
+                  profile,
+                  roles,
+                })
+              );
+            })
+            .catch(() => {
+              this.notificationsService.error(
+                'Une erreur est survenue lors de la connexion'
+              );
+            });
+        }
+      })
+      .catch(() => {
+        this.notificationsService.error(
+          'Une erreur est survenue lors de la connexion'
+        );
+      });
   }
 
   //////////////////////////////////////////////////////////////////////////////
@@ -160,14 +192,12 @@ export class AppComponent implements OnInit {
       });
   };
 
-  readonly subscriptionLinks = Object.values(subscriptionLinks)
-    .filter(link => !['subscribe'].includes(link.path))
-    .map(link => {
-      return {
-        ...link,
-        path: `${navigationRoot.subscriptions.path}/${link.path}`,
-      };
-    });
+  subscriptionLinks = Object.values(subscriptionLinks).map(link => {
+    return {
+      ...link,
+      path: `${navigationRoot.subscriptions.path}/${link.path}`,
+    };
+  });
 
   readonly socialNetworkLinks = Object.values(socialNetworkLinks)
     .filter(link => !['user-profile'].includes(link.path))
