@@ -1,0 +1,83 @@
+<nz-row [nzGutter]="[16, 16]">
+  <nz-col [nzSpan]="24">
+    <nz-card nzTitle="Rechercher un utilisateur">
+      <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton" nzSize="large">
+        <input
+          (input)="onInput()"
+          (change)="manualSearch()"
+          [(ngModel)]="query"
+          type="text"
+          nz-input
+          placeholder="entrez le nom d'un média" />
+      </nz-input-group>
+      <ng-template #suffixIconButton>
+        <button nz-button nzType="primary" nzSearch>
+          <span nz-icon nzType="search"></span>
+        </button>
+      </ng-template>
+      <nz-progress
+        *ngIf="loading"
+        nzStatus="active"
+        [nzShowInfo]="false"
+        [nzPercent]="100"></nz-progress>
+    </nz-card>
+  </nz-col>
+  <nz-col [nzSpan]="24">
+    <nz-card>
+      <nz-table
+        #userTable
+        [nzData]="userResults.results"
+        [nzFrontPagination]="false"
+        [nzLoading]="loading"
+        [nzTotal]="userResults.total"
+        [nzPageSize]="pageSize"
+        [nzPageIndex]="currentPage"
+        [nzPageSizeOptions]="[5, 10, 20, 50]"
+        (nzPageSizeChange)="onPageSizeChange($event)"
+        (nzPageIndexChange)="onPageIndexChange($event)">
+        <thead>
+          <tr>
+            <th>Identifiant</th>
+            <th>Pseudo</th>
+            <th>Prénom</th>
+            <th>Nom</th>
+            <th>Email</th>
+            <th>Date d'inscription</th>
+            <th>Roles</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let user of userTable.data"
+            style="cursor: pointer"
+            [routerLink]="[userProfilViewLinks, user.id]">
+            <td>{{ user.id }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.firstname }}</td>
+            <td>{{ user.lastname }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.createdTimestamp | date : 'dd/MM/yyyy' }}</td>
+            <td>
+              <nz-space>
+                <ng-container *ngIf="user?.roles?.includes('bingemate-user')">
+                  <nz-tag *nzSpaceItem nzChecked nzColor="blue">Actif</nz-tag>
+                </ng-container>
+                <ng-container
+                  *ngIf="user?.roles?.includes('bingemate-subscribed')">
+                  <nz-tag *nzSpaceItem nzChecked nzColor="green"
+                    >Abonné(e)
+                  </nz-tag>
+                </ng-container>
+                <ng-container *ngIf="user?.roles?.includes('bingemate-admin')">
+                  <nz-tag *nzSpaceItem nzChecked nzColor="red"
+                    >Administrateur
+                  </nz-tag>
+                </ng-container>
+              </nz-space>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </nz-card>
+  </nz-col>
+</nz-row>

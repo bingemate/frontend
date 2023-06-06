@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Select, Store } from '@ngxs/store';
-import { Observable } from 'rxjs';
+import { Store } from '@ngxs/store';
 import { Playlist, PlaylistType } from '../../../shared/models/playlist.model';
-import { PlaylistsState } from '../../../feature/playlist/store/playlists.state';
-import { PlaylistsActions } from '../../../feature/playlist/store/playlists.actions';
 import { AuthState } from '../../../core/auth/store/auth.state';
+import { StreamingActions } from '../../../feature/streaming/store/streaming.actions';
+import { PlaylistsService } from '../../../feature/playlist/playlists.service';
 
 @Component({
   selector: 'app-playlists',
@@ -12,18 +11,25 @@ import { AuthState } from '../../../core/auth/store/auth.state';
   styleUrls: ['./playlists.component.less'],
 })
 export class PlaylistsComponent implements OnInit {
-  @Select(PlaylistsState.playlists) playlists$!: Observable<Playlist[]>;
-
+  playlists: Playlist[] = [];
   isPlaylistShown = false;
   isConfirmLoading = false;
   playlistName?: string;
   playlistType?: PlaylistType;
 
-  constructor(private readonly store: Store) {}
+  constructor(
+    private readonly store: Store,
+    private readonly playlistsService: PlaylistsService
+  ) {}
 
   ngOnInit(): void {
     const userId = this.store.selectSnapshot(AuthState.user)?.id;
-    this.store.dispatch(new PlaylistsActions.GetUserPlaylists(userId!));
+    if (!userId) {
+      return;
+    }
+    this.playlistsService.getPlaylists(userId).subscribe(playlists => {
+      this.playlists = playlists;
+    });
   }
 
   showModal(): void {
@@ -40,20 +46,32 @@ export class PlaylistsComponent implements OnInit {
     if (!this.playlistName || !this.playlistType) {
       return;
     }
+    const name = this.playlistName;
+    const type = this.playlistType;
     this.isConfirmLoading = true;
-    this.store
-      .dispatch(
-        new PlaylistsActions.CreatePlaylist({
-          name: this.playlistName,
-          type: this.playlistType,
-        })
-      )
-      .subscribe(() => {
-        this.closeModal();
+    this.playlistsService.createPlaylist({ name, type }).subscribe(id => {
+      this.playlists.push({
+        id: id,
+        name,
+        type,
+        userId: '',
+        items: [],
       });
+      this.closeModal();
+    });
   }
 
-  deletePlaylist(id: string) {
-    this.store.dispatch(new PlaylistsActions.DeletePlaylist(id));
+  deletePlaylist(playlistId: string) {
+    this.playlistsService.deletePlaylist(playlistId).subscribe(() => {
+      this.playlists = this.playlists.filter(
+        playlist => playlist.id !== playlistId
+      );
+    });
+  }
+
+  watchPlaylist(index: number) {
+    this.store.dispatch(
+      new StreamingActions.WatchPlaylist(this.playlists[index], 0)
+    );
   }
 }

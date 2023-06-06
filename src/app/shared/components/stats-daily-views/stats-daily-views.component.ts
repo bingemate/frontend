@@ -11,38 +11,8 @@ import { format } from 'date-fns';
   styleUrls: ['./stats-daily-views.component.less'],
 })
 export class StatsDailyViewsComponent implements OnInit {
-  selectedPeriod = '7 jours';
   @Input()
-  stats: Statistic[] = [
-    {
-      id: '',
-      mediaId: '',
-      userId: '',
-      stoppedAt: new Date(),
-      startedAt: new Date(2023, 3, 22),
-    },
-    {
-      id: '',
-      mediaId: '',
-      userId: '',
-      stoppedAt: new Date(),
-      startedAt: new Date(2023, 4, 16),
-    },
-    {
-      id: '',
-      mediaId: '',
-      userId: '',
-      stoppedAt: new Date(),
-      startedAt: new Date(2023, 4, 15),
-    },
-    {
-      id: '',
-      mediaId: '',
-      userId: '',
-      stoppedAt: new Date(),
-      startedAt: new Date(),
-    },
-  ];
+  stats: Statistic[] = [];
   readonly lineChartType: ChartType = 'line';
   readonly lineChartOptions: ChartConfiguration['options'] = {
     elements: {
@@ -62,12 +32,28 @@ export class StatsDailyViewsComponent implements OnInit {
     },
   };
 
+  selectedPeriod = '7 jours';
   lineChartData: ChartConfiguration['data'] = {
     datasets: [],
   };
 
   ngOnInit(): void {
     this.setDailyViewSevenDaysPeriod();
+  }
+
+  setDailyViewSevenDaysPeriod() {
+    this.selectedPeriod = '7 jours';
+    this.setChartData(7);
+  }
+
+  setDailyViewMonthPeriod() {
+    this.selectedPeriod = '1 mois';
+    this.setChartData(30);
+  }
+
+  setDailyViewSemesterPeriod() {
+    this.selectedPeriod = '6 mois';
+    this.setChartData(180);
   }
 
   private updateChartData(data: number[], labels: string[]): void {
@@ -86,11 +72,6 @@ export class StatsDailyViewsComponent implements OnInit {
     };
   }
 
-  setDailyViewSevenDaysPeriod() {
-    this.selectedPeriod = '7 jours';
-    this.setChartData(7);
-  }
-
   private setChartData(period: number) {
     let stats = this.stats.filter(
       stat =>
@@ -103,16 +84,6 @@ export class StatsDailyViewsComponent implements OnInit {
     const labels = Array.from(watchTimePerDay.keys());
     const data = Array.from(watchTimePerDay.values());
     this.updateChartData(data, labels);
-  }
-
-  setDailyViewMonthPeriod() {
-    this.selectedPeriod = '1 mois';
-    this.setChartData(30);
-  }
-
-  setDailyViewSemesterPeriod() {
-    this.selectedPeriod = '6 mois';
-    this.setChartData(180);
   }
 
   private getWatchTimePerDay(stats: Statistic[]) {

@@ -8,7 +8,9 @@ import {
   toHistories,
 } from '../../shared/models/history.models';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class HistoryService {
   constructor(private readonly http: HttpClient) {}
 
@@ -18,7 +20,7 @@ export class HistoryService {
       .pipe(map(response => toHistories(response)));
   }
 
-  deleteHistory(mediaId: string): Observable<void> {
+  deleteHistory(mediaId: number): Observable<void> {
     return this.http.delete<void>(
       `${environment.apiUrl}/watch-service/history/${mediaId}`
     );

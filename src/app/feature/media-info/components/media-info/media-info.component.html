@@ -1,14 +1,32 @@
-<p>media-info works!</p>
-<ng-template [ngIf]="mediaInfo">
-  <ul>
-    <li>
-      <p>id: {{ mediaInfo.id }}</p>
-    </li>
-    <li>
-      <p>type: {{ mediaInfo.mediaType }}</p>
-    </li>
-  </ul>
-</ng-template>
-<ng-template [ngIf]="!mediaInfo">
-  <p>no media info</p>
-</ng-template>
+<nz-space
+  *ngIf="!vertical"
+  nzDirection="horizontal"
+  nzSize="large"
+  nzAlign="center">
+  <img
+    *nzSpaceItem
+    nzDisablePreview
+    nz-image
+    [nzSrc]="posterUrl"
+    style="max-height: 100px"
+    alt="" />
+  <h5 nz-typography *nzSpaceItem>
+    {{ media?.name }}
+  </h5>
+</nz-space>
+<nz-space
+  *ngIf="vertical"
+  nzDirection="vertical"
+  nzSize="large"
+  nzAlign="center">
+  <img
+    *nzSpaceItem
+    nzDisablePreview
+    nz-image
+    [nzSrc]="posterUrl"
+    style="width: 250px"
+    alt="" />
+  <h4 *nzSpaceItem>
+    {{ media?.name }}
+  </h4>
+</nz-space>

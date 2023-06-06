@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { NavigationLinks } from '../../app-routing.module';
+import { NavigationLinks, navigationRoot } from '../../app-routing.module';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthLoginRegisterComponent } from './auth-login-register/auth-login-register.component';
 import { AuthMyAccountComponent } from './auth-my-account/auth-my-account.component';
@@ -25,6 +25,8 @@ export const accountLinks: NavigationLinks<'login' | 'myAccount' | 'logout'> = {
     // icon: 'logout',
   },
 };
+
+export const loginLink = `/${navigationRoot.auth.path}/${accountLinks.login.path}`;
 
 const routes: Routes = [
   {

@@ -1,0 +1,48 @@
+<nz-card nzTitle="{{ playlist?.name }}" [nzExtra]="autoplayTemplate">
+  <cdk-virtual-scroll-viewport [itemSize]="playlistItems.length">
+    <nz-list nzItemLayout="vertical">
+      <nz-list-item
+        class="media"
+        *ngFor="let item of playlistItems; let index = index"
+        [ngClass]="{ 'active-media': index === position }">
+        <nz-list-item-meta style="margin: 0">
+          <nz-list-item-meta-title class="media-title">
+            <a (click)="seekMedia(index)">
+              <nz-space>
+                <img
+                  *nzSpaceItem
+                  class="media-image"
+                  width="160"
+                  height="90"
+                  alt="logo"
+                  ngSrc="{{ item.media.imageUrl }}" />
+                <nz-space *nzSpaceItem nzDirection="vertical" nzSize="small">
+                  <span *nzSpaceItem>{{ item.media.name }}</span>
+                  <ng-container *ngIf="playlist && playlist.type === 'EPISODE'">
+                    <span *nzSpaceItem>
+                      {{ item.playlistItem.season }}x{{
+                        item.playlistItem.episode
+                      }}
+                    </span>
+                  </ng-container>
+                </nz-space>
+              </nz-space>
+            </a>
+          </nz-list-item-meta-title>
+        </nz-list-item-meta>
+      </nz-list-item>
+      <nz-list-empty
+        *ngIf="playlistItems.length === 0"
+        nzNoResult="Aucun média"></nz-list-empty>
+    </nz-list>
+  </cdk-virtual-scroll-viewport>
+</nz-card>
+<ng-template #autoplayTemplate>
+  <nz-space nzSize="small">
+    <span *nzSpaceItem>Lecture automatique</span>
+    <nz-switch
+      [(ngModel)]="autoplay"
+      (ngModelChange)="onAutoplayToggle($event)"
+      *nzSpaceItem></nz-switch>
+  </nz-space>
+</ng-template>

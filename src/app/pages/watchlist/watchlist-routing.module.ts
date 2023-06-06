@@ -1,32 +1,29 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { NavigationLinks } from '../../app-routing.module';
+import { NavigationLinks, navigationRoot } from '../../app-routing.module';
 import { WatchlistComponent } from './watchtlist/watchlist.component';
 import { WatchtlistCalendarComponent } from './watchtlist-calendar/watchtlist-calendar.component';
 import { PlaylistsComponent } from './playlists/playlists.component';
 import { PlaylistComponent } from './playlist/playlist.component';
-import { HistoryComponent } from './history/history.component';
 
 export const watchlistLinks: NavigationLinks<
-  'lists' | 'calendar' | 'playlists' | 'history'
+  'calendar' | 'lists' | 'playlists'
 > = {
-  lists: {
-    name: 'Mes listes',
-    path: 'lists',
-  },
   calendar: {
     name: 'Calendrier',
     path: 'calendar',
+  },
+  lists: {
+    name: 'Liste de suivie',
+    path: 'lists',
   },
   playlists: {
     name: 'Playlists',
     path: 'playlists',
   },
-  history: {
-    name: 'Historique',
-    path: 'history',
-  },
 };
+
+export const playlistViewLinks = `/${navigationRoot.watchlist.path}/${watchlistLinks.playlists.path}`;
 
 const routes: Routes = [
   {
@@ -44,10 +41,6 @@ const routes: Routes = [
   {
     path: watchlistLinks.playlists.path + '/:id',
     component: PlaylistComponent,
-  },
-  {
-    path: watchlistLinks.history.path,
-    component: HistoryComponent,
   },
 ];
 

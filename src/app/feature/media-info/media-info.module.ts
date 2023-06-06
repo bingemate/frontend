@@ -32,6 +32,15 @@ import {
   CdkVirtualScrollViewport,
 } from '@angular/cdk/scrolling';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
+import { NzTypographyModule } from 'ng-zorro-antd/typography';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
+import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { MediaListComponent } from './components/media-list/media-list.component';
+import { SharedModule } from '../../shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -44,6 +53,7 @@ import { NzSpaceModule } from 'ng-zorro-antd/space';
     MovieListComponent,
     TvListComponent,
     ActorInfoComponent,
+    MediaListComponent,
   ],
   imports: [
     CommonModule,
@@ -69,6 +79,14 @@ import { NzSpaceModule } from 'ng-zorro-antd/space';
     CdkVirtualScrollViewport,
     CdkFixedSizeVirtualScroll,
     NzSpaceModule,
+    NzTypographyModule,
+    NzInputModule,
+    NzModalModule,
+    NzSelectModule,
+    NzDropDownModule,
+    NzCheckboxModule,
+    NzToolTipModule,
+    SharedModule,
   ],
   exports: [
     MediaInfoComponent,
@@ -80,6 +98,7 @@ import { NzSpaceModule } from 'ng-zorro-antd/space';
     MovieInfoComponent,
     ActorInfoComponent,
     TvInfoComponent,
+    MediaListComponent,
   ],
 })
 export class MediaInfoModule {}

@@ -11,9 +11,29 @@
     <div class="tv-info" nz-col [nzMd]="24" [nzXl]="18">
       <nz-row [nzGutter]="[24, 24]">
         <h1 class="tv-title" nz-col nzSpan="24">{{ tv.title }}</h1>
+        <div nz-col nzSpan="24">
+          <nz-space nzSize="small">
+            <button
+              *nzSpaceItem
+              nz-button
+              nzType="default"
+              nzShape="round"
+              nz-dropdown
+              nzTooltipPlacement="top"
+              nz-tooltip
+              [nzTooltipTrigger]="isMediaInWatchList ? 'hover' : null"
+              [nzDropdownMenu]="watchlistMenu">
+              <span *ngIf="!isMediaInWatchList">Suivre cette série</span>
+              <span *ngIf="isMediaInWatchList">{{
+                watchlistItem!.status | watchlistStatus
+              }}</span>
+              <span nz-icon nzType="down"></span>
+            </button>
+          </nz-space>
+        </div>
         <div class="tv-rating" nz-col nzSpan="24">
           <nz-rate [ngModel]="getRate()" nzDisabled nzAllowHalf></nz-rate>
-          &nbsp;{{ tv.voteAverage.toFixed(2) }}
+          &nbsp;{{ (tv.voteAverage / 2).toFixed(2) }}
         </div>
 
         <nz-descriptions nzBordered [nzColumn]="1" nz-col nzSpan="24">
@@ -96,3 +116,26 @@
     [nzSize]="'small'"
     (nzPageIndexChange)="onActorsPageChange($event)"></nz-pagination>
 </ng-template>
+
+<nz-dropdown-menu #watchlistMenu="nzDropdownMenu">
+  <ul nz-menu>
+    <ng-container *ngIf="!isMediaInWatchList">
+      <li
+        nz-menu-item
+        *ngFor="let status of statusNames"
+        (click)="addToWatchlist(status)">
+        {{ status | watchlistStatus }}
+      </li>
+    </ng-container>
+    <ng-container *ngIf="isMediaInWatchList">
+      <li
+        nz-menu-item
+        *ngFor="let status of statusNames"
+        (click)="changeShowStatus(status)"
+        [nzDisabled]="status === watchlistItem?.status">
+        {{ status | watchlistStatus }}
+      </li>
+      <li nz-menu-item nzDanger (click)="removeShowWatchlist()">Retirer</li>
+    </ng-container>
+  </ul>
+</nz-dropdown-menu>

@@ -28,9 +28,21 @@ export class MediaInfoService {
     );
   }
 
+  getMovieShortInfo(tmdbId: number): Observable<MovieResponse> {
+    return this.http.get<MovieResponse>(
+      API_RESOURCE_URI.MEDIA_INFO + '/media/movie-tmdb/' + tmdbId + '/short'
+    );
+  }
+
   getTvShowInfo(tmdbId: number): Observable<TvShowResponse> {
     return this.http.get<TvShowResponse>(
       API_RESOURCE_URI.MEDIA_INFO + '/media/tvshow-tmdb/' + tmdbId
+    );
+  }
+
+  getTvShowShortInfo(tmdbId: number): Observable<TvShowResponse> {
+    return this.http.get<TvShowResponse>(
+      API_RESOURCE_URI.MEDIA_INFO + '/media/tvshow-tmdb/' + tmdbId + '/short'
     );
   }
 

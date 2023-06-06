@@ -158,6 +158,14 @@ export class MediaDiscoverService {
     );
   }
 
+  getMediasByComments(available = false): Observable<number[]> {
+    const params = new HttpParams().set('available', available);
+    return this.http.get<number[]>(
+      API_RESOURCE_URI.MEDIA_INFO + '/discover/media/comments',
+      { params }
+    );
+  }
+
   searchTvShows(
     query: string,
     page = 1,

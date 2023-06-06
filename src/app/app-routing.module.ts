@@ -22,7 +22,7 @@ export const navigationRoot: NavigationLinks<
   | 'streaming'
   | 'watchlist'
   | 'statistics'
-  | 'upload'
+  | 'admin'
   | 'settings'
 > = {
   home: {
@@ -70,11 +70,11 @@ export const navigationRoot: NavigationLinks<
     requiredRoles: [],
     icon: 'line-chart',
   },
-  upload: {
-    path: 'upload',
-    name: 'Upload',
+  admin: {
+    path: 'admin',
+    name: 'Admin',
     requiredRoles: ['bingemate-admin'],
-    icon: 'upload',
+    icon: 'coffee',
   },
   settings: {
     path: 'settings',
@@ -89,7 +89,7 @@ const routes: Routes = [
   {
     path: navigationRoot.home.path,
     loadChildren: () =>
-      import('./pages/home/home.module').then(m => m.HomeModule),
+      import('./pages/home/homepage.module').then(m => m.HomepageModule),
   },
   {
     path: navigationRoot.auth.path,
@@ -157,12 +157,12 @@ const routes: Routes = [
     },
   },
   {
-    path: navigationRoot.upload.path,
+    path: navigationRoot.admin.path,
     loadChildren: () =>
-      import('./pages/upload/upload.module').then(m => m.UploadModule),
+      import('./pages/admin/admin.module').then(m => m.AdminModule),
     canActivate: [KeycloakGuard],
     data: {
-      requiredRoles: navigationRoot.upload.requiredRoles,
+      requiredRoles: navigationRoot.admin.requiredRoles,
     },
   },
 ];

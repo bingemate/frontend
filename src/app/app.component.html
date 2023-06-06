@@ -1,4 +1,12 @@
-<nz-layout class="app-layout">
+<nz-spin nzSpinning *ngIf="isLoading" [nzIndicator]="customSpinnerTemplate">
+  <div class="loading-screen">
+    <div class="logo">
+      <img src="favicon.ico" alt="Logo" />
+    </div>
+    <h2>Veuillez patienter...</h2>
+  </div>
+</nz-spin>
+<nz-layout *ngIf="!isLoading" class="app-layout">
   <nz-sider
     class="menu-sidebar"
     nzCollapsible
@@ -83,6 +91,17 @@
       <ul nz-menu nzMode="inline" [nzInlineCollapsed]="isNavbarCollapsed">
         <nz-divider></nz-divider>
         <li
+          *ngIf="isAdmin"
+          nz-submenu
+          nzTitle="Administration"
+          [nzIcon]="navigationRoot.admin.icon!">
+          <ul>
+            <li *ngFor="let adminLink of adminLinks" nz-menu-item nzMatchRouter>
+              <a [routerLink]="adminLink.path"> {{ adminLink.name }}</a>
+            </li>
+          </ul>
+        </li>
+        <li
           *ngIf="isAuthenticated"
           nz-submenu
           nzTitle="Abonnement"
@@ -147,17 +166,17 @@
   <nz-layout>
     <nz-header>
       <!--      <div class="app-header">
-        <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
-          <span
-            class="trigger"
-            nz-icon
-            [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"></span>
-        </span>
+      <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
         <span
-          >Current section : {{ currentSection }} -
-          {{ currentSectionName }}</span
-        >
-      </div>-->
+          class="trigger"
+          nz-icon
+          [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"></span>
+      </span>
+      <span
+        >Current section : {{ currentSection }} -
+        {{ currentSectionName }}</span
+      >
+    </div>-->
       <nz-page-header class="app-header">
         <nz-page-header-title>
           <span
@@ -170,7 +189,7 @@
           </span>
           {{ currentSectionName }}
         </nz-page-header-title>
-        <nz-page-header-extra>
+        <nz-page-header-extra *ngIf="isAuthenticated">
           <nz-space nzAlign="baseline" nzSize="large">
             <button
               [hidden]="!isAdmin"
@@ -178,25 +197,28 @@
               nz-button
               nz-tooltip="Ajouter de nouveaux médias"
               nzShape="circle"
-              [routerLink]="'/' + navigationRoot.upload.path">
+              [routerLink]="uploadLink">
               <span nz-icon nzType="upload"></span>
             </button>
             <button
               *nzSpaceItem
               [routerLink]="mediaSearchPath"
               nz-button
-              nzShape="circle"
+              nzShape="round"
               nz-tooltip
               nzTooltipTitle="Rechercher un média"
               nzTooltipPlacement="bottomRight">
               <span nz-icon nzType="search"></span>
+              Rechercher
             </button>
-            <nz-badge *nzSpaceItem [nzCount]="6">
-              <button nz-button nzShape="circle" [routerLink]="chatLink">
-                <span nz-icon nzType="message"></span>
-              </button>
-            </nz-badge>
-            <nz-badge *nzSpaceItem [nzCount]="99" [nzOverflowCount]="15">
+            <button
+              *nzSpaceItem
+              nz-button
+              nzShape="round"
+              [routerLink]="chatLink">
+              <span nz-icon nzType="message"></span>&nbsp;Chat
+            </button>
+            <!--<nz-badge *nzSpaceItem [nzCount]="99" [nzOverflowCount]="15">
               <button
                 nz-button
                 nzShape="circle"
@@ -205,7 +227,7 @@
                 [nzDropdownMenu]="notifications">
                 <span nz-icon nzType="bell"></span>
               </button>
-            </nz-badge>
+            </nz-badge>-->
           </nz-space>
         </nz-page-header-extra>
       </nz-page-header>
@@ -217,6 +239,7 @@
     </nz-content>
   </nz-layout>
 </nz-layout>
+
 <nz-dropdown-menu #notifications="nzDropdownMenu">
   <ul nz-menu>
     <nz-space nzDirection="vertical">
@@ -236,3 +259,9 @@
     </nz-space>
   </ul>
 </nz-dropdown-menu>
+
+<ng-template #customSpinnerTemplate>
+  <div class="custom-spinner">
+    <nz-spin [nzSpinning]="true" [nzSize]="'large'"></nz-spin>
+  </div>
+</ng-template>

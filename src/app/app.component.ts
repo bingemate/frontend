@@ -2,7 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { Link, navigationRoot } from './app-routing.module';
 import { accountLinks } from './pages/auth/auth-routing.module';
 import { socialNetworkLinks } from './pages/social-network/social-network-routing.module';
-import { ActivatedRoute, Router } from '@angular/router';
+import {
+  ActivatedRoute,
+  NavigationEnd,
+  NavigationStart,
+  Router,
+} from '@angular/router';
 import { subscriptionLinks } from './pages/subscription/subscriptions-routing.module';
 import {
   mediaSearchPath,
@@ -18,9 +23,9 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { AuthActions } from './core/auth/store/auth.actions';
 import { AuthState } from './core/auth/store/auth.state';
-import { isMatchingRoles, UserModel } from './shared/models/user.models';
+import { isMatchingRoles, UserResponse } from './shared/models/user.models';
 import { KeycloakService } from 'keycloak-angular';
-import { uploadLinks } from './pages/upload/upload-routing.module';
+import { adminLinks, uploadLink } from './pages/admin/admin-routing.module';
 
 @Component({
   selector: 'app-root',
@@ -28,6 +33,7 @@ import { uploadLinks } from './pages/upload/upload-routing.module';
   styleUrls: ['./app.component.less'],
 })
 export class AppComponent implements OnInit {
+  isLoading = true;
   readonly environment = environment;
 
   constructor(
@@ -40,6 +46,13 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.router.events.subscribe(e => {
+      if (e instanceof NavigationStart) {
+        this.isLoading = true;
+      } else if (e instanceof NavigationEnd) {
+        this.isLoading = false;
+      }
+    });
     this.subscribeForRouterEvents();
     this.subscribeForAuthEvents();
     this.subscribeForThemeEvents();
@@ -60,8 +73,8 @@ export class AppComponent implements OnInit {
   isSubscribed$!: Observable<boolean>;
   isSubscribed = false;
   @Select(AuthState.user)
-  user$!: Observable<UserModel>;
-  user: UserModel | null = null;
+  user$!: Observable<UserResponse>;
+  user: UserResponse | null = null;
 
   subscribeForAuthEvents() {
     this.isAuthenticated$.subscribe(isAuthenticated => {
@@ -157,10 +170,7 @@ export class AppComponent implements OnInit {
     });
 
   readonly socialNetworkLinks = Object.values(socialNetworkLinks)
-    .filter(
-      link =>
-        !['media', 'user-profile', 'chat', 'movie-view'].includes(link.path)
-    )
+    .filter(link => !['user-profile'].includes(link.path))
     .map(link => {
       return {
         ...link,
@@ -203,6 +213,14 @@ export class AppComponent implements OnInit {
       path: `${navigationRoot.statistics.path}/${link.path}`,
     };
   });
-  protected readonly uploadLinks = uploadLinks;
+
+  readonly adminLinks = Object.values(adminLinks).map(link => {
+    return {
+      ...link,
+      path: `${navigationRoot.admin.path}/${link.path}`,
+    };
+  });
+
+  protected readonly uploadLink = uploadLink;
   protected readonly mediaSearchPath = mediaSearchPath;
 }

@@ -10,13 +10,21 @@ import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { StatsDailyViewedMediasComponent } from '../../shared/components/stats-daily-viewed-medias/stats-daily-viewed-medias.component';
 import { StatisticsService } from './statistics.service';
+import { StatsDailyViewedGenreComponent } from '../../shared/components/stats-daily-viewed-genre/stats-daily-viewed-genre.component';
+import { MediaInfoModule } from '../../feature/media-info/media-info.module';
+import { NzListModule } from 'ng-zorro-antd/list';
+import { NzProgressModule } from 'ng-zorro-antd/progress';
+import { NzTypographyModule } from 'ng-zorro-antd/typography';
 
 @NgModule({
   declarations: [
     StatisticsWatchStatsComponent,
     StatisticsHistoryComponent,
+    StatsDailyViewedMediasComponent,
     StatsDailyViewsComponent,
+    StatsDailyViewedGenreComponent,
   ],
   imports: [
     CommonModule,
@@ -27,6 +35,10 @@ import { StatisticsService } from './statistics.service';
     NzDropDownModule,
     NzIconModule,
     NzButtonModule,
+    MediaInfoModule,
+    NzListModule,
+    NzProgressModule,
+    NzTypographyModule,
   ],
   providers: [StatisticsService],
 })

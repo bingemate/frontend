@@ -1,19 +1,78 @@
-<h2>Keycloak Account info</h2>
-<p>ID : {{ user?.id }}</p>
-<p>Username : {{ user?.username }}</p>
-<p>Email : {{ user?.email }}</p>
-<p>First Name : {{ user?.firstname }}</p>
-<p>Last Name : {{ user?.lastname }}</p>
-<p>Role : {{ user?.roles?.join(' | ') }}</p>
+<nz-tabset nzSize="large" nzDirection="vertical">
+  <nz-tab nzTitle="Mes informations">
+    <app-user-info [user]="user"> </app-user-info>
+  </nz-tab>
+  <nz-tab nzTitle="HttpBin">
+    <nz-space nzDirection="vertical" nzSize="large">
+      <button *nzSpaceItem nz-button nzType="primary" (click)="getHttpBin()">
+        Get Http Bin
+      </button>
+      <code *nzSpaceItem style="white-space: pre">
+        {{ httpbinResponse }}
+      </code>
+    </nz-space>
+  </nz-tab>
+  <nz-tab nzTitle="Mes commentaires" (nzClick)="onRefreshComments()">
+    <ng-template nz-tab>
+      <nz-card [nzExtra]="commentsListPagination">
+        <app-comment-list
+          [comments]="comments.results"
+          [showMedia]="true"></app-comment-list>
+      </nz-card>
+    </ng-template>
+  </nz-tab>
+  <nz-tab nzTitle="Mes notes" (nzClick)="onRefreshRatings()">
+    <ng-template nz-tab>
+      <nz-card [nzExtra]="ratingsListPagination">
+        <app-rating-list
+          [editable]="true"
+          [showMedia]="true"
+          [ratings]="ratings.results"></app-rating-list>
+      </nz-card>
+    </ng-template>
+  </nz-tab>
+</nz-tabset>
 
-<nz-divider></nz-divider>
-<h2>Http Bin</h2>
+<ng-template #commentsListPagination>
+  <nz-space>
+    <nz-pagination
+      *nzSpaceItem
+      [nzPageIndex]="commentsCurrentPage"
+      [nzTotal]="comments.totalResult"
+      [nzPageSize]="5"
+      [nzShowSizeChanger]="false"
+      [nzSize]="'small'"
+      (nzPageIndexChange)="onCommentsPageChange($event)"></nz-pagination>
+    <button
+      *nzSpaceItem
+      nz-button
+      nzType="primary"
+      nzShape="circle"
+      nzSize="small"
+      (click)="onRefreshComments()">
+      <i nz-icon nzType="sync"></i>
+    </button>
+  </nz-space>
+</ng-template>
 
-<nz-space nzDirection="vertical" nzSize="large">
-  <button *nzSpaceItem nz-button nzType="primary" (click)="getHttpBin()">
-    Get Http Bin
-  </button>
-  <code *nzSpaceItem style="white-space: pre">
-    {{ httpbinResponse }}
-  </code>
-</nz-space>
+<ng-template #ratingsListPagination>
+  <nz-space>
+    <nz-pagination
+      *nzSpaceItem
+      [nzPageIndex]="ratingsCurrentPage"
+      [nzTotal]="ratings.totalResult"
+      [nzPageSize]="5"
+      [nzShowSizeChanger]="false"
+      [nzSize]="'small'"
+      (nzPageIndexChange)="onRatingsPageChange($event)"></nz-pagination>
+    <button
+      *nzSpaceItem
+      nz-button
+      nzType="primary"
+      nzShape="circle"
+      nzSize="small"
+      (click)="onRefreshRatings()">
+      <i nz-icon nzType="sync"></i>
+    </button>
+  </nz-space>
+</ng-template>

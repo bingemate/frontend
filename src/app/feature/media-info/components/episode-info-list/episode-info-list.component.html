@@ -2,6 +2,23 @@
   *ngIf="loading"
   [nzActive]="true"
   [nzParagraph]="{ rows: 10 }"></nz-skeleton>
+<button
+  nz-button
+  nzType="default"
+  nzShape="round"
+  nz-dropdown
+  [disabled]="!selectedEpisode"
+  [nzDropdownMenu]="playlistMenu">
+  Ajouter à une playlist
+  <span nz-icon nzType="down"></span>
+</button>
+<nz-dropdown-menu #playlistMenu="nzDropdownMenu">
+  <ul nz-menu>
+    <li nz-menu-item *ngFor="let playlist of playlists$ | async">
+      <a (click)="addToPlaylist(playlist.id)">{{ playlist.name }}</a>
+    </li>
+  </ul>
+</nz-dropdown-menu>
 
 <cdk-virtual-scroll-viewport itemSize="73" class="infinite-container">
   <nz-list>
@@ -15,7 +32,15 @@
           {{ episode.name }}
         </nz-list-item-meta-title>
         <nz-list-item-meta-description>
-          <nz-space nzSize="middle">
+          <nz-space nzSize="middle" style="padding-right: 16px">
+            <label
+              *nzSpaceItem
+              nz-checkbox
+              [nzDisabled]="
+                selectedEpisode !== undefined && selectedEpisode !== episode
+              "
+              [ngModel]="false"
+              (ngModelChange)="onEpisodeSelection(episode)"></label>
             <img
               *nzSpaceItem
               nz-image
@@ -25,8 +50,15 @@
             <button
               *nzSpaceItem
               [hidden]="!episode.present"
+              [disabled]="(isSubscribed$ | async) === false"
               [routerLink]="[streamPath, episode.id]"
               nz-button
+              nz-tooltip
+              [nzTooltipTitle]="
+                (isSubscribed$ | async) === false
+                  ? 'Vous devez être abonné pour regarder cette série'
+                  : ''
+              "
               nzType="primary"
               nzShape="circle">
               <span nz-icon nzType="play-circle" nzTheme="fill"></span>
@@ -37,6 +69,9 @@
           </nz-space>
         </nz-list-item-meta-description>
       </nz-list-item-meta>
+      <nz-list-item-extra>
+        {{ episode.airDate | date : 'dd/MM/yyyy' }}
+      </nz-list-item-extra>
     </nz-list-item>
   </nz-list>
 </cdk-virtual-scroll-viewport>

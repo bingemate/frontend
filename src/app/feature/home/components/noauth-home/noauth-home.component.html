@@ -1,0 +1,79 @@
+<nz-row
+  class="home"
+  [nzGutter]="[16, 32]"
+  nzAlign="middle"
+  nzJustify="space-evenly">
+  <nz-col>
+    <nz-space nzAlign="center" nzDirection="vertical">
+      <h1 nz-typography *nzSpaceItem>Bingemate</h1>
+      <h3 nz-typography *nzSpaceItem>
+        Le meilleur endroit pour trouver des séries et des films à regarder.
+      </h3>
+    </nz-space>
+  </nz-col>
+  <nz-divider nz-col [nzSpan]="24"></nz-divider>
+  <ng-lottie
+    nz-col
+    [nzXXl]="{ span: 6 }"
+    [nzXl]="{ span: 6 }"
+    [nzLg]="{ span: 6 }"
+    [nzMd]="{ span: 8 }"
+    [nzSm]="{ span: 12 }"
+    [nzXs]="{ span: 24 }"
+    [options]="animation" />
+  <nz-col>
+    <button
+      nz-button
+      nzSize="large"
+      nzType="primary"
+      nzShape="round"
+      [routerLink]="loginLink">
+      Se connecter
+    </button>
+  </nz-col>
+
+  <nz-carousel
+    nz-col
+    [nzSpan]="24"
+    [nzAutoPlay]="true"
+    style="height: 250px"
+    nzAutoPlaySpeed="4000">
+    <nz-comment nz-carousel-content *ngFor="let feature of features">
+      <nz-comment-content>
+        <nz-space nzSize="large" nzAlign="center" nzDirection="horizontal">
+          <ng-lottie
+            height="200px"
+            *nzSpaceItem
+            [options]="feature.animation"></ng-lottie>
+          <div *nzSpaceItem>
+            <h2>{{ feature.title }}</h2>
+            <p>{{ feature.description }}</p>
+          </div>
+        </nz-space>
+      </nz-comment-content>
+    </nz-comment>
+  </nz-carousel>
+
+  <nz-divider nz-col [nzSpan]="24"></nz-divider>
+  <h2 nz-typography nz-col>Rejoignez Bingemate</h2>
+  <nz-col [nzSpan]="24">
+    <nz-row [nzGutter]="[16, 16]">
+      <nz-col nzSpan="8" *ngFor="let category of categories">
+        <nz-card [nzTitle]="category.title" [nzCover]="cardCover">
+          <ng-template #cardCover>
+            <img
+              nz-image
+              style="padding: 10px"
+              [nzSrc]="category.image"
+              [alt]="category.title" />
+          </ng-template>
+          <p>{{ category.description }}</p>
+        </nz-card>
+      </nz-col>
+    </nz-row>
+  </nz-col>
+
+  <nz-col [nzSpan]="24">
+    <span>&copy; 2023 Bingemate. Tous droits réservés.</span>
+  </nz-col>
+</nz-row>

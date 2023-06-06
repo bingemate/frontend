@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MediasMediaListComponent } from './medias-media-list/medias-media-list.component';
 import { MediasRoutingModule } from './medias-routing.module';
 import { TrendingComponent } from './trending/trending.component';
 import { NzPageHeaderModule } from 'ng-zorro-antd/page-header';
@@ -36,10 +35,12 @@ import { NzProgressModule } from 'ng-zorro-antd/progress';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
 import { MediaSearchModule } from '../../feature/media-search/media-search.module';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
+import { CommentModule } from '../../feature/comment/comment.module';
+import { NzRateModule } from 'ng-zorro-antd/rate';
+import { RatingModule } from '../../feature/rating/rating.module';
 
 @NgModule({
   declarations: [
-    MediasMediaListComponent,
     TrendingComponent,
     MovieViewComponent,
     MovieByGenreComponent,
@@ -76,6 +77,9 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
     NzEmptyModule,
     MediaSearchModule,
     NzCheckboxModule,
+    CommentModule,
+    NzRateModule,
+    RatingModule,
   ],
 })
 export class MediasModule {}

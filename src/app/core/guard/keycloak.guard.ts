@@ -44,7 +44,7 @@ export class KeycloakGuard extends KeycloakAuthGuard {
     if (!granted) {
       // await this.router.navigate(['permission-denied']);
       this.notificationsService.error(
-        'Vous devez avoir le rôle administrateur pour accéder à ce contenu'
+        "Vous n'êtes pas autorisé à accéder à ce contenu"
       );
     }
 

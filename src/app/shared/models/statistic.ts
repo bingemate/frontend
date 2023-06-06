@@ -1,7 +1,7 @@
 export interface Statistic {
   id: string;
   userId: string;
-  mediaId: string;
+  mediaId: number;
   startedAt: Date;
   stoppedAt: Date;
 }
@@ -9,7 +9,7 @@ export interface Statistic {
 export interface StatisticApiResponse {
   id: string;
   userId: string;
-  mediaId: string;
+  mediaId: number;
   startedAt: string;
   stoppedAt?: string;
 }

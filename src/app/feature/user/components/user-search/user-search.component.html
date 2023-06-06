@@ -1,0 +1,38 @@
+<nz-row [nzGutter]="[16, 16]">
+  <nz-col [nzSpan]="24">
+    <nz-card nzTitle="Rechercher un utilisateur">
+      <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton" nzSize="large">
+        <input
+          (input)="onInput()"
+          (change)="manualSearch()"
+          [(ngModel)]="query"
+          type="text"
+          nz-input
+          placeholder="entrez le nom d'un média" />
+      </nz-input-group>
+      <ng-template #suffixIconButton>
+        <button nz-button nzType="primary" nzSearch>
+          <span nz-icon nzType="search"></span>
+        </button>
+      </ng-template>
+      <nz-progress
+        *ngIf="searchingUser$ | async"
+        nzStatus="active"
+        [nzShowInfo]="false"
+        [nzPercent]="100"></nz-progress>
+    </nz-card>
+  </nz-col>
+  <nz-col [nzSpan]="24">
+    <nz-empty
+      *ngIf="
+        (userResults$ | async)?.length === 0 &&
+        (searchingUser$ | async) === false
+      "></nz-empty>
+    <app-user-list
+      *ngIf="
+        ((userResults$ | async)?.length ?? 0) > 0 &&
+        (searchingUser$ | async) === false
+      "
+      [users]="(userResults$ | async) ?? []"></app-user-list>
+  </nz-col>
+</nz-row>

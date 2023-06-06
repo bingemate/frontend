@@ -43,6 +43,9 @@ import { NzListModule } from 'ng-zorro-antd/list';
 import { AuthState } from './core/auth/store/auth.state';
 import { KeycloakAngularModule } from 'keycloak-angular';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { LottieModule } from 'ngx-lottie';
+import player from 'lottie-web';
 
 registerLocaleData(fr);
 
@@ -51,6 +54,10 @@ const ngZorroConfig: NzConfig = {
     nzPlacement: 'bottomRight',
   },
 };
+
+export function playerFactory() {
+  return player;
+}
 
 @NgModule({
   declarations: [AppComponent],
@@ -110,9 +117,11 @@ const ngZorroConfig: NzConfig = {
     NgxsReduxDevtoolsPluginModule.forRoot({
       disabled: environment.production,
     }),
+    LottieModule.forRoot({ player: playerFactory }),
     NzListModule,
     NzMenuModule,
     NzToolTipModule,
+    NzSpinModule,
   ],
   providers: [
     KeycloakInitializerProvider,
