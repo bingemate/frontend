@@ -48,9 +48,11 @@ export class AppComponent implements OnInit {
       this.subscriptionLinks = Object.values(subscriptionLinks)
         .filter(
           link =>
-            ![isSubscribed ? 'subscriptions-list' : 'my-subscription'].includes(
-              link.path
-            )
+            ![
+              isSubscribed ? 'subscriptions-list' : 'my-subscription',
+              'success',
+              'canceled',
+            ].includes(link.path)
         )
         .map(link => {
           return {

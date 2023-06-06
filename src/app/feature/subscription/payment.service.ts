@@ -26,6 +26,12 @@ export class PaymentService {
     );
   }
 
+  cancelSubscription() {
+    return this.http.delete(
+      `${environment.apiUrl}/payment-service/subscription`
+    );
+  }
+
   getInvoices(): Observable<Invoice[]> {
     return this.http
       .get<InvoiceResponse[]>(`${environment.apiUrl}/payment-service/invoice`)

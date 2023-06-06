@@ -15,9 +15,19 @@ import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { SharedModule } from '../../shared/shared.module';
 import { NzTimelineModule } from 'ng-zorro-antd/timeline';
+import { SubscriptionSuccessComponent } from './subscription-success/subscription-success.component';
+import { SubscriptionCanceledComponent } from './subscription-canceled/subscription-canceled.component';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { LottieComponent } from 'ngx-lottie';
+import { NzGridModule } from 'ng-zorro-antd/grid';
 
 @NgModule({
-  declarations: [SubscriptionComponent, InvoicesComponent],
+  declarations: [
+    SubscriptionComponent,
+    InvoicesComponent,
+    SubscriptionSuccessComponent,
+    SubscriptionCanceledComponent,
+  ],
   imports: [
     CommonModule,
     SubscriptionsRoutingModule,
@@ -33,6 +43,9 @@ import { NzTimelineModule } from 'ng-zorro-antd/timeline';
     NzSpaceModule,
     SharedModule,
     NzTimelineModule,
+    NzToolTipModule,
+    LottieComponent,
+    NzGridModule,
   ],
 })
 export class SubscriptionModule {}

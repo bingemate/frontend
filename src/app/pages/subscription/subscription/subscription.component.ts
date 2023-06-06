@@ -19,4 +19,7 @@ export class SubscriptionComponent {
       .changePaymentMethodUrl()
       .subscribe(url => (window.location = url.url as any));
   }
+  cancelSubscription() {
+    this.paymentService.cancelSubscription().subscribe();
+  }
 }
