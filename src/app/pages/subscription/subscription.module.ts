@@ -20,6 +20,9 @@ import { SubscriptionCanceledComponent } from './subscription-canceled/subscript
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { LottieComponent } from 'ngx-lottie';
 import { NzGridModule } from 'ng-zorro-antd/grid';
+import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
+import { NzBadgeModule } from 'ng-zorro-antd/badge';
+import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 
 @NgModule({
   declarations: [
@@ -46,6 +49,9 @@ import { NzGridModule } from 'ng-zorro-antd/grid';
     NzToolTipModule,
     LottieComponent,
     NzGridModule,
+    NzDescriptionsModule,
+    NzBadgeModule,
+    NzPopconfirmModule,
   ],
 })
 export class SubscriptionModule {}

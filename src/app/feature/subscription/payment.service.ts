@@ -8,6 +8,11 @@ import {
   InvoiceResponse,
   toInvoice,
 } from '../../shared/models/payment.models';
+import {
+  SubscriptionModel,
+  SubscriptionResponse,
+  toSubscription,
+} from '../../shared/models/streaming.model';
 
 @Injectable({
   providedIn: 'root',
@@ -36,5 +41,13 @@ export class PaymentService {
     return this.http
       .get<InvoiceResponse[]>(`${environment.apiUrl}/payment-service/invoice`)
       .pipe(map(invoices => invoices.map(toInvoice)));
+  }
+
+  getSubscription(): Observable<SubscriptionModel> {
+    return this.http
+      .get<SubscriptionResponse>(
+        `${environment.apiUrl}/payment-service/subscription`
+      )
+      .pipe(map(toSubscription));
   }
 }

@@ -1,25 +1,47 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { PaymentService } from '../../../feature/subscription/payment.service';
+import { Select } from '@ngxs/store';
+import { AuthState } from '../../../core/auth/store/auth.state';
+import { Observable } from 'rxjs';
+import { SubscriptionModel } from '../../../shared/models/streaming.model';
 
 @Component({
   selector: 'app-subscription',
   templateUrl: './subscription.component.html',
   styleUrls: ['./subscription.component.less'],
 })
-export class SubscriptionComponent {
+export class SubscriptionComponent implements OnInit {
+  @Select(AuthState.isSubscribed)
+  isSubscribed$!: Observable<boolean>;
+  loading = false;
+  subscription?: SubscriptionModel;
+
   constructor(private paymentService: PaymentService) {}
 
-  subscribe() {
+  ngOnInit() {
     this.paymentService
-      .getCheckoutSession()
-      .subscribe(url => (window.location = url.url as any));
+      .getSubscription()
+      .subscribe(subscription => (this.subscription = subscription));
+  }
+
+  subscribe() {
+    this.loading = true;
+    this.paymentService.getCheckoutSession().subscribe({
+      next: url => (window.location = url.url as any),
+      complete: () => (this.loading = false),
+    });
   }
   changePaymentMethod() {
-    this.paymentService
-      .changePaymentMethodUrl()
-      .subscribe(url => (window.location = url.url as any));
+    this.loading = true;
+    this.paymentService.changePaymentMethodUrl().subscribe({
+      next: url => (window.location = url.url as any),
+      complete: () => (this.loading = false),
+    });
   }
   cancelSubscription() {
-    this.paymentService.cancelSubscription().subscribe();
+    this.loading = true;
+    this.paymentService
+      .cancelSubscription()
+      .subscribe({ complete: () => (this.loading = false) });
   }
 }
