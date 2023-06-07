@@ -44,4 +44,28 @@ export class SubscriptionComponent implements OnInit {
       .cancelSubscription()
       .subscribe({ complete: () => (this.loading = false) });
   }
+
+  getSubscriptionStatus() {
+    switch (this.subscription?.status) {
+      default:
+        return 'Inconnu';
+      case 'active':
+        return 'Actif';
+      case 'canceled':
+        return 'Annulé';
+    }
+  }
+
+  getSubscriptionStatusState() {
+    switch (this.subscription?.status) {
+      default:
+        return 'default';
+      case 'active':
+        return 'success';
+      case 'canceled':
+        return 'warning';
+      case 'unpaid':
+        return 'error';
+    }
+  }
 }

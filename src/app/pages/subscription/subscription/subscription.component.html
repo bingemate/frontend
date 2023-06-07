@@ -19,6 +19,11 @@
     <nz-descriptions-item nzTitle="Type">
       Abonnement Standard
     </nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Status">
+      <nz-badge
+        [nzStatus]="getSubscriptionStatusState()"
+        [nzText]="getSubscriptionStatus()"></nz-badge>
+    </nz-descriptions-item>
     <nz-descriptions-item nzTitle="Méthode de paiement">
       <button
         nz-button
@@ -51,9 +56,6 @@
       nzTitle="Fin de la souscription"
       [nzSpan]="2">
       {{ subscription?.endAt | date : 'dd/MM/yyyy' }}
-    </nz-descriptions-item>
-    <nz-descriptions-item nzTitle="Status" [nzSpan]="3">
-      <nz-badge nzStatus="processing" nzText="Actif"></nz-badge>
     </nz-descriptions-item>
     <nz-descriptions-item nzTitle="Tarif">
       {{ subscription?.price }} €

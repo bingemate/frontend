@@ -18,7 +18,15 @@ export interface StreamUpdateEvent {
 }
 
 export interface SubscriptionResponse {
-  status: string;
+  status:
+    | 'active'
+    | 'canceled'
+    | 'incomplete'
+    | 'incomplete_expired'
+    | 'past_due'
+    | 'paused'
+    | 'trialing'
+    | 'unpaid';
   price: number;
   isCanceled: boolean;
   paymentMethod: 'card' | 'paypal';
@@ -28,7 +36,15 @@ export interface SubscriptionResponse {
 }
 
 export interface SubscriptionModel {
-  status: string;
+  status:
+    | 'active'
+    | 'canceled'
+    | 'incomplete'
+    | 'incomplete_expired'
+    | 'past_due'
+    | 'paused'
+    | 'trialing'
+    | 'unpaid';
   price: number;
   isCanceled: boolean;
   paymentMethod: 'card' | 'paypal';
