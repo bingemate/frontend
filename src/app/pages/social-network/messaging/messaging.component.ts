@@ -15,7 +15,6 @@ import { KeycloakService } from 'keycloak-angular';
 import { ActivatedRoute } from '@angular/router';
 import { UserResponse } from '../../../shared/models/user.models';
 import { FriendshipService } from '../../../feature/friendship/friendship.service';
-import { FriendResponse } from '../../../shared/models/friendship.models';
 
 @Component({
   selector: 'app-messaging',
@@ -29,13 +28,10 @@ export class MessagingComponent implements OnInit, OnDestroy {
 
   @ViewChild('messages') messages!: ElementRef;
 
-  activeFriendId?: string;
+  activeUserId?: string;
   newMessage = '';
   userList = new Set<string>();
   messageList: Message[] = [];
-
-  friendList: FriendResponse[] = [];
-  friendLoading = false;
 
   private socket?: Socket;
 
@@ -52,15 +48,14 @@ export class MessagingComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.currentRoute.params.subscribe(params => {
       if (params['id']) {
-        this.activeFriendId = params['id'];
+        this.activeUserId = params['id'];
+        this.userList.add(params['id']);
       }
     });
 
     this.user$.subscribe(user => {
-      this.friendLoading = true;
       this.friendshipService.getUserFriends(user.id).subscribe(friends => {
-        this.friendLoading = false;
-        this.friendList = friends;
+        friends.forEach(friend => this.userList.add(friend.friendId));
       });
     });
 
@@ -99,7 +94,7 @@ export class MessagingComponent implements OnInit, OnDestroy {
     if (this.newMessage.trim() !== '') {
       this.socket?.emit('sendMessage', {
         text: this.newMessage,
-        receiverId: this.activeFriendId,
+        receiverId: this.activeUserId,
       });
       this.newMessage = '';
     }
@@ -124,13 +119,13 @@ export class MessagingComponent implements OnInit, OnDestroy {
     );
   }
 
-  selectFriend(userId: string) {
-    this.activeFriendId = userId;
+  selectUser(userId: string) {
+    this.activeUserId = userId;
     this.scrollToBottom();
   }
 
   isSelected(userId: string) {
-    return this.activeFriendId === userId;
+    return this.activeUserId === userId;
   }
 
   scrollToBottom() {

@@ -183,6 +183,13 @@
     (click)="toggleEditMode()">
     Modifier
   </button>
+  <a
+    nz-button
+    *ngIf="user?.id !== authUser?.id"
+    nzType="default"
+    [routerLink]="['/social-network/chat', user?.id]">
+    Envoyer un message
+  </a>
 </ng-template>
 
 <ng-template #toggleSave>
