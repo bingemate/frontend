@@ -1,42 +1,44 @@
 <nz-row [nzGutter]="[16, 16]">
-  <nz-page-header nz-col [nzSpan]="24" nzTitle="Continuer à regarder">
-  </nz-page-header>
+  <ng-container *ngIf="isSubscribed">
+    <nz-page-header nz-col [nzSpan]="24" nzTitle="Continuer à regarder">
+    </nz-page-header>
 
-  <nz-col [nzSpan]="24">
-    <nz-card>
-      <cdk-virtual-scroll-viewport
-        orientation="horizontal"
-        itemSize="250"
-        class="viewport">
-        <nz-space nzDirection="horizontal" nzSize="large">
-          <ng-container *cdkVirtualFor="let item of history">
-            <div *nzSpaceItem class="item">
-              <app-media-info
-                [routerLink]="
-                  (isSubscribed$ | async) ? [mediaStreamPath, item.mediaId] : []
-                "
-                [queryParams]="{
-                  progress: item.stoppedAt > 0.95 ? 0 : item.stoppedAt
-                }"
-                style="cursor: pointer"
-                [mediaId]="item.mediaId"
-                [vertical]="true"></app-media-info>
-              <div style="width: 220px">
-                <nz-progress
-                  nzSize="small"
-                  [nzShowInfo]="false"
-                  [nzPercent]="
-                    (
-                      (item.stoppedAt > 0.95 ? 1 : item.stoppedAt) * 100
-                    ).toFixed(2)
-                  "></nz-progress>
+    <nz-col [nzSpan]="24">
+      <nz-card>
+        <cdk-virtual-scroll-viewport
+          orientation="horizontal"
+          itemSize="250"
+          class="viewport">
+          <nz-space nzDirection="horizontal" nzSize="large">
+            <ng-container *cdkVirtualFor="let item of history">
+              <div *nzSpaceItem class="item">
+                <app-media-info
+                  [routerLink]="
+                    isSubscribed ? [mediaStreamPath, item.mediaId] : []
+                  "
+                  [queryParams]="{
+                    progress: item.stoppedAt > 0.95 ? 0 : item.stoppedAt
+                  }"
+                  style="cursor: pointer"
+                  [mediaId]="item.mediaId"
+                  [vertical]="true"></app-media-info>
+                <div style="width: 220px">
+                  <nz-progress
+                    nzSize="small"
+                    [nzShowInfo]="false"
+                    [nzPercent]="
+                      (
+                        (item.stoppedAt > 0.95 ? 1 : item.stoppedAt) * 100
+                      ).toFixed(2)
+                    "></nz-progress>
+                </div>
               </div>
-            </div>
-          </ng-container>
-        </nz-space>
-      </cdk-virtual-scroll-viewport>
-    </nz-card>
-  </nz-col>
+            </ng-container>
+          </nz-space>
+        </cdk-virtual-scroll-viewport>
+      </nz-card>
+    </nz-col>
+  </ng-container>
 
   <nz-page-header nz-col [nzSpan]="24" nzTitle="Médias ajoutés récemment">
   </nz-page-header>
