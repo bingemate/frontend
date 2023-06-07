@@ -2,12 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Link, navigationRoot } from './app-routing.module';
 import { accountLinks } from './pages/auth/auth-routing.module';
 import { socialNetworkLinks } from './pages/social-network/social-network-routing.module';
-import {
-  ActivatedRoute,
-  NavigationEnd,
-  NavigationStart,
-  Router,
-} from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { subscriptionLinks } from './pages/subscription/subscriptions-routing.module';
 import {
   mediaSearchPath,
@@ -33,7 +28,6 @@ import { adminLinks, uploadLink } from './pages/admin/admin-routing.module';
   styleUrls: ['./app.component.less'],
 })
 export class AppComponent implements OnInit {
-  isLoading = true;
   readonly environment = environment;
 
   constructor(
@@ -62,13 +56,6 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.router.events.subscribe(e => {
-      if (e instanceof NavigationStart) {
-        this.isLoading = true;
-      } else if (e instanceof NavigationEnd) {
-        this.isLoading = false;
-      }
-    });
     this.subscribeForRouterEvents();
     this.subscribeForAuthEvents();
     this.subscribeForThemeEvents();

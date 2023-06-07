@@ -1,12 +1,4 @@
-<nz-spin nzSpinning *ngIf="isLoading" [nzIndicator]="customSpinnerTemplate">
-  <div class="loading-screen">
-    <div class="logo">
-      <img src="favicon.ico" alt="Logo" />
-    </div>
-    <h2>Veuillez patienter...</h2>
-  </div>
-</nz-spin>
-<nz-layout *ngIf="!isLoading" class="app-layout">
+<nz-layout class="app-layout">
   <nz-sider
     class="menu-sidebar"
     nzCollapsible
