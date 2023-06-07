@@ -17,7 +17,7 @@ export class SubscriptionsComponent {
 
   subscribe() {
     this.loading = true;
-    this.paymentService.getCheckoutSession().subscribe({
+    this.paymentService.getCheckoutSessionUrl().subscribe({
       next: url => (window.location = url.url as any),
       complete: () => (this.loading = false),
     });

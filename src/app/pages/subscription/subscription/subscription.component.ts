@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { PaymentService } from '../../../feature/subscription/payment.service';
 import { SubscriptionModel } from '../../../shared/models/streaming.model';
+import { navigationRoot } from '../../../app-routing.module';
+import { subscriptionLinks } from '../subscriptions-routing.module';
 
 @Component({
   selector: 'app-subscription',
@@ -8,6 +10,7 @@ import { SubscriptionModel } from '../../../shared/models/streaming.model';
   styleUrls: ['./subscription.component.less'],
 })
 export class SubscriptionComponent implements OnInit {
+  readonly subscriptionBillingPath = `/${navigationRoot.subscriptions.path}/${subscriptionLinks.billing.path}/`;
   loading = false;
   subscription?: SubscriptionModel;
 
@@ -21,14 +24,14 @@ export class SubscriptionComponent implements OnInit {
 
   subscribe() {
     this.loading = true;
-    this.paymentService.getCheckoutSession().subscribe({
+    this.paymentService.getCheckoutSessionUrl().subscribe({
       next: url => (window.location = url.url as any),
       complete: () => (this.loading = false),
     });
   }
   changePaymentMethod() {
     this.loading = true;
-    this.paymentService.changePaymentMethodUrl().subscribe({
+    this.paymentService.getChangePaymentMethodUrl().subscribe({
       next: url => (window.location = url.url as any),
       complete: () => (this.loading = false),
     });

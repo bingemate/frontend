@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
-import { environment } from '../../../environments/environment';
 import {
   CheckoutResponse,
   Invoice,
@@ -13,6 +12,7 @@ import {
   SubscriptionResponse,
   toSubscription,
 } from '../../shared/models/streaming.model';
+import { API_RESOURCE_URI } from '../../shared/api-resource-uri/api-resources-uri';
 
 @Injectable({
   providedIn: 'root',
@@ -20,33 +20,33 @@ import {
 export class PaymentService {
   constructor(private readonly http: HttpClient) {}
 
-  getCheckoutSession(): Observable<CheckoutResponse> {
+  getCheckoutSessionUrl(): Observable<CheckoutResponse> {
     return this.http.get<CheckoutResponse>(
-      `${environment.apiUrl}/payment-service/subscription/subscribe`
+      `${API_RESOURCE_URI.KEYCLOAK_SERVICE}/subscription/subscribe`
     );
   }
-  changePaymentMethodUrl(): Observable<CheckoutResponse> {
+  getChangePaymentMethodUrl(): Observable<CheckoutResponse> {
     return this.http.get<CheckoutResponse>(
-      `${environment.apiUrl}/payment-service/subscription/payment-method`
+      `${API_RESOURCE_URI.KEYCLOAK_SERVICE}/subscription/payment-method`
     );
   }
 
   cancelSubscription() {
     return this.http.delete(
-      `${environment.apiUrl}/payment-service/subscription`
+      `${API_RESOURCE_URI.KEYCLOAK_SERVICE}/subscription`
     );
   }
 
   getInvoices(): Observable<Invoice[]> {
     return this.http
-      .get<InvoiceResponse[]>(`${environment.apiUrl}/payment-service/invoice`)
+      .get<InvoiceResponse[]>(`${API_RESOURCE_URI.KEYCLOAK_SERVICE}/invoice`)
       .pipe(map(invoices => invoices.map(toInvoice)));
   }
 
   getSubscription(): Observable<SubscriptionModel> {
     return this.http
       .get<SubscriptionResponse>(
-        `${environment.apiUrl}/payment-service/subscription`
+        `${API_RESOURCE_URI.KEYCLOAK_SERVICE}/subscription`
       )
       .pipe(map(toSubscription));
   }
