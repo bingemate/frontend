@@ -32,7 +32,7 @@ export class TvInfoComponent implements OnChanges {
   @Input() tv: TvShowResponse | undefined;
   actorsCurrentPage = 1;
   actorsPageSize = 5;
-  isMediaInWatchList = true;
+  isMediaInWatchList = false;
   watchlistItem: WatchlistItem | undefined;
 
   constructor(

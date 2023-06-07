@@ -49,7 +49,7 @@ export class MovieInfoComponent implements OnInit, OnChanges {
   @Input() movie: MovieResponse | undefined;
   actorsCurrentPage = 1;
   actorsPageSize = 5;
-  isMediaInWatchList = true;
+  isMediaInWatchList = false;
   watchlistItem: WatchlistItem | undefined;
 
   constructor(
