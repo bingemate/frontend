@@ -1,8 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { PaymentService } from '../../../feature/subscription/payment.service';
-import { Select } from '@ngxs/store';
-import { AuthState } from '../../../core/auth/store/auth.state';
-import { Observable } from 'rxjs';
 import { SubscriptionModel } from '../../../shared/models/streaming.model';
 
 @Component({
@@ -11,8 +8,6 @@ import { SubscriptionModel } from '../../../shared/models/streaming.model';
   styleUrls: ['./subscription.component.less'],
 })
 export class SubscriptionComponent implements OnInit {
-  @Select(AuthState.isSubscribed)
-  isSubscribed$!: Observable<boolean>;
   loading = false;
   subscription?: SubscriptionModel;
 

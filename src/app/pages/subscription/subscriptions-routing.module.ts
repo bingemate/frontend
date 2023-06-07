@@ -5,6 +5,7 @@ import { SubscriptionComponent } from './subscription/subscription.component';
 import { InvoicesComponent } from './invoices/invoices.component';
 import { SubscriptionSuccessComponent } from './subscription-success/subscription-success.component';
 import { SubscriptionCanceledComponent } from './subscription-canceled/subscription-canceled.component';
+import { SubscriptionsComponent } from './subscriptions/subscriptions.component';
 
 export const subscriptionLinks: NavigationLinks<
   'subscriptions' | 'my_subscription' | 'billing' | 'success' | 'canceled'
@@ -34,7 +35,7 @@ export const subscriptionLinks: NavigationLinks<
 const routes: Routes = [
   {
     path: subscriptionLinks.subscriptions.path,
-    component: SubscriptionComponent,
+    component: SubscriptionsComponent,
     data: { title: subscriptionLinks.subscriptions.name },
   },
   {

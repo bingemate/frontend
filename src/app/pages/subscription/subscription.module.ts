@@ -23,9 +23,13 @@ import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
 import { NzBadgeModule } from 'ng-zorro-antd/badge';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { SubscriptionsComponent } from './subscriptions/subscriptions.component';
+import { NzTypographyModule } from 'ng-zorro-antd/typography';
 
 @NgModule({
   declarations: [
+    SubscriptionsComponent,
     SubscriptionComponent,
     InvoicesComponent,
     SubscriptionSuccessComponent,
@@ -52,6 +56,8 @@ import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
     NzDescriptionsModule,
     NzBadgeModule,
     NzPopconfirmModule,
+    NzCardModule,
+    NzTypographyModule,
   ],
 })
 export class SubscriptionModule {}
