@@ -9,7 +9,10 @@
     <nz-descriptions-item nzTitle="Prénom" [nzSpan]="2">
       {{ user?.firstname }}
     </nz-descriptions-item>
-    <nz-descriptions-item nzTitle="Email" [nzSpan]="3">
+    <nz-descriptions-item
+      nzTitle="Email"
+      [nzSpan]="3"
+      *ngIf="user?.id === authUser?.id || isAdmin">
       {{ user?.email }}
     </nz-descriptions-item>
     <nz-descriptions-item nzTitle="Inscris depuis le" [nzSpan]="3">
