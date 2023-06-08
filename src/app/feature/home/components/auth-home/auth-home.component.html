@@ -1,10 +1,9 @@
 <nz-row [nzGutter]="[16, 16]">
-  <!--  <ng-container *ngIf="isSubscribed">-->
   <nz-page-header nz-col [nzSpan]="24" nzTitle="Continuer à regarder">
   </nz-page-header>
 
   <nz-col [nzSpan]="24">
-    <nz-card [ngClass]="{ 'disabled-overlay': !isSubscribed }">
+    <nz-card [ngClass]="isSubscribed ? '' : 'disabled-overlay'">
       <cdk-virtual-scroll-viewport
         orientation="horizontal"
         itemSize="250"
@@ -38,7 +37,6 @@
       </cdk-virtual-scroll-viewport>
     </nz-card>
   </nz-col>
-  <!--  </ng-container>-->
 
   <nz-page-header nz-col [nzSpan]="24" nzTitle="Médias ajoutés récemment">
   </nz-page-header>
