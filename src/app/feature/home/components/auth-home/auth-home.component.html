@@ -4,7 +4,7 @@
   </nz-page-header>
 
   <nz-col [nzSpan]="24">
-    <nz-card [ngClass]="{ 'disabled-overlay': isSubscribed }">
+    <nz-card [ngClass]="{ 'disabled-overlay': !isSubscribed }">
       <cdk-virtual-scroll-viewport
         orientation="horizontal"
         itemSize="250"
