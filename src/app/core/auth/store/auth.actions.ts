@@ -1,4 +1,4 @@
-import { KeycloakProfile } from 'keycloak-js';
+import { UserResponse } from '../../../shared/models/user.models';
 
 export namespace AuthActions {
   export class LoggedIn {
@@ -6,8 +6,7 @@ export namespace AuthActions {
 
     constructor(
       public payload: {
-        profile: KeycloakProfile;
-        roles: string[];
+        user: UserResponse;
       }
     ) {}
   }

@@ -33,17 +33,15 @@ export class AuthState {
 
   @Action(AuthActions.LoggedIn)
   login(ctx: StateContext<AuthStateModel>, action: AuthActions.LoggedIn) {
-    const profile = action.payload.profile;
-    const roles = action.payload.roles;
     ctx.setState({
       user: {
-        id: profile.id ?? '',
-        username: profile.username ?? '',
-        email: profile.email ?? '',
-        firstname: profile.firstName ?? '',
-        lastname: profile.lastName ?? '',
-        createdTimestamp: profile.createdTimestamp ?? 0,
-        roles: roles,
+        id: action.payload.user.id,
+        username: action.payload.user.username,
+        email: action.payload.user.email,
+        firstname: action.payload.user.firstname,
+        lastname: action.payload.user.lastname,
+        createdTimestamp: action.payload.user.createdTimestamp,
+        roles: action.payload.user.roles,
       },
     });
   }
