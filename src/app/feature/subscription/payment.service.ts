@@ -22,31 +22,29 @@ export class PaymentService {
 
   getCheckoutSessionUrl(): Observable<CheckoutResponse> {
     return this.http.get<CheckoutResponse>(
-      `${API_RESOURCE_URI.KEYCLOAK_SERVICE}/subscription/subscribe`
+      `${API_RESOURCE_URI.PAYMENT_SERVICE}/subscription/subscribe`
     );
   }
   getChangePaymentMethodUrl(): Observable<CheckoutResponse> {
     return this.http.get<CheckoutResponse>(
-      `${API_RESOURCE_URI.KEYCLOAK_SERVICE}/subscription/payment-method`
+      `${API_RESOURCE_URI.PAYMENT_SERVICE}/subscription/payment-method`
     );
   }
 
   cancelSubscription() {
-    return this.http.delete(
-      `${API_RESOURCE_URI.KEYCLOAK_SERVICE}/subscription`
-    );
+    return this.http.delete(`${API_RESOURCE_URI.PAYMENT_SERVICE}/subscription`);
   }
 
   getInvoices(): Observable<Invoice[]> {
     return this.http
-      .get<InvoiceResponse[]>(`${API_RESOURCE_URI.KEYCLOAK_SERVICE}/invoice`)
+      .get<InvoiceResponse[]>(`${API_RESOURCE_URI.PAYMENT_SERVICE}/invoice`)
       .pipe(map(invoices => invoices.map(toInvoice)));
   }
 
   getSubscription(): Observable<SubscriptionModel> {
     return this.http
       .get<SubscriptionResponse>(
-        `${API_RESOURCE_URI.KEYCLOAK_SERVICE}/subscription`
+        `${API_RESOURCE_URI.PAYMENT_SERVICE}/subscription`
       )
       .pipe(map(toSubscription));
   }
