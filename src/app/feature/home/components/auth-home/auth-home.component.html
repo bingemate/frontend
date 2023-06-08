@@ -1,9 +1,10 @@
 <nz-row [nzGutter]="[16, 16]">
+  <!--  <ng-container *ngIf="isSubscribed">-->
   <nz-page-header nz-col [nzSpan]="24" nzTitle="Continuer à regarder">
   </nz-page-header>
 
   <nz-col [nzSpan]="24">
-    <nz-card>
+    <nz-card [ngClass]="{ 'disabled-overlay': isSubscribed }">
       <cdk-virtual-scroll-viewport
         orientation="horizontal"
         itemSize="250"
@@ -13,7 +14,7 @@
             <div *nzSpaceItem class="item">
               <app-media-info
                 [routerLink]="
-                  (isSubscribed$ | async) ? [mediaStreamPath, item.mediaId] : []
+                  isSubscribed ? [mediaStreamPath, item.mediaId] : []
                 "
                 [queryParams]="{
                   progress: item.stoppedAt > 0.95 ? 0 : item.stoppedAt
@@ -37,6 +38,7 @@
       </cdk-virtual-scroll-viewport>
     </nz-card>
   </nz-col>
+  <!--  </ng-container>-->
 
   <nz-page-header nz-col [nzSpan]="24" nzTitle="Médias ajoutés récemment">
   </nz-page-header>
