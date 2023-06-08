@@ -1,10 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { EpisodeStatisticsService } from '../episode-statistics.service';
 import { AuthState } from '../../../core/auth/store/auth.state';
-import { Store } from '@ngxs/store';
+import { Select } from '@ngxs/store';
 import { MovieStatisticsService } from '../movie-statistics.service';
 import { Statistic } from '../../../shared/models/statistic.models';
 import { forkJoin } from 'rxjs';
+import { CommentService } from '../../../feature/comment/comment.service';
+import { CommentResponse } from '../../../shared/models/comment.models';
+import { RatingService } from '../../../feature/rating/rating.service';
+import { RatingResponse } from '../../../shared/models/rating.models';
+import { filter, forkJoin, mergeMap, Observable } from 'rxjs';
+import { UserResponse } from '../../../shared/models/user.models';
 
 @Component({
   selector: 'app-statistics-watch-stats',
@@ -12,23 +18,37 @@ import { forkJoin } from 'rxjs';
   styleUrls: ['./statistics-watch-stats.component.less'],
 })
 export class StatisticsWatchStatsComponent implements OnInit {
+  @Select(AuthState.user)
+  user$!: Observable<UserResponse>;
   stats: Statistic[] = [];
+  comments: CommentResponse[] = [];
+  ratings: RatingResponse[] = [];
+  watchTime = 200;
 
   constructor(
     private episodeStatisticsService: EpisodeStatisticsService,
     private movieStatisticsService: MovieStatisticsService,
-    private readonly store: Store
+    private commentService: CommentService,
+    private ratingService: RatingService
   ) {}
 
   ngOnInit(): void {
-    const userId = this.store.selectSnapshot(AuthState.user)?.id;
-    if (userId) {
-      forkJoin([
-        this.episodeStatisticsService.getStatisticsByUserId(userId),
-        this.movieStatisticsService.getStatisticsByUserId(userId),
-      ]).subscribe(([episodeStats, movieStats]) => {
+    this.user$
+      .pipe(
+        filter(user => user !== null && user !== undefined),
+        mergeMap(user =>
+          forkJoin([
+            this.episodeStatisticsService.getStatisticsByUserId(userId),
+            this.movieStatisticsService.getStatisticsByUserId(userId),
+            this.commentService.getUserComments(user.id),
+            this.ratingService.getUserRating(user.id),
+          ])
+        )
+      )
+      .subscribe(([episodeStats, movieStats, comments, ratings]) => {
         this.stats = [...episodeStats, ...movieStats];
+        this.comments = comments.results;
+        this.ratings = ratings.results;
       });
-    }
   }
 }

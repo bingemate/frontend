@@ -18,6 +18,9 @@ import { NzListModule } from 'ng-zorro-antd/list';
 import { NzProgressModule } from 'ng-zorro-antd/progress';
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
 import { MovieStatisticsService } from './movie-statistics.service';
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { SharedModule } from '../../shared/shared.module';
+import { NzStatisticModule } from 'ng-zorro-antd/statistic';
 
 @NgModule({
   declarations: [
@@ -40,6 +43,9 @@ import { MovieStatisticsService } from './movie-statistics.service';
     NzListModule,
     NzProgressModule,
     NzTypographyModule,
+    NzCardModule,
+    SharedModule,
+    NzStatisticModule,
   ],
   providers: [EpisodeStatisticsService, MovieStatisticsService],
 })
