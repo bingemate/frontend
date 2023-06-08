@@ -21,6 +21,7 @@ import { AuthState } from './core/auth/store/auth.state';
 import { isMatchingRoles, UserResponse } from './shared/models/user.models';
 import { KeycloakService } from 'keycloak-angular';
 import { adminLinks, uploadLink } from './pages/admin/admin-routing.module';
+import { UserService } from './feature/user/user.service';
 
 @Component({
   selector: 'app-root',
@@ -36,15 +37,18 @@ export class AppComponent implements OnInit {
     public readonly notificationsService: NotificationsService,
     private readonly store: Store,
     private readonly actions: Actions,
-    private readonly keycloak: KeycloakService
+    private readonly keycloak: KeycloakService,
+    private readonly userService: UserService
   ) {
     this.isSubscribed$.subscribe(isSubscribed => {
       this.subscriptionLinks = Object.values(subscriptionLinks)
         .filter(
           link =>
-            ![isSubscribed ? 'subscriptions-list' : 'my-subscription'].includes(
-              link.path
-            )
+            ![
+              isSubscribed ? 'subscriptions-list' : 'my-subscription',
+              'success',
+              'canceled',
+            ].includes(link.path)
         )
         .map(link => {
           return {
@@ -100,22 +104,20 @@ export class AppComponent implements OnInit {
       .isLoggedIn()
       .then(logged => {
         if (logged) {
-          this.keycloak
-            .loadUserProfile()
-            .then(profile => {
-              const roles = this.keycloak.getUserRoles();
+          this.userService.getMe().subscribe({
+            next: user => {
               this.store.dispatch(
                 new AuthActions.LoggedIn({
-                  profile,
-                  roles,
+                  user,
                 })
               );
-            })
-            .catch(() => {
+            },
+            error: () => {
               this.notificationsService.error(
                 'Une erreur est survenue lors de la connexion'
               );
-            });
+            },
+          });
         }
       })
       .catch(() => {

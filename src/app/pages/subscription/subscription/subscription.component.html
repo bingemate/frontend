@@ -1,0 +1,71 @@
+<nz-descriptions
+  nzTitle="Détails de l'abonnement"
+  nzBordered
+  [nzExtra]="extraTpl">
+  <nz-descriptions-item nzTitle="Type">
+    Abonnement Standard
+  </nz-descriptions-item>
+  <nz-descriptions-item nzTitle="Status">
+    <nz-badge
+      [nzStatus]="getSubscriptionStatusState()"
+      [nzText]="getSubscriptionStatus()"></nz-badge>
+  </nz-descriptions-item>
+  <nz-descriptions-item nzTitle="Méthode de paiement">
+    <button
+      nz-button
+      nzType="link"
+      (click)="changePaymentMethod()"
+      [disabled]="loading"
+      nzTooltipTitle="Changer le moyen de paiement"
+      nzTooltipPlacement="top"
+      nz-tooltip>
+      {{
+        subscription?.paymentMethod === 'card' ? 'Carte de crédit' : 'Paypal'
+      }}
+      <span nz-icon nzType="edit" nzTheme="outline"></span>
+    </button>
+  </nz-descriptions-item>
+  <nz-descriptions-item nzTitle="Renouvellement automatique">
+    {{ subscription?.isCanceled ? 'Non' : 'Oui' }}
+  </nz-descriptions-item>
+  <nz-descriptions-item nzTitle="Date de souscription">
+    {{ subscription?.startedAt | date : 'dd/MM/yyyy' }}
+  </nz-descriptions-item>
+  <nz-descriptions-item
+    *ngIf="!subscription?.isCanceled"
+    nzTitle="Prochaine facturation"
+    [nzSpan]="2">
+    {{ subscription?.nextPaymentAt | date : 'dd/MM/yyyy' }}
+  </nz-descriptions-item>
+  <nz-descriptions-item
+    *ngIf="subscription?.isCanceled"
+    nzTitle="Fin de la souscription"
+    [nzSpan]="2">
+    {{ subscription?.endAt | date : 'dd/MM/yyyy' }}
+  </nz-descriptions-item>
+  <nz-descriptions-item nzTitle="Tarif">
+    {{ subscription?.price }} €
+  </nz-descriptions-item>
+</nz-descriptions>
+<ng-template #extraTpl>
+  <nz-space nzSize="small">
+    <a *nzSpaceItem [routerLink]="subscriptionBillingPath">
+      <span nz-icon nzType="dollar-circle" nzTheme="fill"></span>
+      Voir les factures
+    </a>
+    <button
+      *nzSpaceItem
+      nz-button
+      nzType="default"
+      nzSize="large"
+      nzShape="round"
+      [disabled]="loading"
+      nz-popconfirm
+      nzPopconfirmTitle="Voulez-vous vraiment mettre fin à votre abonnement ?"
+      (nzOnConfirm)="cancelSubscription()"
+      nzPopconfirmPlacement="bottomRight"
+      (click)="cancelSubscription()">
+      Annuler l'abonnement
+    </button>
+  </nz-space>
+</ng-template>

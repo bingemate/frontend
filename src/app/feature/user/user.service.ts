@@ -39,6 +39,12 @@ export class UserService {
     );
   }
 
+  getMe(): Observable<UserResponse> {
+    return this.http.get<UserResponse>(
+      `${API_RESOURCE_URI.KEYCLOAK_SERVICE}/user-info/me`
+    );
+  }
+
   update(updateUser: UpdateUserRequest): Observable<UserResponse> {
     return this.http.put<UserResponse>(
       `${API_RESOURCE_URI.KEYCLOAK_SERVICE}/user-edit`,

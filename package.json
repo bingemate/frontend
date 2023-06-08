@@ -1,6 +1,6 @@
 {
   "name": "binge-mate",
-  "version": "0.21.5",
+  "version": "0.22.4",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --configuration local",
@@ -42,6 +42,7 @@
     "ng-zorro-antd": "^15.1.0",
     "ng2-charts": "^4.1.1",
     "ngx-lottie": "^10.0.0",
+    "ngx-typed-js": "^2.1.1",
     "prettier-eslint": "^15.0.1",
     "rxjs": "~7.8.1",
     "save-dev": "^0.0.1-security",
@@ -50,7 +51,7 @@
     "zone.js": "~0.13.0"
   },
   "devDependencies": {
-    "@angular-devkit/architect": "^0.1600.4",
+    "@angular-devkit/architect": "^0.1600.5",
     "@angular-devkit/build-angular": "^15.2.7",
     "@angular-eslint/builder": "15.2.1",
     "@angular-eslint/eslint-plugin": "15.2.1",

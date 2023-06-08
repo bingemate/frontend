@@ -1,0 +1,37 @@
+<div nz-row nzJustify="center">
+  <nz-card
+    style="width: 350px"
+    [nzBordered]="false"
+    nzTitle="Abonnement streaming">
+    <ng-lottie [options]="animation" />
+    <div nz-row nzJustify="center">
+      <nz-space nzSize="small">
+        <h2 *nzSpaceItem nz-typography>9.99€</h2>
+        <span *nzSpaceItem nz-typography nzType="secondary">par mois</span>
+      </nz-space>
+    </div>
+    <div nz-row>
+      <ul>
+        <li>Lecture de vidéos haute qualité</li>
+        <li>Créez vos propres playlists personnalisées</li>
+        <li>
+          Mise à jour en temps réel de votre watchlist pour ne jamais manquer
+          vos séries préférées
+        </li>
+        <li>
+          Accédez à des statistiques détaillées sur vos habitudes de visionnage
+        </li>
+      </ul>
+    </div>
+    <div nz-row nzJustify="center">
+      <button
+        nz-button
+        nzType="primary"
+        nzSize="large"
+        [disabled]="loading"
+        (click)="subscribe()">
+        S'abonner
+      </button>
+    </div>
+  </nz-card>
+</div>

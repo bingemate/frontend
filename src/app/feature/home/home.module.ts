@@ -19,6 +19,7 @@ import { NzListModule } from 'ng-zorro-antd/list';
 import { MediaInfoModule } from '../media-info/media-info.module';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { NzProgressModule } from 'ng-zorro-antd/progress';
+import { NgxTypedJsModule } from 'ngx-typed-js';
 
 @NgModule({
   declarations: [NoauthHomeComponent, AuthHomeComponent],
@@ -43,6 +44,7 @@ import { NzProgressModule } from 'ng-zorro-antd/progress';
     MediaInfoModule,
     ScrollingModule,
     NzProgressModule,
+    NgxTypedJsModule,
   ],
 })
 export class HomeModule {}
