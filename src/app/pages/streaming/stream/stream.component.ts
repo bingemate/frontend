@@ -9,9 +9,9 @@ import { environment } from '../../../../environments/environment';
 import { KeycloakEventType, KeycloakService } from 'keycloak-angular';
 import { MediaResponse } from '../../../shared/models/media.models';
 import { Select } from '@ngxs/store';
-import { StreamingState } from '../../../feature/streaming/store/movie-streaming-state.service';
 import { EpisodePlaylist } from '../../../shared/models/episode-playlist.model';
 import { MoviePlaylist } from '../../../shared/models/movie-playlist.model';
+import { StreamingState } from '../../../feature/streaming/store/streaming.state';
 
 @Component({
   selector: 'app-stream',

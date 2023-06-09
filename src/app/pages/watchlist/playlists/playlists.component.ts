@@ -93,7 +93,7 @@ export class PlaylistsComponent implements OnInit {
 
   watchMoviePlaylist(index: number) {
     this.store.dispatch(
-      new StreamingActions.WatchPlaylist(this.moviePlaylists[index], 0)
+      new StreamingActions.WatchMoviePlaylist(this.moviePlaylists[index], 0)
     );
   }
 }

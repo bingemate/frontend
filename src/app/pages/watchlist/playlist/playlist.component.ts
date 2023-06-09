@@ -69,8 +69,8 @@ export class PlaylistComponent implements OnInit {
       .pipe(
         switchMap(params => {
           const id = params['id'];
-          const type: 'movies' | 'episodes' = params['type'];
-          if (type === 'movies') {
+          this.type = params['type'];
+          if (this.type === 'movies') {
             return this.moviePlaylistsService.getPlaylistById(id).pipe(
               mergeMap(playlist => {
                 this.moviePlaylist = playlist;
@@ -151,12 +151,16 @@ export class PlaylistComponent implements OnInit {
   }
 
   watchMovie(index: number) {
-    if (!this.moviePlaylist || !this.isSubscribed) {
+    if (!this.isSubscribed) {
       return;
     }
-    if (this.type === 'movies') {
+    if (this.type === 'movies' && this.moviePlaylist) {
       this.store.dispatch(
-        new StreamingActions.WatchPlaylist(this.moviePlaylist, index)
+        new StreamingActions.WatchMoviePlaylist(this.moviePlaylist, index)
+      );
+    } else if (this.type === 'episodes' && this.episodePlaylist) {
+      this.store.dispatch(
+        new StreamingActions.WatchEpisodePlaylist(this.episodePlaylist, index)
       );
     }
   }

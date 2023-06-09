@@ -6,6 +6,7 @@ import {
   StatisticApiResponse,
   toStatistics,
 } from '../../shared/models/statistic';
+import { API_RESOURCE_URI } from '../../shared/api-resource-uri/api-resources-uri';
 
 @Injectable()
 export class StatisticsService {
@@ -13,7 +14,9 @@ export class StatisticsService {
 
   getStatisticsByUserId(userId: string): Observable<Statistic[]> {
     return this.http
-      .get<StatisticApiResponse[]>(`http://localhost:3000/stats/${userId}`)
+      .get<StatisticApiResponse[]>(
+        `${API_RESOURCE_URI.WATCH_SERVICE}/stats/${userId}`
+      )
       .pipe(map(response => toStatistics(response)));
   }
 }

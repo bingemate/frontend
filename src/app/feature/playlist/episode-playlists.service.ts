@@ -12,6 +12,7 @@ import {
   toEpisodePlaylists,
   UpdateEpisodePlaylistOrderApiRequest,
 } from '../../shared/models/episode-playlist.model';
+import { API_RESOURCE_URI } from '../../shared/api-resource-uri/api-resources-uri';
 
 @Injectable()
 export class EpisodePlaylistsService {
@@ -20,7 +21,7 @@ export class EpisodePlaylistsService {
   getPlaylistById(playlistId: string): Observable<EpisodePlaylist> {
     return this.http
       .get<EpisodePlaylistApiResponse>(
-        `http://localhost:3000/playlist/${playlistId}`
+        `${API_RESOURCE_URI.WATCH_SERVICE}/episode-playlist/${playlistId}`
       )
       .pipe(map(response => toEpisodePlaylist(response)));
   }
@@ -28,20 +29,20 @@ export class EpisodePlaylistsService {
   getEpisodePlaylists(userId: string): Observable<EpisodePlaylist[]> {
     return this.http
       .get<EpisodePlaylistsApiResponse>(
-        `http://localhost:3000/playlist/user/${userId}`
+        `${API_RESOURCE_URI.WATCH_SERVICE}/episode-playlist/user/${userId}`
       )
       .pipe(map(response => toEpisodePlaylists(response)));
   }
 
   deletePlaylist(playlistId: string): Observable<void> {
     return this.http.delete<void>(
-      `http://localhost:3000/playlist/${playlistId}`
+      `${API_RESOURCE_URI.WATCH_SERVICE}/episode-playlist/${playlistId}`
     );
   }
 
   deletePlaylistMedia(playlistId: string, mediaId: number): Observable<void> {
     return this.http.delete<void>(
-      `http://localhost:3000/playlist/${playlistId}/${mediaId}`
+      `${API_RESOURCE_URI.WATCH_SERVICE}/episode-playlist/${playlistId}/${mediaId}`
     );
   }
 
@@ -50,7 +51,7 @@ export class EpisodePlaylistsService {
   ): Observable<string> {
     return this.http
       .post<EpisodePlaylistIdDto>(
-        `http://localhost:3000/playlist`,
+        `${API_RESOURCE_URI.WATCH_SERVICE}/episode-playlist`,
         createPlaylist
       )
       .pipe(map(idDto => idDto.id));
@@ -61,14 +62,14 @@ export class EpisodePlaylistsService {
     playlistItems: UpdateEpisodePlaylistOrderApiRequest
   ): Observable<void> {
     return this.http.put<void>(
-      `http://localhost:3000/playlist/${playlistId}`,
+      `${API_RESOURCE_URI.WATCH_SERVICE}/episode-playlist/${playlistId}`,
       playlistItems
     );
   }
 
   addToPlaylist(playlistId: string, request: AddPlaylistEpisodeRequest) {
     return this.http.patch<void>(
-      `http://localhost:3000/playlist/${playlistId}`,
+      `${API_RESOURCE_URI.WATCH_SERVICE}/episode-playlist/${playlistId}`,
       request
     );
   }

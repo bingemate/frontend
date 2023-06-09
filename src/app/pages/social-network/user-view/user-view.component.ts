@@ -15,9 +15,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { userProfilViewLinks } from '../social-network-routing.module';
 import { FriendResponse } from '../../../shared/models/friendship.models';
 import { FriendshipService } from '../../../feature/friendship/friendship.service';
-import { EpisodePlaylist } from '../../../shared/models/playlist.model';
 import { MoviePlaylistsService } from '../../../feature/playlist/movie-playlists.service';
 import { playlistViewLinks } from '../../watchlist/watchlist-routing.module';
+import { EpisodePlaylist } from '../../../shared/models/episode-playlist.model';
+import { MoviePlaylist } from '../../../shared/models/movie-playlist.model';
+import { EpisodePlaylistsService } from '../../../feature/playlist/episode-playlists.service';
 
 @Component({
   selector: 'app-user-view',
@@ -35,7 +37,8 @@ export class UserViewComponent {
   ratings: RatingResults = emptyRatingResults;
   ratingsCurrentPage = 1;
 
-  playlists: EpisodePlaylist[] = [];
+  episodePlaylists: EpisodePlaylist[] = [];
+  moviePlaylists: MoviePlaylist[] = [];
   playlistsLoading = false;
 
   friends: FriendResponse[] = [];
@@ -48,7 +51,8 @@ export class UserViewComponent {
     private readonly ratingService: RatingService,
     private readonly userService: UserService,
     private readonly friendshipService: FriendshipService,
-    private readonly playlistService: MoviePlaylistsService
+    private readonly episodePlaylistService: EpisodePlaylistsService,
+    private readonly moviePlaylistService: MoviePlaylistsService
   ) {
     this.currentRoute.params.subscribe(params => {
       this.userID = params['id'];
@@ -120,10 +124,18 @@ export class UserViewComponent {
 
   onGetUserPlaylists() {
     this.playlistsLoading = true;
-    this.playlistService.getMoviePlaylists(this.userID).subscribe(playlists => {
-      this.playlistsLoading = false;
-      this.playlists = playlists;
-    });
+    this.episodePlaylistService
+      .getEpisodePlaylists(this.userID)
+      .subscribe(playlists => {
+        this.playlistsLoading = false;
+        this.episodePlaylists = playlists;
+      });
+    this.moviePlaylistService
+      .getMoviePlaylists(this.userID)
+      .subscribe(playlists => {
+        this.playlistsLoading = false;
+        this.moviePlaylists = playlists;
+      });
   }
 
   protected readonly playlistViewLinks = playlistViewLinks;

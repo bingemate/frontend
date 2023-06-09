@@ -6,6 +6,7 @@ import {
   WatchlistItem,
   WatchlistResponse,
 } from '../../shared/models/watchlist.models';
+import { API_RESOURCE_URI } from '../../shared/api-resource-uri/api-resources-uri';
 
 @Injectable()
 export class WatchlistService {
@@ -13,31 +14,35 @@ export class WatchlistService {
 
   getWatchlistByUserId(userId: string): Observable<WatchlistItem[]> {
     return this.http
-      .get<WatchlistResponse>(`http://localhost:3000/watch-list/${userId}`)
+      .get<WatchlistResponse>(
+        `${API_RESOURCE_URI.WATCH_SERVICE}/watch-list/${userId}`
+      )
       .pipe(map(watchlist => watchlist.watchListItems));
   }
 
   createWatchlistItem(item: CreateWatchlistItem) {
     return this.http.post(
-      `http://localhost:3000/watch-list/${item.mediaId}`,
+      `${API_RESOURCE_URI.WATCH_SERVICE}/watch-list/${item.mediaId}`,
       item
     );
   }
 
   updateWatchlistItem(item: WatchlistItem) {
     return this.http.put(
-      `http://localhost:3000/watch-list/${item.mediaId}`,
+      `${API_RESOURCE_URI.WATCH_SERVICE}/watch-list/${item.mediaId}`,
       item
     );
   }
 
   getWatchlistItem(mediaId: number) {
     return this.http.get<WatchlistItem>(
-      `http://localhost:3000/watch-list/${mediaId}/item`
+      `${API_RESOURCE_URI.WATCH_SERVICE}/watch-list/${mediaId}/item`
     );
   }
 
   removeFromWatchlist(mediaId: number) {
-    return this.http.delete(`http://localhost:3000/watch-list/${mediaId}`);
+    return this.http.delete(
+      `${API_RESOURCE_URI.WATCH_SERVICE}/watch-list/${mediaId}`
+    );
   }
 }
