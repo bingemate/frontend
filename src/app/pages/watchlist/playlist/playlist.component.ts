@@ -74,6 +74,7 @@ export class PlaylistComponent implements OnInit {
             return this.moviePlaylistsService.getPlaylistById(id).pipe(
               mergeMap(playlist => {
                 this.moviePlaylist = playlist;
+                console.log(playlist);
                 return this.getMovies(playlist.items);
               }),
               tap(items => {

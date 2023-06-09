@@ -33,7 +33,7 @@ export interface PlaylistItemsApiResponse {
 }
 
 export interface MoviePlaylistItemApiResponse {
-  MovieId: number;
+  movieId: number;
 }
 
 export interface CreateMoviePlaylistApiRequest {
@@ -78,6 +78,6 @@ export function toMoviePlaylistItem(
   playlistItem: MoviePlaylistItemApiResponse
 ): MoviePlaylistItem {
   return {
-    movieId: playlistItem.MovieId,
+    movieId: playlistItem.movieId,
   };
 }

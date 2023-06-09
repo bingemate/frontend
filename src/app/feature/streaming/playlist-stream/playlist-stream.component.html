@@ -51,7 +51,7 @@
         </nz-list-item-meta>
       </nz-list-item>
       <nz-list-empty
-        *ngIf="episodePlaylistItems.length === 0"
+        *ngIf="episodePlaylistItems.length + moviePlaylistItems.length === 0"
         nzNoResult="Aucun média"></nz-list-empty>
     </nz-list>
   </cdk-virtual-scroll-viewport>

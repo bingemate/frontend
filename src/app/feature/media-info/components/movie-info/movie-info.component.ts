@@ -59,7 +59,7 @@ export class MovieInfoComponent implements OnInit, OnChanges {
     private watchlistService: WatchlistService
   ) {
     this.user$.subscribe(user => {
-      this.userId = user.id;
+      this.userId = user?.id;
     });
   }
 
@@ -99,6 +99,7 @@ export class MovieInfoComponent implements OnInit, OnChanges {
   }
 
   addToPlaylist(playlistId: string) {
+    console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
     if (this.movie) {
       this.moviePlaylistsService
         .addToPlaylist(playlistId, {
