@@ -1,14 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { forkJoin, map, mergeMap, Observable, Subscription } from 'rxjs';
-import { StreamingState } from '../store/streaming.state';
-import {
-  Playlist,
-  PlaylistItem,
-  PlaylistType,
-} from '../../../shared/models/playlist.model';
-import { StreamingActions } from '../store/streaming.actions';
+import { StreamingState } from '../store/movie-streaming-state.service';
+import { MovieStreamingActions } from '../store/movieStreamingActions';
 import { MediaInfoService } from '../../media-info/media-info.service';
+import { MoviePlaylist } from '../../../shared/models/movie-playlist.model';
 
 @Component({
   selector: 'app-playlist-stream',
@@ -17,14 +13,14 @@ import { MediaInfoService } from '../../media-info/media-info.service';
 })
 export class PlaylistStreamComponent implements OnInit, OnDestroy {
   @Select(StreamingState.playlist)
-  playlist$!: Observable<Playlist>;
+  playlist$!: Observable<MoviePlaylist>;
   @Select(StreamingState.autoplay)
   autoplay$!: Observable<boolean>;
   @Select(StreamingState.position)
   position$!: Observable<number>;
-  playlist?: Playlist;
+  playlist?: EpisodePlaylist;
   playlistItems: {
-    playlistItem: PlaylistItem;
+    playlistItem: EpisodePlaylistItem;
     media: {
       name: string;
       imageUrl: string;
@@ -64,10 +60,10 @@ export class PlaylistStreamComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
-  private getMovies(items: PlaylistItem[]) {
+  private getMovies(items: EpisodePlaylistItem[]) {
     return forkJoin(
       items.map(item =>
-        this.mediaService.getMovieInfo(item.mediaId).pipe(
+        this.mediaService.getMovieInfo(item.episodeId).pipe(
           map(media => {
             return {
               media: {
@@ -82,11 +78,11 @@ export class PlaylistStreamComponent implements OnInit, OnDestroy {
     );
   }
 
-  private getEpisodes(items: PlaylistItem[]) {
+  private getEpisodes(items: EpisodePlaylistItem[]) {
     return forkJoin(
       items.map(item =>
         this.mediaService
-          .getTvShowEpisodeInfo(item.mediaId, item.season, item.episode)
+          .getTvShowEpisodeInfo(item.episodeId, item.season, item.episode)
           .pipe(
             map(media => {
               return {
@@ -103,10 +99,10 @@ export class PlaylistStreamComponent implements OnInit, OnDestroy {
   }
 
   seekMedia(index: number) {
-    this.store.dispatch(new StreamingActions.SeekMediaPlaylist(index));
+    this.store.dispatch(new MovieStreamingActions.SeekMediaPlaylist(index));
   }
 
   onAutoplayToggle($event: boolean) {
-    this.store.dispatch(new StreamingActions.AutoplayToggle($event));
+    this.store.dispatch(new MovieStreamingActions.AutoplayToggle($event));
   }
 }

@@ -39,7 +39,7 @@ const routes: Routes = [
     component: PlaylistsComponent,
   },
   {
-    path: watchlistLinks.playlists.path + '/:id',
+    path: watchlistLinks.playlists.path + '/:type/:id',
     component: PlaylistComponent,
   },
 ];

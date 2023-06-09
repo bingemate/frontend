@@ -15,8 +15,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { userProfilViewLinks } from '../social-network-routing.module';
 import { FriendResponse } from '../../../shared/models/friendship.models';
 import { FriendshipService } from '../../../feature/friendship/friendship.service';
-import { Playlist } from '../../../shared/models/playlist.model';
-import { PlaylistsService } from '../../../feature/playlist/playlists.service';
+import { EpisodePlaylist } from '../../../shared/models/playlist.model';
+import { MoviePlaylistsService } from '../../../feature/playlist/movie-playlists.service';
 import { playlistViewLinks } from '../../watchlist/watchlist-routing.module';
 
 @Component({
@@ -35,7 +35,7 @@ export class UserViewComponent {
   ratings: RatingResults = emptyRatingResults;
   ratingsCurrentPage = 1;
 
-  playlists: Playlist[] = [];
+  playlists: EpisodePlaylist[] = [];
   playlistsLoading = false;
 
   friends: FriendResponse[] = [];
@@ -48,7 +48,7 @@ export class UserViewComponent {
     private readonly ratingService: RatingService,
     private readonly userService: UserService,
     private readonly friendshipService: FriendshipService,
-    private readonly playlistService: PlaylistsService
+    private readonly playlistService: MoviePlaylistsService
   ) {
     this.currentRoute.params.subscribe(params => {
       this.userID = params['id'];
@@ -120,7 +120,7 @@ export class UserViewComponent {
 
   onGetUserPlaylists() {
     this.playlistsLoading = true;
-    this.playlistService.getPlaylists(this.userID).subscribe(playlists => {
+    this.playlistService.getMoviePlaylists(this.userID).subscribe(playlists => {
       this.playlistsLoading = false;
       this.playlists = playlists;
     });

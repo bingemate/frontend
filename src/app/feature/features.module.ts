@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { NgxsModule } from '@ngxs/store';
 import { AlbumsState } from './albums/store/albums.state';
 import { AlbumsService } from './albums/albums.service';
-import { StreamingState } from './streaming/store/streaming.state';
+import { StreamingState } from './streaming/store/movie-streaming-state.service';
 import { PlaylistModule } from './playlist/playlist.module';
 import { WatchlistModule } from './watchlist/watchlist.module';
 

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
-import { environment } from '../../../environments/environment';
 import {
   Statistic,
   StatisticApiResponse,
@@ -14,9 +13,7 @@ export class StatisticsService {
 
   getStatisticsByUserId(userId: string): Observable<Statistic[]> {
     return this.http
-      .get<StatisticApiResponse[]>(
-        `${environment.apiUrl}/watch-service/stats/${userId}`
-      )
+      .get<StatisticApiResponse[]>(`http://localhost:3000/stats/${userId}`)
       .pipe(map(response => toStatistics(response)));
   }
 }

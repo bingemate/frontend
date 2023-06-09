@@ -19,7 +19,7 @@ import {
   StreamStatusEnum,
   StreamUpdateEvent,
 } from '../../../shared/models/streaming.model';
-import { StreamingActions } from '../store/streaming.actions';
+import { MovieStreamingActions } from '../store/movieStreamingActions';
 import { Store } from '@ngxs/store';
 import { MediaResponse } from '../../../shared/models/media.models';
 
@@ -162,7 +162,7 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
       api
         .getDefaultMedia()
         .subscriptions.ended.subscribe(() =>
-          this.store.dispatch(new StreamingActions.MediaEndedPlaylist())
+          this.store.dispatch(new MovieStreamingActions.MediaEndedPlaylist())
         )
     );
     api.seekTime(this.timeSeek);

@@ -7,7 +7,9 @@ import { StreamingActions } from './streaming.actions';
 @State<StreamingStateModel>({
   name: 'streaming',
   defaults: {
-    playlist: undefined,
+    episodePlaylist: undefined,
+    moviePlaylist: undefined,
+    type: undefined,
     position: 0,
     autoplay: true,
   },
@@ -20,8 +22,13 @@ export class StreamingState {
   ) {}
 
   @Selector()
-  static playlist(state: StreamingStateModel) {
-    return state.playlist;
+  static episodePlaylist(state: StreamingStateModel) {
+    return state.episodePlaylist;
+  }
+
+  @Selector()
+  static moviePlaylist(state: StreamingStateModel) {
+    return state.moviePlaylist;
   }
 
   @Selector()
@@ -47,7 +54,7 @@ export class StreamingState {
       this.router
         .navigate([
           '/streaming/stream',
-          ctx.getState().playlist?.items[payload.position].mediaId,
+          ctx.getState().playlist?.items[payload.position].movieId,
         ])
         .then();
     });
@@ -65,7 +72,7 @@ export class StreamingState {
       this.router
         .navigate([
           '/streaming/stream',
-          ctx.getState().playlist?.items[payload.position].mediaId,
+          ctx.getState().playlist?.items[payload.position].movieId,
         ])
         .then();
     });
@@ -88,7 +95,7 @@ export class StreamingState {
       this.router
         .navigate([
           '/streaming/stream',
-          ctx.getState().playlist?.items[position].mediaId,
+          ctx.getState().playlist?.items[position].movieId,
         ])
         .then();
     });

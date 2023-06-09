@@ -1,9 +1,9 @@
-import { Playlist } from '../../../shared/models/playlist.model';
+import { MoviePlaylist } from '../../../shared/models/movie-playlist.model';
 
 export namespace StreamingActions {
   export class WatchPlaylist {
     static readonly type = '[Streaming] Watch Playlist';
-    constructor(public playlist: Playlist, public position: number) {}
+    constructor(public playlist: MoviePlaylist, public position: number) {}
   }
   export class SeekMediaPlaylist {
     static readonly type = '[Streaming] Playlist Seek Media';

@@ -9,8 +9,9 @@ import { environment } from '../../../../environments/environment';
 import { KeycloakEventType, KeycloakService } from 'keycloak-angular';
 import { MediaResponse } from '../../../shared/models/media.models';
 import { Select } from '@ngxs/store';
-import { StreamingState } from '../../../feature/streaming/store/streaming.state';
-import { Playlist } from '../../../shared/models/playlist.model';
+import { StreamingState } from '../../../feature/streaming/store/movie-streaming-state.service';
+import { EpisodePlaylist } from '../../../shared/models/episode-playlist.model';
+import { MoviePlaylist } from '../../../shared/models/movie-playlist.model';
 
 @Component({
   selector: 'app-stream',
@@ -18,8 +19,10 @@ import { Playlist } from '../../../shared/models/playlist.model';
   styleUrls: ['./stream.component.less'],
 })
 export class StreamComponent implements OnInit, OnDestroy {
-  @Select(StreamingState.playlist)
-  playlist$!: Observable<Playlist>;
+  @Select(StreamingState.episodePlaylist)
+  episodePlaylist$!: Observable<EpisodePlaylist>;
+  @Select(StreamingState.moviePlaylist)
+  moviePlaylist$!: Observable<MoviePlaylist>;
   mediaId = 0;
   mediaFile: MediaFile | undefined;
   mediaInfo: MediaResponse | undefined;

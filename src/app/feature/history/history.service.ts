@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
-import { environment } from '../../../environments/environment';
 import {
   HistoryAPIResponse,
   HistoryModel,
@@ -16,13 +15,11 @@ export class HistoryService {
 
   getHistory(): Observable<HistoryModel[]> {
     return this.http
-      .get<HistoryAPIResponse>(`${environment.apiUrl}/watch-service/history`)
+      .get<HistoryAPIResponse>(`http://localhost:3000/history`)
       .pipe(map(response => toHistories(response)));
   }
 
   deleteHistory(mediaId: number): Observable<void> {
-    return this.http.delete<void>(
-      `${environment.apiUrl}/watch-service/history/${mediaId}`
-    );
+    return this.http.delete<void>(`http://localhost:3000/history/${mediaId}`);
   }
 }

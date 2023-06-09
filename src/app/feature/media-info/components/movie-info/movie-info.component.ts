@@ -11,10 +11,9 @@ import { streamingLinks } from '../../../../pages/streaming/streaming-routing.mo
 import { mediasLinks } from '../../../../pages/medias/medias-routing.module';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { Playlist } from '../../../../shared/models/playlist.model';
 import { PlaylistState } from '../../../playlist/store/playlist.state';
 import { PlaylistActions } from '../../../playlist/store/playlist.actions';
-import { PlaylistsService } from '../../../playlist/playlists.service';
+import { MoviePlaylistsService } from '../../../playlist/movie-playlists.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 import { WatchlistService } from '../../../watchlist/watchlist.service';
 import {
@@ -24,6 +23,7 @@ import {
 } from '../../../../shared/models/watchlist.models';
 import { AuthState } from '../../../../core/auth/store/auth.state';
 import { UserResponse } from '../../../../shared/models/user.models';
+import { MoviePlaylist } from '../../../../shared/models/movie-playlist.model';
 
 @Component({
   selector: 'app-movie-info',
@@ -45,7 +45,7 @@ export class MovieInfoComponent implements OnInit, OnChanges {
   readonly statusNames = Object.values(WatchListStatus);
 
   @Select(PlaylistState.moviePlaylists)
-  playlists$!: Observable<Playlist[]>;
+  playlists$!: Observable<MoviePlaylist[]>;
   @Input() movie: MovieResponse | undefined;
   actorsCurrentPage = 1;
   actorsPageSize = 5;
@@ -54,7 +54,7 @@ export class MovieInfoComponent implements OnInit, OnChanges {
 
   constructor(
     private readonly store: Store,
-    private playlistsService: PlaylistsService,
+    private moviePlaylistsService: MoviePlaylistsService,
     private readonly notificationsService: NotificationsService,
     private watchlistService: WatchlistService
   ) {
@@ -100,9 +100,9 @@ export class MovieInfoComponent implements OnInit, OnChanges {
 
   addToPlaylist(playlistId: string) {
     if (this.movie) {
-      this.playlistsService
+      this.moviePlaylistsService
         .addToPlaylist(playlistId, {
-          mediaId: this.movie.id,
+          movieId: this.movie.id,
         })
         .subscribe(() =>
           this.notificationsService.success('Film ajouté à la playlist')

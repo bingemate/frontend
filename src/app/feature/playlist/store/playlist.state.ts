@@ -1,53 +1,59 @@
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { Injectable } from '@angular/core';
-import {
-  PlaylistStateModel,
-  PlaylistType,
-} from '../../../shared/models/playlist.model';
 import { PlaylistActions } from './playlist.actions';
 import { AuthState } from '../../../core/auth/store/auth.state';
-import { PlaylistsService } from '../playlists.service';
+import { MoviePlaylistsService } from '../movie-playlists.service';
 import { tap } from 'rxjs/operators';
+import { PlaylistStateModel } from '../../../shared/models/playlist.models';
+import { EpisodePlaylistsService } from '../episode-playlists.service';
+import { forkJoin } from 'rxjs';
 
 @State<PlaylistStateModel>({
   name: 'playlist',
   defaults: {
-    playlists: [],
+    moviePlaylists: [],
+    episodePlaylists: [],
   },
 })
 @Injectable()
 export class PlaylistState {
   constructor(
     private readonly store: Store,
-    private readonly playlistsService: PlaylistsService
+    private readonly moviePlaylistsService: MoviePlaylistsService,
+    private readonly episodePlaylistsService: EpisodePlaylistsService
   ) {}
 
   @Selector()
   static episodePlaylists(state: PlaylistStateModel) {
-    return state.playlists.filter(
-      playlist => playlist.type === PlaylistType.EPISODE
-    );
+    return state.episodePlaylists;
   }
   @Selector()
   static moviePlaylists(state: PlaylistStateModel) {
-    return state.playlists.filter(
-      playlist => playlist.type === PlaylistType.MOVIE
-    );
+    return state.moviePlaylists;
   }
 
   @Action(PlaylistActions.GetCurrentUserPlaylists)
-  autoplayToggle(ctx: StateContext<PlaylistStateModel>) {
+  getCurrentUserPlaylists(ctx: StateContext<PlaylistStateModel>) {
     const userId = this.store.selectSnapshot(AuthState.user)?.id;
     if (!userId) {
       return;
     }
 
-    return this.playlistsService.getPlaylists(userId).pipe(
-      tap(playlists =>
-        ctx.patchState({
-          playlists,
-        })
-      )
-    );
+    return forkJoin([
+      this.episodePlaylistsService.getPlaylists(userId).pipe(
+        tap(episodePlaylists =>
+          ctx.patchState({
+            episodePlaylists,
+          })
+        )
+      ),
+      this.moviePlaylistsService.getMoviePlaylists(userId).pipe(
+        tap(moviePlaylists =>
+          ctx.patchState({
+            moviePlaylists,
+          })
+        )
+      ),
+    ]);
   }
 }

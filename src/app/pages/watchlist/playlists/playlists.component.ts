@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { Playlist, PlaylistType } from '../../../shared/models/playlist.model';
 import { AuthState } from '../../../core/auth/store/auth.state';
+import { MoviePlaylistsService } from '../../../feature/playlist/movie-playlists.service';
+import { EpisodePlaylist } from '../../../shared/models/episode-playlist.model';
+import { MoviePlaylist } from '../../../shared/models/movie-playlist.model';
+import { EpisodePlaylistsService } from '../../../feature/playlist/episode-playlists.service';
 import { StreamingActions } from '../../../feature/streaming/store/streaming.actions';
-import { PlaylistsService } from '../../../feature/playlist/playlists.service';
 
 @Component({
   selector: 'app-playlists',
@@ -11,15 +13,17 @@ import { PlaylistsService } from '../../../feature/playlist/playlists.service';
   styleUrls: ['./playlists.component.less'],
 })
 export class PlaylistsComponent implements OnInit {
-  playlists: Playlist[] = [];
+  episodePlaylists: EpisodePlaylist[] = [];
+  moviePlaylists: MoviePlaylist[] = [];
   isPlaylistShown = false;
   isConfirmLoading = false;
   playlistName?: string;
-  playlistType?: PlaylistType;
+  playlistType?: 'MOVIE' | 'EPISODE';
 
   constructor(
     private readonly store: Store,
-    private readonly playlistsService: PlaylistsService
+    private readonly moviePlaylistsService: MoviePlaylistsService,
+    private readonly episodePlaylistsService: EpisodePlaylistsService
   ) {}
 
   ngOnInit(): void {
@@ -27,9 +31,11 @@ export class PlaylistsComponent implements OnInit {
     if (!userId) {
       return;
     }
-    this.playlistsService.getPlaylists(userId).subscribe(playlists => {
-      this.playlists = playlists;
-    });
+    this.moviePlaylistsService
+      .getMoviePlaylists(userId)
+      .subscribe(playlists => {
+        this.moviePlaylists = playlists;
+      });
   }
 
   showModal(): void {
@@ -49,29 +55,40 @@ export class PlaylistsComponent implements OnInit {
     const name = this.playlistName;
     const type = this.playlistType;
     this.isConfirmLoading = true;
-    this.playlistsService.createPlaylist({ name, type }).subscribe(id => {
-      this.playlists.push({
-        id: id,
-        name,
-        type,
-        userId: '',
-        items: [],
+    if (type === 'MOVIE') {
+      this.moviePlaylistsService.createPlaylist({ name }).subscribe(id => {
+        this.moviePlaylists.push({
+          id: id,
+          name,
+          userId: '',
+          items: [],
+        });
+        this.closeModal();
       });
-      this.closeModal();
-    });
+    } else {
+      this.episodePlaylistsService.createPlaylist({ name }).subscribe(id => {
+        this.moviePlaylists.push({
+          id: id,
+          name,
+          userId: '',
+          items: [],
+        });
+        this.closeModal();
+      });
+    }
   }
 
   deletePlaylist(playlistId: string) {
-    this.playlistsService.deletePlaylist(playlistId).subscribe(() => {
-      this.playlists = this.playlists.filter(
+    this.moviePlaylistsService.deletePlaylist(playlistId).subscribe(() => {
+      this.moviePlaylists = this.moviePlaylists.filter(
         playlist => playlist.id !== playlistId
       );
     });
   }
 
-  watchPlaylist(index: number) {
+  watchMoviePlaylist(index: number) {
     this.store.dispatch(
-      new StreamingActions.WatchPlaylist(this.playlists[index], 0)
+      new StreamingActions.WatchPlaylist(this.moviePlaylists[index], 0)
     );
   }
 }
