@@ -25,7 +25,7 @@ export class EpisodePlaylistsService {
       .pipe(map(response => toEpisodePlaylist(response)));
   }
 
-  getPlaylists(userId: string): Observable<EpisodePlaylist[]> {
+  getEpisodePlaylists(userId: string): Observable<EpisodePlaylist[]> {
     return this.http
       .get<EpisodePlaylistsApiResponse>(
         `http://localhost:3000/playlist/user/${userId}`

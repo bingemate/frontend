@@ -36,6 +36,11 @@ export class PlaylistsComponent implements OnInit {
       .subscribe(playlists => {
         this.moviePlaylists = playlists;
       });
+    this.episodePlaylistsService
+      .getEpisodePlaylists(userId)
+      .subscribe(playlists => {
+        this.episodePlaylists = playlists;
+      });
   }
 
   showModal(): void {
@@ -67,7 +72,7 @@ export class PlaylistsComponent implements OnInit {
       });
     } else {
       this.episodePlaylistsService.createPlaylist({ name }).subscribe(id => {
-        this.moviePlaylists.push({
+        this.episodePlaylists.push({
           id: id,
           name,
           userId: '',

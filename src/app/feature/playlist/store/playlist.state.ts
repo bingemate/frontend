@@ -40,7 +40,7 @@ export class PlaylistState {
     }
 
     return forkJoin([
-      this.episodePlaylistsService.getPlaylists(userId).pipe(
+      this.episodePlaylistsService.getEpisodePlaylists(userId).pipe(
         tap(episodePlaylists =>
           ctx.patchState({
             episodePlaylists,
