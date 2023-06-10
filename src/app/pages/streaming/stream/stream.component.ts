@@ -24,6 +24,7 @@ export class StreamComponent implements OnInit, OnDestroy {
   @Select(StreamingState.moviePlaylist)
   moviePlaylist$!: Observable<MoviePlaylist>;
   mediaId = 0;
+  type?: 'episode' | 'movie';
   mediaFile: MediaFile | undefined;
   mediaInfo: MediaResponse | undefined;
   error: string | undefined;
@@ -41,6 +42,7 @@ export class StreamComponent implements OnInit, OnDestroy {
       .pipe(
         switchMap(params => {
           this.mediaId = parseInt(params['id']);
+          this.type = params['type'];
           return forkJoin([
             this.mediaInfoService.getFileInfos(this.mediaId),
             this.mediaInfoService.getMediaInfo(this.mediaId),
@@ -83,7 +85,7 @@ export class StreamComponent implements OnInit, OnDestroy {
       transports: ['polling'],
       extraHeaders: { Authorization: `Bearer ${key}` },
       path: '/dev/watch-service/socket.io',
-      query: { mediaId: this.mediaId },
+      query: { mediaId: this.mediaId, type: this.type },
     });
     this.keycloak.keycloakEvents$.subscribe(async event => {
       if (event.type === KeycloakEventType.OnTokenExpired && this.socket) {

@@ -14,7 +14,7 @@ export const streamingLinks: NavigationLinks<'stream'> = {
 
 const routes: Routes = [
   {
-    path: streamingLinks.stream.path + '/:id',
+    path: streamingLinks.stream.path + '/:type/:id',
     component: StreamComponent,
     canActivate: [KeycloakGuard],
     data: {

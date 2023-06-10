@@ -61,6 +61,7 @@ export class StreamingState {
       this.router
         .navigate([
           '/streaming/stream',
+          'movie',
           ctx.getState().moviePlaylist?.items[payload.position].movieId,
         ])
         .then();
@@ -82,6 +83,7 @@ export class StreamingState {
       this.router
         .navigate([
           '/streaming/stream',
+          'episode',
           ctx.getState().moviePlaylist?.items[payload.position].movieId,
         ])
         .then();
@@ -101,7 +103,9 @@ export class StreamingState {
         ? ctx.getState().moviePlaylist?.items[payload.position].movieId
         : ctx.getState().episodePlaylist?.items[payload.position].episodeId;
     this.ngZone.run(() => {
-      this.router.navigate(['/streaming/stream', id]).then();
+      this.router
+        .navigate(['/streaming/stream', ctx.getState().type, id])
+        .then();
     });
   }
 
@@ -127,7 +131,9 @@ export class StreamingState {
       position,
     });
     this.ngZone.run(() => {
-      this.router.navigate(['/streaming/stream', id]).then();
+      this.router
+        .navigate(['/streaming/stream', ctx.getState().type, id])
+        .then();
     });
   }
 

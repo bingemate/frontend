@@ -13,7 +13,7 @@
             <div *nzSpaceItem class="item">
               <app-media-info
                 [routerLink]="
-                  isSubscribed ? [mediaStreamPath, item.mediaId] : []
+                  isSubscribed ? [mediaStreamPath, item.type, item.mediaId] : []
                 "
                 [queryParams]="{
                   progress: item.stoppedAt > 0.95 ? 0 : item.stoppedAt

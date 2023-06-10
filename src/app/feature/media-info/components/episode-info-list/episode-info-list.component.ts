@@ -21,7 +21,7 @@ export class EpisodeInfoListComponent implements OnInit {
   @Select(AuthState.isSubscribed)
   isSubscribed$!: Observable<boolean>;
 
-  readonly streamPath = `/${navigationRoot.streaming.path}/${streamingLinks.stream.path}/`;
+  readonly streamPath = `/${navigationRoot.streaming.path}/${streamingLinks.stream.path}/episode/`;
 
   @Select(PlaylistState.episodePlaylists)
   playlists$!: Observable<EpisodePlaylist[]>;

@@ -38,7 +38,7 @@ export class MovieInfoComponent implements OnInit, OnChanges {
   readonly user$!: Observable<UserResponse>;
   userId = '';
 
-  readonly streamPath = `/${navigationRoot.streaming.path}/${streamingLinks.stream.path}/`;
+  readonly streamPath = `/${navigationRoot.streaming.path}/${streamingLinks.stream.path}/movie/`;
   readonly moviesByGenrePath = `/${navigationRoot.medias.path}/${mediasLinks.movies_by_genre.path}/`;
   readonly moviesByActorPath = `/${navigationRoot.medias.path}/${mediasLinks.movies_by_actor.path}/`;
   readonly moviesByStudioPath = `/${navigationRoot.medias.path}/${mediasLinks.movies_by_studio.path}/`;
