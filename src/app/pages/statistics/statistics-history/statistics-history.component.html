@@ -3,6 +3,7 @@
     <nz-list-item-meta>
       <nz-list-item-meta-description>
         <app-media-info
+          [type]="item.type"
           [routerLink]="
             (isSubscribed$ | async)
               ? [mediaStreamPath, item.type, item.mediaId]
