@@ -11,6 +11,7 @@ import { NotificationsService } from '../../../../core/notifications/notificatio
 export class RatingViewComponent {
   @Input() rating: RatingResponse | undefined;
   @Input() editable = false;
+  @Input() type?: 'movie' | 'tv';
   @Output() updateRating: EventEmitter<RatingResponse> = new EventEmitter();
 
   constructor(
@@ -19,7 +20,10 @@ export class RatingViewComponent {
   ) {}
 
   onUpdateRating(rating: RatingResponse, value: number): void {
-    this.ratingService.saveRating(rating.mediaId, value).subscribe(response => {
+    (this.type === 'tv'
+      ? this.ratingService.saveTvRating(rating.mediaId, value)
+      : this.ratingService.saveMovieRating(rating.mediaId, value)
+    ).subscribe(response => {
       this.notificationsService.success('Note mise à jour');
       this.updateRating.emit(response);
       rating.rating = value;

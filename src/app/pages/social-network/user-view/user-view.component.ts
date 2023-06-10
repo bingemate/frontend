@@ -82,17 +82,25 @@ export class UserViewComponent {
     this.onGetUserComments();
   }
 
-  onGetUserRatings() {
+  onGetTvUserRatings() {
     this.ratingService
-      .getUserRating(this.userID, this.ratingsCurrentPage)
+      .getUserTvRatings(this.userID, this.ratingsCurrentPage)
       .subscribe(ratings => {
         this.ratings = ratings;
       });
   }
 
-  onRefreshUserRatings() {
+  onGetMovieUserRatings() {
+    this.ratingService
+      .getUserMovieRatings(this.userID, this.ratingsCurrentPage)
+      .subscribe(ratings => {
+        this.ratings = ratings;
+      });
+  }
+
+  onRefreshUserTvRatings() {
     this.ratingsCurrentPage = 1;
-    this.onGetUserRatings();
+    this.onGetTvUserRatings();
   }
 
   onCommentsPageChange(page: number) {
@@ -102,7 +110,7 @@ export class UserViewComponent {
 
   onRatingsPageChange(page: number) {
     this.ratingsCurrentPage = page;
-    this.onGetUserRatings();
+    this.onGetTvUserRatings();
   }
 
   onViewUser(userID: string) {
@@ -139,4 +147,6 @@ export class UserViewComponent {
   }
 
   protected readonly playlistViewLinks = playlistViewLinks;
+
+  handleIndexChange($event: number) {}
 }

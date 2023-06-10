@@ -88,7 +88,7 @@ export class MovieViewComponent {
 
   onGetUserRating() {
     this.ratingService
-      .getUserMediaRating(this.user?.id ?? '', this.movieId ?? 0)
+      .getUserMovieRating(this.user?.id ?? '', this.movieId ?? 0)
       .subscribe(rating => {
         this.userRating = rating;
       });
@@ -96,7 +96,7 @@ export class MovieViewComponent {
 
   onGetMediaRatings() {
     this.ratingService
-      .getMediaRating(this.movieId ?? 0, this.ratingsCurrentPage)
+      .getMovieRating(this.movieId ?? 0, this.ratingsCurrentPage)
       .subscribe(ratings => {
         this.ratings = ratings;
         console.log(ratings);

@@ -9,6 +9,7 @@
           <nz-space nzDirection="vertical" nzSize="large" style="width: 100%">
             <app-rating-view
               *nzSpaceItem
+              [type]="'tv'"
               [editable]="true"
               [rating]="userRating"
               (updateRating)="onRefreshRatings()"></app-rating-view>
