@@ -3,14 +3,14 @@
     <nz-collapse>
       <nz-collapse-panel
         nzActive="true"
-        *ngFor="let status of statusNames"
-        [nzHeader]="statusMap[status]">
+        *ngFor="let status of tvShowStatusNames"
+        [nzHeader]="status | tvShowWatchlistStatus">
         <nz-list nzItemLayout="vertical" [nzLoading]="false" nzBordered>
           <ng-container *ngFor="let item of showWatchlist">
             <nz-list-item *ngIf="item.watchlist.status === status">
               <nz-list-item-meta>
                 <nz-list-item-meta-title>
-                  <a [routerLink]="[tvShowViewPath, item.watchlist.mediaId]">
+                  <a [routerLink]="[tvShowViewPath, item.watchlist.tvShowId]">
                     <nz-space nzDirection="horizontal" nzSize="large">
                       <img
                         *nzSpaceItem
@@ -21,7 +21,7 @@
                         alt="logo"
                         [nzSrc]="item.media.posterUrl" />
                       <span *nzSpaceItem>
-                        {{ item.watchlist.mediaId | tvName | async }}
+                        {{ item.watchlist.tvShowId | tvName | async }}
                       </span>
                     </nz-space>
                   </a>
@@ -54,7 +54,7 @@
                       <li
                         nz-menu-item
                         [nzSelected]="item.watchlist.status === status"
-                        *ngFor="let status of statusNames"
+                        *ngFor="let status of tvShowStatusNames"
                         (click)="changeShowStatus(item, status)">
                         {{ statusMap[status] }}
                       </li>
@@ -75,14 +75,14 @@
     <nz-collapse>
       <nz-collapse-panel
         nzActive="true"
-        *ngFor="let status of statusNames"
+        *ngFor="let status of movieStatusNames"
         [nzHeader]="statusMap[status]">
         <nz-list nzItemLayout="vertical" [nzLoading]="false" nzBordered>
           <ng-container *ngFor="let item of movieWatchlist">
             <nz-list-item *ngIf="item.watchlist.status === status">
               <nz-list-item-meta>
                 <nz-list-item-meta-title>
-                  <a [routerLink]="[movieViewPath, item.watchlist.mediaId]">
+                  <a [routerLink]="[movieViewPath, item.watchlist.movieId]">
                     <nz-space nzDirection="horizontal" nzSize="large">
                       <img
                         *nzSpaceItem
@@ -93,7 +93,7 @@
                         alt="logo"
                         [nzSrc]="item.media.posterUrl" />
                       <span *nzSpaceItem>
-                        {{ item.watchlist.mediaId | movieName | async }}
+                        {{ item.watchlist.movieId | movieName | async }}
                       </span>
                     </nz-space>
                   </a>
@@ -112,7 +112,7 @@
                     <li
                       nz-menu-item
                       [nzSelected]="item.watchlist.status === status"
-                      *ngFor="let status of statusNames"
+                      *ngFor="let status of movieStatusNames"
                       (click)="changeMovieStatus(item, status)">
                       {{ statusMap[status] }}
                     </li>

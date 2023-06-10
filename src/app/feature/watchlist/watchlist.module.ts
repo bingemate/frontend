@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
-import { WatchlistService } from './watchlist.service';
+import { TvShowWatchlistService } from './tv-show-watchlist.service';
+import { MovieWatchlistService } from './movie-watchlist.service';
 
 @NgModule({
   declarations: [],
   imports: [],
-  providers: [WatchlistService],
+  providers: [TvShowWatchlistService, MovieWatchlistService],
 })
 export class WatchlistModule {}
