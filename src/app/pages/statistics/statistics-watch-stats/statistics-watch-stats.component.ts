@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { StatisticsService } from '../statistics.service';
+import { EpisodeStatisticsService } from '../episode-statistics.service';
 import { AuthState } from '../../../core/auth/store/auth.state';
 import { Store } from '@ngxs/store';
-import { Statistic } from '../../../shared/models/statistic';
+import { MovieStatisticsService } from '../movie-statistics.service';
+import { Statistic } from '../../../shared/models/statistic.models';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-statistics-watch-stats',
@@ -13,15 +15,19 @@ export class StatisticsWatchStatsComponent implements OnInit {
   stats: Statistic[] = [];
 
   constructor(
-    private statService: StatisticsService,
+    private episodeStatisticsService: EpisodeStatisticsService,
+    private movieStatisticsService: MovieStatisticsService,
     private readonly store: Store
   ) {}
 
   ngOnInit(): void {
     const userId = this.store.selectSnapshot(AuthState.user)?.id;
     if (userId) {
-      this.statService.getStatisticsByUserId(userId).subscribe(stats => {
-        this.stats = stats;
+      forkJoin([
+        this.episodeStatisticsService.getStatisticsByUserId(userId),
+        this.movieStatisticsService.getStatisticsByUserId(userId),
+      ]).subscribe(([episodeStats, movieStats]) => {
+        this.stats = [...episodeStats, ...movieStats];
       });
     }
   }

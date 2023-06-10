@@ -24,7 +24,7 @@ export function toEpisodeHistory(
     userId: history.userId,
     mediaId: history.episodeId,
     stoppedAt: history.stoppedAt,
-    viewedAt: history.viewedAt,
+    viewedAt: new Date(history.viewedAt),
     type: 'episode',
   };
 }
