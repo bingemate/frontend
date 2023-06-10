@@ -57,7 +57,7 @@ export class AuthHomeComponent implements OnInit {
       ([episodeHistory, movieHistory]) =>
         (this.history = [...episodeHistory, ...movieHistory]
           .filter(history => history.stoppedAt < 0.9)
-          .sort((a, b) => a.viewedAt.getTime() - b.viewedAt.getTime()))
+          .sort((a, b) => b.viewedAt.getTime() - a.viewedAt.getTime()))
     );
     this.mediaDiscoverService.getPopularMovies().subscribe(movies => {
       this.popularMovies = movies.results;

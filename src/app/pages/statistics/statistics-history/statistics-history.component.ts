@@ -33,7 +33,7 @@ export class StatisticsHistoryComponent implements OnInit {
     ]).subscribe(
       ([episodeHistory, movieHistory]) =>
         (this.history = [...episodeHistory, ...movieHistory].sort(
-          (a, b) => a.viewedAt.getTime() - b.viewedAt.getTime()
+          (a, b) => b.viewedAt.getTime() - a.viewedAt.getTime()
         ))
     );
   }
