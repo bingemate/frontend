@@ -96,9 +96,15 @@ export class MediaInfoService {
     );
   }
 
-  getFileInfos(mediaId: number): Observable<MediaFile> {
+  getMovieFileInfos(mediaId: number): Observable<MediaFile> {
     return this.http.get<MediaFile>(
-      API_RESOURCE_URI.MEDIA_INFO + '/media-file/file-tmdb/' + mediaId
+      API_RESOURCE_URI.MEDIA_INFO + '/media-file/movie/' + mediaId
+    );
+  }
+
+  getEpisodeFileInfos(mediaId: number): Observable<MediaFile> {
+    return this.http.get<MediaFile>(
+      API_RESOURCE_URI.MEDIA_INFO + '/media-file/episode/' + mediaId
     );
   }
 }
