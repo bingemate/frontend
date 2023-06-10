@@ -1,7 +1,10 @@
-import { Playlist } from './playlist.model';
+import { MoviePlaylist } from './movie-playlist.model';
+import { EpisodePlaylist } from './episode-playlist.model';
 
 export interface StreamingStateModel {
-  playlist?: Playlist;
+  moviePlaylist?: MoviePlaylist;
+  episodePlaylist?: EpisodePlaylist;
+  type?: 'movie' | 'episode';
   position: number;
   autoplay: boolean;
 }

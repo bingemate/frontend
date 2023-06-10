@@ -2,17 +2,16 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { navigationRoot } from '../../../../app-routing.module';
 import { mediasLinks } from '../../../../pages/medias/medias-routing.module';
 import { Person, TvShowResponse } from '../../../../shared/models/media.models';
-import {
-  WatchlistItem,
-  WatchListStatus,
-  WatchListType,
-} from '../../../../shared/models/watchlist.models';
-import { WatchlistService } from '../../../watchlist/watchlist.service';
+import { TvShowWatchlistService } from '../../../watchlist/tv-show-watchlist.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 import { Select } from '@ngxs/store';
 import { AuthState } from '../../../../core/auth/store/auth.state';
 import { Observable } from 'rxjs';
 import { UserResponse } from '../../../../shared/models/user.models';
+import {
+  TvShowWatchlistItem,
+  TvShowWatchListStatus,
+} from '../../../../shared/models/tv-show-watchlist.models';
 
 @Component({
   selector: 'app-tv-info',
@@ -27,17 +26,17 @@ export class TvInfoComponent implements OnChanges {
   readonly tvsByGenrePath = `/${navigationRoot.medias.path}/${mediasLinks.tv_shows_by_genre.path}/`;
   readonly tvsByActorPath = `/${navigationRoot.medias.path}/${mediasLinks.tv_show_by_actor.path}/`;
   readonly tvsByNetworkPath = `/${navigationRoot.medias.path}/${mediasLinks.tv_shows_by_network.path}/`;
-  readonly statusNames = Object.values(WatchListStatus);
+  readonly statusNames = Object.values(TvShowWatchListStatus);
 
   @Input() tv: TvShowResponse | undefined;
   actorsCurrentPage = 1;
   actorsPageSize = 5;
   isMediaInWatchList = false;
-  watchlistItem: WatchlistItem | undefined;
+  watchlistItem: TvShowWatchlistItem | undefined;
 
   constructor(
     private readonly notificationsService: NotificationsService,
-    private watchlistService: WatchlistService
+    private watchlistService: TvShowWatchlistService
   ) {
     this.user$.subscribe(user => {
       if (user) {
@@ -83,13 +82,13 @@ export class TvInfoComponent implements OnChanges {
 
   protected readonly Array = Array;
 
-  addToWatchlist(status: WatchListStatus) {
+  addToWatchlist(status: TvShowWatchListStatus) {
     if (this.tv) {
       this.watchlistService
         .createWatchlistItem({
           status,
-          mediaId: this.tv.id,
-          mediaType: WatchListType.SHOW,
+          tvShowId: this.tv.id,
+          viewedEpisodes: 0,
         })
         .subscribe(() => {
           this.notificationsService.success(
@@ -97,16 +96,16 @@ export class TvInfoComponent implements OnChanges {
           );
           this.isMediaInWatchList = true;
           this.watchlistItem = {
-            mediaId: this.tv!.id,
-            mediaType: WatchListType.SHOW,
+            tvShowId: this.tv!.id,
             status,
             userId: this.userId,
+            viewedEpisodes: 0,
           };
         });
     }
   }
 
-  changeShowStatus(status: WatchListStatus) {
+  changeShowStatus(status: TvShowWatchListStatus) {
     this.watchlistItem!.status = status;
     this.watchlistService
       .updateWatchlistItem(this.watchlistItem!)
@@ -117,7 +116,7 @@ export class TvInfoComponent implements OnChanges {
 
   removeShowWatchlist() {
     this.watchlistService
-      .removeFromWatchlist(this.watchlistItem!.mediaId)
+      .removeFromWatchlist(this.watchlistItem!.tvShowId)
       .subscribe(() => {
         this.isMediaInWatchList = false;
         this.watchlistItem = undefined;

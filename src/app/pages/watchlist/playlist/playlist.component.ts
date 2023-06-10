@@ -1,18 +1,25 @@
 import { Component, OnInit } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
-import { forkJoin, map, mergeMap, Observable } from 'rxjs';
+import { forkJoin, map, mergeMap, Observable, switchMap } from 'rxjs';
 import {
-  Playlist,
-  PlaylistItem,
-  PlaylistType,
-} from '../../../shared/models/playlist.model';
+  EpisodePlaylist,
+  EpisodePlaylistItem,
+  EpisodePlaylistItemMedia,
+} from '../../../shared/models/episode-playlist.model';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ActivatedRoute } from '@angular/router';
-import { PlaylistsService } from '../../../feature/playlist/playlists.service';
+import { MoviePlaylistsService } from '../../../feature/playlist/movie-playlists.service';
 import { MediaInfoService } from '../../../feature/media-info/media-info.service';
-import { StreamingActions } from '../../../feature/streaming/store/streaming.actions';
 import { AuthState } from '../../../core/auth/store/auth.state';
 import { UserResponse } from '../../../shared/models/user.models';
+import { StreamingActions } from '../../../feature/streaming/store/streaming.actions';
+import {
+  MoviePlaylist,
+  MoviePlaylistItem,
+  MoviePlaylistItemMedia,
+} from '../../../shared/models/movie-playlist.model';
+import { EpisodePlaylistsService } from '../../../feature/playlist/episode-playlists.service';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-playlist',
@@ -24,7 +31,9 @@ export class PlaylistComponent implements OnInit {
   isSubscribed$!: Observable<boolean>;
   isSubscribed = false;
 
-  playlist?: Playlist;
+  episodePlaylist?: EpisodePlaylist;
+  moviePlaylist?: MoviePlaylist;
+  type?: 'movies' | 'episodes';
 
   @Select(AuthState.user)
   user$!: Observable<UserResponse>;
@@ -34,18 +43,14 @@ export class PlaylistComponent implements OnInit {
   isAdmin$!: Observable<boolean>;
   isAdmin: boolean | undefined;
 
-  playlistItems: {
-    playlistItem: PlaylistItem;
-    media: {
-      name: string;
-      imageUrl: string;
-    };
-  }[] = [];
+  moviePlaylistItems: MoviePlaylistItemMedia[] = [];
+  episodePlaylistItems: EpisodePlaylistItemMedia[] = [];
 
   constructor(
     private route: ActivatedRoute,
     private store: Store,
-    private playlistsService: PlaylistsService,
+    private moviePlaylistsService: MoviePlaylistsService,
+    private episodePlaylistsService: EpisodePlaylistsService,
     private mediaService: MediaInfoService
   ) {
     this.user$.subscribe(user => (this.user = user));
@@ -56,27 +61,48 @@ export class PlaylistComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => this.updatePlaylist(params['id']));
+    this.watchPlaylistUpdate();
   }
 
-  private updatePlaylist(id: string): void {
-    this.playlistsService
-      .getPlaylistById(id)
+  private watchPlaylistUpdate(): void {
+    this.route.params
       .pipe(
-        mergeMap(playlist => {
-          this.playlist = playlist;
-          return this.playlist.type === PlaylistType.MOVIE
-            ? this.getMovies(playlist.items)
-            : this.getEpisodes(playlist.items);
+        switchMap(params => {
+          const id = params['id'];
+          this.type = params['type'];
+          if (this.type === 'movies') {
+            return this.moviePlaylistsService.getPlaylistById(id).pipe(
+              mergeMap(playlist => {
+                this.moviePlaylist = playlist;
+                console.log(playlist);
+                return this.getMovies(playlist.items);
+              }),
+              tap(items => {
+                this.moviePlaylistItems = items;
+              })
+            );
+          } else {
+            return this.episodePlaylistsService.getPlaylistById(id).pipe(
+              mergeMap(playlist => {
+                this.episodePlaylist = playlist;
+                return this.getEpisodes(playlist.items);
+              }),
+              tap(items => {
+                this.episodePlaylistItems = items;
+              })
+            );
+          }
         })
       )
-      .subscribe(items => (this.playlistItems = items));
+      .subscribe();
   }
 
-  private getMovies(items: PlaylistItem[]) {
+  private getMovies(
+    items: MoviePlaylistItem[]
+  ): Observable<MoviePlaylistItemMedia[]> {
     return forkJoin(
       items.map(item =>
-        this.mediaService.getMovieInfo(item.mediaId).pipe(
+        this.mediaService.getMovieInfo(item.movieId).pipe(
           map(media => {
             return {
               media: {
@@ -91,58 +117,108 @@ export class PlaylistComponent implements OnInit {
     );
   }
 
-  private getEpisodes(items: PlaylistItem[]) {
-    return forkJoin(
-      items.map(item =>
-        this.mediaService
-          .getTvShowEpisodeInfo(item.mediaId, item.season, item.episode)
-          .pipe(
-            map(media => {
-              return {
-                media: {
-                  name: media.name,
-                  imageUrl: media.posterUrl,
-                },
-                playlistItem: item,
-              };
-            })
-          )
-      )
-    );
+  itemMoved(event: CdkDragDrop<(EpisodePlaylistItem | MoviePlaylistItem)[]>) {
+    if (this.type === 'movies') {
+      this.itemMovieMoved(event as CdkDragDrop<MoviePlaylistItem[]>);
+    } else {
+      this.itemEpisodeMoved(event as CdkDragDrop<EpisodePlaylistItem[]>);
+    }
   }
 
-  itemMoved(event: CdkDragDrop<PlaylistItem[]>) {
-    if (!this.playlist || !this.playlistItems) {
+  itemEpisodeMoved(event: CdkDragDrop<EpisodePlaylistItem[]>) {
+    if (!this.episodePlaylist || !this.episodePlaylistItems) {
       return;
     }
-    const items = [...this.playlistItems];
+    const items = [...this.episodePlaylistItems];
     moveItemInArray(items, event.previousIndex, event.currentIndex);
-    this.playlistsService
-      .updatePlaylistOrder(this.playlist.id, {
-        items: this.playlistItems.map(item => item.playlistItem),
+    this.episodePlaylistsService
+      .updatePlaylistOrder(this.episodePlaylist.id, {
+        items: this.episodePlaylistItems.map(item => item.playlistItem),
       })
-      .subscribe(() => (this.playlistItems = items));
+      .subscribe(() => (this.episodePlaylistItems = items));
   }
 
-  removeItem(deletedItem: PlaylistItem): void {
-    if (!this.playlist) {
+  itemMovieMoved(event: CdkDragDrop<MoviePlaylistItem[]>) {
+    if (!this.moviePlaylist || !this.moviePlaylistItems) {
       return;
     }
-    this.playlistsService
-      .deletePlaylistMedia(this.playlist.id, deletedItem.mediaId)
+    const items = [...this.moviePlaylistItems];
+    moveItemInArray(items, event.previousIndex, event.currentIndex);
+    this.moviePlaylistsService
+      .updatePlaylistOrder(this.moviePlaylist.id, {
+        items: this.moviePlaylistItems.map(item => item.playlistItem),
+      })
+      .subscribe(() => (this.moviePlaylistItems = items));
+  }
+
+  watchMovie(index: number) {
+    if (!this.isSubscribed) {
+      return;
+    }
+    if (this.type === 'movies' && this.moviePlaylist) {
+      this.store.dispatch(
+        new StreamingActions.WatchMoviePlaylist(this.moviePlaylist, index)
+      );
+    } else if (this.type === 'episodes' && this.episodePlaylist) {
+      this.store.dispatch(
+        new StreamingActions.WatchEpisodePlaylist(this.episodePlaylist, index)
+      );
+    }
+  }
+
+  removeItem(playlistItem: EpisodePlaylistItem | MoviePlaylistItem) {
+    if (this.type === 'movies') {
+      this.removeMovieItem(playlistItem as MoviePlaylistItem);
+    } else {
+      this.removeEpisodeItem(playlistItem as EpisodePlaylistItem);
+    }
+  }
+
+  removeMovieItem(deletedItem: MoviePlaylistItem): void {
+    if (!this.moviePlaylist) {
+      return;
+    }
+    this.moviePlaylistsService
+      .deletePlaylistMedia(this.moviePlaylist.id, deletedItem.movieId)
       .subscribe(() => {
-        this.playlistItems = this.playlistItems.filter(
-          item => item.playlistItem.mediaId !== deletedItem.mediaId
-        );
+        this.moviePlaylistItems = (
+          this.moviePlaylistItems as MoviePlaylistItemMedia[]
+        ).filter(item => item.playlistItem.movieId !== deletedItem.movieId);
       });
   }
 
-  watchMedia(index: number) {
-    if (!this.playlist || !this.isSubscribed) {
+  removeEpisodeItem(deletedItem: EpisodePlaylistItem): void {
+    if (!this.episodePlaylist) {
       return;
     }
-    this.store.dispatch(
-      new StreamingActions.WatchPlaylist(this.playlist, index)
+    this.episodePlaylistsService
+      .deletePlaylistMedia(this.episodePlaylist.id, deletedItem.episodeId)
+      .subscribe(() => {
+        this.episodePlaylistItems = (
+          this.episodePlaylistItems as EpisodePlaylistItemMedia[]
+        ).filter(item => item.playlistItem.episodeId !== deletedItem.episodeId);
+      });
+  }
+
+  private getEpisodes(
+    items: EpisodePlaylistItem[]
+  ): Observable<EpisodePlaylistItemMedia[]> {
+    return forkJoin(
+      items.map(item =>
+        this.mediaService.getTvShowEpisodeInfoById(item.episodeId).pipe(
+          map(media => {
+            return {
+              media: {
+                name: media.name,
+                imageUrl: media.posterUrl,
+                episode: media.episodeNumber,
+                season: media.seasonNumber,
+              },
+              playlistItem: item,
+            };
+          })
+        )
+      )
     );
   }
 }

@@ -35,6 +35,7 @@ import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { NzImageModule } from 'ng-zorro-antd/image';
 import { RouterLink } from '@angular/router';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 
 @NgModule({
   declarations: [
@@ -78,6 +79,7 @@ import { RouterLink } from '@angular/router';
     NzInputNumberModule,
     NzImageModule,
     RouterLink,
+    NzSpinModule,
   ],
 })
 export class WatchlistModule {}

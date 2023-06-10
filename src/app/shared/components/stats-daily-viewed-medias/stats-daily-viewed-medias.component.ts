@@ -1,9 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ChartConfiguration, ChartType } from 'chart.js';
-import { Statistic } from '../../models/statistic';
 import { getDateDays } from '../../utils/date.utils';
 import { fr } from 'date-fns/locale';
 import { format } from 'date-fns';
+import { Statistic } from '../../models/statistic.models';
 
 @Component({
   selector: 'app-stats-daily-viewed-medias',

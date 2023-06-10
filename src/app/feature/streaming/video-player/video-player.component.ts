@@ -19,9 +19,9 @@ import {
   StreamStatusEnum,
   StreamUpdateEvent,
 } from '../../../shared/models/streaming.model';
-import { StreamingActions } from '../store/streaming.actions';
 import { Store } from '@ngxs/store';
 import { MediaResponse } from '../../../shared/models/media.models';
+import { StreamingActions } from '../store/streaming.actions';
 
 @Component({
   selector: 'app-video-player',

@@ -6,11 +6,11 @@ import { streamingLinks } from '../../../../pages/streaming/streaming-routing.mo
 import { Select, Store } from '@ngxs/store';
 import { PlaylistState } from '../../../playlist/store/playlist.state';
 import { Observable } from 'rxjs';
-import { Playlist } from '../../../../shared/models/playlist.model';
 import { PlaylistActions } from '../../../playlist/store/playlist.actions';
-import { PlaylistsService } from '../../../playlist/playlists.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 import { AuthState } from '../../../../core/auth/store/auth.state';
+import { EpisodePlaylist } from '../../../../shared/models/episode-playlist.model';
+import { EpisodePlaylistsService } from '../../../playlist/episode-playlists.service';
 
 @Component({
   selector: 'app-episode-info-list',
@@ -21,10 +21,10 @@ export class EpisodeInfoListComponent implements OnInit {
   @Select(AuthState.isSubscribed)
   isSubscribed$!: Observable<boolean>;
 
-  readonly streamPath = `/${navigationRoot.streaming.path}/${streamingLinks.stream.path}/`;
+  readonly streamPath = `/${navigationRoot.streaming.path}/${streamingLinks.stream.path}/episode/`;
 
   @Select(PlaylistState.episodePlaylists)
-  playlists$!: Observable<Playlist[]>;
+  playlists$!: Observable<EpisodePlaylist[]>;
   @Input() tvShowId = 0;
   @Input() seasonNumber = 0;
 
@@ -36,7 +36,7 @@ export class EpisodeInfoListComponent implements OnInit {
   constructor(
     private readonly store: Store,
     private mediaInfoService: MediaInfoService,
-    private playlistsService: PlaylistsService,
+    private episodePlaylistsService: EpisodePlaylistsService,
     private readonly notificationsService: NotificationsService
   ) {}
 
@@ -65,11 +65,9 @@ export class EpisodeInfoListComponent implements OnInit {
 
   addToPlaylist(playlistId: string) {
     if (this.selectedEpisode) {
-      this.playlistsService
+      this.episodePlaylistsService
         .addToPlaylist(playlistId, {
-          mediaId: this.selectedEpisode.id,
-          episode: this.selectedEpisode.episodeNumber,
-          season: this.selectedEpisode.seasonNumber,
+          episodeId: this.selectedEpisode.id,
         })
         .subscribe(() =>
           this.notificationsService.success('Episode ajouté à la playlist')

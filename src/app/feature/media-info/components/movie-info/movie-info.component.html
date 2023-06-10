@@ -54,7 +54,7 @@
               [nzDropdownMenu]="watchlistMenu">
               <span *ngIf="!isMediaInWatchList">Suivre ce film</span>
               <span *ngIf="isMediaInWatchList">{{
-                watchlistItem!.status | watchlistStatus
+                watchlistItem!.status | tvShowWatchlistStatus
               }}</span>
               <span nz-icon nzType="down"></span>
             </button>
@@ -140,7 +140,7 @@
         nz-menu-item
         *ngFor="let status of statusNames"
         (click)="addToWatchlist(status)">
-        {{ status | watchlistStatus }}
+        {{ status | tvShowWatchlistStatus }}
       </li>
     </ng-container>
     <ng-container *ngIf="isMediaInWatchList">
@@ -149,7 +149,7 @@
         *ngFor="let status of statusNames"
         (click)="changeMovieStatus(status)"
         [nzDisabled]="status === watchlistItem?.status">
-        {{ status | watchlistStatus }}
+        {{ status | movieWatchlistStatus }}
       </li>
       <li nz-menu-item nzDanger (click)="removeMovieWatchlist()">Retirer</li>
     </ng-container>

@@ -10,7 +10,8 @@ import { MediaLinkPipe } from './pipes/media-link.pipe';
 import { UsernamePipe } from './pipes/username.pipe';
 import { MovieNamePipe } from './pipes/movie-name.pipe';
 import { TvNamePipe } from './pipes/tv-name.pipe';
-import { WatchlistStatusPipe } from './pipes/watchlist-status.pipe';
+import { TvShowWatchlistStatusPipe } from './pipes/episode-watchlist-status.pipe';
+import { MovieWatchlistStatusPipe } from './pipes/movie-watchlist-status.pipe';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { WatchlistStatusPipe } from './pipes/watchlist-status.pipe';
     UsernamePipe,
     MovieNamePipe,
     TvNamePipe,
-    WatchlistStatusPipe,
+    TvShowWatchlistStatusPipe,
+    MovieWatchlistStatusPipe,
   ],
   imports: [CommonModule, NzCardModule, NzTabsModule],
   exports: [
@@ -34,7 +36,8 @@ import { WatchlistStatusPipe } from './pipes/watchlist-status.pipe';
     UsernamePipe,
     MovieNamePipe,
     TvNamePipe,
-    WatchlistStatusPipe,
+    TvShowWatchlistStatusPipe,
+    MovieWatchlistStatusPipe,
   ],
 })
 export class SharedModule {}

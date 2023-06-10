@@ -1,14 +1,27 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
-import { forkJoin, map, mergeMap, Observable, Subscription } from 'rxjs';
-import { StreamingState } from '../store/streaming.state';
 import {
-  Playlist,
-  PlaylistItem,
-  PlaylistType,
-} from '../../../shared/models/playlist.model';
-import { StreamingActions } from '../store/streaming.actions';
+  forkJoin,
+  map,
+  mergeMap,
+  Observable,
+  Subscription,
+  switchMap,
+} from 'rxjs';
 import { MediaInfoService } from '../../media-info/media-info.service';
+import {
+  MoviePlaylist,
+  MoviePlaylistItem,
+  MoviePlaylistItemMedia,
+} from '../../../shared/models/movie-playlist.model';
+import {
+  EpisodePlaylist,
+  EpisodePlaylistItem,
+  EpisodePlaylistItemMedia,
+} from '../../../shared/models/episode-playlist.model';
+import { StreamingState } from '../store/streaming.state';
+import { StreamingActions } from '../store/streaming.actions';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-playlist-stream',
@@ -16,20 +29,19 @@ import { MediaInfoService } from '../../media-info/media-info.service';
   styleUrls: ['./playlist-stream.component.less'],
 })
 export class PlaylistStreamComponent implements OnInit, OnDestroy {
-  @Select(StreamingState.playlist)
-  playlist$!: Observable<Playlist>;
+  @Select(StreamingState.moviePlaylist)
+  moviePlaylist$!: Observable<MoviePlaylist>;
+  @Select(StreamingState.episodePlaylist)
+  episodePlaylist$!: Observable<EpisodePlaylist>;
+  @Select(StreamingState.type)
+  type$!: Observable<'movie' | 'episode' | undefined>;
   @Select(StreamingState.autoplay)
   autoplay$!: Observable<boolean>;
   @Select(StreamingState.position)
   position$!: Observable<number>;
-  playlist?: Playlist;
-  playlistItems: {
-    playlistItem: PlaylistItem;
-    media: {
-      name: string;
-      imageUrl: string;
-    };
-  }[] = [];
+  playlist?: EpisodePlaylist;
+  episodePlaylistItems: EpisodePlaylistItemMedia[] = [];
+  moviePlaylistItems: MoviePlaylistItemMedia[] = [];
   autoplay?: boolean;
   position?: number;
   subscriptions: Subscription[] = [];
@@ -40,18 +52,31 @@ export class PlaylistStreamComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.subscriptions.push(
-      this.playlist$
-        .pipe(
-          mergeMap(playlist => {
-            this.playlist = playlist;
-            return this.playlist.type === PlaylistType.MOVIE
-              ? this.getMovies(playlist.items)
-              : this.getEpisodes(playlist.items);
-          })
-        )
-        .subscribe(items => (this.playlistItems = items))
-    );
+    this.type$
+      .pipe(
+        switchMap(type => {
+          if (type === 'movie') {
+            return this.moviePlaylist$.pipe(
+              mergeMap(playlist => {
+                return this.getMovies(playlist.items);
+              }),
+              tap(items => {
+                this.moviePlaylistItems = items;
+              })
+            );
+          } else {
+            return this.episodePlaylist$.pipe(
+              mergeMap(playlist => {
+                return this.getEpisodes(playlist.items);
+              }),
+              tap(items => {
+                this.episodePlaylistItems = items;
+              })
+            );
+          }
+        })
+      )
+      .subscribe();
     this.subscriptions.push(
       this.autoplay$.subscribe(autoplay => (this.autoplay = autoplay))
     );
@@ -64,10 +89,12 @@ export class PlaylistStreamComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
-  private getMovies(items: PlaylistItem[]) {
+  private getMovies(
+    items: MoviePlaylistItem[]
+  ): Observable<MoviePlaylistItemMedia[]> {
     return forkJoin(
       items.map(item =>
-        this.mediaService.getMovieInfo(item.mediaId).pipe(
+        this.mediaService.getMovieInfo(item.movieId).pipe(
           map(media => {
             return {
               media: {
@@ -82,22 +109,24 @@ export class PlaylistStreamComponent implements OnInit, OnDestroy {
     );
   }
 
-  private getEpisodes(items: PlaylistItem[]) {
+  private getEpisodes(
+    items: EpisodePlaylistItem[]
+  ): Observable<EpisodePlaylistItemMedia[]> {
     return forkJoin(
       items.map(item =>
-        this.mediaService
-          .getTvShowEpisodeInfo(item.mediaId, item.season, item.episode)
-          .pipe(
-            map(media => {
-              return {
-                media: {
-                  name: media.name,
-                  imageUrl: media.posterUrl,
-                },
-                playlistItem: item,
-              };
-            })
-          )
+        this.mediaService.getTvShowEpisodeInfoById(item.episodeId).pipe(
+          map(media => {
+            return {
+              media: {
+                name: media.name,
+                imageUrl: media.posterUrl,
+                episode: media.episodeNumber,
+                season: media.seasonNumber,
+              },
+              playlistItem: item,
+            };
+          })
+        )
       )
     );
   }

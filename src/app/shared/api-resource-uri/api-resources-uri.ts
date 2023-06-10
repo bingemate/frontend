@@ -13,4 +13,5 @@ export const API_RESOURCE_URI = {
   KEYCLOAK_SERVICE: `${env.apiUrl}/keycloak-service`,
   // KEYCLOAK_SERVICE: `http://localhost:8081/keycloak-service`,
   PAYMENT_SERVICE: `${env.apiUrl}/payment-service`,
+  WATCH_SERVICE: `${env.apiUrl}/watch-service`,
 };

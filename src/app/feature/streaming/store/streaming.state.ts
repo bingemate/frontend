@@ -7,7 +7,9 @@ import { StreamingActions } from './streaming.actions';
 @State<StreamingStateModel>({
   name: 'streaming',
   defaults: {
-    playlist: undefined,
+    episodePlaylist: undefined,
+    moviePlaylist: undefined,
+    type: undefined,
     position: 0,
     autoplay: true,
   },
@@ -20,8 +22,18 @@ export class StreamingState {
   ) {}
 
   @Selector()
-  static playlist(state: StreamingStateModel) {
-    return state.playlist;
+  static episodePlaylist(state: StreamingStateModel) {
+    return state.episodePlaylist;
+  }
+
+  @Selector()
+  static type(state: StreamingStateModel) {
+    return state.type;
+  }
+
+  @Selector()
+  static moviePlaylist(state: StreamingStateModel) {
+    return state.moviePlaylist;
   }
 
   @Selector()
@@ -34,20 +46,45 @@ export class StreamingState {
     return state.position;
   }
 
-  @Action(StreamingActions.WatchPlaylist)
-  watchPlaylist(
+  @Action(StreamingActions.WatchMoviePlaylist)
+  watchMoviePlaylist(
     ctx: StateContext<StreamingStateModel>,
-    payload: StreamingActions.WatchPlaylist
+    payload: StreamingActions.WatchMoviePlaylist
   ) {
     ctx.patchState({
-      playlist: payload.playlist,
+      type: 'movie',
+      moviePlaylist: payload.playlist,
+      episodePlaylist: undefined,
       position: payload.position,
     });
     this.ngZone.run(() => {
       this.router
         .navigate([
           '/streaming/stream',
-          ctx.getState().playlist?.items[payload.position].mediaId,
+          'movie',
+          ctx.getState().moviePlaylist?.items[payload.position].movieId,
+        ])
+        .then();
+    });
+  }
+
+  @Action(StreamingActions.WatchEpisodePlaylist)
+  watchEpisodePlaylist(
+    ctx: StateContext<StreamingStateModel>,
+    payload: StreamingActions.WatchEpisodePlaylist
+  ) {
+    ctx.patchState({
+      type: 'episode',
+      moviePlaylist: undefined,
+      episodePlaylist: payload.playlist,
+      position: payload.position,
+    });
+    this.ngZone.run(() => {
+      this.router
+        .navigate([
+          '/streaming/stream',
+          'episode',
+          ctx.getState().moviePlaylist?.items[payload.position].movieId,
         ])
         .then();
     });
@@ -61,12 +98,13 @@ export class StreamingState {
     ctx.patchState({
       position: payload.position,
     });
+    const id =
+      ctx.getState().type === 'movie'
+        ? ctx.getState().moviePlaylist?.items[payload.position].movieId
+        : ctx.getState().episodePlaylist?.items[payload.position].episodeId;
     this.ngZone.run(() => {
       this.router
-        .navigate([
-          '/streaming/stream',
-          ctx.getState().playlist?.items[payload.position].mediaId,
-        ])
+        .navigate(['/streaming/stream', ctx.getState().type, id])
         .then();
     });
   }
@@ -74,10 +112,18 @@ export class StreamingState {
   @Action(StreamingActions.MediaEndedPlaylist)
   mediaEnded(ctx: StateContext<StreamingStateModel>) {
     const position = ctx.getState().position + 1;
+    const id =
+      ctx.getState().type === 'movie'
+        ? ctx.getState().moviePlaylist?.items[position].movieId
+        : ctx.getState().episodePlaylist?.items[position].episodeId;
+    const playlist =
+      ctx.getState().type === 'movie'
+        ? ctx.getState().moviePlaylist
+        : ctx.getState().episodePlaylist;
     if (
       !ctx.getState().autoplay ||
-      !ctx.getState().playlist ||
-      position === ctx.getState().playlist?.items.length
+      !playlist ||
+      position === playlist?.items.length
     ) {
       return;
     }
@@ -86,10 +132,7 @@ export class StreamingState {
     });
     this.ngZone.run(() => {
       this.router
-        .navigate([
-          '/streaming/stream',
-          ctx.getState().playlist?.items[position].mediaId,
-        ])
+        .navigate(['/streaming/stream', ctx.getState().type, id])
         .then();
     });
   }

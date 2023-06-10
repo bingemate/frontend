@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { navigationRoot } from '../../../app-routing.module';
 import { streamingLinks } from '../../streaming/streaming-routing.module';
-import { Select, Store } from '@ngxs/store';
-import { HistoryState } from '../../../feature/history/store/history.state';
-import { Observable } from 'rxjs';
-import { HistoryModel } from '../../../shared/models/history.models';
-import { HistoryActions } from '../../../feature/history/store/history.actions';
+import { Select } from '@ngxs/store';
+import { forkJoin, Observable } from 'rxjs';
 import { AuthState } from '../../../core/auth/store/auth.state';
+import { EpisodeHistoryService } from '../../../feature/history/episode-history.service';
+import { MovieHistoryService } from '../../../feature/history/movie-history.service';
+import { HistoryModel } from '../../../shared/models/history.models';
 
 @Component({
   selector: 'app-statistics-history',
@@ -19,17 +19,37 @@ export class StatisticsHistoryComponent implements OnInit {
 
   mediaStreamPath = `/${navigationRoot.streaming.path}/${streamingLinks.stream.path}/`;
 
-  @Select(HistoryState.history) history$!: Observable<HistoryModel[]>;
+  history: HistoryModel[] = [];
 
-  constructor(private readonly store: Store) {}
+  constructor(
+    private episodeHistoryService: EpisodeHistoryService,
+    private movieHistoryService: MovieHistoryService
+  ) {}
 
   ngOnInit(): void {
-    this.store.dispatch(new HistoryActions.GetAll());
+    forkJoin([
+      this.episodeHistoryService.getEpisodeHistory(),
+      this.movieHistoryService.getMovieHistory(),
+    ]).subscribe(
+      ([episodeHistory, movieHistory]) =>
+        (this.history = [...episodeHistory, ...movieHistory].sort(
+          (a, b) => b.viewedAt.getTime() - a.viewedAt.getTime()
+        ))
+    );
   }
 
-  deleteMedia(mediaId: number) {
-    this.store.dispatch(new HistoryActions.DeleteFromHistory(mediaId));
+  deleteMedia(history: HistoryModel) {
+    const historyList = this.history.filter(
+      historyItem => historyItem.mediaId !== history.mediaId
+    );
+    if (history.type === 'movie') {
+      this.movieHistoryService
+        .deleteMovieHistory(history.mediaId)
+        .subscribe(() => (this.history = historyList));
+    } else {
+      this.episodeHistoryService
+        .deleteEpisodeHistory(history.mediaId)
+        .subscribe(() => (this.history = historyList));
+    }
   }
-
-  protected readonly Number = Number;
 }

@@ -5,10 +5,10 @@
   </button>
 </nz-row>
 <nz-list nzItemLayout="vertical" [nzLoading]="false">
-  <nz-list-item *ngFor="let item of playlists; let index = index">
+  <nz-list-item *ngFor="let item of moviePlaylists; let index = index">
     <nz-list-item-meta>
       <nz-list-item-meta-title>
-        <a [routerLink]="[item.id]">{{ item.name }}</a>
+        <a [routerLink]="['movies', item.id]">{{ item.name }}</a>
       </nz-list-item-meta-title>
     </nz-list-item-meta>
     <ul nz-list-item-actions>
@@ -17,7 +17,21 @@
       </nz-list-item-action>
     </ul>
   </nz-list-item>
-  <nz-list-empty *ngIf="playlists.length === 0" nzNoResult="Aucune playlist">
+  <nz-list-item *ngFor="let item of episodePlaylists; let index = index">
+    <nz-list-item-meta>
+      <nz-list-item-meta-title>
+        <a [routerLink]="['episodes', item.id]">{{ item.name }}</a>
+      </nz-list-item-meta-title>
+    </nz-list-item-meta>
+    <ul nz-list-item-actions>
+      <nz-list-item-action>
+        <a (click)="deletePlaylist(item.id)">Supprimer</a>
+      </nz-list-item-action>
+    </ul>
+  </nz-list-item>
+  <nz-list-empty
+    *ngIf="moviePlaylists.length + episodePlaylists.length === 0"
+    nzNoResult="Aucune playlist">
   </nz-list-empty>
 </nz-list>
 <nz-modal

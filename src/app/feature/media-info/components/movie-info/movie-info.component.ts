@@ -11,19 +11,18 @@ import { streamingLinks } from '../../../../pages/streaming/streaming-routing.mo
 import { mediasLinks } from '../../../../pages/medias/medias-routing.module';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { Playlist } from '../../../../shared/models/playlist.model';
 import { PlaylistState } from '../../../playlist/store/playlist.state';
 import { PlaylistActions } from '../../../playlist/store/playlist.actions';
-import { PlaylistsService } from '../../../playlist/playlists.service';
+import { MoviePlaylistsService } from '../../../playlist/movie-playlists.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
-import { WatchlistService } from '../../../watchlist/watchlist.service';
-import {
-  WatchlistItem,
-  WatchListStatus,
-  WatchListType,
-} from '../../../../shared/models/watchlist.models';
 import { AuthState } from '../../../../core/auth/store/auth.state';
 import { UserResponse } from '../../../../shared/models/user.models';
+import { MoviePlaylist } from '../../../../shared/models/movie-playlist.model';
+import {
+  MovieWatchlistItem,
+  MovieWatchListStatus,
+} from '../../../../shared/models/movie-watchlist.models';
+import { MovieWatchlistService } from '../../../watchlist/movie-watchlist.service';
 
 @Component({
   selector: 'app-movie-info',
@@ -38,28 +37,28 @@ export class MovieInfoComponent implements OnInit, OnChanges {
   readonly user$!: Observable<UserResponse>;
   userId = '';
 
-  readonly streamPath = `/${navigationRoot.streaming.path}/${streamingLinks.stream.path}/`;
+  readonly streamPath = `/${navigationRoot.streaming.path}/${streamingLinks.stream.path}/movie/`;
   readonly moviesByGenrePath = `/${navigationRoot.medias.path}/${mediasLinks.movies_by_genre.path}/`;
   readonly moviesByActorPath = `/${navigationRoot.medias.path}/${mediasLinks.movies_by_actor.path}/`;
   readonly moviesByStudioPath = `/${navigationRoot.medias.path}/${mediasLinks.movies_by_studio.path}/`;
-  readonly statusNames = Object.values(WatchListStatus);
+  readonly statusNames = Object.values(MovieWatchListStatus);
 
   @Select(PlaylistState.moviePlaylists)
-  playlists$!: Observable<Playlist[]>;
+  playlists$!: Observable<MoviePlaylist[]>;
   @Input() movie: MovieResponse | undefined;
   actorsCurrentPage = 1;
   actorsPageSize = 5;
   isMediaInWatchList = false;
-  watchlistItem: WatchlistItem | undefined;
+  watchlistItem: MovieWatchlistItem | undefined;
 
   constructor(
     private readonly store: Store,
-    private playlistsService: PlaylistsService,
+    private moviePlaylistsService: MoviePlaylistsService,
     private readonly notificationsService: NotificationsService,
-    private watchlistService: WatchlistService
+    private watchlistService: MovieWatchlistService
   ) {
     this.user$.subscribe(user => {
-      this.userId = user.id;
+      this.userId = user?.id;
     });
   }
 
@@ -100,9 +99,9 @@ export class MovieInfoComponent implements OnInit, OnChanges {
 
   addToPlaylist(playlistId: string) {
     if (this.movie) {
-      this.playlistsService
+      this.moviePlaylistsService
         .addToPlaylist(playlistId, {
-          mediaId: this.movie.id,
+          movieId: this.movie.id,
         })
         .subscribe(() =>
           this.notificationsService.success('Film ajouté à la playlist')
@@ -110,13 +109,12 @@ export class MovieInfoComponent implements OnInit, OnChanges {
     }
   }
 
-  addToWatchlist(status: WatchListStatus) {
+  addToWatchlist(status: MovieWatchListStatus) {
     if (this.movie) {
       this.watchlistService
         .createWatchlistItem({
           status,
-          mediaId: this.movie.id,
-          mediaType: WatchListType.MOVIE,
+          movieId: this.movie.id,
         })
         .subscribe(() => {
           this.notificationsService.success(
@@ -124,8 +122,7 @@ export class MovieInfoComponent implements OnInit, OnChanges {
           );
           this.isMediaInWatchList = true;
           this.watchlistItem = {
-            mediaId: this.movie!.id,
-            mediaType: WatchListType.MOVIE,
+            movieId: this.movie!.id,
             status,
             userId: this.userId,
           };
@@ -133,7 +130,7 @@ export class MovieInfoComponent implements OnInit, OnChanges {
     }
   }
 
-  changeMovieStatus(status: WatchListStatus) {
+  changeMovieStatus(status: MovieWatchListStatus) {
     this.watchlistItem!.status = status;
     this.watchlistService
       .updateWatchlistItem(this.watchlistItem!)
@@ -144,7 +141,7 @@ export class MovieInfoComponent implements OnInit, OnChanges {
 
   removeMovieWatchlist() {
     this.watchlistService
-      .removeFromWatchlist(this.watchlistItem!.mediaId)
+      .removeFromWatchlist(this.watchlistItem!.movieId)
       .subscribe(() => {
         this.isMediaInWatchList = false;
         this.watchlistItem = undefined;
