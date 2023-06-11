@@ -15,7 +15,7 @@ interface PreviewFile {
   styleUrls: ['./upload.component.less'],
 })
 export class UploadComponent {
-  @Input() type: 'movie' | 'tv' = 'movie';
+  @Input() type: 'movies' | 'tv-shows' = 'movies';
 
   @ViewChild('upload', { static: false }) movieUpload!: NzUploadComponent;
 
@@ -82,7 +82,7 @@ export class UploadComponent {
     console.log(`Envoi du fichier (${file.name})`);
     this.previewFiles[index].progress = true;
     // Envoyer la requête d'upload en utilisant HttpClient
-    if (this.type === 'movie') {
+    if (this.type === 'movies') {
       this.uploadService.uploadMovie(file).subscribe(() => {
         // Upload terminé pour ce fichier
         this.previewFiles[index].progress = false;

@@ -9,7 +9,7 @@
           <nz-space nzDirection="vertical" nzSize="large" style="width: 100%">
             <app-rating-view
               *nzSpaceItem
-              [type]="'tv'"
+              [type]="'tv-shows'"
               [editable]="true"
               [rating]="userRating"
               (updateRating)="onRefreshRatings()"></app-rating-view>
@@ -60,7 +60,7 @@
 
 <ng-template #newComment>
   <app-new-comment
-    [type]="'tv'"
+    [type]="'tv-shows'"
     [mediaId]="tvId ?? 0"
     (newComment)="onRefreshComments()"></app-new-comment>
 </ng-template>

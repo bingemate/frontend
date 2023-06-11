@@ -25,6 +25,6 @@ export function toEpisodeHistory(
     mediaId: history.episodeId,
     stoppedAt: history.stoppedAt,
     viewedAt: new Date(history.viewedAt),
-    type: 'episode',
+    type: 'tv-shows',
   };
 }
