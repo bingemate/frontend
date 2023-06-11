@@ -23,6 +23,6 @@ export function toMovieHistory(history: MovieHistoryAPIResponse): HistoryModel {
     mediaId: history.movieId,
     stoppedAt: history.stoppedAt,
     viewedAt: new Date(history.viewedAt),
-    type: 'movie',
+    type: 'movies',
   };
 }

@@ -23,6 +23,6 @@ export function toEpisodeStatistic(
     userId: statistic.userId,
     startedAt: new Date(statistic.startedAt),
     stoppedAt: new Date(statistic.stoppedAt || new Date()),
-    type: 'episode',
+    type: 'tv-shows',
   };
 }

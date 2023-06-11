@@ -4,7 +4,7 @@ export interface Statistic {
   mediaId: number;
   startedAt: Date;
   stoppedAt: Date;
-  type: 'episode' | 'movie';
+  type: 'tv-shows' | 'movies';
 }
 
 export interface StatDisplay {

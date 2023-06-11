@@ -14,6 +14,66 @@ import {
 export class CommentService {
   constructor(private readonly http: HttpClient) {}
 
+  getCommentCount(): Observable<number> {
+    return this.http.get<number>(
+      `${API_RESOURCE_URI.MEDIA_INFO}/comment/count`
+    );
+  }
+
+  getCommentHistory(start?: string, end?: string): Observable<CommentResults> {
+    const params = new HttpParams();
+    if (start) {
+      params.set('start', start);
+    }
+    if (end) {
+      params.set('end', end);
+    }
+    return this.http.get<CommentResults>(
+      `${API_RESOURCE_URI.MEDIA_INFO}/comment/history`,
+      { params }
+    );
+  }
+
+  getUserCommentCount(userId: string): Observable<number> {
+    return this.http.get<number>(
+      `${API_RESOURCE_URI.MEDIA_INFO}/comment/user/count/${userId}`
+    );
+  }
+
+  getUserCommentHistory(
+    userId: string,
+    start?: string,
+    end?: string
+  ): Observable<CommentResults> {
+    const params = new HttpParams();
+    if (start) {
+      params.set('start', start);
+    }
+    if (end) {
+      params.set('end', end);
+    }
+    return this.http.get<CommentResults>(
+      `${API_RESOURCE_URI.MEDIA_INFO}/comment/user/history/${userId}`,
+      { params }
+    );
+  }
+
+  getUserMovieComments(userId: string, page = 1): Observable<CommentResults> {
+    const params = new HttpParams().set('page', page);
+    return this.http.get<CommentResults>(
+      `${API_RESOURCE_URI.MEDIA_INFO}/comment/movie/user/${userId}`,
+      { params }
+    );
+  }
+
+  getUserTvComments(userId: string, page = 1): Observable<CommentResults> {
+    const params = new HttpParams().set('page', page);
+    return this.http.get<CommentResults>(
+      `${API_RESOURCE_URI.MEDIA_INFO}/comment/tv/user/${userId}`,
+      { params }
+    );
+  }
+
   getMovieComments(mediaId: number, page = 1): Observable<CommentResults> {
     const params = new HttpParams().set('page', page);
     return this.http.get<CommentResults>(
@@ -25,15 +85,7 @@ export class CommentService {
   getTvShowComments(mediaId: number, page = 1): Observable<CommentResults> {
     const params = new HttpParams().set('page', page);
     return this.http.get<CommentResults>(
-      `${API_RESOURCE_URI.MEDIA_INFO}/comment/movie/${mediaId}`,
-      { params }
-    );
-  }
-
-  getUserComments(userId: string, page = 1): Observable<CommentResults> {
-    const params = new HttpParams().set('page', page);
-    return this.http.get<CommentResults>(
-      `${API_RESOURCE_URI.MEDIA_INFO}/comment/user/${userId}`,
+      `${API_RESOURCE_URI.MEDIA_INFO}/comment/tv/${mediaId}`,
       { params }
     );
   }
@@ -64,7 +116,7 @@ export class CommentService {
     );
   }
 
-  updateComment(
+  updateMovieComment(
     commentId: number,
     content: string
   ): Observable<CommentResponse> {
@@ -72,14 +124,33 @@ export class CommentService {
       content,
     };
     return this.http.put<CommentResponse>(
-      `${API_RESOURCE_URI.MEDIA_INFO}/comment/${commentId}`,
+      `${API_RESOURCE_URI.MEDIA_INFO}/comment/movie/${commentId}`,
       requestContent
     );
   }
 
-  deleteComment(commentId: number): Observable<string> {
+  updateTvShowComment(
+    commentId: number,
+    content: string
+  ): Observable<CommentResponse> {
+    const requestContent: CommentRequest = {
+      content,
+    };
+    return this.http.put<CommentResponse>(
+      `${API_RESOURCE_URI.MEDIA_INFO}/comment/tv/${commentId}`,
+      requestContent
+    );
+  }
+
+  deleteMovieComment(commentId: number): Observable<string> {
     return this.http.delete<string>(
-      `${API_RESOURCE_URI.MEDIA_INFO}/comment/${commentId}`
+      `${API_RESOURCE_URI.MEDIA_INFO}/comment/movie/${commentId}`
+    );
+  }
+
+  deleteTvShowComment(commentId: number): Observable<string> {
+    return this.http.delete<string>(
+      `${API_RESOURCE_URI.MEDIA_INFO}/comment/tv/${commentId}`
     );
   }
 }

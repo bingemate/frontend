@@ -23,6 +23,6 @@ export function toMovieStatistic(
     userId: statistic.userId,
     startedAt: new Date(statistic.startedAt),
     stoppedAt: new Date(statistic.stoppedAt || new Date()),
-    type: 'movie',
+    type: 'movies',
   };
 }

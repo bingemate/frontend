@@ -4,7 +4,9 @@
       <nz-comment
         [nzAuthor]="
           showMedia
-            ? (rating.mediaId | mediaName | async) ?? 'No name'
+            ? mediaType === 'movie'
+              ? (rating.mediaId | movieName | async) ?? 'No title'
+              : (rating.mediaId | tvName | async) ?? 'No title'
             : (rating.userId | username | async) ?? 'No name'
         "
         nzDatetime="{{ rating.createdAt | date : 'dd/MM/yyyy HH:mm' }}">

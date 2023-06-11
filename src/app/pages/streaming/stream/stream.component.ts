@@ -7,7 +7,10 @@ import { StreamUpdateEvent } from '../../../shared/models/streaming.model';
 import { io, Socket } from 'socket.io-client';
 import { environment } from '../../../../environments/environment';
 import { KeycloakEventType, KeycloakService } from 'keycloak-angular';
-import { MediaResponse } from '../../../shared/models/media.models';
+import {
+  MovieResponse,
+  TvEpisodeResponse,
+} from '../../../shared/models/media.models';
 import { Select } from '@ngxs/store';
 import { EpisodePlaylist } from '../../../shared/models/episode-playlist.model';
 import { MoviePlaylist } from '../../../shared/models/movie-playlist.model';
@@ -24,9 +27,9 @@ export class StreamComponent implements OnInit, OnDestroy {
   @Select(StreamingState.moviePlaylist)
   moviePlaylist$!: Observable<MoviePlaylist>;
   mediaId = 0;
-  type?: 'episode' | 'movie';
+  type?: 'tv-shows' | 'movies';
   mediaFile: MediaFile | undefined;
-  mediaInfo: MediaResponse | undefined;
+  mediaInfo: MovieResponse | TvEpisodeResponse | undefined;
   error: string | undefined;
   progress = 0;
   socket?: Socket;
@@ -44,10 +47,12 @@ export class StreamComponent implements OnInit, OnDestroy {
           this.mediaId = parseInt(params['id']);
           this.type = params['type'];
           return forkJoin([
-            this.type === 'movie'
+            this.type === 'movies'
               ? this.mediaInfoService.getMovieFileInfos(this.mediaId)
               : this.mediaInfoService.getEpisodeFileInfos(this.mediaId),
-            this.mediaInfoService.getMediaInfo(this.mediaId),
+            this.type === 'movies'
+              ? this.mediaInfoService.getMovieInfo(this.mediaId)
+              : this.mediaInfoService.getTvShowEpisodeInfoById(this.mediaId),
           ]);
         })
       )

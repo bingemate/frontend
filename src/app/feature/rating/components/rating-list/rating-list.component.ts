@@ -10,6 +10,7 @@ import { userProfilViewLinks } from '../../../../pages/social-network/social-net
 export class RatingListComponent {
   @Input() ratings: RatingResponse[] = [];
   @Input() showMedia = false;
+  @Input() mediaType: 'movie' | 'tv' = 'movie';
   @Input() editable = false;
   readonly userViewLink = userProfilViewLinks;
 }

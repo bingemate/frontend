@@ -42,7 +42,7 @@ export class StatisticsHistoryComponent implements OnInit {
     const historyList = this.history.filter(
       historyItem => historyItem.mediaId !== history.mediaId
     );
-    if (history.type === 'movie') {
+    if (history.type === 'movies') {
       this.movieHistoryService
         .deleteMovieHistory(history.mediaId)
         .subscribe(() => (this.history = historyList));

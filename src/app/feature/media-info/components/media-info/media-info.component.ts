@@ -14,7 +14,7 @@ export class MediaInfoComponent implements OnInit {
   readonly emptyImage = '';
   @Input() mediaId = 0;
   @Input()
-  type: 'movie' | 'episode' = 'movie';
+  type: 'movies' | 'tv-shows' = 'movies';
 
   @Input()
   vertical = false;
@@ -26,7 +26,7 @@ export class MediaInfoComponent implements OnInit {
   constructor(private mediaInfoService: MediaInfoService) {}
 
   ngOnInit(): void {
-    if (this.type === 'episode') {
+    if (this.type === 'tv-shows') {
       this.mediaInfoService
         .getTvShowEpisodeInfoById(this.mediaId)
         .subscribe(episode => {

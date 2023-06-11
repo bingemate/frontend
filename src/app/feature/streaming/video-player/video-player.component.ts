@@ -20,7 +20,10 @@ import {
   StreamUpdateEvent,
 } from '../../../shared/models/streaming.model';
 import { Store } from '@ngxs/store';
-import { MediaResponse } from '../../../shared/models/media.models';
+import {
+  MovieResponse,
+  TvEpisodeResponse,
+} from '../../../shared/models/media.models';
 import { StreamingActions } from '../store/streaming.actions';
 
 @Component({
@@ -32,9 +35,9 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
   mediaViewLink = `/${navigationRoot.medias.path}/`;
 
   @Input() mediaId: number | undefined;
-  @Input() mediaInfo: MediaResponse | undefined;
+  @Input() mediaInfo: MovieResponse | TvEpisodeResponse | undefined;
   @Input() mediaFile: MediaFile | undefined;
-  @Input() type: 'movie' | 'episode' | undefined;
+  @Input() type: 'movies' | 'tv-shows' | undefined;
   @Input() timeSeek = 0;
   @Output() streamUpdate = new EventEmitter<StreamUpdateEvent>();
 
@@ -46,6 +49,7 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
   videoUrl = '';
   currentAudio = '';
   subscriptions: Subscription[] = [];
+  mediaName = '';
 
   constructor(
     private mediaInfoService: MediaInfoService,
@@ -63,41 +67,34 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (
-      changes['mediaFile'] &&
-      !changes['mediaFile'].isFirstChange() &&
-      changes['mediaFile'].previousValue !== changes['mediaFile'].currentValue
+      (changes['mediaFile'] &&
+        !changes['mediaFile'].isFirstChange() &&
+        changes['mediaFile'].previousValue !==
+          changes['mediaFile'].currentValue) ||
+      (changes['mediaId'] &&
+        !changes['mediaId'].isFirstChange() &&
+        changes['mediaId'].previousValue !== changes['mediaId'].currentValue) ||
+      (changes['type'] &&
+        !changes['type'].isFirstChange() &&
+        changes['type'].previousValue !== changes['type'].currentValue)
     ) {
       this.loadMediaFileInfo();
-    }
-    if (
-      changes['mediaId'] &&
-      !changes['mediaId'].isFirstChange() &&
-      changes['mediaId'].previousValue !== changes['mediaId'].currentValue
-    ) {
-      this.loadMediaInfo();
     }
   }
 
   private loadMediaInfo() {
-    if (this.mediaInfo) {
-      switch (this.mediaInfo.mediaType) {
-        case 'Movie':
-          this.mediaViewLink += `${mediasLinks.movie_view.path}/${this.mediaId}`;
-          break;
-        case 'Episode':
-          this.subscriptions.push(
-            this.mediaInfoService
-              .getTvShowEpisodeInfoById(this.mediaInfo.id)
-              .subscribe(episode => {
-                this.mediaViewLink += `${mediasLinks.tv_show_view.path}/${episode.tvShowId}`;
-              })
-          );
-          break;
-      }
+    if (this.type && this.type === 'movies') {
+      const movie = this.mediaInfo as MovieResponse;
+      this.mediaName = movie.title;
+      this.mediaViewLink += `${mediasLinks.movie_view.path}/${this.mediaId}`;
+    } else {
+      const episode = this.mediaInfo as TvEpisodeResponse;
+      this.mediaName = episode.name;
+      this.mediaViewLink += `${mediasLinks.tv_show_view.path}/${episode.tvShowId}`;
     }
   }
   private loadMediaFileInfo() {
-    if (this.mediaFile) {
+    if (this.mediaFile && this.type) {
       this.videoUrl = `${API_RESOURCE_URI.STREAMING}/${this.type}/${this.mediaId}/${this.mediaFile.filename}`;
       console.log(this.videoUrl);
       this.audioOptions = this.mediaFile.audios.map((audioTrack, index) => {

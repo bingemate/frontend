@@ -20,3 +20,8 @@ export const emptyCommentResults: CommentResults = {
   results: [],
   totalResult: 0,
 };
+
+export interface commentHistoryResponse {
+  date: string;
+  count: number;
+}

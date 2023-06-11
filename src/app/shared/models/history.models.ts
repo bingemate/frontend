@@ -3,5 +3,5 @@ export interface HistoryModel {
   mediaId: number;
   stoppedAt: number;
   viewedAt: Date;
-  type: 'episode' | 'movie';
+  type: 'tv-shows' | 'movies';
 }
