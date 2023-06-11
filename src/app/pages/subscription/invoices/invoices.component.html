@@ -8,7 +8,6 @@
   <thead>
     <tr>
       <th>Tarif</th>
-      <th>Monnaie</th>
       <th>Status</th>
       <th>Date de création</th>
       <th>Consulter</th>
@@ -17,7 +16,17 @@
   </thead>
   <tbody>
     <tr *ngFor="let data of table.data">
-      <td>{{ data.status }}</td>
+      <td>
+        {{
+          data.price / 100
+            | currency : data.currency.toUpperCase() : 'symbol' : '0.2-2' : 'fr'
+        }}
+      </td>
+      <td>
+        <span nz-typography [nzType]="mapStatus(data.status)">
+          {{ data.status }}
+        </span>
+      </td>
       <td>{{ data.created | date : 'dd/MM/yyyy' }}</td>
       <td>
         <a [href]="data.invoiceUrl" target="_blank">
