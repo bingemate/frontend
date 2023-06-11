@@ -11,10 +11,11 @@ import {
   MovieResponse,
   TvEpisodeResponse,
 } from '../../../shared/models/media.models';
-import { Select } from '@ngxs/store';
+import { Select, Store } from '@ngxs/store';
 import { EpisodePlaylist } from '../../../shared/models/episode-playlist.model';
 import { MoviePlaylist } from '../../../shared/models/movie-playlist.model';
 import { StreamingState } from '../../../feature/streaming/store/streaming.state';
+import { StreamingActions } from '../../../feature/streaming/store/streaming.actions';
 
 @Component({
   selector: 'app-stream',
@@ -37,7 +38,8 @@ export class StreamComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private keycloak: KeycloakService,
-    private mediaInfoService: MediaInfoService
+    private mediaInfoService: MediaInfoService,
+    private store: Store
   ) {}
 
   ngOnInit(): void {
@@ -66,6 +68,26 @@ export class StreamComponent implements OnInit, OnDestroy {
               mediaFile.duration *
               Number.parseFloat(
                 this.route.snapshot.queryParamMap.get('progress') || '0'
+              );
+          }
+          if (this.type === 'tv-shows') {
+            this.mediaInfoService
+              .getAvailableEpisodes((mediaInfo as TvEpisodeResponse).tvShowId)
+              .subscribe(episodes =>
+                this.store.dispatch(
+                  new StreamingActions.WatchEpisodePlaylist(
+                    {
+                      id: '',
+                      name: 'Lecture automatique',
+                      userId: '',
+                      items: episodes.map(episodeId => ({
+                        episodeId,
+                      })),
+                    },
+                    episodes.indexOf(this.mediaId),
+                    false
+                  )
+                )
               );
           }
         },
