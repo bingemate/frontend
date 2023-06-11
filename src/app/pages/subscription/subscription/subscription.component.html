@@ -10,21 +10,6 @@
       [nzStatus]="getSubscriptionStatusState()"
       [nzText]="getSubscriptionStatus()"></nz-badge>
   </nz-descriptions-item>
-  <nz-descriptions-item nzTitle="Méthode de paiement">
-    <button
-      nz-button
-      nzType="link"
-      (click)="changePaymentMethod()"
-      [disabled]="loading"
-      nzTooltipTitle="Changer le moyen de paiement"
-      nzTooltipPlacement="top"
-      nz-tooltip>
-      {{
-        subscription?.paymentMethod === 'card' ? 'Carte de crédit' : 'Paypal'
-      }}
-      <span nz-icon nzType="edit" nzTheme="outline"></span>
-    </button>
-  </nz-descriptions-item>
   <nz-descriptions-item nzTitle="Renouvellement automatique">
     {{ subscription?.isCanceled ? 'Non' : 'Oui' }}
   </nz-descriptions-item>
@@ -53,6 +38,17 @@
       <span nz-icon nzType="dollar-circle" nzTheme="fill"></span>
       Voir les factures
     </a>
+    <button
+      nz-button
+      nzType="link"
+      (click)="changePaymentMethod()"
+      [disabled]="loading"
+      nzTooltipTitle="Changer le moyen de paiement"
+      nzTooltipPlacement="top"
+      nz-tooltip>
+      Changer de moyen de paiement
+      <span nz-icon nzType="edit" nzTheme="outline"></span>
+    </button>
     <button
       *nzSpaceItem
       nz-button

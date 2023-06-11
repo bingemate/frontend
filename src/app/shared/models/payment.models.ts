@@ -6,6 +6,8 @@ export interface InvoiceResponse {
   invoicePdfUrl: string;
   created: number;
   status: 'draft' | 'open' | 'paid' | 'uncollectible' | 'void';
+  price: number;
+  currency: string;
 }
 
 export interface Invoice {
@@ -13,6 +15,8 @@ export interface Invoice {
   invoicePdfUrl: string;
   created: Date;
   status: 'draft' | 'open' | 'paid' | 'uncollectible' | 'void';
+  price: number;
+  currency: string;
 }
 
 export function toInvoice(invoice: InvoiceResponse): Invoice {

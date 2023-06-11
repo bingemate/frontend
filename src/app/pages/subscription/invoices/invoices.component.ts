@@ -19,18 +19,18 @@ export class InvoicesComponent implements OnInit {
 
   mapStatus(
     status: 'draft' | 'open' | 'paid' | 'uncollectible' | 'void'
-  ): 'green' | 'blue' | 'red' {
+  ): 'secondary' | 'warning' | 'danger' | 'success' | undefined {
     switch (status) {
       case 'paid':
-        return 'green';
+        return 'success';
       case 'draft':
-        return 'blue';
+        return 'secondary';
       case 'open':
-        return 'blue';
+        return 'warning';
       case 'uncollectible':
-        return 'red';
+        return 'danger';
       case 'void':
-        return 'red';
+        return 'danger';
     }
   }
 }

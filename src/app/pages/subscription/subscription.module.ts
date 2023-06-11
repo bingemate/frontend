@@ -26,6 +26,8 @@ import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { SubscriptionsComponent } from './subscriptions/subscriptions.component';
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
+import { NzEmptyModule } from 'ng-zorro-antd/empty';
+import { NzTableModule } from 'ng-zorro-antd/table';
 
 @NgModule({
   declarations: [
@@ -58,6 +60,8 @@ import { NzTypographyModule } from 'ng-zorro-antd/typography';
     NzPopconfirmModule,
     NzCardModule,
     NzTypographyModule,
+    NzEmptyModule,
+    NzTableModule,
   ],
 })
 export class SubscriptionModule {}
