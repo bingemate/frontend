@@ -34,7 +34,7 @@ export class PlaylistStreamComponent implements OnInit, OnDestroy {
   @Select(StreamingState.episodePlaylist)
   episodePlaylist$!: Observable<EpisodePlaylist>;
   @Select(StreamingState.type)
-  type$!: Observable<'movie' | 'episode' | undefined>;
+  type$!: Observable<'movies' | 'tv-shows' | undefined>;
   @Select(StreamingState.autoplay)
   autoplay$!: Observable<boolean>;
   @Select(StreamingState.position)
@@ -55,7 +55,7 @@ export class PlaylistStreamComponent implements OnInit, OnDestroy {
     this.type$
       .pipe(
         switchMap(type => {
-          if (type === 'movie') {
+          if (type === 'movies') {
             return this.moviePlaylist$.pipe(
               mergeMap(playlist => {
                 return this.getMovies(playlist.items);

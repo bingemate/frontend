@@ -11,7 +11,7 @@ import { NotificationsService } from '../../../../core/notifications/notificatio
 })
 export class NewCommentComponent {
   @Input() mediaId = 0;
-  @Input() type?: 'tv' | 'movie';
+  @Input() type?: 'tv-shows' | 'movies';
   @Output() newComment: EventEmitter<CommentResponse> = new EventEmitter();
 
   form: FormGroup;
@@ -27,7 +27,7 @@ export class NewCommentComponent {
   }
 
   onSubmit(): void {
-    (this.type === 'movie'
+    (this.type === 'movies'
       ? this.commentService.createMovieComment(
           this.mediaId,
           this.form.value.comment
