@@ -6,7 +6,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { ChartConfiguration, ChartType } from 'chart.js';
-import { getDateDays, getDateHours } from '../../utils/date.utils';
+import { getDateDays, getDateSeconds } from '../../utils/date.utils';
 import { fr } from 'date-fns/locale';
 import { format } from 'date-fns';
 import {
@@ -35,6 +35,17 @@ export class StatsDailyViewsComponent implements OnInit, OnChanges {
     scales: {
       y: {
         position: 'left',
+        ticks: {
+          stepSize: 3600,
+          callback: label => this.formatTime(label as number),
+        },
+      },
+    },
+    plugins: {
+      tooltip: {
+        callbacks: {
+          label: label => this.formatLabelTime(label),
+        },
       },
     },
   };
@@ -153,16 +164,35 @@ export class StatsDailyViewsComponent implements OnInit, OnChanges {
       if (!data.has(key) || !value) {
         data.set(
           key,
-          getDateHours(stat.stoppedAt.getTime() - stat.startedAt.getTime())
+          getDateSeconds(stat.stoppedAt.getTime() - stat.startedAt.getTime())
         );
       } else {
         data.set(
           key,
           value +
-            getDateHours(stat.stoppedAt.getTime() - stat.startedAt.getTime())
+            getDateSeconds(stat.stoppedAt.getTime() - stat.startedAt.getTime())
         );
       }
     });
     return data;
+  }
+  private formatLabelTime(context: any) {
+    let label = context.dataset.label || '';
+
+    if (label) {
+      label += ': ';
+    }
+    if (context.parsed.y !== null) {
+      label += this.formatTime(context.parsed.y);
+    }
+    return label;
+  }
+  private formatTime(secs: number) {
+    const hours = Math.floor(secs / (60 * 60));
+
+    const divisor_for_minutes = secs % (60 * 60);
+    const minutes = Math.floor(divisor_for_minutes / 60);
+
+    return hours + 'h' + minutes + 'm';
   }
 }
