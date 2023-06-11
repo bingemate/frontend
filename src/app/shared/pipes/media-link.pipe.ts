@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { catchError, map, Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { MediaInfoService } from '../../feature/media-info/media-info.service';
 import { navigationRoot } from '../../app-routing.module';
 import { mediasLinks } from '../../pages/medias/medias-routing.module';
