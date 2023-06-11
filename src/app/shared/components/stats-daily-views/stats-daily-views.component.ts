@@ -1,16 +1,26 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import { ChartConfiguration, ChartType } from 'chart.js';
 import { getDateDays, getDateHours } from '../../utils/date.utils';
 import { fr } from 'date-fns/locale';
 import { format } from 'date-fns';
-import { Statistic } from '../../models/statistic.models';
+import {
+  STAT_COLORS,
+  StatDisplay,
+  Statistic,
+} from '../../models/statistic.models';
 
 @Component({
   selector: 'app-stats-daily-views',
   templateUrl: './stats-daily-views.component.html',
   styleUrls: ['./stats-daily-views.component.less'],
 })
-export class StatsDailyViewsComponent implements OnInit {
+export class StatsDailyViewsComponent implements OnInit, OnChanges {
   @Input()
   movieStats: Statistic[] = [];
   @Input()
@@ -27,65 +37,112 @@ export class StatsDailyViewsComponent implements OnInit {
         position: 'left',
       },
     },
-    plugins: {
-      legend: {
-        display: false,
-      },
-    },
   };
-
-  selectedPeriod = '7 jours';
   lineChartData: ChartConfiguration['data'] = {
     datasets: [],
   };
+  selectedPeriod = '7 jours';
+  sevenTvDays: StatDisplay = { data: [], labels: [] };
+  oneTvMonth: StatDisplay = { data: [], labels: [] };
+  sixTvMonth: StatDisplay = { data: [], labels: [] };
+  sevenMovieDays: number[] = [];
+  oneMovieMonth: number[] = [];
+  sixMovieMonth: number[] = [];
 
   ngOnInit(): void {
-    this.setDailyViewSevenDaysPeriod();
+    this.updateMovieData();
+    this.updateTvData();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (
+      changes['movieStats'].currentValue !== changes['movieStats'].previousValue
+    ) {
+      this.updateMovieData();
+    }
+    if (
+      changes['episodeStats'].currentValue !==
+      changes['episodeStats'].previousValue
+    ) {
+      this.updateTvData();
+    }
+  }
+
+  private updateMovieData() {
+    this.sevenMovieDays = this.getPeriodData(this.movieStats, 7).data;
+    this.oneMovieMonth = this.getPeriodData(this.movieStats, 30).data;
+    this.sixMovieMonth = this.getPeriodData(this.movieStats, 180).data;
+    if (this.selectedPeriod === '7 jours') {
+      this.setDailyViewSevenDaysPeriod();
+    } else if (this.selectedPeriod === '1 mois') {
+      this.setDailyViewMonthPeriod();
+    } else {
+      this.setDailyViewSemesterPeriod();
+    }
+  }
+
+  private updateTvData() {
+    this.sevenTvDays = this.getPeriodData(this.episodeStats, 7);
+    this.oneTvMonth = this.getPeriodData(this.episodeStats, 30);
+    this.sixTvMonth = this.getPeriodData(this.episodeStats, 180);
+    if (this.selectedPeriod === '7 jours') {
+      this.setDailyViewSevenDaysPeriod();
+    } else if (this.selectedPeriod === '1 mois') {
+      this.setDailyViewMonthPeriod();
+    } else {
+      this.setDailyViewSemesterPeriod();
+    }
   }
 
   setDailyViewSevenDaysPeriod() {
     this.selectedPeriod = '7 jours';
-    this.setChartData(7);
+    this.updateChartData(this.sevenTvDays, this.sevenMovieDays);
   }
 
   setDailyViewMonthPeriod() {
     this.selectedPeriod = '1 mois';
-    this.setChartData(30);
+    this.updateChartData(this.oneTvMonth, this.oneMovieMonth);
   }
 
   setDailyViewSemesterPeriod() {
     this.selectedPeriod = '6 mois';
-    this.setChartData(180);
+    this.updateChartData(this.sixTvMonth, this.sixMovieMonth);
   }
 
-  private updateChartData(data: number[], labels: string[]): void {
+  private updateChartData(tvData: StatDisplay, movieData: number[]): void {
     this.lineChartData = {
       datasets: [
         {
-          data,
-          label: 'Temps de visionnage',
-          backgroundColor: 'rgba(255, 113, 24, 0.3)',
-          borderColor: 'rgb(255, 113, 24)',
-          pointBackgroundColor: 'rgb(255, 113, 24)',
+          data: tvData.data,
+          label: 'Séries',
           fill: 'origin',
+          ...STAT_COLORS.TV_SHOW_COLOR,
+        },
+        {
+          data: movieData,
+          label: 'Films',
+          fill: 'origin',
+          ...STAT_COLORS.MOVIE_COLOR,
         },
       ],
-      labels,
+      labels: tvData.labels,
     };
   }
 
-  private setChartData(period: number) {
-    let stats = this.movieStats.filter(
+  private getPeriodData(stats: readonly Statistic[], period: number) {
+    let statsFiltered = stats.filter(
       stat =>
         getDateDays(new Date().getTime()) -
           getDateDays(stat.startedAt.getTime()) <=
         period
     );
-    stats = stats.sort((a, b) => a.startedAt.getTime() - b.startedAt.getTime());
-    const watchTimePerDay = this.getWatchTimePerDay(stats);
+    statsFiltered = statsFiltered.sort(
+      (a, b) => a.startedAt.getTime() - b.startedAt.getTime()
+    );
+    const watchTimePerDay = this.getWatchTimePerDay(statsFiltered);
     const labels = Array.from(watchTimePerDay.keys());
     const data = Array.from(watchTimePerDay.values());
-    this.updateChartData(data, labels);
+    return { data, labels };
   }
 
   private getWatchTimePerDay(stats: Statistic[]) {

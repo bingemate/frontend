@@ -10,7 +10,11 @@ import { getDateDays } from '../../utils/date.utils';
 import { MediaInfoService } from '../../../feature/media-info/media-info.service';
 import { forkJoin, map, switchMap } from 'rxjs';
 import { Genre } from '../../models/media.models';
-import { StatDisplay, Statistic } from '../../models/statistic.models';
+import {
+  STAT_COLORS,
+  StatDisplay,
+  Statistic,
+} from '../../models/statistic.models';
 
 @Component({
   selector: 'app-stats-daily-viewed-genre',
@@ -78,10 +82,12 @@ export class StatsDailyViewedGenreComponent implements OnInit, OnChanges {
         {
           label: 'Séries',
           data: stats.data,
+          ...STAT_COLORS.TV_SHOW_COLOR,
         },
         {
           label: 'Films',
           data: movieData,
+          ...STAT_COLORS.MOVIE_COLOR,
         },
       ],
       labels: stats.labels,
