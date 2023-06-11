@@ -19,7 +19,7 @@
     <nz-card>
       <div nz-row nzJustify="center">
         <nz-statistic
-          [nzValue]="watchTime!"
+          [nzValue]="watchedMediaCount"
           [nzTitle]="'Médias visionnés'"
           [nzPrefix]="playPref"></nz-statistic>
         <ng-template #playPref
@@ -32,7 +32,7 @@
     <nz-card>
       <div nz-row nzJustify="center">
         <nz-statistic
-          [nzValue]="comments.length"
+          [nzValue]="commentsCount"
           [nzTitle]="'Commentaires envoyés'"
           [nzPrefix]="commentPref"></nz-statistic>
         <ng-template #commentPref
@@ -45,7 +45,7 @@
     <nz-card>
       <div nz-row nzJustify="center">
         <nz-statistic
-          [nzValue]="ratings.length"
+          [nzValue]="ratingsCount"
           [nzTitle]="'Médias notés'"
           [nzPrefix]="starPref"></nz-statistic>
         <ng-template #starPref><span nz-icon nzType="star"></span></ng-template>

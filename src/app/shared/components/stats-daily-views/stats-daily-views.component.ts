@@ -6,7 +6,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { ChartConfiguration, ChartType } from 'chart.js';
-import { getDateDays, getDateSeconds } from '../../utils/date.utils';
+import { getDateDays, millisToSeconds } from '../../utils/date.utils';
 import { fr } from 'date-fns/locale';
 import { format } from 'date-fns';
 import {
@@ -164,13 +164,13 @@ export class StatsDailyViewsComponent implements OnInit, OnChanges {
       if (!data.has(key) || !value) {
         data.set(
           key,
-          getDateSeconds(stat.stoppedAt.getTime() - stat.startedAt.getTime())
+          millisToSeconds(stat.stoppedAt.getTime() - stat.startedAt.getTime())
         );
       } else {
         data.set(
           key,
           value +
-            getDateSeconds(stat.stoppedAt.getTime() - stat.startedAt.getTime())
+            millisToSeconds(stat.stoppedAt.getTime() - stat.startedAt.getTime())
         );
       }
     });

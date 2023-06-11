@@ -10,6 +10,7 @@ import { RatingService } from '../../../feature/rating/rating.service';
 import { RatingResponse } from '../../../shared/models/rating.models';
 import { filter, forkJoin, mergeMap, Observable } from 'rxjs';
 import { UserResponse } from '../../../shared/models/user.models';
+import { millisToHours } from '../../../shared/utils/date.utils';
 
 @Component({
   selector: 'app-statistics-watch-stats',
@@ -23,7 +24,10 @@ export class StatisticsWatchStatsComponent implements OnInit {
   movieStats: Statistic[] = [];
   comments: CommentResponse[] = [];
   ratings: RatingResponse[] = [];
-  watchTime = 200;
+  watchTime = 0;
+  commentsCount = 0;
+  ratingsCount = 0;
+  watchedMediaCount = 0;
 
   constructor(
     private episodeStatisticsService: EpisodeStatisticsService,
@@ -40,22 +44,29 @@ export class StatisticsWatchStatsComponent implements OnInit {
           forkJoin([
             this.episodeStatisticsService.getStatisticsByUserId(user.id),
             this.movieStatisticsService.getStatisticsByUserId(user.id),
-            // this.commentService.getUserComments(user.id),
-            // this.ratingService.getUserTvRatings(user.id),
+            this.commentService.getCommentCount(),
+            this.ratingService.getRatingCount(),
           ])
         )
       )
-      .subscribe(
-        ([
-          episodeStats,
-          movieStats,
-          //, comments, ratings
-        ]) => {
-          this.episodeStats = episodeStats;
-          this.movieStats = movieStats;
-          this.comments = [];
-          this.ratings = [];
-        }
-      );
+      .subscribe(([episodeStats, movieStats, commentsCount, ratingsCount]) => {
+        this.episodeStats = episodeStats;
+        this.movieStats = movieStats;
+        this.commentsCount = commentsCount;
+        this.ratingsCount = ratingsCount;
+        this.watchTime = episodeStats
+          .map(stat =>
+            millisToHours(stat.stoppedAt.getTime() - stat.startedAt.getTime())
+          )
+          .reduce((a, b) => a + b);
+        this.watchTime += movieStats
+          .map(stat =>
+            millisToHours(stat.stoppedAt.getTime() - stat.startedAt.getTime())
+          )
+          .reduce((a, b) => a + b);
+        this.watchedMediaCount =
+          new Set(episodeStats.map(stat => stat.mediaId)).size +
+          new Set(movieStats.map(stat => stat.mediaId)).size;
+      });
   }
 }
