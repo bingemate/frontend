@@ -91,13 +91,19 @@ export class MediaInfoService {
 
   getMovieFileInfos(mediaId: number): Observable<MediaFile> {
     return this.http.get<MediaFile>(
-      API_RESOURCE_URI.MEDIA_INFO + '/media-file/movie/' + mediaId
+      API_RESOURCE_URI.MEDIA_INFO + '/file/movie/' + mediaId
     );
   }
 
   getEpisodeFileInfos(mediaId: number): Observable<MediaFile> {
     return this.http.get<MediaFile>(
-      API_RESOURCE_URI.MEDIA_INFO + '/media-file/episode/' + mediaId
+      API_RESOURCE_URI.MEDIA_INFO + '/file/episode/' + mediaId
+    );
+  }
+
+  getAvailableEpisodes(mediaId: number): Observable<number[]> {
+    return this.http.get<number[]>(
+      `${API_RESOURCE_URI.MEDIA_INFO}/file/tv/${mediaId}/available`
     );
   }
 }

@@ -79,15 +79,17 @@ export class StreamingState {
       episodePlaylist: payload.playlist,
       position: payload.position,
     });
-    this.ngZone.run(() => {
-      this.router
-        .navigate([
-          '/streaming/stream',
-          'tv-shows',
-          ctx.getState().moviePlaylist?.items[payload.position].movieId,
-        ])
-        .then();
-    });
+    if (payload.redirect) {
+      this.ngZone.run(() => {
+        this.router
+          .navigate([
+            '/streaming/stream',
+            'tv-shows',
+            ctx.getState().moviePlaylist?.items[payload.position].movieId,
+          ])
+          .then();
+      });
+    }
   }
 
   @Action(StreamingActions.SeekMediaPlaylist)
