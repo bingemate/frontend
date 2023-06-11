@@ -12,7 +12,10 @@ import { MediaInfoService } from '../../media-info.service';
   styleUrls: ['./media-list.component.less'],
 })
 export class MediaListComponent implements OnInit, OnChanges {
-  @Input() mediaIds: number[] = [];
+  @Input() mediaIds: {
+    id: number;
+    type: 'tv' | 'movie';
+  }[] = [];
 
   medias: {
     type?: MediaType;
@@ -24,37 +27,38 @@ export class MediaListComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.medias = new Array(this.mediaIds.length).fill({});
-    this.mediaIds.forEach((mediaId, index) => {
-      this.getMedia(mediaId, index);
+    this.mediaIds.forEach(({ id, type }, index) => {
+      this.getMedia(id, type, index);
     });
   }
 
   ngOnChanges() {
     this.medias = new Array(this.mediaIds.length).fill({});
     this.mediaIds.forEach((mediaId, index) => {
-      this.getMedia(mediaId, index);
+      this.getMedia(mediaId.id, mediaId.type, index);
     });
   }
 
-  getMedia(mediaId: number, index: number) {
-    this.mediaService.getTvShowShortInfo(mediaId).subscribe({
-      next: tvShow => {
-        this.medias[index] = {
-          type: MediaType.TvShow,
-          tvShowResponse: tvShow,
-        };
-      },
-      error: () => {
-        this.mediaService.getMovieShortInfo(mediaId).subscribe({
-          next: movie => {
-            this.medias[index] = {
-              type: MediaType.Movie,
-              movieResponse: movie,
-            };
-          },
-        });
-      },
-    });
+  getMedia(mediaId: number, type: 'movie' | 'tv', index: number) {
+    if (type === 'tv') {
+      this.mediaService.getTvShowShortInfo(mediaId).subscribe({
+        next: tvShow => {
+          this.medias[index] = {
+            type: MediaType.TvShow,
+            tvShowResponse: tvShow,
+          };
+        },
+      });
+    } else {
+      this.mediaService.getMovieShortInfo(mediaId).subscribe({
+        next: movie => {
+          this.medias[index] = {
+            type: MediaType.Movie,
+            movieResponse: movie,
+          };
+        },
+      });
+    }
   }
 
   protected readonly MediaType = MediaType;

@@ -1,8 +1,12 @@
 <nz-row [nzGutter]="[16, 16]">
-  <nz-page-header nz-col [nzSpan]="24" nzTitle="Continuer à regarder">
+  <nz-page-header
+    nz-col
+    [nzSpan]="24"
+    nzTitle="Continuer à regarder"
+    *ngIf="history.length > 0">
   </nz-page-header>
 
-  <nz-col [nzSpan]="24">
+  <nz-col [nzSpan]="24" *ngIf="history.length > 0">
     <nz-card [ngClass]="isSubscribed ? '' : 'disabled-overlay'">
       <cdk-virtual-scroll-viewport
         orientation="horizontal"
