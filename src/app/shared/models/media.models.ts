@@ -92,6 +92,7 @@ export interface TvShowResponse {
   posterUrl: string;
   releaseDate: string;
   seasonsCount: number;
+  episodesCount: number;
   status: string;
   title: string;
   voteAverage: number;
