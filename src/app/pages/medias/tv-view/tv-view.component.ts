@@ -71,7 +71,7 @@ export class TvViewComponent {
 
   onGetMediaComments() {
     this.commentService
-      .getMediaComments(this.tvId ?? 0, this.commentsCurrentPage)
+      .getTvShowComments(this.tvId ?? 0, this.commentsCurrentPage)
       .subscribe(comments => {
         this.comments = comments;
       });

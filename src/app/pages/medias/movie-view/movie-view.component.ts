@@ -70,7 +70,7 @@ export class MovieViewComponent {
 
   onGetMediaComments() {
     this.commentService
-      .getMediaComments(this.movieId ?? 0, this.commentsCurrentPage)
+      .getMovieComments(this.movieId ?? 0, this.commentsCurrentPage)
       .subscribe(comments => {
         this.comments = comments;
       });
