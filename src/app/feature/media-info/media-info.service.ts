@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {
-  MediaResponse,
   MovieResponse,
   TvEpisodeResponse,
   TvShowResponse,
@@ -18,12 +17,6 @@ export class MediaInfoService {
   private readonly tvNames = new Map<number, TvShowResponse>();
   private readonly movieNames = new Map<number, MovieResponse>();
   constructor(private readonly http: HttpClient) {}
-
-  getMediaInfo(tmdbId: number): Observable<MediaResponse> {
-    return this.http.get<MediaResponse>(
-      API_RESOURCE_URI.MEDIA_INFO + '/media/base-tmdb/' + tmdbId
-    );
-  }
 
   getMovieInfo(tmdbId: number): Observable<MovieResponse> {
     return this.http.get<MovieResponse>(

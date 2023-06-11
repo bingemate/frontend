@@ -21,7 +21,7 @@
                         alt="logo"
                         [nzSrc]="item.media.posterUrl" />
                       <span *nzSpaceItem>
-                        {{ item.watchlist.tvShowId | tvName | async }}
+                        {{ item.watchlist.tvShowId | mediaName : 'tv' | async }}
                       </span>
                     </nz-space>
                   </a>
@@ -93,7 +93,9 @@
                         alt="logo"
                         [nzSrc]="item.media.posterUrl" />
                       <span *nzSpaceItem>
-                        {{ item.watchlist.movieId | movieName | async }}
+                        {{
+                          item.watchlist.movieId | mediaName : 'movie' | async
+                        }}
                       </span>
                     </nz-space>
                   </a>

@@ -179,20 +179,26 @@
 </nz-card>
 
 <ng-template #toggleEdit>
-  <button
-    *ngIf="canEdit()"
-    nz-button
-    nzType="primary"
-    (click)="toggleEditMode()">
-    Modifier
-  </button>
-  <a
-    nz-button
-    *ngIf="user?.id !== authUser?.id"
-    nzType="default"
-    [routerLink]="['/social-network/chat', user?.id]">
-    Envoyer un message
-  </a>
+  <nz-space nzDirection="horizontal">
+    <ng-container *ngIf="canEdit()">
+      <button
+        *nzSpaceItem
+        nz-button
+        nzType="primary"
+        (click)="toggleEditMode()">
+        Modifier
+      </button>
+    </ng-container>
+    <ng-container *ngIf="user?.id !== authUser?.id">
+      <button
+        *nzSpaceItem
+        nz-button
+        nzType="default"
+        [routerLink]="['/social-network/chat', user?.id]">
+        Envoyer un message
+      </button>
+    </ng-container>
+  </nz-space>
 </ng-template>
 
 <ng-template #toggleSave>

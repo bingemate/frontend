@@ -14,6 +14,16 @@ import {
 export class RatingService {
   constructor(private readonly http: HttpClient) {}
 
+  getRatingCount(): Observable<number> {
+    return this.http.get<number>(`${API_RESOURCE_URI.MEDIA_INFO}/rating/count`);
+  }
+
+  getUserRatingCount(userId: string): Observable<number> {
+    return this.http.get<number>(
+      `${API_RESOURCE_URI.MEDIA_INFO}/rating/user/count/${userId}`
+    );
+  }
+
   getMovieRating(mediaId: number, page = 1): Observable<RatingResults> {
     const params = new HttpParams().set('page', page);
     return this.http.get<RatingResults>(
