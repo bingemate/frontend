@@ -64,6 +64,7 @@
 <ng-template #newComment>
   <app-new-comment
     [mediaId]="movieId ?? 0"
+    [type]="'movie'"
     (newComment)="onRefreshComments()"></app-new-comment>
 </ng-template>
 

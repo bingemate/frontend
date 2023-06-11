@@ -14,10 +14,18 @@ import {
 export class CommentService {
   constructor(private readonly http: HttpClient) {}
 
-  getMediaComments(mediaId: number, page = 1): Observable<CommentResults> {
+  getMovieComments(mediaId: number, page = 1): Observable<CommentResults> {
     const params = new HttpParams().set('page', page);
     return this.http.get<CommentResults>(
-      `${API_RESOURCE_URI.MEDIA_INFO}/comment/media/${mediaId}`,
+      `${API_RESOURCE_URI.MEDIA_INFO}/comment/movie/${mediaId}`,
+      { params }
+    );
+  }
+
+  getTvShowComments(mediaId: number, page = 1): Observable<CommentResults> {
+    const params = new HttpParams().set('page', page);
+    return this.http.get<CommentResults>(
+      `${API_RESOURCE_URI.MEDIA_INFO}/comment/movie/${mediaId}`,
       { params }
     );
   }
@@ -30,12 +38,28 @@ export class CommentService {
     );
   }
 
-  createComment(mediaId: number, content: string): Observable<CommentResponse> {
+  createMovieComment(
+    mediaId: number,
+    content: string
+  ): Observable<CommentResponse> {
     const requestContent: CommentRequest = {
       content,
     };
     return this.http.post<CommentResponse>(
-      `${API_RESOURCE_URI.MEDIA_INFO}/comment/media/${mediaId}`,
+      `${API_RESOURCE_URI.MEDIA_INFO}/comment/movie/${mediaId}`,
+      requestContent
+    );
+  }
+
+  createTvShowComment(
+    mediaId: number,
+    content: string
+  ): Observable<CommentResponse> {
+    const requestContent: CommentRequest = {
+      content,
+    };
+    return this.http.post<CommentResponse>(
+      `${API_RESOURCE_URI.MEDIA_INFO}/comment/tv/${mediaId}`,
       requestContent
     );
   }

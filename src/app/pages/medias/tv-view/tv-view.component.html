@@ -60,6 +60,7 @@
 
 <ng-template #newComment>
   <app-new-comment
+    [type]="'tv'"
     [mediaId]="tvId ?? 0"
     (newComment)="onRefreshComments()"></app-new-comment>
 </ng-template>
