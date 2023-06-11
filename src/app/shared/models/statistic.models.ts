@@ -6,3 +6,8 @@ export interface Statistic {
   stoppedAt: Date;
   type: 'episode' | 'movie';
 }
+
+export interface StatDisplay {
+  data: number[];
+  labels: string[];
+}

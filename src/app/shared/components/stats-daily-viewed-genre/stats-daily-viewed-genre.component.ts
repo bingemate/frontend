@@ -6,11 +6,11 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { ChartConfiguration, ChartType } from 'chart.js';
-import { StatDisplay, Statistic } from '../../models/statistic';
 import { getDateDays } from '../../utils/date.utils';
 import { MediaInfoService } from '../../../feature/media-info/media-info.service';
 import { catchError, forkJoin, map } from 'rxjs';
 import { Genre } from '../../models/media.models';
+import { StatDisplay, Statistic } from '../../models/statistic.models';
 
 @Component({
   selector: 'app-stats-daily-viewed-genre',

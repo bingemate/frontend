@@ -4,7 +4,6 @@ import { AuthState } from '../../../core/auth/store/auth.state';
 import { Select } from '@ngxs/store';
 import { MovieStatisticsService } from '../movie-statistics.service';
 import { Statistic } from '../../../shared/models/statistic.models';
-import { forkJoin } from 'rxjs';
 import { CommentService } from '../../../feature/comment/comment.service';
 import { CommentResponse } from '../../../shared/models/comment.models';
 import { RatingService } from '../../../feature/rating/rating.service';
@@ -38,8 +37,8 @@ export class StatisticsWatchStatsComponent implements OnInit {
         filter(user => user !== null && user !== undefined),
         mergeMap(user =>
           forkJoin([
-            this.episodeStatisticsService.getStatisticsByUserId(userId),
-            this.movieStatisticsService.getStatisticsByUserId(userId),
+            this.episodeStatisticsService.getStatisticsByUserId(user.id),
+            this.movieStatisticsService.getStatisticsByUserId(user.id),
             this.commentService.getUserComments(user.id),
             this.ratingService.getUserRating(user.id),
           ])
