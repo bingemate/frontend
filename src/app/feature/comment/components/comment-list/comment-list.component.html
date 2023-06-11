@@ -4,7 +4,9 @@
       <nz-comment
         [nzAuthor]="
           showMedia
-            ? (comment.mediaId | mediaName | async) ?? 'No name'
+            ? mediaType === 'movie'
+              ? (comment.mediaId | movieName | async) ?? 'No title'
+              : (comment.mediaId | tvName | async) ?? 'No title'
             : (comment.userId | username | async) ?? 'No name'
         "
         nzDatetime="{{ comment.createdAt | date : 'dd/MM/yyyy HH:mm' }}">
