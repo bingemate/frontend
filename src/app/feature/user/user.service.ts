@@ -10,7 +10,7 @@ import {
   UserResponse,
   UserResults,
 } from '../../shared/models/user.models';
-import { tap } from 'rxjs/operators';
+import { delay, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -69,6 +69,12 @@ export class UserService {
     );
   }
 
+  delete(): Observable<string> {
+    return this.http.delete<string>(
+      `${API_RESOURCE_URI.KEYCLOAK_SERVICE}/user-edit`
+    );
+  }
+
   updateUser(
     userId: string,
     updateUser: UpdateUserRequest
@@ -124,6 +130,12 @@ export class UserService {
     return this.http.get<UserResults>(
       `${API_RESOURCE_URI.KEYCLOAK_SERVICE}/user-admin/search`,
       { params }
+    );
+  }
+
+  adminDeleteUser(userId: string): Observable<string> {
+    return this.http.delete<string>(
+      `${API_RESOURCE_URI.KEYCLOAK_SERVICE}/user-admin/delete/${userId}`
     );
   }
 }
