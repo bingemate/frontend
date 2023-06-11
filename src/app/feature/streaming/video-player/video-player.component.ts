@@ -136,7 +136,7 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
         .subscribe(() =>
           this.streamUpdate.emit({
             watchStatus: StreamStatusEnum.PLAYING,
-            stoppedAt: api.currentTime / api.duration,
+            stoppedAt: api.currentTime / api.duration || 0,
           })
         )
     );
@@ -144,7 +144,7 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
       api.getDefaultMedia().subscriptions.pause.subscribe(() =>
         this.streamUpdate.emit({
           watchStatus: StreamStatusEnum.STOPPED,
-          stoppedAt: api.currentTime / api.duration,
+          stoppedAt: api.currentTime / api.duration || 0,
         })
       )
     );
@@ -152,7 +152,7 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
       api.getDefaultMedia().subscriptions.play.subscribe(() =>
         this.streamUpdate.emit({
           watchStatus: StreamStatusEnum.STARTED,
-          stoppedAt: api.currentTime / api.duration,
+          stoppedAt: api.currentTime / api.duration || 0,
         })
       )
     );
