@@ -17,24 +17,32 @@ import {
 } from '../../models/statistic.models';
 
 @Component({
-  selector: 'app-stats-daily-viewed-genre',
-  templateUrl: './stats-daily-viewed-genre.component.html',
-  styleUrls: ['./stats-daily-viewed-genre.component.less'],
+  selector: 'app-stats-show-daily-viewed-genre',
+  templateUrl: './stats-show-daily-viewed-genre.component.html',
+  styleUrls: ['./stats-show-daily-viewed-genre.component.less'],
 })
-export class StatsDailyViewedGenreComponent implements OnInit, OnChanges {
-  @Input()
-  movieStats: Statistic[] = [];
+export class StatsShowDailyViewedGenreComponent implements OnInit, OnChanges {
   @Input()
   episodeStats: Statistic[] = [];
 
   sevenTvDays: StatDisplay = { data: [], labels: [] };
   oneTvMonth: StatDisplay = { data: [], labels: [] };
   sixTvMonth: StatDisplay = { data: [], labels: [] };
-  sevenMovieDays: number[] = [];
-  oneMovieMonth: number[] = [];
-  sixMovieMonth: number[] = [];
   readonly lineChartType: ChartType = 'radar';
-  readonly lineChartOptions: ChartConfiguration['options'] = {};
+  readonly lineChartOptions: ChartConfiguration['options'] = {
+    scales: {
+      r: {
+        ticks: {
+          precision: 0,
+        },
+      },
+    },
+    plugins: {
+      legend: {
+        display: false,
+      },
+    },
+  };
 
   selectedPeriod = '7 jours';
   lineChartData: ChartConfiguration['data'] = {
@@ -44,15 +52,9 @@ export class StatsDailyViewedGenreComponent implements OnInit, OnChanges {
   constructor(private mediaService: MediaInfoService) {}
 
   ngOnInit(): void {
-    this.updateMovieData();
     this.updateTvData();
   }
   ngOnChanges(changes: SimpleChanges): void {
-    if (
-      changes['movieStats'].currentValue !== changes['movieStats'].previousValue
-    ) {
-      this.updateMovieData();
-    }
     if (
       changes['episodeStats'].currentValue !==
       changes['episodeStats'].previousValue
@@ -63,61 +65,30 @@ export class StatsDailyViewedGenreComponent implements OnInit, OnChanges {
 
   setDailyViewSevenDaysPeriod() {
     this.selectedPeriod = '7 jours';
-    this.updateChartData(this.sevenTvDays, this.sevenMovieDays);
+    this.updateChartData(this.sevenTvDays);
   }
 
   setDailyViewMonthPeriod() {
     this.selectedPeriod = '1 mois';
-    this.updateChartData(this.oneTvMonth, this.oneMovieMonth);
+    this.updateChartData(this.oneTvMonth);
   }
 
   setDailyViewSemesterPeriod() {
     this.selectedPeriod = '6 mois';
-    this.updateChartData(this.sixTvMonth, this.sixMovieMonth);
+    this.updateChartData(this.sixTvMonth);
   }
 
-  private updateChartData(stats: StatDisplay, movieData: number[]): void {
+  private updateChartData(tvStats: StatDisplay): void {
     this.lineChartData = {
       datasets: [
         {
-          label: 'Séries',
-          data: stats.data,
-          fill: 'origin',
+          data: tvStats.data,
+          fill: true,
           ...STAT_COLORS.TV_SHOW_COLOR,
         },
-        {
-          label: 'Films',
-          data: movieData,
-          fill: 'origin',
-          ...STAT_COLORS.MOVIE_COLOR,
-        },
       ],
-      labels: stats.labels,
+      labels: tvStats.labels,
     };
-  }
-
-  private updateMovieData() {
-    forkJoin(
-      this.movieStats.map(stat =>
-        this.mediaService.getMovieShortInfo(stat.mediaId).pipe(
-          map(media => ({
-            stat,
-            media,
-          }))
-        )
-      )
-    ).subscribe(stats => {
-      this.sevenMovieDays = this.getPeriodData(stats, 7).data;
-      this.oneMovieMonth = this.getPeriodData(stats, 30).data;
-      this.sixMovieMonth = this.getPeriodData(stats, 180).data;
-      if (this.selectedPeriod === '7 jours') {
-        this.setDailyViewSevenDaysPeriod();
-      } else if (this.selectedPeriod === '1 mois') {
-        this.setDailyViewMonthPeriod();
-      } else {
-        this.setDailyViewSemesterPeriod();
-      }
-    });
   }
 
   private updateTvData() {
