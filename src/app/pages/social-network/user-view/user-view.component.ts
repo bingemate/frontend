@@ -147,6 +147,4 @@ export class UserViewComponent {
   }
 
   protected readonly playlistViewLinks = playlistViewLinks;
-
-  handleIndexChange($event: number) {}
 }
