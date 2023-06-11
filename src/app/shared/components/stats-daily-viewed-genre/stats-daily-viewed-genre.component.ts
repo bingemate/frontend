@@ -82,11 +82,13 @@ export class StatsDailyViewedGenreComponent implements OnInit, OnChanges {
         {
           label: 'Séries',
           data: stats.data,
+          fill: 'origin',
           ...STAT_COLORS.TV_SHOW_COLOR,
         },
         {
           label: 'Films',
           data: movieData,
+          fill: 'origin',
           ...STAT_COLORS.MOVIE_COLOR,
         },
       ],
@@ -166,8 +168,17 @@ export class StatsDailyViewedGenreComponent implements OnInit, OnChanges {
 
   private getWatchTimePerDay(stats: { stat: Statistic; media: any }[]) {
     const data: Map<string, number> = new Map<string, number>();
+    const ids: Map<string, Set<number>> = new Map<string, Set<number>>();
     stats.forEach(stat => {
       stat.media.genres.forEach((genre: Genre) => {
+        let elements = ids.get(genre.name);
+        if (!elements) {
+          elements = new Set();
+          ids.set(genre.name, elements);
+        } else if (elements.has(stat.stat.mediaId)) {
+          return;
+        }
+        elements.add(stat.stat.mediaId);
         const value = data.get(genre.name);
         if (!data.has(genre.name) || !value) {
           data.set(genre.name, 1);
