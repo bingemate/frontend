@@ -54,14 +54,16 @@
   <nz-tab nzTitle="Les plus commentés">
     <ng-template nz-tab>
       <nz-skeleton
-        *ngIf="mediaByCommentsLoading"
+        *ngIf="moviesByCommentsLoading || tvShowsByCommentsLoading"
         [nzActive]="true"
         [nzParagraph]="{ rows: 10 }"></nz-skeleton>
       <nz-empty
         *ngIf="
-          !mediaByCommentsLoading && mediaByComments.length === 0
+          !moviesByCommentsLoading &&
+          !tvShowsByCommentsLoading &&
+          mediaByComments.length === 0
         "></nz-empty>
-      <nz-card *ngIf="!mediaByCommentsLoading">
+      <nz-card *ngIf="!moviesByCommentsLoading || !tvShowsByCommentsLoading">
         <app-media-list [mediaIds]="mediaByComments"></app-media-list>
       </nz-card>
     </ng-template>
