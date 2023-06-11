@@ -25,8 +25,9 @@ export class TrendingComponent implements OnInit {
   recentTvShows: TvShowResponse[] = [];
   recentTvShowsLoading = false;
 
-  mediaByComments: number[] = [];
-  mediaByCommentsLoading = false;
+  mediaByComments: { type: 'movie' | 'tv'; id: number }[] = [];
+  moviesByCommentsLoading = false;
+  tvShowsByCommentsLoading = false;
 
   onlyAvailable = false;
 
@@ -98,12 +99,28 @@ export class TrendingComponent implements OnInit {
   }
 
   onGetMediaByComments() {
-    this.mediaByCommentsLoading = true;
+    this.moviesByCommentsLoading = true;
+    this.tvShowsByCommentsLoading = true;
+    this.mediaByComments = [];
     this.mediaDiscoverService
       .getMoviesByComments(this.onlyAvailable)
       .subscribe(media => {
-        this.mediaByCommentsLoading = false;
-        this.mediaByComments = media;
+        this.moviesByCommentsLoading = false;
+        this.mediaByComments.push(
+          ...media.map(
+            m => ({ type: 'movie', id: m } as { type: 'movie'; id: number })
+          )
+        );
+      });
+    this.mediaDiscoverService
+      .getTvShowsByComments(this.onlyAvailable)
+      .subscribe(media => {
+        this.tvShowsByCommentsLoading = false;
+        this.mediaByComments.push(
+          ...media.map(
+            m => ({ type: 'tv', id: m } as { type: 'tv'; id: number })
+          )
+        );
       });
   }
 

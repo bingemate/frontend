@@ -1,6 +1,69 @@
-<nz-tabset nzSize="large" nzDirection="vertical">
+<nz-tabset nzSize="large">
   <nz-tab nzTitle="Mes informations">
-    <app-user-info [user]="user"></app-user-info>
+    <nz-space nzDirection="vertical" style="width: 100%">
+      <app-user-info *nzSpaceItem [user]="user"></app-user-info>
+      <button
+        *nzSpaceItem
+        nz-button
+        nzDanger
+        nzType="primary"
+        (click)="showModal()">
+        <span>Supprimer mon compte</span>
+      </button>
+    </nz-space>
+    <nz-modal
+      [(nzVisible)]="deleteModalVisible"
+      nzTitle="Suppression du compte"
+      [nzFooter]="null"
+      (nzOnCancel)="handleCancel()">
+      <ng-container *nzModalContent>
+        <nz-result
+          *ngIf="
+            !deleteModalLoading && !deleteModalError && !deleteModalSuccess
+          "
+          nzStatus="warning"
+          nzTitle="Voulez-vous vraiment supprimer votre compte ?">
+          <div nz-result-extra>
+            <button nz-button nzType="primary" (click)="handleDelete()">
+              Oui
+            </button>
+            <button nz-button nzType="default" (click)="handleCancel()">
+              Non
+            </button>
+          </div>
+        </nz-result>
+        <nz-result
+          *ngIf="deleteModalLoading"
+          nzStatus="info"
+          nzTitle="Suppression en cours...">
+          <div nz-result-extra>
+            <nz-spin></nz-spin>
+          </div>
+        </nz-result>
+        <nz-result
+          *ngIf="deleteModalError"
+          nzStatus="error"
+          nzTitle="Une erreur est survenue lors de la suppression de votre compte. {{
+            deleteModalErrorMessage
+          }}">
+          <div nz-result-extra>
+            <button nz-button nzType="primary" (click)="handleCancel()">
+              Ok
+            </button>
+          </div>
+        </nz-result>
+        <nz-result
+          *ngIf="deleteModalSuccess"
+          nzStatus="success"
+          nzTitle="Votre compte a bien été supprimé.">
+          <div nz-result-extra>
+            <button nz-button nzType="primary" (click)="handleCancel()">
+              Ok
+            </button>
+          </div>
+        </nz-result>
+      </ng-container>
+    </nz-modal>
   </nz-tab>
   <nz-tab nzTitle="HttpBin">
     <nz-space nzDirection="vertical" nzSize="large">
