@@ -52,7 +52,7 @@ export class StreamingState {
     payload: StreamingActions.WatchMoviePlaylist
   ) {
     ctx.patchState({
-      type: 'movie',
+      type: 'movies',
       moviePlaylist: payload.playlist,
       episodePlaylist: undefined,
       position: payload.position,
@@ -61,7 +61,7 @@ export class StreamingState {
       this.router
         .navigate([
           '/streaming/stream',
-          'movie',
+          'movies',
           ctx.getState().moviePlaylist?.items[payload.position].movieId,
         ])
         .then();
@@ -74,7 +74,7 @@ export class StreamingState {
     payload: StreamingActions.WatchEpisodePlaylist
   ) {
     ctx.patchState({
-      type: 'episode',
+      type: 'tv-shows',
       moviePlaylist: undefined,
       episodePlaylist: payload.playlist,
       position: payload.position,
@@ -83,7 +83,7 @@ export class StreamingState {
       this.router
         .navigate([
           '/streaming/stream',
-          'episode',
+          'tv-shows',
           ctx.getState().moviePlaylist?.items[payload.position].movieId,
         ])
         .then();
@@ -99,7 +99,7 @@ export class StreamingState {
       position: payload.position,
     });
     const id =
-      ctx.getState().type === 'movie'
+      ctx.getState().type === 'movies'
         ? ctx.getState().moviePlaylist?.items[payload.position].movieId
         : ctx.getState().episodePlaylist?.items[payload.position].episodeId;
     this.ngZone.run(() => {
@@ -113,11 +113,11 @@ export class StreamingState {
   mediaEnded(ctx: StateContext<StreamingStateModel>) {
     const position = ctx.getState().position + 1;
     const id =
-      ctx.getState().type === 'movie'
+      ctx.getState().type === 'movies'
         ? ctx.getState().moviePlaylist?.items[position].movieId
         : ctx.getState().episodePlaylist?.items[position].episodeId;
     const playlist =
-      ctx.getState().type === 'movie'
+      ctx.getState().type === 'movies'
         ? ctx.getState().moviePlaylist
         : ctx.getState().episodePlaylist;
     if (

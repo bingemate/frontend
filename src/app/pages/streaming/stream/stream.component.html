@@ -4,6 +4,7 @@
     [nzSpan]="(episodePlaylist$ | async) || (moviePlaylist$ | async) ? 18 : 24">
     <app-video-player
       (streamUpdate)="onStreamUpdate($event)"
+      [type]="type"
       [timeSeek]="progress"
       [mediaInfo]="mediaInfo"
       [mediaId]="mediaId"
