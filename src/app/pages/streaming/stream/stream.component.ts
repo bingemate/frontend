@@ -44,7 +44,9 @@ export class StreamComponent implements OnInit, OnDestroy {
           this.mediaId = parseInt(params['id']);
           this.type = params['type'];
           return forkJoin([
-            this.mediaInfoService.getFileInfos(this.mediaId),
+            this.type === 'movie'
+              ? this.mediaInfoService.getMovieFileInfos(this.mediaId)
+              : this.mediaInfoService.getEpisodeFileInfos(this.mediaId),
             this.mediaInfoService.getMediaInfo(this.mediaId),
           ]);
         })

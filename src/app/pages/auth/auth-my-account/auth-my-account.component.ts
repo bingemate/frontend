@@ -82,7 +82,7 @@ export class AuthMyAccountComponent implements OnInit {
 
   onGetUserRatings() {
     this.ratingService
-      .getUserRating(this.user?.id ?? '', this.ratingsCurrentPage)
+      .getUserMovieRatings(this.user?.id ?? '', this.ratingsCurrentPage)
       .subscribe(ratings => {
         this.ratings = ratings;
       });

@@ -100,7 +100,7 @@ export class TrendingComponent implements OnInit {
   onGetMediaByComments() {
     this.mediaByCommentsLoading = true;
     this.mediaDiscoverService
-      .getMediasByComments(this.onlyAvailable)
+      .getMoviesByComments(this.onlyAvailable)
       .subscribe(media => {
         this.mediaByCommentsLoading = false;
         this.mediaByComments = media;

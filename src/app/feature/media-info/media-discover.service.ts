@@ -158,10 +158,18 @@ export class MediaDiscoverService {
     );
   }
 
-  getMediasByComments(available = false): Observable<number[]> {
+  getMoviesByComments(available = false): Observable<number[]> {
     const params = new HttpParams().set('available', available);
     return this.http.get<number[]>(
-      API_RESOURCE_URI.MEDIA_INFO + '/discover/media/comments',
+      API_RESOURCE_URI.MEDIA_INFO + '/discover/movie/comments',
+      { params }
+    );
+  }
+
+  getTvShowsByComments(available = false): Observable<number[]> {
+    const params = new HttpParams().set('available', available);
+    return this.http.get<number[]>(
+      API_RESOURCE_URI.MEDIA_INFO + '/discover/tv/comments',
       { params }
     );
   }

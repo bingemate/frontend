@@ -14,37 +14,69 @@ import {
 export class RatingService {
   constructor(private readonly http: HttpClient) {}
 
-  getMediaRating(mediaId: number, page = 1): Observable<RatingResults> {
+  getMovieRating(mediaId: number, page = 1): Observable<RatingResults> {
     const params = new HttpParams().set('page', page);
     return this.http.get<RatingResults>(
-      `${API_RESOURCE_URI.MEDIA_INFO}/rating/media/${mediaId}`,
+      `${API_RESOURCE_URI.MEDIA_INFO}/rating/movie/${mediaId}`,
       { params }
     );
   }
 
-  getUserMediaRating(
+  getTvRating(mediaId: number, page = 1): Observable<RatingResults> {
+    const params = new HttpParams().set('page', page);
+    return this.http.get<RatingResults>(
+      `${API_RESOURCE_URI.MEDIA_INFO}/rating/tv/${mediaId}`,
+      { params }
+    );
+  }
+
+  getUserMovieRating(
     userId: string,
     mediaId: number
   ): Observable<RatingResponse> {
     return this.http.get<RatingResponse>(
-      `${API_RESOURCE_URI.MEDIA_INFO}/rating/media/${mediaId}/own`
+      `${API_RESOURCE_URI.MEDIA_INFO}/rating/movie/${mediaId}/own`
     );
   }
 
-  getUserRating(userId: string, page = 1): Observable<RatingResults> {
+  getUserTvRating(userId: string, mediaId: number): Observable<RatingResponse> {
+    return this.http.get<RatingResponse>(
+      `${API_RESOURCE_URI.MEDIA_INFO}/rating/tv/${mediaId}/own`
+    );
+  }
+
+  getUserMovieRatings(userId: string, page = 1): Observable<RatingResults> {
     const params = new HttpParams().set('page', page);
     return this.http.get<RatingResults>(
-      `${API_RESOURCE_URI.MEDIA_INFO}/rating/user/${userId}`,
+      `${API_RESOURCE_URI.MEDIA_INFO}/rating/movie/user/${userId}`,
       { params }
     );
   }
 
-  saveRating(mediaId: number, rating: number): Observable<RatingResponse> {
+  getUserTvRatings(userId: string, page = 1): Observable<RatingResults> {
+    const params = new HttpParams().set('page', page);
+    return this.http.get<RatingResults>(
+      `${API_RESOURCE_URI.MEDIA_INFO}/rating/tv/user/${userId}`,
+      { params }
+    );
+  }
+
+  saveMovieRating(mediaId: number, rating: number): Observable<RatingResponse> {
     const requestContent: RatingRequest = {
       rating,
     };
     return this.http.post<RatingResponse>(
-      `${API_RESOURCE_URI.MEDIA_INFO}/rating/media/${mediaId}`,
+      `${API_RESOURCE_URI.MEDIA_INFO}/rating/movie/${mediaId}`,
+      requestContent
+    );
+  }
+
+  saveTvRating(mediaId: number, rating: number): Observable<RatingResponse> {
+    const requestContent: RatingRequest = {
+      rating,
+    };
+    return this.http.post<RatingResponse>(
+      `${API_RESOURCE_URI.MEDIA_INFO}/rating/tv/${mediaId}`,
       requestContent
     );
   }

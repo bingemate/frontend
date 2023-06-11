@@ -34,6 +34,7 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
   @Input() mediaId: number | undefined;
   @Input() mediaInfo: MediaResponse | undefined;
   @Input() mediaFile: MediaFile | undefined;
+  @Input() type: 'movie' | 'episode' | undefined;
   @Input() timeSeek = 0;
   @Output() streamUpdate = new EventEmitter<StreamUpdateEvent>();
 
@@ -97,7 +98,7 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
   }
   private loadMediaFileInfo() {
     if (this.mediaFile) {
-      this.videoUrl = `${API_RESOURCE_URI.STREAMING}/${this.mediaId}/${this.mediaFile.filename}`;
+      this.videoUrl = `${API_RESOURCE_URI.STREAMING}/${this.type}/${this.mediaId}/${this.mediaFile.filename}`;
       console.log(this.videoUrl);
       this.audioOptions = this.mediaFile.audios.map((audioTrack, index) => {
         return {
@@ -111,13 +112,13 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
       });
       this.audioList = this.mediaFile.audios.map(
         audioTrack =>
-          `${API_RESOURCE_URI.STREAMING}/${this.mediaId}/${audioTrack.filename}`
+          `${API_RESOURCE_URI.STREAMING}/${this.type}/${this.mediaId}/${audioTrack.filename}`
       );
       this.subtitleList = this.mediaFile.subtitles.map(
         (subtitleTrack, index) => {
           return {
             srcLang: subtitleTrack.language.toLowerCase(),
-            url: `${API_RESOURCE_URI.STREAMING}/${this.mediaId}/${subtitleTrack.filename}`,
+            url: `${API_RESOURCE_URI.STREAMING}/${this.type}/${this.mediaId}/${subtitleTrack.filename}`,
             default: index === 0,
           };
         }

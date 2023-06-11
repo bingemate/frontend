@@ -11,7 +11,7 @@
       </nz-card>
     </ng-template>
   </nz-tab>
-  <nz-tab nzTitle="Notes" (nzClick)="onRefreshUserRatings()">
+  <nz-tab nzTitle="Notes" (nzClick)="onRefreshUserTvRatings()">
     <ng-template nz-tab>
       <nz-card [nzExtra]="ratingsListPagination">
         <app-rating-list
@@ -105,7 +105,7 @@
       nzType="primary"
       nzShape="circle"
       nzSize="small"
-      (click)="onRefreshUserRatings()">
+      (click)="onRefreshUserTvRatings()">
       <i nz-icon nzType="sync"></i>
     </button>
   </nz-space>
