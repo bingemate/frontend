@@ -22,12 +22,14 @@ import { NzCardModule } from 'ng-zorro-antd/card';
 import { SharedModule } from '../../shared/shared.module';
 import { NzStatisticModule } from 'ng-zorro-antd/statistic';
 import { StatsMovieDailyViewedGenreComponent } from '../../shared/components/stats-movie-daily-viewed-genre/stats-movie-daily-viewed-genre.component';
+import { StatsDailySentCommentsComponent } from '../../shared/components/stats-daily-sent-comments/stats-daily-sent-comments.component';
 
 @NgModule({
   declarations: [
     StatisticsWatchStatsComponent,
     StatisticsHistoryComponent,
     StatsDailyViewedMediasComponent,
+    StatsDailySentCommentsComponent,
     StatsDailyViewsComponent,
     StatsShowDailyViewedGenreComponent,
     StatsMovieDailyViewedGenreComponent,

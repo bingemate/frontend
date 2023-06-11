@@ -12,6 +12,11 @@ export interface StatDisplay {
   labels: string[];
 }
 
+export interface CommentStat {
+  date: Date;
+  count: number;
+}
+
 export const STAT_COLORS = {
   MOVIE_COLOR: {
     backgroundColor: 'rgba(255, 113, 24, 0.3)',
@@ -22,5 +27,10 @@ export const STAT_COLORS = {
     backgroundColor: 'rgba(47,255,24, 0.3)',
     borderColor: 'rgb(47,255,24)',
     pointBackgroundColor: 'rgb(47,255,24)',
+  },
+  COMMENT_COLOR: {
+    backgroundColor: 'rgba(24,255,236, 0.3)',
+    borderColor: 'rgb(24,255,236)',
+    pointBackgroundColor: 'rgb(24,255,236)',
   },
 };

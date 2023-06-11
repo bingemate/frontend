@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { API_RESOURCE_URI } from '../../shared/api-resource-uri/api-resources-uri';
 import {
+  CommentHistory,
   CommentRequest,
   CommentResponse,
   CommentResults,
 } from '../../shared/models/comment.models';
+import { CommentStat } from '../../shared/models/statistic.models';
 
 @Injectable({
   providedIn: 'root',
@@ -20,7 +22,7 @@ export class CommentService {
     );
   }
 
-  getCommentHistory(start?: string, end?: string): Observable<CommentResults> {
+  getCommentHistory(start?: string, end?: string): Observable<CommentStat[]> {
     const params = new HttpParams();
     if (start) {
       params.set('start', start);
@@ -28,10 +30,18 @@ export class CommentService {
     if (end) {
       params.set('end', end);
     }
-    return this.http.get<CommentResults>(
-      `${API_RESOURCE_URI.MEDIA_INFO}/comment/history`,
-      { params }
-    );
+    return this.http
+      .get<CommentHistory[]>(`${API_RESOURCE_URI.MEDIA_INFO}/comment/history`, {
+        params,
+      })
+      .pipe(
+        map(comments =>
+          comments.map(comment => ({
+            date: new Date(comment.date),
+            count: comment.count,
+          }))
+        )
+      );
   }
 
   getUserCommentCount(userId: string): Observable<number> {

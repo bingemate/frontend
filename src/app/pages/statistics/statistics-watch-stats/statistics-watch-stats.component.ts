@@ -3,11 +3,12 @@ import { EpisodeStatisticsService } from '../episode-statistics.service';
 import { AuthState } from '../../../core/auth/store/auth.state';
 import { Select } from '@ngxs/store';
 import { MovieStatisticsService } from '../movie-statistics.service';
-import { Statistic } from '../../../shared/models/statistic.models';
+import {
+  CommentStat,
+  Statistic,
+} from '../../../shared/models/statistic.models';
 import { CommentService } from '../../../feature/comment/comment.service';
-import { CommentResponse } from '../../../shared/models/comment.models';
 import { RatingService } from '../../../feature/rating/rating.service';
-import { RatingResponse } from '../../../shared/models/rating.models';
 import { filter, forkJoin, mergeMap, Observable } from 'rxjs';
 import { UserResponse } from '../../../shared/models/user.models';
 import { millisToHours } from '../../../shared/utils/date.utils';
@@ -22,8 +23,7 @@ export class StatisticsWatchStatsComponent implements OnInit {
   user$!: Observable<UserResponse>;
   episodeStats: Statistic[] = [];
   movieStats: Statistic[] = [];
-  comments: CommentResponse[] = [];
-  ratings: RatingResponse[] = [];
+  commentStats: CommentStat[] = [];
   watchTime = 0;
   commentsCount = 0;
   ratingsCount = 0;
@@ -37,6 +37,9 @@ export class StatisticsWatchStatsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    const sixMonthAgo = new Date();
+    sixMonthAgo.setDate(1);
+    sixMonthAgo.setMonth(sixMonthAgo.getMonth() - 6);
     this.user$
       .pipe(
         filter(user => user !== null && user !== undefined),
@@ -46,27 +49,34 @@ export class StatisticsWatchStatsComponent implements OnInit {
             this.movieStatisticsService.getStatisticsByUserId(user.id),
             this.commentService.getCommentCount(),
             this.ratingService.getRatingCount(),
+            this.commentService.getCommentHistory(
+              new Date().toDateString(),
+              sixMonthAgo.toDateString()
+            ),
           ])
         )
       )
-      .subscribe(([episodeStats, movieStats, commentsCount, ratingsCount]) => {
-        this.episodeStats = episodeStats;
-        this.movieStats = movieStats;
-        this.commentsCount = commentsCount;
-        this.ratingsCount = ratingsCount;
-        this.watchTime = episodeStats
-          .map(stat =>
-            millisToHours(stat.stoppedAt.getTime() - stat.startedAt.getTime())
-          )
-          .reduce((a, b) => a + b);
-        this.watchTime += movieStats
-          .map(stat =>
-            millisToHours(stat.stoppedAt.getTime() - stat.startedAt.getTime())
-          )
-          .reduce((a, b) => a + b);
-        this.watchedMediaCount =
-          new Set(episodeStats.map(stat => stat.mediaId)).size +
-          new Set(movieStats.map(stat => stat.mediaId)).size;
-      });
+      .subscribe(
+        ([episodeStats, movieStats, commentsCount, ratingsCount, comments]) => {
+          this.episodeStats = episodeStats;
+          this.movieStats = movieStats;
+          this.commentsCount = commentsCount;
+          this.ratingsCount = ratingsCount;
+          this.commentStats = comments;
+          this.watchTime = episodeStats
+            .map(stat =>
+              millisToHours(stat.stoppedAt.getTime() - stat.startedAt.getTime())
+            )
+            .reduce((a, b) => a + b);
+          this.watchTime += movieStats
+            .map(stat =>
+              millisToHours(stat.stoppedAt.getTime() - stat.startedAt.getTime())
+            )
+            .reduce((a, b) => a + b);
+          this.watchedMediaCount =
+            new Set(episodeStats.map(stat => stat.mediaId)).size +
+            new Set(movieStats.map(stat => stat.mediaId)).size;
+        }
+      );
   }
 }
