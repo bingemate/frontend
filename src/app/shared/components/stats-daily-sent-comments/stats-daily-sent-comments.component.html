@@ -1,6 +1,6 @@
 <nz-card>
   <div nz-row nzJustify="space-between">
-    <h3>Temps de visionnage quotidien</h3>
+    <h3>Visionnage de média quotidien</h3>
     <nz-button-group>
       <button nz-button nz-dropdown [nzDropdownMenu]="menu4">
         {{ selectedPeriod }}
@@ -20,19 +20,19 @@
     <ul nz-menu>
       <li
         nz-menu-item
-        (click)="setDailyViewSevenDaysPeriod()"
+        (click)="setDailySentSevenDaysPeriod()"
         [nzSelected]="selectedPeriod === '7 jours'">
         7 jours
       </li>
       <li
         nz-menu-item
-        (click)="setDailyViewMonthPeriod()"
+        (click)="setDailySentMonthPeriod()"
         [nzSelected]="selectedPeriod === '1 mois'">
         1 mois
       </li>
       <li
         nz-menu-item
-        (click)="setDailyViewSemesterPeriod()"
+        (click)="setDailySentSemesterPeriod()"
         [nzSelected]="selectedPeriod === '6 mois'">
         6 mois
       </li>

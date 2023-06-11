@@ -12,20 +12,27 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { StatsDailyViewedMediasComponent } from '../../shared/components/stats-daily-viewed-medias/stats-daily-viewed-medias.component';
 import { EpisodeStatisticsService } from './episode-statistics.service';
-import { StatsDailyViewedGenreComponent } from '../../shared/components/stats-daily-viewed-genre/stats-daily-viewed-genre.component';
+import { StatsShowDailyViewedGenreComponent } from '../../shared/components/stats-show-daily-viewed-genre/stats-show-daily-viewed-genre.component';
 import { MediaInfoModule } from '../../feature/media-info/media-info.module';
 import { NzListModule } from 'ng-zorro-antd/list';
 import { NzProgressModule } from 'ng-zorro-antd/progress';
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
 import { MovieStatisticsService } from './movie-statistics.service';
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { SharedModule } from '../../shared/shared.module';
+import { NzStatisticModule } from 'ng-zorro-antd/statistic';
+import { StatsMovieDailyViewedGenreComponent } from '../../shared/components/stats-movie-daily-viewed-genre/stats-movie-daily-viewed-genre.component';
+import { StatsDailySentCommentsComponent } from '../../shared/components/stats-daily-sent-comments/stats-daily-sent-comments.component';
 
 @NgModule({
   declarations: [
     StatisticsWatchStatsComponent,
     StatisticsHistoryComponent,
     StatsDailyViewedMediasComponent,
+    StatsDailySentCommentsComponent,
     StatsDailyViewsComponent,
-    StatsDailyViewedGenreComponent,
+    StatsShowDailyViewedGenreComponent,
+    StatsMovieDailyViewedGenreComponent,
   ],
   imports: [
     CommonModule,
@@ -40,6 +47,9 @@ import { MovieStatisticsService } from './movie-statistics.service';
     NzListModule,
     NzProgressModule,
     NzTypographyModule,
+    NzCardModule,
+    SharedModule,
+    NzStatisticModule,
   ],
   providers: [EpisodeStatisticsService, MovieStatisticsService],
 })

@@ -16,6 +16,11 @@ export interface CommentResults {
   totalResult: number;
 }
 
+export interface CommentHistory {
+  date: string;
+  count: number;
+}
+
 export const emptyCommentResults: CommentResults = {
   results: [],
   totalResult: 0,
