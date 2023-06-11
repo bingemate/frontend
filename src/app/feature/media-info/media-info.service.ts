@@ -100,4 +100,10 @@ export class MediaInfoService {
       API_RESOURCE_URI.MEDIA_INFO + '/media-file/episode/' + mediaId
     );
   }
+
+  getAvailableEpisodes(mediaId: number): Observable<number[]> {
+    return this.http.get<number[]>(
+      `${API_RESOURCE_URI.MEDIA_INFO}/media-file/tv/${mediaId}/available`
+    );
+  }
 }
