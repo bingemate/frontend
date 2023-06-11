@@ -10,22 +10,24 @@ import { mediasLinks } from '../../pages/medias/medias-routing.module';
 export class MediaLinkPipe implements PipeTransform {
   constructor(private readonly mediaService: MediaInfoService) {}
 
-  transform(mediaId: number): Observable<string> {
-    return this.mediaService.getTvShowShortInfo(mediaId).pipe(
-      map(
-        () =>
-          `/${navigationRoot.medias.path}/${mediasLinks.tv_show_view.path}/${mediaId}`
-      ),
-      catchError(() => {
-        return this.mediaService
-          .getMovieShortInfo(mediaId)
-          .pipe(
-            map(
-              () =>
-                `/${navigationRoot.medias.path}/${mediasLinks.movie_view.path}/${mediaId}`
-            )
-          );
-      })
-    );
+  transform(mediaId: number, type: 'movie' | 'tv'): Observable<string> {
+    if (type === 'movie') {
+      return this.mediaService
+        .getMovieShortInfo(mediaId)
+        .pipe(
+          map(
+            () =>
+              `/${navigationRoot.medias.path}/${mediasLinks.movie_view.path}/${mediaId}`
+          )
+        );
+    }
+    return this.mediaService
+      .getTvShowShortInfo(mediaId)
+      .pipe(
+        map(
+          () =>
+            `/${navigationRoot.medias.path}/${mediasLinks.tv_show_view.path}/${mediaId}`
+        )
+      );
   }
 }

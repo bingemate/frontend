@@ -3,14 +3,20 @@ import { MediaInfoService } from '../../feature/media-info/media-info.service';
 import { map, Observable } from 'rxjs';
 
 @Pipe({
-  name: 'movieName',
+  name: 'mediaName',
 })
-export class MovieNamePipe implements PipeTransform {
+export class MediaNamePipe implements PipeTransform {
   constructor(private readonly mediaService: MediaInfoService) {}
 
-  transform(mediaId: number): Observable<string> {
+  transform(mediaId: number, type: 'movie' | 'tv'): Observable<string> {
+    if (type === 'movie') {
+      return this.mediaService
+        .getMovieShortInfo(mediaId)
+        .pipe(map(movieInfo => movieInfo.title));
+    }
+
     return this.mediaService
-      .getMovieShortInfo(mediaId)
+      .getTvShowShortInfo(mediaId)
       .pipe(map(movieInfo => movieInfo.title));
   }
 }
