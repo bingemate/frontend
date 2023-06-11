@@ -12,7 +12,9 @@ import { Statistic } from '../../models/statistic.models';
 })
 export class StatsDailyViewsComponent implements OnInit {
   @Input()
-  stats: Statistic[] = [];
+  movieStats: Statistic[] = [];
+  @Input()
+  episodeStats: Statistic[] = [];
   readonly lineChartType: ChartType = 'line';
   readonly lineChartOptions: ChartConfiguration['options'] = {
     elements: {
@@ -73,7 +75,7 @@ export class StatsDailyViewsComponent implements OnInit {
   }
 
   private setChartData(period: number) {
-    let stats = this.stats.filter(
+    let stats = this.movieStats.filter(
       stat =>
         getDateDays(new Date().getTime()) -
           getDateDays(stat.startedAt.getTime()) <=

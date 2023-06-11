@@ -53,15 +53,18 @@
 <div nz-row [nzGutter]="{ xs: 32, sm: 32, md: 32, lg: 32 }">
   <div nz-col nzSpan="10" class="gutter-row">
     <app-stats-daily-views
-      [stats]="stats"
+      [movieStats]="movieStats"
+      [episodeStats]="episodeStats"
       class="stats-item"></app-stats-daily-views>
     <app-stats-daily-viewed-medias
-      [stats]="stats"
+      [movieStats]="movieStats"
+      [episodeStats]="episodeStats"
       class="stats-item"></app-stats-daily-viewed-medias>
   </div>
   <div nz-col nzSpan="6" class="gutter-row">
     <app-stats-daily-viewed-genre
-      [stats]="stats"
+      [movieStats]="movieStats"
+      [episodeStats]="episodeStats"
       class="stats-item"></app-stats-daily-viewed-genre>
   </div>
 </div>

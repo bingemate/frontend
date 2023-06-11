@@ -19,7 +19,8 @@ import { UserResponse } from '../../../shared/models/user.models';
 export class StatisticsWatchStatsComponent implements OnInit {
   @Select(AuthState.user)
   user$!: Observable<UserResponse>;
-  stats: Statistic[] = [];
+  episodeStats: Statistic[] = [];
+  movieStats: Statistic[] = [];
   comments: CommentResponse[] = [];
   ratings: RatingResponse[] = [];
   watchTime = 200;
@@ -39,15 +40,22 @@ export class StatisticsWatchStatsComponent implements OnInit {
           forkJoin([
             this.episodeStatisticsService.getStatisticsByUserId(user.id),
             this.movieStatisticsService.getStatisticsByUserId(user.id),
-            this.commentService.getUserComments(user.id),
-            this.ratingService.getUserRating(user.id),
+            // this.commentService.getUserComments(user.id),
+            // this.ratingService.getUserTvRatings(user.id),
           ])
         )
       )
-      .subscribe(([episodeStats, movieStats, comments, ratings]) => {
-        this.stats = [...episodeStats, ...movieStats];
-        this.comments = comments.results;
-        this.ratings = ratings.results;
-      });
+      .subscribe(
+        ([
+          episodeStats,
+          movieStats,
+          //, comments, ratings
+        ]) => {
+          this.episodeStats = episodeStats;
+          this.movieStats = movieStats;
+          this.comments = [];
+          this.ratings = [];
+        }
+      );
   }
 }
