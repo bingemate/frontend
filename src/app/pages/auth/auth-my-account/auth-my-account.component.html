@@ -43,7 +43,9 @@
         <nz-result
           *ngIf="deleteModalError"
           nzStatus="error"
-          nzTitle="Une erreur est survenue lors de la suppression de votre compte.">
+          nzTitle="Une erreur est survenue lors de la suppression de votre compte. {{
+            deleteModalErrorMessage
+          }}">
           <div nz-result-extra>
             <button nz-button nzType="primary" (click)="handleCancel()">
               Ok
