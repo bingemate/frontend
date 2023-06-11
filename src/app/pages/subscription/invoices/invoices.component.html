@@ -1,12 +1,50 @@
-<nz-timeline>
-  <nz-timeline-item
-    *ngFor="let invoice of invoices"
-    [nzColor]="mapStatus(invoice.status)">
-    <a [href]="invoice.invoiceUrl" target="_blank">
-      Facture du {{ invoice.created | date : 'dd/MM/yyyy' }}
+<h1>Factures</h1>
+<nz-table
+  #table
+  nzShowPagination
+  nzShowSizeChanger
+  [nzData]="invoices"
+  *ngIf="invoices.length > 0">
+  <thead>
+    <tr>
+      <th>Tarif</th>
+      <th>Monnaie</th>
+      <th>Status</th>
+      <th>Date de création</th>
+      <th>Consulter</th>
+      <th>Télécharger</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of table.data">
+      <td>{{ data.status }}</td>
+      <td>{{ data.created | date : 'dd/MM/yyyy' }}</td>
+      <td>
+        <a [href]="data.invoiceUrl" target="_blank">
+          <span nz-icon nzType="link" nzTheme="outline"></span>
+        </a>
+      </td>
+      <td>
+        <a [href]="data.invoicePdfUrl" target="_blank">
+          <span nz-icon nzType="download" nzTheme="outline"></span>
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</nz-table>
+<nz-empty
+  [nzNotFoundContent]="contentTpl"
+  [nzNotFoundFooter]="footerTpl"
+  *ngIf="invoices.length === 0">
+  <ng-template #contentTpl>
+    <span> Vous n'avez actuellement pas de facture </span>
+  </ng-template>
+  <ng-template #footerTpl>
+    <a
+      nz-button
+      nzType="primary"
+      [routerLink]="['/subscriptions/subscriptions-list']">
+      Abonnez vous
     </a>
-    <a [href]="invoice.invoicePdfUrl">
-      <span nz-icon nzType="download" nzTheme="outline"></span>
-    </a>
-  </nz-timeline-item>
-</nz-timeline>
+  </ng-template>
+</nz-empty>
