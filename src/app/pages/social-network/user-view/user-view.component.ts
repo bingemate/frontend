@@ -31,11 +31,17 @@ export class UserViewComponent {
   user: UserResponse | null = null;
   userLoading = false;
 
-  comments: CommentResults = emptyCommentResults;
-  commentsCurrentPage = 1;
+  movieComments: CommentResults = emptyCommentResults;
+  movieCommentsCurrentPage = 1;
 
-  ratings: RatingResults = emptyRatingResults;
-  ratingsCurrentPage = 1;
+  movieRatings: RatingResults = emptyRatingResults;
+  movieRatingsCurrentPage = 1;
+
+  tvComments: CommentResults = emptyCommentResults;
+  tvCommentsCurrentPage = 1;
+
+  tvRatings: RatingResults = emptyRatingResults;
+  tvRatingsCurrentPage = 1;
 
   episodePlaylists: EpisodePlaylist[] = [];
   moviePlaylists: MoviePlaylist[] = [];
@@ -69,48 +75,90 @@ export class UserViewComponent {
     });
   }
 
-  onGetUserComments() {
+  onGetUserMovieComments() {
     this.commentService
-      .getUserComments(this.userID, this.commentsCurrentPage)
+      .getUserMovieComments(this.userID, this.movieCommentsCurrentPage)
       .subscribe(comments => {
-        this.comments = comments;
+        this.movieComments = comments;
       });
   }
 
-  onRefreshUserComments() {
-    this.commentsCurrentPage = 1;
-    this.onGetUserComments();
+  onGetUserTvComments() {
+    this.commentService
+      .getUserTvComments(this.userID, this.tvCommentsCurrentPage)
+      .subscribe(comments => {
+        this.tvComments = comments;
+      });
   }
 
-  onGetTvUserRatings() {
+  onMovieCommentsPageChange(page: number): void {
+    this.movieCommentsCurrentPage = page;
+    this.onGetUserMovieComments();
+  }
+
+  onTvCommentsPageChange(page: number): void {
+    this.tvCommentsCurrentPage = page;
+    this.onGetUserTvComments();
+  }
+
+  onRefreshAllComments(): void {
+    this.movieCommentsCurrentPage = 1;
+    this.tvCommentsCurrentPage = 1;
+    this.onGetUserMovieComments();
+    this.onGetUserTvComments();
+  }
+
+  onRefreshMovieComments(): void {
+    this.movieCommentsCurrentPage = 1;
+    this.onGetUserMovieComments();
+  }
+
+  onRefreshTvComments(): void {
+    this.tvCommentsCurrentPage = 1;
+    this.onGetUserTvComments();
+  }
+
+  onGetUserMovieRatings() {
     this.ratingService
-      .getUserTvRatings(this.userID, this.ratingsCurrentPage)
+      .getUserMovieRatings(this.userID, this.movieRatingsCurrentPage)
       .subscribe(ratings => {
-        this.ratings = ratings;
+        this.movieRatings = ratings;
       });
   }
 
-  onGetMovieUserRatings() {
+  onGetUserTvRatings() {
     this.ratingService
-      .getUserMovieRatings(this.userID, this.ratingsCurrentPage)
+      .getUserTvRatings(this.userID, this.tvRatingsCurrentPage)
       .subscribe(ratings => {
-        this.ratings = ratings;
+        this.tvRatings = ratings;
       });
   }
 
-  onRefreshUserTvRatings() {
-    this.ratingsCurrentPage = 1;
-    this.onGetTvUserRatings();
+  onMovieRatingsPageChange(page: number): void {
+    this.movieRatingsCurrentPage = page;
+    this.onGetUserMovieRatings();
   }
 
-  onCommentsPageChange(page: number) {
-    this.commentsCurrentPage = page;
-    this.onGetUserComments();
+  onTvRatingsPageChange(page: number): void {
+    this.tvRatingsCurrentPage = page;
+    this.onGetUserTvRatings();
   }
 
-  onRatingsPageChange(page: number) {
-    this.ratingsCurrentPage = page;
-    this.onGetTvUserRatings();
+  onRefreshAllRatings(): void {
+    this.movieRatingsCurrentPage = 1;
+    this.tvRatingsCurrentPage = 1;
+    this.onGetUserMovieRatings();
+    this.onGetUserTvRatings();
+  }
+
+  onRefreshMovieRatings(): void {
+    this.movieRatingsCurrentPage = 1;
+    this.onGetUserMovieRatings();
+  }
+
+  onRefreshTvRatings(): void {
+    this.tvRatingsCurrentPage = 1;
+    this.onGetUserTvRatings();
   }
 
   onViewUser(userID: string) {

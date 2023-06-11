@@ -2,23 +2,50 @@
   <nz-tab nzTitle="Informations">
     <app-user-info *ngIf="user !== null" [user]="user"></app-user-info>
   </nz-tab>
-  <nz-tab nzTitle="Commentaires" (nzClick)="onRefreshUserComments()">
+  <nz-tab nzTitle="Commentaires" (nzClick)="onRefreshAllComments()">
     <ng-template nz-tab>
-      <nz-card [nzExtra]="commentsListPagination">
-        <app-comment-list
-          [comments]="comments.results"
-          [showMedia]="true"></app-comment-list>
-      </nz-card>
+      <nz-row [nzGutter]="[16, 16]">
+        <nz-col [nzXl]="12" [nzMd]="24">
+          <nz-card [nzExtra]="movieCommentsListPagination" nzTitle="Films">
+            <app-comment-list
+              [mediaType]="'movie'"
+              [comments]="movieComments.results"
+              [showMedia]="true"></app-comment-list>
+          </nz-card>
+        </nz-col>
+        <nz-col [nzXl]="12" [nzMd]="24">
+          <nz-card [nzExtra]="tvCommentsListPagination" nzTitle="Séries">
+            <app-comment-list
+              [mediaType]="'tv'"
+              [comments]="tvComments.results"
+              [showMedia]="true"></app-comment-list>
+          </nz-card>
+        </nz-col>
+      </nz-row>
     </ng-template>
   </nz-tab>
-  <nz-tab nzTitle="Notes" (nzClick)="onRefreshUserTvRatings()">
+  <nz-tab nzTitle="Notes" (nzClick)="onRefreshAllRatings()">
     <ng-template nz-tab>
-      <nz-card [nzExtra]="ratingsListPagination">
-        <app-rating-list
-          [editable]="true"
-          [showMedia]="true"
-          [ratings]="ratings.results"></app-rating-list>
-      </nz-card>
+      <nz-row [nzGutter]="[16, 16]">
+        <nz-col [nzXl]="12" [nzMd]="24">
+          <nz-card [nzExtra]="movieRatingsListPagination" nzTitle="Films">
+            <app-rating-list
+              [mediaType]="'movie'"
+              [editable]="true"
+              [showMedia]="true"
+              [ratings]="movieRatings.results"></app-rating-list>
+          </nz-card>
+        </nz-col>
+        <nz-col [nzXl]="12" [nzMd]="24">
+          <nz-card [nzExtra]="tvRatingsListPagination" nzTitle="Séries">
+            <app-rating-list
+              [mediaType]="'tv'"
+              [editable]="true"
+              [showMedia]="true"
+              [ratings]="tvRatings.results"></app-rating-list>
+          </nz-card>
+        </nz-col>
+      </nz-row>
     </ng-template>
   </nz-tab>
   <nz-tab nzTitle="Listes de lecture" (nzClick)="onGetUserPlaylists()">
@@ -67,45 +94,88 @@
   </nz-tab>
 </nz-tabset>
 
-<ng-template #commentsListPagination>
+<ng-template #movieCommentsListPagination>
   <nz-space>
     <nz-pagination
       *nzSpaceItem
-      [nzPageIndex]="commentsCurrentPage"
-      [nzTotal]="comments.totalResult"
+      [nzPageIndex]="movieCommentsCurrentPage"
+      [nzTotal]="movieComments.totalResult"
       [nzPageSize]="5"
       [nzShowSizeChanger]="false"
       [nzSize]="'small'"
-      (nzPageIndexChange)="onCommentsPageChange($event)"></nz-pagination>
+      (nzPageIndexChange)="onMovieCommentsPageChange($event)"></nz-pagination>
     <button
       *nzSpaceItem
       nz-button
       nzType="primary"
       nzShape="circle"
       nzSize="small"
-      (click)="onRefreshUserComments()">
+      (click)="onRefreshMovieComments()">
       <i nz-icon nzType="sync"></i>
     </button>
   </nz-space>
 </ng-template>
 
-<ng-template #ratingsListPagination>
+<ng-template #movieRatingsListPagination>
   <nz-space>
     <nz-pagination
       *nzSpaceItem
-      [nzPageIndex]="ratingsCurrentPage"
-      [nzTotal]="ratings.totalResult"
+      [nzPageIndex]="movieRatingsCurrentPage"
+      [nzTotal]="movieRatings.totalResult"
       [nzPageSize]="5"
       [nzShowSizeChanger]="false"
       [nzSize]="'small'"
-      (nzPageIndexChange)="onRatingsPageChange($event)"></nz-pagination>
+      (nzPageIndexChange)="onMovieRatingsPageChange($event)"></nz-pagination>
     <button
       *nzSpaceItem
       nz-button
       nzType="primary"
       nzShape="circle"
       nzSize="small"
-      (click)="onRefreshUserTvRatings()">
+      (click)="onRefreshMovieRatings()">
+      <i nz-icon nzType="sync"></i>
+    </button>
+  </nz-space>
+</ng-template>
+<ng-template #tvCommentsListPagination>
+  <nz-space>
+    <nz-pagination
+      *nzSpaceItem
+      [nzPageIndex]="tvCommentsCurrentPage"
+      [nzTotal]="tvComments.totalResult"
+      [nzPageSize]="5"
+      [nzShowSizeChanger]="false"
+      [nzSize]="'small'"
+      (nzPageIndexChange)="onTvCommentsPageChange($event)"></nz-pagination>
+    <button
+      *nzSpaceItem
+      nz-button
+      nzType="primary"
+      nzShape="circle"
+      nzSize="small"
+      (click)="onRefreshTvComments()">
+      <i nz-icon nzType="sync"></i>
+    </button>
+  </nz-space>
+</ng-template>
+
+<ng-template #tvRatingsListPagination>
+  <nz-space>
+    <nz-pagination
+      *nzSpaceItem
+      [nzPageIndex]="tvRatingsCurrentPage"
+      [nzTotal]="tvRatings.totalResult"
+      [nzPageSize]="5"
+      [nzShowSizeChanger]="false"
+      [nzSize]="'small'"
+      (nzPageIndexChange)="onTvRatingsPageChange($event)"></nz-pagination>
+    <button
+      *nzSpaceItem
+      nz-button
+      nzType="primary"
+      nzShape="circle"
+      nzSize="small"
+      (click)="onRefreshTvRatings()">
       <i nz-icon nzType="sync"></i>
     </button>
   </nz-space>
