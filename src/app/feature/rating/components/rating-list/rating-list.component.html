@@ -2,39 +2,27 @@
   <nz-list nzBordered nzSize="small" nzItemLayout="vertical">
     <nz-list-item *cdkVirtualFor="let rating of ratings">
       <nz-comment
-        [nzAuthor]="
-          showMedia
-            ? mediaType === 'movie'
-              ? (rating.mediaId | movieName | async) ?? 'No title'
-              : (rating.mediaId | tvName | async) ?? 'No title'
-            : (rating.userId | username | async) ?? 'No name'
-        "
+        [nzAuthor]="author"
         nzDatetime="{{ rating.createdAt | date : 'dd/MM/yyyy HH:mm' }}">
+        <ng-template #author>
+          <a
+            [routerLink]="
+              showMedia
+                ? (rating.mediaId | mediaLink : mediaType | async) ?? ''
+                : [userViewLink, rating.userId]
+            ">
+            {{
+              showMedia
+                ? (rating.mediaId | mediaName : mediaType | async) ?? 'No title'
+                : (rating.userId | username | async) ?? 'No name'
+            }}
+          </a>
+        </ng-template>
         <nz-comment-content (click)="$event.preventDefault()">
           <app-rating-view
             [rating]="rating"
             [editable]="editable"></app-rating-view>
         </nz-comment-content>
-        <nz-comment-action>
-          <button
-            *ngIf="showMedia"
-            [routerLink]="
-              showMedia ? (rating.mediaId | mediaLink | async) ?? '' : '/'
-            "
-            nz-button
-            nzType="link"
-            nzSize="small">
-            <i nz-icon nzType="eye"></i>
-          </button>
-          <button
-            *ngIf="!showMedia"
-            [routerLink]="[userViewLink, rating.userId]"
-            nz-button
-            nzType="link"
-            nzSize="small">
-            <i nz-icon nzType="eye"></i>
-          </button>
-        </nz-comment-action>
       </nz-comment>
     </nz-list-item>
   </nz-list>
