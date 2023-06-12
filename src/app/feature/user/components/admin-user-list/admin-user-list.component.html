@@ -33,6 +33,8 @@
         [nzPageSize]="pageSize"
         [nzPageIndex]="currentPage"
         [nzPageSizeOptions]="[5, 10, 20, 50]"
+        nzShowSizeChanger
+        nzShowPagination
         (nzPageSizeChange)="onPageSizeChange($event)"
         (nzPageIndexChange)="onPageIndexChange($event)">
         <thead>
