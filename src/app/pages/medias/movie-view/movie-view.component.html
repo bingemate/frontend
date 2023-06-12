@@ -26,10 +26,7 @@
           [nzActions]="[newComment]"
           nzTitle="Commentaires"
           [nzExtra]="commentsListPagination">
-          <app-comment-list
-            nz-col
-            nzSpan="24"
-            [comments]="comments.results"></app-comment-list>
+          <app-comment-list [comments]="comments.results"></app-comment-list>
         </nz-card>
       </ng-template>
     </nz-tab>
