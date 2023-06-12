@@ -1,11 +1,40 @@
 <nz-page-header>
   <nz-page-header-title>Calendrier des médias suivis</nz-page-header-title>
-  <nz-page-header-extra>
-    <app-calendar-links></app-calendar-links>
-  </nz-page-header-extra>
+  <nz-page-header-extra> </nz-page-header-extra>
   <nz-page-header-content>
-    <app-media-calendar
-      [events]="events"
-      (monthChange)="onMonthChange($event)"></app-media-calendar>
+    <nz-space nzDirection="vertical" nzAlign="start" nzWrap>
+      <app-calendar-links *nzSpaceItem></app-calendar-links>
+      <nz-descriptions *nzSpaceItem nzBordered>
+        <nz-descriptions-item nzTitle="Films">
+          <nz-space nzAlign="center" nzSize="large">
+            <label
+              *nzSpaceItem
+              nz-checkbox
+              [(ngModel)]="showMovies"
+              (change)="onMovieCheckChange()"></label>
+            <ng-container *ngIf="moviesLoading">
+              <nz-spin *nzSpaceItem nzSpinning></nz-spin>
+            </ng-container>
+          </nz-space>
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Séries">
+          <nz-space nzAlign="center" nzSize="large">
+            <label
+              *nzSpaceItem
+              nz-checkbox
+              [(ngModel)]="showTvShows"
+              (change)="onTvShowCheckChange()"></label>
+            <ng-container *ngIf="tvShowsLoading">
+              <nz-spin *nzSpaceItem nzSpinning></nz-spin>
+            </ng-container>
+          </nz-space>
+        </nz-descriptions-item>
+      </nz-descriptions>
+
+      <app-media-calendar
+        *nzSpaceItem
+        [events]="events"
+        (monthChange)="onMonthChange($event)"></app-media-calendar>
+    </nz-space>
   </nz-page-header-content>
 </nz-page-header>
