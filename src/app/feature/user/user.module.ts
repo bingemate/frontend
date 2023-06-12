@@ -33,6 +33,9 @@ import { DeleteUserComponent } from './components/delete-user/delete-user.compon
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzResultModule } from 'ng-zorro-antd/result';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { UpdatePasswordComponent } from './components/update-password/update-password.component';
+import { NzPopoverModule } from 'ng-zorro-antd/popover';
+import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 
 @NgModule({
   declarations: [
@@ -41,6 +44,7 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
     UserInfoComponent,
     AdminUserListComponent,
     DeleteUserComponent,
+    UpdatePasswordComponent,
   ],
   imports: [
     CommonModule,
@@ -70,7 +74,14 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
     NzModalModule,
     NzResultModule,
     NzSpinModule,
+    NzPopoverModule,
+    NzPopconfirmModule,
   ],
-  exports: [UserSearchComponent, UserInfoComponent, AdminUserListComponent],
+  exports: [
+    UserSearchComponent,
+    UserInfoComponent,
+    AdminUserListComponent,
+    UpdatePasswordComponent,
+  ],
 })
 export class UserModule {}
