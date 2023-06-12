@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Select, Store } from '@ngxs/store';
+import { Select } from '@ngxs/store';
 import { AuthState } from '../../../core/auth/store/auth.state';
 import { Observable } from 'rxjs';
 import { UserResponse } from '../../../shared/models/user.models';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { API_RESOURCE_URI } from '../../../shared/api-resource-uri/api-resources-uri';
 import { CommentService } from '../../../feature/comment/comment.service';
 import {
@@ -15,10 +15,6 @@ import {
   RatingResults,
 } from '../../../shared/models/rating.models';
 import { RatingService } from '../../../feature/rating/rating.service';
-import { UserService } from '../../../feature/user/user.service';
-import { Router } from '@angular/router';
-import { KeycloakService } from 'keycloak-angular';
-import { AuthActions } from '../../../core/auth/store/auth.actions';
 
 @Component({
   selector: 'app-auth-my-account',
@@ -29,12 +25,6 @@ export class AuthMyAccountComponent implements OnInit {
   @Select(AuthState.user)
   user$!: Observable<UserResponse>;
   user: UserResponse | null = null;
-
-  deleteModalVisible = false;
-  deleteModalLoading = false;
-  deleteModalError = false;
-  deleteModalErrorMessage = '';
-  deleteModalSuccess = false;
 
   httpbinResponse = '{}';
 
@@ -53,11 +43,7 @@ export class AuthMyAccountComponent implements OnInit {
   constructor(
     private readonly httpClient: HttpClient,
     private readonly commentService: CommentService,
-    private readonly ratingService: RatingService,
-    private readonly userService: UserService,
-    private readonly router: Router,
-    private readonly keycloakService: KeycloakService,
-    private readonly store: Store
+    private readonly ratingService: RatingService
   ) {}
 
   ngOnInit() {
@@ -166,42 +152,5 @@ export class AuthMyAccountComponent implements OnInit {
   onRefreshTvRatings(): void {
     this.tvRatingsCurrentPage = 1;
     this.onGetUserTvRatings();
-  }
-
-  showModal(): void {
-    this.deleteModalVisible = true;
-  }
-
-  handleDelete(): void {
-    this.deleteModalLoading = true;
-    this.userService.delete().subscribe({
-      next: () => {
-        this.deleteModalLoading = false;
-        this.deleteModalSuccess = true;
-      },
-      error: (error: HttpErrorResponse) => {
-        this.deleteModalLoading = false;
-        this.deleteModalError = true;
-        this.deleteModalErrorMessage = error.error.message;
-      },
-    });
-  }
-
-  handleCancel(): void {
-    if (this.deleteModalLoading) {
-      return;
-    }
-    if (this.deleteModalError) {
-      this.deleteModalError = false;
-    }
-    if (this.deleteModalSuccess) {
-      this.store.dispatch(new AuthActions.Logout());
-      this.keycloakService.clearToken();
-      sessionStorage.clear();
-      this.router.navigate(['/home']).finally(() => {
-        this.keycloakService.logout(window.location.origin);
-      });
-    }
-    this.deleteModalVisible = false;
   }
 }
