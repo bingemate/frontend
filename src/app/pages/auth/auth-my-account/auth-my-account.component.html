@@ -1,6 +1,9 @@
 <nz-tabset nzSize="large">
   <nz-tab nzTitle="Mes informations">
-    <app-user-info [user]="user" [owner]="true"></app-user-info>
+    <nz-space nzDirection="vertical" style="width: 100%">
+      <app-user-info *nzSpaceItem [user]="user" [owner]="true"></app-user-info>
+      <app-update-password *nzSpaceItem></app-update-password>
+    </nz-space>
   </nz-tab>
   <nz-tab nzTitle="HttpBin">
     <nz-space nzDirection="vertical" nzSize="large">
