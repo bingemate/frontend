@@ -182,7 +182,7 @@
           {{ currentSectionName }}
         </nz-page-header-title>
         <nz-page-header-extra *ngIf="isAuthenticated">
-          <nz-space nzAlign="baseline" nzSize="large">
+          <nz-space nzAlign="baseline" nzSize="small">
             <button
               [hidden]="!isAdmin"
               *nzSpaceItem
@@ -209,6 +209,13 @@
               nzShape="round"
               [routerLink]="chatLink">
               <span nz-icon nzType="message"></span>&nbsp;Chat
+            </button>
+            <button
+              *nzSpaceItem
+              nz-button
+              nzShape="round"
+              [routerLink]="calendarLink">
+              <span nz-icon nzType="calendar"></span>&nbsp;Calendrier
             </button>
             <!--<nz-badge *nzSpaceItem [nzCount]="99" [nzOverflowCount]="15">
               <button
