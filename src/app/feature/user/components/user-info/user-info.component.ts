@@ -181,13 +181,6 @@ export class UserInfoComponent implements OnInit {
     };
   }
 
-  getBadgeColor(role: string): string {
-    const index = role
-      .split('')
-      .reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    return badgeColors[index % badgeColors.length];
-  }
-
   onRoleChange(role: string, checked: boolean): void {
     if (checked) {
       this.userService
@@ -226,6 +219,13 @@ export class UserInfoComponent implements OnInit {
   }
 
   protected readonly FriendState = FriendState;
+}
+
+export function getBadgeColor(role: string): string {
+  const index = role
+    .split('')
+    .reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  return badgeColors[index % badgeColors.length];
 }
 
 const badgeColors = [
