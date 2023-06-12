@@ -165,6 +165,7 @@ export class AppComponent implements OnInit {
   }
 
   readonly chatLink = `${navigationRoot.socialNetwork.path}/${socialNetworkLinks.chat.path}`;
+  readonly calendarLink = `${navigationRoot.watchlist.path}/${watchlistLinks.calendar.path}`;
 
   accountLinks: Link[] = [];
 
