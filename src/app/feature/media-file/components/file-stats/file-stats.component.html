@@ -1,0 +1,36 @@
+<nz-card nzTitle="Informations général" [nzExtra]="refresh">
+  <nz-row [nzGutter]="[16, 16]" nzAlign="middle">
+    <nz-col [nzXl]="6" [nzMd]="24">
+      <nz-statistic
+        [nzValue]="mediaFileCount"
+        nzTitle="Nombre de fichiers media"
+        nzPrefix="📁"></nz-statistic>
+    </nz-col>
+    <nz-col [nzXl]="6" [nzMd]="12">
+      <nz-statistic
+        nzValue="{{ mediaFileTotalSize | nzBytes : 2 }}"
+        nzTitle="Espace disque utilisé"></nz-statistic>
+    </nz-col>
+    <nz-col [nzXl]="6" [nzMd]="12">
+      <nz-statistic
+        nzValue="{{ availableDiskSpace | nzBytes : 2 }}"
+        nzTitle="Espace disque disponible"></nz-statistic>
+    </nz-col>
+    <nz-col [nzXl]="6" [nzMd]="12">
+      <nz-progress
+        nzSize="small"
+        nzType="circle"
+        [nzPercent]="availableDiskSpacePercent()"
+        [nzStrokeColor]="{
+          '0%': '#3be910',
+          '100%': '#e73232'
+        }"></nz-progress>
+    </nz-col>
+  </nz-row>
+</nz-card>
+
+<ng-template #refresh>
+  <button nz-button nzType="primary" nzShape="circle" (click)="refreshData()">
+    <i nz-icon nzType="sync" nzTheme="outline"></i>
+  </button>
+</ng-template>
