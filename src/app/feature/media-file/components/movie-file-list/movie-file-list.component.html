@@ -1,0 +1,89 @@
+<nz-row [nzGutter]="[16, 16]">
+  <nz-col [nzSpan]="24">
+    <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton" nzSize="large">
+      <input
+        (input)="onInput()"
+        (change)="manualSearch()"
+        [(ngModel)]="query"
+        type="text"
+        nz-input
+        placeholder="entrez le nom d'un film" />
+    </nz-input-group>
+    <ng-template #suffixIconButton>
+      <button nz-button nzType="primary" nzSearch>
+        <span nz-icon nzType="search"></span>
+      </button>
+    </ng-template>
+    <nz-progress
+      *ngIf="loading"
+      nzStatus="active"
+      [nzShowInfo]="false"
+      [nzPercent]="100"></nz-progress>
+  </nz-col>
+  <nz-col [nzSpan]="24">
+    <nz-table
+      [nzData]="movieFilesResults.results"
+      [nzFrontPagination]="false"
+      [nzLoading]="loading"
+      [nzTotal]="movieFilesResults.total"
+      [nzPageSize]="pageSize"
+      [nzPageIndex]="currentPage"
+      [nzPageSizeOptions]="[5, 10, 20, 50]"
+      (nzPageIndexChange)="onPageIndexChange($event)"
+      (nzPageSizeChange)="onPageSizeChange($event)">
+      <thead>
+        <tr>
+          <th>Titre</th>
+          <th>Date de sortie</th>
+          <th>Durée</th>
+          <th>Taille</th>
+          <th>Ajouté le</th>
+          <th>Langues</th>
+          <th>Sous-titres</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-template ngFor let-movieFile [ngForOf]="movieFilesResults.results">
+          <tr>
+            <td>
+              <a [routerLink]="[movieViewPath, movieFile.id]">
+                {{ movieFile.name }}
+              </a>
+            </td>
+            <td>{{ movieFile.releaseDate | date : 'dd/MM/yyyy' }}</td>
+            <td>{{ movieFile.file.duration | duration }}</td>
+            <td>{{ movieFile.file.size | nzBytes : 2 }}</td>
+            <td>{{ movieFile.file.createdAt | date : 'dd/MM/yyyy' }}</td>
+            <td>
+              <nz-tag
+                *ngFor="let audio of movieFile.file.audios"
+                [nzColor]="getBadgeColor(audio.language)">
+                {{ audio.language }}
+              </nz-tag>
+            </td>
+            <td>
+              <nz-tag
+                *ngFor="let subtitle of movieFile.file.subtitles"
+                [nzColor]="getBadgeColor(subtitle.language)">
+                {{ subtitle.language }}
+              </nz-tag>
+            </td>
+            <td>
+              <button
+                nz-button
+                nzType="primary"
+                nzDanger
+                nzShape="circle"
+                nz-popconfirm
+                nzPopconfirmTitle="Êtes-vous sûr de vouloir supprimer ce film ?"
+                (nzOnConfirm)="onDelete(movieFile.file.id)">
+                <span nz-icon nzType="delete"></span>
+              </button>
+            </td>
+          </tr>
+        </ng-template>
+      </tbody>
+    </nz-table>
+  </nz-col>
+</nz-row>

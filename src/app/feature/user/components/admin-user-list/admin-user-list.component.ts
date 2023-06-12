@@ -20,6 +20,9 @@ export class AdminUserListComponent implements OnInit, OnDestroy {
   loading = false;
   query = '';
 
+  inputSubject: Subject<string> = new Subject<string>();
+  private subscription: Subscription;
+
   constructor(private readonly userService: UserService) {
     this.subscription = this.inputSubject
       .pipe(debounceTime(1000))
@@ -27,9 +30,6 @@ export class AdminUserListComponent implements OnInit, OnDestroy {
         this.search();
       });
   }
-
-  inputSubject: Subject<string> = new Subject<string>();
-  private subscription: Subscription;
 
   onInput() {
     this.inputSubject.next(this.query);
