@@ -12,7 +12,6 @@ import { CommentService } from '../../../feature/comment/comment.service';
 import { RatingService } from '../../../feature/rating/rating.service';
 import { UserService } from '../../../feature/user/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { userProfilViewLinks } from '../social-network-routing.module';
 import { FriendResponse } from '../../../shared/models/friendship.models';
 import { FriendshipService } from '../../../feature/friendship/friendship.service';
 import { MoviePlaylistsService } from '../../../feature/playlist/movie-playlists.service';
@@ -23,10 +22,6 @@ import { EpisodePlaylistsService } from '../../../feature/playlist/episode-playl
 import { Select } from '@ngxs/store';
 import { AuthState } from '../../../core/auth/store/auth.state';
 import { Observable } from 'rxjs';
-import { HttpErrorResponse } from '@angular/common/http';
-import { AuthActions } from '../../../core/auth/store/auth.actions';
-import { navigationRoot } from '../../../app-routing.module';
-import { adminLinks } from '../../admin/admin-routing.module';
 
 @Component({
   selector: 'app-user-view',
@@ -41,12 +36,6 @@ export class UserViewComponent {
   userID = '';
   user: UserResponse | null = null;
   userLoading = false;
-
-  deleteModalVisible = false;
-  deleteModalLoading = false;
-  deleteModalError = false;
-  deleteModalErrorMessage = '';
-  deleteModalSuccess = false;
 
   movieComments: CommentResults = emptyCommentResults;
   movieCommentsCurrentPage = 1;
@@ -181,14 +170,6 @@ export class UserViewComponent {
     this.onGetUserTvRatings();
   }
 
-  onViewUser(userID: string) {
-    this.router
-      .navigate([userProfilViewLinks, userID], {
-        onSameUrlNavigation: 'reload',
-      })
-      .then();
-  }
-
   onGetUserFriends() {
     this.friendsLoading = true;
 
@@ -212,41 +193,6 @@ export class UserViewComponent {
         this.playlistsLoading = false;
         this.moviePlaylists = playlists;
       });
-  }
-
-  showModal(): void {
-    this.deleteModalVisible = true;
-  }
-
-  handleDelete(): void {
-    this.deleteModalLoading = true;
-    this.userService.adminDeleteUser(this.userID).subscribe({
-      next: () => {
-        this.deleteModalLoading = false;
-        this.deleteModalSuccess = true;
-      },
-      error: (error: HttpErrorResponse) => {
-        this.deleteModalLoading = false;
-        this.deleteModalError = true;
-        this.deleteModalErrorMessage = error.error.message;
-      },
-    });
-  }
-
-  handleCancel(): void {
-    if (this.deleteModalLoading) {
-      return;
-    }
-    if (this.deleteModalError) {
-      this.deleteModalError = false;
-    }
-    if (this.deleteModalSuccess) {
-      sessionStorage.clear();
-      this.router
-        .navigate([`${navigationRoot.admin.path}/${adminLinks.users.path}`])
-        .finally();
-    }
-    this.deleteModalVisible = false;
   }
 
   protected readonly playlistViewLinks = playlistViewLinks;

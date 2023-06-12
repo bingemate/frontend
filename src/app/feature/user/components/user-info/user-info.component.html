@@ -198,6 +198,11 @@
         Envoyer un message
       </button>
     </ng-container>
+    <app-delete-user
+      *nzSpaceItem
+      [admin]="isAdmin"
+      [owner]="owner"
+      [userId]="user?.id ?? ''"></app-delete-user>
   </nz-space>
 </ng-template>
 

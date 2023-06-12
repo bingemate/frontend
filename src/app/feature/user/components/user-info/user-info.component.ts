@@ -28,6 +28,8 @@ export class UserInfoComponent implements OnInit {
   isAdmin = false;
   roles: string[] = [];
 
+  @Input() owner = false;
+
   @Input() user: UserResponse | null = null;
 
   userForm: FormGroup | null = null;
