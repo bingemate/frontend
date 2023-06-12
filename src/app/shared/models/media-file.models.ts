@@ -55,7 +55,6 @@ export interface MediaFile {
 }
 
 export interface MovieFileResponse {
-  expand: boolean;
   id: number;
   name: string;
   releaseDate: string;
