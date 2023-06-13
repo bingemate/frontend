@@ -8,7 +8,7 @@ import { MediaFilesComponent } from './media-files/media-files.component';
 export const adminLinks: NavigationLinks<'upload' | 'users' | 'media_files'> = {
   upload: {
     path: 'upload',
-    name: 'Envoi de médias',
+    name: 'Envoi / Scan de médias',
     icon: 'upload',
   },
   media_files: {
