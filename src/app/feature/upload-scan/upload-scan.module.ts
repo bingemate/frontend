@@ -12,10 +12,12 @@ import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzPipesModule } from 'ng-zorro-antd/pipes';
 import { NzProgressModule } from 'ng-zorro-antd/progress';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { LogsComponent } from './components/logs/logs.component';
+import { NzCardModule } from 'ng-zorro-antd/card';
 
 @NgModule({
-  declarations: [ScanComponent, UploadComponent],
-  exports: [UploadComponent, ScanComponent],
+  declarations: [ScanComponent, UploadComponent, LogsComponent],
+  exports: [UploadComponent, ScanComponent, LogsComponent],
   imports: [
     CommonModule,
     NzUploadModule,
@@ -27,6 +29,7 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
     NzPipesModule,
     NzProgressModule,
     NzSpinModule,
+    NzCardModule,
   ],
   providers: [UploadScanService],
 })
