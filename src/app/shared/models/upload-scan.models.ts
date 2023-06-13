@@ -1,9 +1,7 @@
-export interface MovieScanResponse {
-  data: MovieScannerResult[];
-}
-
-export interface TVScanResponse {
-  data: TVScannerResult[];
+export interface JobLog {
+  jobName: string;
+  date: string;
+  message: string;
 }
 
 export interface UploadResponse {
