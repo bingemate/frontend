@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngxs/store';
+import { Select, Store } from '@ngxs/store';
 import { AuthState } from '../../../core/auth/store/auth.state';
 import { MoviePlaylistsService } from '../../../feature/playlist/movie-playlists.service';
 import { EpisodePlaylist } from '../../../shared/models/episode-playlist.model';
 import { MoviePlaylist } from '../../../shared/models/movie-playlist.model';
 import { EpisodePlaylistsService } from '../../../feature/playlist/episode-playlists.service';
 import { StreamingActions } from '../../../feature/streaming/store/streaming.actions';
+import { Observable } from 'rxjs';
+import { UserResponse } from '../../../shared/models/user.models';
 
 @Component({
   selector: 'app-playlists',
@@ -20,6 +22,8 @@ export class PlaylistsComponent implements OnInit {
   playlistName?: string;
   playlistType?: 'MOVIE' | 'EPISODE';
 
+  @Select(AuthState.user) user$!: Observable<UserResponse | null>;
+
   constructor(
     private readonly store: Store,
     private readonly moviePlaylistsService: MoviePlaylistsService,
@@ -27,20 +31,20 @@ export class PlaylistsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const userId = this.store.selectSnapshot(AuthState.user)?.id;
-    if (!userId) {
-      return;
-    }
-    this.moviePlaylistsService
-      .getMoviePlaylists(userId)
-      .subscribe(playlists => {
-        this.moviePlaylists = playlists;
-      });
-    this.episodePlaylistsService
-      .getEpisodePlaylists(userId)
-      .subscribe(playlists => {
-        this.episodePlaylists = playlists;
-      });
+    this.user$.subscribe(user => {
+      if (user) {
+        this.moviePlaylistsService
+          .getMoviePlaylists(user.id)
+          .subscribe(playlists => {
+            this.moviePlaylists = playlists;
+          });
+        this.episodePlaylistsService
+          .getEpisodePlaylists(user.id)
+          .subscribe(playlists => {
+            this.episodePlaylists = playlists;
+          });
+      }
+    });
   }
 
   showModal(): void {
@@ -83,9 +87,17 @@ export class PlaylistsComponent implements OnInit {
     }
   }
 
-  deletePlaylist(playlistId: string) {
+  deleteMoviePlaylist(playlistId: string) {
     this.moviePlaylistsService.deletePlaylist(playlistId).subscribe(() => {
       this.moviePlaylists = this.moviePlaylists.filter(
+        playlist => playlist.id !== playlistId
+      );
+    });
+  }
+
+  deleteEpisodePlaylist(playlistId: string) {
+    this.episodePlaylistsService.deletePlaylist(playlistId).subscribe(() => {
+      this.episodePlaylists = this.episodePlaylists.filter(
         playlist => playlist.id !== playlistId
       );
     });

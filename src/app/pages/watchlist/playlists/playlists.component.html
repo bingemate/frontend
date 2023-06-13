@@ -1,39 +1,64 @@
-<nz-row [nzJustify]="'space-between'">
-  <h2>Playlists</h2>
+<nz-card nzTitle="Playlists" [nzExtra]="add">
+  <nz-divider nzText="Films" nzOrientation="left"></nz-divider>
+  <nz-list nzItemLayout="vertical" [nzLoading]="false">
+    <nz-list-item *ngFor="let item of moviePlaylists; let index = index">
+      <nz-list-item-meta>
+        <nz-list-item-meta-title>
+          <a [routerLink]="['movies', item.id]">{{ item.name }}</a>
+        </nz-list-item-meta-title>
+      </nz-list-item-meta>
+      <ul nz-list-item-actions>
+        <nz-list-item-action>
+          <button
+            nz-button
+            nzType="primary"
+            nzDanger
+            nz-popconfirm
+            nzPopconfirmTitle="Voulez-vous vraiment supprimer cette playlist ?"
+            (nzOnConfirm)="deleteMoviePlaylist(item.id)">
+            <span nz-icon nzType="delete"></span>
+            Supprimer
+          </button>
+        </nz-list-item-action>
+      </ul>
+    </nz-list-item>
+  </nz-list>
+  <nz-divider nzText="Episodes" nzOrientation="left"></nz-divider>
+  <nz-list nzItemLayout="vertical" [nzLoading]="false">
+    <nz-list-item *ngFor="let item of episodePlaylists; let index = index">
+      <nz-list-item-meta>
+        <nz-list-item-meta-title>
+          <a [routerLink]="['episodes', item.id]">{{ item.name }}</a>
+        </nz-list-item-meta-title>
+      </nz-list-item-meta>
+      <ul nz-list-item-actions>
+        <nz-list-item-action>
+          <button
+            nz-button
+            nzType="primary"
+            nzDanger
+            nz-popconfirm
+            nzPopconfirmTitle="Voulez-vous vraiment supprimer cette playlist ?"
+            (nzOnConfirm)="deleteEpisodePlaylist(item.id)">
+            <span nz-icon nzType="delete"></span>
+            Supprimer
+          </button>
+        </nz-list-item-action>
+      </ul>
+    </nz-list-item>
+    <nz-list-empty
+      *ngIf="moviePlaylists.length + episodePlaylists.length === 0"
+      nzNoResult="Aucune playlist">
+    </nz-list-empty>
+  </nz-list>
+</nz-card>
+
+<ng-template #add>
   <button nz-button nzType="primary" (click)="showModal()">
     <span>Créer une playlist</span>
   </button>
-</nz-row>
-<nz-list nzItemLayout="vertical" [nzLoading]="false">
-  <nz-list-item *ngFor="let item of moviePlaylists; let index = index">
-    <nz-list-item-meta>
-      <nz-list-item-meta-title>
-        <a [routerLink]="['movies', item.id]">{{ item.name }}</a>
-      </nz-list-item-meta-title>
-    </nz-list-item-meta>
-    <ul nz-list-item-actions>
-      <nz-list-item-action>
-        <a (click)="deletePlaylist(item.id)">Supprimer</a>
-      </nz-list-item-action>
-    </ul>
-  </nz-list-item>
-  <nz-list-item *ngFor="let item of episodePlaylists; let index = index">
-    <nz-list-item-meta>
-      <nz-list-item-meta-title>
-        <a [routerLink]="['episodes', item.id]">{{ item.name }}</a>
-      </nz-list-item-meta-title>
-    </nz-list-item-meta>
-    <ul nz-list-item-actions>
-      <nz-list-item-action>
-        <a (click)="deletePlaylist(item.id)">Supprimer</a>
-      </nz-list-item-action>
-    </ul>
-  </nz-list-item>
-  <nz-list-empty
-    *ngIf="moviePlaylists.length + episodePlaylists.length === 0"
-    nzNoResult="Aucune playlist">
-  </nz-list-empty>
-</nz-list>
+</ng-template>
+
 <nz-modal
   [(nzVisible)]="isPlaylistShown"
   nzTitle="Créer une nouvelle playlist"
