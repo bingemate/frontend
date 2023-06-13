@@ -31,7 +31,6 @@
           <nz-card [nzExtra]="movieRatingsListPagination" nzTitle="Films">
             <app-rating-list
               [mediaType]="'movie'"
-              [editable]="true"
               [showMedia]="true"
               [ratings]="movieRatings.results"></app-rating-list>
           </nz-card>
@@ -40,8 +39,7 @@
           <nz-card [nzExtra]="tvRatingsListPagination" nzTitle="Séries">
             <app-rating-list
               [mediaType]="'tv'"
-              [editable]="true"
-              [showMedia]="true"
+              [editable]="isAdmin"
               [ratings]="tvRatings.results"></app-rating-list>
           </nz-card>
         </nz-col>

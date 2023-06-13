@@ -21,6 +21,7 @@
         <nz-comment-content (click)="$event.preventDefault()">
           <app-rating-view
             [rating]="rating"
+            [type]="mediaType"
             [editable]="editable"></app-rating-view>
         </nz-comment-content>
       </nz-comment>
