@@ -85,7 +85,7 @@ export class StreamingState {
           .navigate([
             '/streaming/stream',
             'tv-shows',
-            ctx.getState().moviePlaylist?.items[payload.position].movieId,
+            ctx.getState().episodePlaylist?.items[payload.position].episodeId,
           ])
           .then();
       });

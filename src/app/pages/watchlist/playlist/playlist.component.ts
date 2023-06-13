@@ -151,7 +151,7 @@ export class PlaylistComponent implements OnInit {
       .subscribe(() => (this.moviePlaylistItems = items));
   }
 
-  watchMovie(index: number) {
+  watchMedia(index: number) {
     if (!this.isSubscribed) {
       return;
     }
