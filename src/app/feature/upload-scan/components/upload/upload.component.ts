@@ -1,6 +1,7 @@
 import { Component, Input, ViewChild } from '@angular/core';
 import { NzUploadComponent, NzUploadFile } from 'ng-zorro-antd/upload';
 import { UploadScanService } from '../../upload-scan.service';
+import { NotificationsService } from '../../../../core/notifications/notifications.service';
 
 interface PreviewFile {
   file: File;
@@ -16,19 +17,23 @@ interface PreviewFile {
 })
 export class UploadComponent {
   @Input() type: 'movies' | 'tv-shows' = 'movies';
+  @Input() disabled = false;
 
   @ViewChild('upload', { static: false }) movieUpload!: NzUploadComponent;
 
-  private uploadQueue: File[] = [];
+  protected uploadQueue: File[] = [];
   public previewFiles: PreviewFile[] = [];
   public uploading = false;
 
-  constructor(private uploadService: UploadScanService) {}
+  constructor(
+    private uploadService: UploadScanService,
+    private readonly notificationsService: NotificationsService
+  ) {}
 
   beforeUpload = (uploadFile: NzUploadFile, files: NzUploadFile[]): boolean => {
-    console.log('Handle before upload');
-    console.log(uploadFile);
-    console.log(files);
+    // console.log('Handle before upload');
+    // console.log(uploadFile);
+    // console.log(files);
     const file = uploadFile as unknown as File;
 
     if (file.type.startsWith('video')) {
@@ -40,8 +45,8 @@ export class UploadComponent {
         done: false,
       });
     }
-    console.log('UPLOAD QUEUE');
-    console.log(this.uploadQueue);
+    // console.log('UPLOAD QUEUE');
+    // console.log(this.uploadQueue);
     return false;
   };
 
@@ -57,8 +62,8 @@ export class UploadComponent {
   }
 
   handleChange(event: unknown) {
-    console.log('UPLOAD EVENT');
-    console.log(event);
+    // console.log('UPLOAD EVENT');
+    // console.log(event);
   }
 
   uploadFiles() {
@@ -79,11 +84,15 @@ export class UploadComponent {
     if (!file) {
       return;
     }
-    console.log(`Envoi du fichier (${file.name})`);
+    // console.log(`Envoi du fichier (${file.name})`);
     this.previewFiles[index].progress = true;
     // Envoyer la requête d'upload en utilisant HttpClient
     if (this.type === 'movies') {
       this.uploadService.uploadMovie(file).subscribe(() => {
+        this.notificationsService.success(
+          'Upload terminé',
+          `Le fichier ${file.name} a été uploadé avec succès`
+        );
         // Upload terminé pour ce fichier
         this.previewFiles[index].progress = false;
         this.previewFiles[index].done = true;
@@ -97,6 +106,10 @@ export class UploadComponent {
       });
     } else {
       this.uploadService.uploadTVShow(file).subscribe(() => {
+        this.notificationsService.success(
+          'Upload terminé',
+          `Le fichier ${file.name} a été uploadé avec succès`
+        );
         // Upload terminé pour ce fichier
         this.previewFiles[index].progress = false;
         this.previewFiles[index].done = true;
