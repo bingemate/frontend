@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { MediaInfoService } from '../../../feature/media-info/media-info.service';
 import { TvShowWatchlistService } from '../../../feature/watchlist/tv-show-watchlist.service';
 import { AuthState } from '../../../core/auth/store/auth.state';
-import { Store } from '@ngxs/store';
-import { forkJoin, map, mergeMap } from 'rxjs';
+import { Select, Store } from '@ngxs/store';
+import { forkJoin, map, mergeMap, Observable } from 'rxjs';
 import {
   MovieResponse,
   TvShowResponse,
@@ -22,6 +22,7 @@ import {
   TvShowWatchListStatus,
 } from '../../../shared/models/tv-show-watchlist.models';
 import { MovieWatchlistService } from '../../../feature/watchlist/movie-watchlist.service';
+import { UserResponse } from '../../../shared/models/user.models';
 
 @Component({
   selector: 'app-watchlist',
@@ -38,6 +39,8 @@ export class WatchlistComponent implements OnInit {
     ABANDONED: 'Abandonné',
   };
 
+  @Select(AuthState.user) user$!: Observable<UserResponse | null>;
+
   movieWatchlist: { media: MovieResponse; watchlist: MovieWatchlistItem }[] =
     [];
   showWatchlist: { media: TvShowResponse; watchlist: TvShowWatchlistItem }[] =
@@ -52,41 +55,42 @@ export class WatchlistComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const userId = this.store.selectSnapshot(AuthState.user)?.id;
-    if (userId) {
-      this.tvShowWatchlistService
-        .getWatchlistByUserId(userId)
-        .pipe(
-          mergeMap(watchlist =>
-            forkJoin(
-              watchlist.map(item =>
-                this.mediaService
-                  .getTvShowInfo(item.tvShowId)
-                  .pipe(map(media => ({ media, watchlist: item })))
+    this.user$.subscribe(user => {
+      if (user) {
+        this.tvShowWatchlistService
+          .getWatchlistByUserId(user.id)
+          .pipe(
+            mergeMap(watchlist =>
+              forkJoin(
+                watchlist.map(item =>
+                  this.mediaService
+                    .getTvShowInfo(item.tvShowId)
+                    .pipe(map(media => ({ media, watchlist: item })))
+                )
               )
             )
           )
-        )
-        .subscribe(watchlist => {
-          this.showWatchlist = watchlist;
-        });
-      this.movieWatchlistService
-        .getWatchlistByUserId(userId)
-        .pipe(
-          mergeMap(watchlist =>
-            forkJoin(
-              watchlist.map(item =>
-                this.mediaService
-                  .getMovieInfo(item.movieId)
-                  .pipe(map(media => ({ media, watchlist: item })))
+          .subscribe(watchlist => {
+            this.showWatchlist = watchlist;
+          });
+        this.movieWatchlistService
+          .getWatchlistByUserId(user.id)
+          .pipe(
+            mergeMap(watchlist =>
+              forkJoin(
+                watchlist.map(item =>
+                  this.mediaService
+                    .getMovieInfo(item.movieId)
+                    .pipe(map(media => ({ media, watchlist: item })))
+                )
               )
             )
           )
-        )
-        .subscribe(watchlist => {
-          this.movieWatchlist = watchlist;
-        });
-    }
+          .subscribe(watchlist => {
+            this.movieWatchlist = watchlist;
+          });
+      }
+    });
   }
 
   changeShowStatus(
@@ -103,6 +107,7 @@ export class WatchlistComponent implements OnInit {
         )
       );
   }
+
   changeMovieStatus(
     item: { media: MovieResponse; watchlist: MovieWatchlistItem },
     status: MovieWatchListStatus
@@ -134,6 +139,7 @@ export class WatchlistComponent implements OnInit {
         );
       });
   }
+
   removeShowWatchlist(item: {
     media: TvShowResponse;
     watchlist: TvShowWatchlistItem;
