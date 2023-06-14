@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { forkJoin, map, mergeMap, Observable, switchMap } from 'rxjs';
 import {
@@ -26,7 +26,7 @@ import { tap } from 'rxjs/operators';
   templateUrl: './playlist.component.html',
   styleUrls: ['./playlist.component.less'],
 })
-export class PlaylistComponent implements OnInit {
+export class PlaylistComponent implements OnInit, OnDestroy {
   @Select(AuthState.isSubscribed)
   isSubscribed$!: Observable<boolean>;
   isSubscribed = false;
@@ -47,6 +47,10 @@ export class PlaylistComponent implements OnInit {
   moviePlaylistItems: MoviePlaylistItemMedia[] = [];
   episodePlaylistItems: EpisodePlaylistItemMedia[] = [];
 
+  query = '';
+  filter = '';
+  queryTimeout = 0;
+
   constructor(
     private route: ActivatedRoute,
     private store: Store,
@@ -63,6 +67,29 @@ export class PlaylistComponent implements OnInit {
 
   ngOnInit(): void {
     this.watchPlaylistUpdate();
+  }
+
+  ngOnDestroy(): void {
+    clearTimeout(this.queryTimeout);
+  }
+
+  onQuery() {
+    clearTimeout(this.queryTimeout);
+    this.queryTimeout = setTimeout(() => {
+      this.filter = this.query;
+    }, 300);
+  }
+
+  filteredMovieItems(): MoviePlaylistItemMedia[] {
+    return this.moviePlaylistItems.filter(item =>
+      item.media.name.toLowerCase().includes(this.filter.toLowerCase())
+    );
+  }
+
+  filteredEpisodeItems(): EpisodePlaylistItemMedia[] {
+    return this.episodePlaylistItems.filter(item =>
+      item.media.name.toLowerCase().includes(this.filter.toLowerCase())
+    );
   }
 
   private watchPlaylistUpdate(): void {

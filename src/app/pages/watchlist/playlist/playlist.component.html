@@ -1,12 +1,12 @@
 <ng-container *ngIf="type === 'movies' && moviePlaylist !== undefined">
-  <nz-card [nzTitle]="moviePlaylist!.name">
+  <nz-card [nzTitle]="moviePlaylist!.name" [nzExtra]="search">
     <nz-list
       nzItemLayout="vertical"
       [nzLoading]="playlistLoading"
       cdkDropList
       (cdkDropListDropped)="itemMoved($event)">
       <nz-list-item
-        *ngFor="let item of moviePlaylistItems; let index = index"
+        *ngFor="let item of filteredMovieItems(); let index = index"
         cdkDrag>
         <nz-list-item-meta>
           <nz-list-item-meta-title>
@@ -36,11 +36,17 @@
         </nz-list-item-meta>
         <ul nz-list-item-actions>
           <nz-list-item-action
-            *ngIf="moviePlaylist?.userId === user?.id || isAdmin"
-            ><a (click)="removeItem(item.playlistItem)"
-              >Supprimer</a
-            ></nz-list-item-action
-          >
+            *ngIf="moviePlaylist?.userId === user?.id || isAdmin">
+            <button
+              nz-button
+              nzType="primary"
+              nzDanger
+              nz-popconfirm
+              nzPopconfirmTitle="Êtes-vous sûr de vouloir supprimer ce média ?"
+              (nzOnConfirm)="removeItem(item.playlistItem)">
+              Supprimer
+            </button>
+          </nz-list-item-action>
         </ul>
       </nz-list-item>
     </nz-list>
@@ -50,14 +56,14 @@
   </nz-card>
 </ng-container>
 <ng-container *ngIf="type === 'episodes' && episodePlaylist !== undefined">
-  <nz-card [nzTitle]="episodePlaylist!.name">
+  <nz-card [nzTitle]="episodePlaylist!.name" [nzExtra]="search">
     <nz-list
       nzItemLayout="vertical"
       [nzLoading]="playlistLoading"
       cdkDropList
       (cdkDropListDropped)="itemMoved($event)">
       <nz-list-item
-        *ngFor="let item of episodePlaylistItems; let index = index"
+        *ngFor="let item of filteredEpisodeItems(); let index = index"
         cdkDrag>
         <nz-list-item-meta>
           <nz-list-item-meta-title>
@@ -90,9 +96,15 @@
         <ul nz-list-item-actions>
           <nz-list-item-action
             *ngIf="episodePlaylist?.userId === user?.id || isAdmin"
-            ><a (click)="removeItem(item.playlistItem)"
-              >Supprimer</a
-            ></nz-list-item-action
+            ><button
+              nz-button
+              nzType="primary"
+              nzDanger
+              nz-popconfirm
+              nzPopconfirmTitle="Êtes-vous sûr de vouloir supprimer ce média ?"
+              (nzOnConfirm)="removeItem(item.playlistItem)">
+              Supprimer
+            </button></nz-list-item-action
           >
         </ul>
       </nz-list-item>
@@ -102,3 +114,17 @@
       nzNoResult="Aucun média"></nz-list-empty>
   </nz-card>
 </ng-container>
+
+<ng-template #search>
+  <nz-input-group nzSearch [nzSuffix]="suffixIconSearch">
+    <input
+      nz-input
+      placeholder="Rechercher"
+      [(ngModel)]="query"
+      (ngModelChange)="onQuery()" />
+  </nz-input-group>
+</ng-template>
+
+<ng-template #suffixIconSearch>
+  <span nz-icon nzType="search"></span>
+</ng-template>
