@@ -14,6 +14,7 @@ import { MediaInfoService } from '../../../media-info/media-info.service';
 import { MediaDiscoverService } from '../../../media-info/media-discover.service';
 import { HistoryModel } from '../../../../shared/models/history.models';
 import { MovieHistoryService } from '../../../history/movie-history.service';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-auth-home',
@@ -37,12 +38,19 @@ export class AuthHomeComponent implements OnInit {
   popularMovies: MovieResponse[] = [];
   popularTvShows: TvShowResponse[] = [];
 
+  isOnPhone = false;
+
   constructor(
+    private breakpointObserver: BreakpointObserver,
     private readonly episodeHistoryService: EpisodeHistoryService,
     private readonly movieHistoryService: MovieHistoryService,
     private readonly mediaInfoService: MediaInfoService,
     private readonly mediaDiscoverService: MediaDiscoverService
   ) {
+    this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
+      this.isOnPhone = result.matches;
+    });
+
     this.user$.subscribe(user => (this.user = user));
     this.isSubscribed$.subscribe(
       isSubscribed => (this.isSubscribed = isSubscribed)
