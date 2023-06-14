@@ -23,6 +23,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { NzStatisticModule } from 'ng-zorro-antd/statistic';
 import { StatsMovieDailyViewedGenreComponent } from '../../shared/components/stats-movie-daily-viewed-genre/stats-movie-daily-viewed-genre.component';
 import { StatsDailySentCommentsComponent } from '../../shared/components/stats-daily-sent-comments/stats-daily-sent-comments.component';
+import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { StatsDailySentCommentsComponent } from '../../shared/components/stats-d
     NzCardModule,
     SharedModule,
     NzStatisticModule,
+    NzPopconfirmModule,
   ],
   providers: [EpisodeStatisticsService, MovieStatisticsService],
 })

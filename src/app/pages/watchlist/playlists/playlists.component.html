@@ -1,7 +1,14 @@
 <nz-card nzTitle="Playlists" [nzExtra]="add">
+  <nz-input-group nzSearch [nzSuffix]="suffixIconSearch">
+    <input
+      nz-input
+      placeholder="Rechercher"
+      [(ngModel)]="query"
+      (ngModelChange)="onQuery()" />
+  </nz-input-group>
   <nz-divider nzText="Films" nzOrientation="left"></nz-divider>
-  <nz-list nzItemLayout="vertical" [nzLoading]="false">
-    <nz-list-item *ngFor="let item of moviePlaylists; let index = index">
+  <nz-list nzItemLayout="vertical" [nzLoading]="moviePlaylistLoading">
+    <nz-list-item *ngFor="let item of filteredMoviePlaylists()">
       <nz-list-item-meta>
         <nz-list-item-meta-title>
           <a [routerLink]="['movies', item.id]">{{ item.name }}</a>
@@ -22,10 +29,14 @@
         </nz-list-item-action>
       </ul>
     </nz-list-item>
+    <nz-list-empty
+      *ngIf="!moviePlaylistLoading && moviePlaylists.length === 0"
+      nzNoResult="Aucune playlist">
+    </nz-list-empty>
   </nz-list>
   <nz-divider nzText="Episodes" nzOrientation="left"></nz-divider>
-  <nz-list nzItemLayout="vertical" [nzLoading]="false">
-    <nz-list-item *ngFor="let item of episodePlaylists; let index = index">
+  <nz-list nzItemLayout="vertical" [nzLoading]="episodePlaylistLoading">
+    <nz-list-item *ngFor="let item of filteredEpisodePlaylists()">
       <nz-list-item-meta>
         <nz-list-item-meta-title>
           <a [routerLink]="['episodes', item.id]">{{ item.name }}</a>
@@ -47,7 +58,7 @@
       </ul>
     </nz-list-item>
     <nz-list-empty
-      *ngIf="moviePlaylists.length + episodePlaylists.length === 0"
+      *ngIf="!episodePlaylistLoading && episodePlaylists.length === 0"
       nzNoResult="Aucune playlist">
     </nz-list-empty>
   </nz-list>
@@ -97,3 +108,7 @@
     </button>
   </div>
 </nz-modal>
+
+<ng-template #suffixIconSearch>
+  <span nz-icon nzType="search"></span>
+</ng-template>

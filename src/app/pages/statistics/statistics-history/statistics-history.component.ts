@@ -20,6 +20,7 @@ export class StatisticsHistoryComponent implements OnInit {
   mediaStreamPath = `/${navigationRoot.streaming.path}/${streamingLinks.stream.path}/`;
 
   history: HistoryModel[] = [];
+  historyLoading = false;
 
   constructor(
     private episodeHistoryService: EpisodeHistoryService,
@@ -27,15 +28,20 @@ export class StatisticsHistoryComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.historyLoading = true;
     forkJoin([
       this.episodeHistoryService.getEpisodeHistory(),
       this.movieHistoryService.getMovieHistory(),
-    ]).subscribe(
-      ([episodeHistory, movieHistory]) =>
-        (this.history = [...episodeHistory, ...movieHistory].sort(
+    ]).subscribe({
+      next: ([episodeHistory, movieHistory]) => {
+        this.history = [...episodeHistory, ...movieHistory].sort(
           (a, b) => b.viewedAt.getTime() - a.viewedAt.getTime()
-        ))
-    );
+        );
+      },
+      complete: () => {
+        this.historyLoading = false;
+      },
+    });
   }
 
   deleteMedia(history: HistoryModel) {

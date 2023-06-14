@@ -1,11 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { AuthState } from '../../../core/auth/store/auth.state';
 import { MoviePlaylistsService } from '../../../feature/playlist/movie-playlists.service';
 import { EpisodePlaylist } from '../../../shared/models/episode-playlist.model';
 import { MoviePlaylist } from '../../../shared/models/movie-playlist.model';
 import { EpisodePlaylistsService } from '../../../feature/playlist/episode-playlists.service';
-import { StreamingActions } from '../../../feature/streaming/store/streaming.actions';
 import { Observable } from 'rxjs';
 import { UserResponse } from '../../../shared/models/user.models';
 
@@ -14,9 +13,16 @@ import { UserResponse } from '../../../shared/models/user.models';
   templateUrl: './playlists.component.html',
   styleUrls: ['./playlists.component.less'],
 })
-export class PlaylistsComponent implements OnInit {
+export class PlaylistsComponent implements OnInit, OnDestroy {
   episodePlaylists: EpisodePlaylist[] = [];
   moviePlaylists: MoviePlaylist[] = [];
+  episodePlaylistLoading = false;
+  moviePlaylistLoading = false;
+
+  query = '';
+  filter = '';
+  queryTimeout = 0;
+
   isPlaylistShown = false;
   isConfirmLoading = false;
   playlistName?: string;
@@ -30,20 +36,59 @@ export class PlaylistsComponent implements OnInit {
     private readonly episodePlaylistsService: EpisodePlaylistsService
   ) {}
 
+  onQuery() {
+    clearTimeout(this.queryTimeout);
+    this.queryTimeout = setTimeout(() => {
+      this.filter = this.query;
+    }, 300);
+  }
+
+  ngOnDestroy(): void {
+    clearTimeout(this.queryTimeout);
+  }
+
+  filteredMoviePlaylists(): MoviePlaylist[] {
+    return this.moviePlaylists.filter(playlist =>
+      playlist.name.toLowerCase().includes(this.filter.toLowerCase())
+    );
+  }
+
+  filteredEpisodePlaylists(): EpisodePlaylist[] {
+    return this.episodePlaylists.filter(playlist =>
+      playlist.name.toLowerCase().includes(this.filter.toLowerCase())
+    );
+  }
+
   ngOnInit(): void {
     this.user$.subscribe(user => {
       if (user) {
-        this.moviePlaylistsService
-          .getMoviePlaylists(user.id)
-          .subscribe(playlists => {
-            this.moviePlaylists = playlists;
-          });
-        this.episodePlaylistsService
-          .getEpisodePlaylists(user.id)
-          .subscribe(playlists => {
-            this.episodePlaylists = playlists;
-          });
+        this.loadMoviePlaylists(user);
+        this.loadEpisodePlaylists(user);
       }
+    });
+  }
+
+  private loadEpisodePlaylists(user: UserResponse) {
+    this.episodePlaylistLoading = true;
+    this.episodePlaylistsService.getEpisodePlaylists(user.id).subscribe({
+      next: playlists => {
+        this.episodePlaylists = playlists;
+      },
+      complete: () => {
+        this.episodePlaylistLoading = false;
+      },
+    });
+  }
+
+  private loadMoviePlaylists(user: UserResponse) {
+    this.moviePlaylistLoading = true;
+    this.moviePlaylistsService.getMoviePlaylists(user.id).subscribe({
+      next: playlists => {
+        this.moviePlaylists = playlists;
+      },
+      complete: () => {
+        this.moviePlaylistLoading = false;
+      },
     });
   }
 
@@ -101,11 +146,5 @@ export class PlaylistsComponent implements OnInit {
         playlist => playlist.id !== playlistId
       );
     });
-  }
-
-  watchMoviePlaylist(index: number) {
-    this.store.dispatch(
-      new StreamingActions.WatchMoviePlaylist(this.moviePlaylists[index], 0)
-    );
   }
 }
