@@ -33,6 +33,7 @@ export class PlaylistComponent implements OnInit {
 
   episodePlaylist?: EpisodePlaylist;
   moviePlaylist?: MoviePlaylist;
+  playlistLoading = false;
   type?: 'movies' | 'episodes';
 
   @Select(AuthState.user)
@@ -65,6 +66,7 @@ export class PlaylistComponent implements OnInit {
   }
 
   private watchPlaylistUpdate(): void {
+    this.playlistLoading = true;
     this.route.params
       .pipe(
         switchMap(params => {
@@ -74,10 +76,10 @@ export class PlaylistComponent implements OnInit {
             return this.moviePlaylistsService.getPlaylistById(id).pipe(
               mergeMap(playlist => {
                 this.moviePlaylist = playlist;
-                console.log(playlist);
                 return this.getMovies(playlist.items);
               }),
               tap(items => {
+                this.playlistLoading = false;
                 this.moviePlaylistItems = items;
               })
             );
@@ -88,6 +90,7 @@ export class PlaylistComponent implements OnInit {
                 return this.getEpisodes(playlist.items);
               }),
               tap(items => {
+                this.playlistLoading = false;
                 this.episodePlaylistItems = items;
               })
             );
