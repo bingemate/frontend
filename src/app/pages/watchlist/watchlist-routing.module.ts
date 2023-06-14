@@ -12,6 +12,7 @@ export const watchlistLinks: NavigationLinks<
   calendar: {
     name: 'Calendrier',
     path: 'calendar',
+    hideOnPhone: true,
   },
   lists: {
     name: 'Liste de suivie',
