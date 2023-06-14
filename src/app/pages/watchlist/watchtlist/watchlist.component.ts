@@ -30,8 +30,11 @@ import { UserResponse } from '../../../shared/models/user.models';
   styleUrls: ['./watchlist.component.less'],
 })
 export class WatchlistComponent implements OnInit {
+  @Select(AuthState.user) user$!: Observable<UserResponse | null>;
+
   readonly movieStatusNames = Object.values(MovieWatchListStatus);
   readonly tvShowStatusNames = Object.values(TvShowWatchListStatus);
+
   readonly statusMap = {
     WATCHING: 'En cours',
     PLAN_TO_WATCH: 'Prévu',
@@ -39,12 +42,12 @@ export class WatchlistComponent implements OnInit {
     ABANDONED: 'Abandonné',
   };
 
-  @Select(AuthState.user) user$!: Observable<UserResponse | null>;
-
   movieWatchlist: { media: MovieResponse; watchlist: MovieWatchlistItem }[] =
     [];
+  movieWatchlistLoading = false;
   showWatchlist: { media: TvShowResponse; watchlist: TvShowWatchlistItem }[] =
     [];
+  showWatchlistLoading = false;
 
   constructor(
     private readonly store: Store,
@@ -57,40 +60,64 @@ export class WatchlistComponent implements OnInit {
   ngOnInit(): void {
     this.user$.subscribe(user => {
       if (user) {
-        this.tvShowWatchlistService
-          .getWatchlistByUserId(user.id)
-          .pipe(
-            mergeMap(watchlist =>
-              forkJoin(
-                watchlist.map(item =>
-                  this.mediaService
-                    .getTvShowInfo(item.tvShowId)
-                    .pipe(map(media => ({ media, watchlist: item })))
-                )
-              )
-            )
-          )
-          .subscribe(watchlist => {
-            this.showWatchlist = watchlist;
-          });
-        this.movieWatchlistService
-          .getWatchlistByUserId(user.id)
-          .pipe(
-            mergeMap(watchlist =>
-              forkJoin(
-                watchlist.map(item =>
-                  this.mediaService
-                    .getMovieInfo(item.movieId)
-                    .pipe(map(media => ({ media, watchlist: item })))
-                )
-              )
-            )
-          )
-          .subscribe(watchlist => {
-            this.movieWatchlist = watchlist;
-          });
+        this.loadTvWatchlist(user);
+        this.loadMovieWatchlist(user);
       }
     });
+  }
+
+  private loadMovieWatchlist(user: UserResponse) {
+    this.movieWatchlistLoading = true;
+    this.movieWatchlistService
+      .getWatchlistByUserId(user.id)
+      .pipe(
+        mergeMap(watchlist =>
+          forkJoin(
+            watchlist.map(item =>
+              this.mediaService
+                .getMovieShortInfo(item.movieId)
+                .pipe(map(media => ({ media, watchlist: item })))
+            )
+          )
+        )
+      )
+      .subscribe({
+        next: watchlist => {
+          this.movieWatchlist = watchlist;
+        },
+        complete: () => (this.movieWatchlistLoading = false),
+      });
+  }
+
+  private loadTvWatchlist(user: UserResponse) {
+    this.showWatchlistLoading = true;
+    this.tvShowWatchlistService
+      .getWatchlistByUserId(user.id)
+      .pipe(
+        mergeMap(watchlist =>
+          forkJoin(
+            watchlist.map(item =>
+              this.mediaService
+                .getTvShowShortInfo(item.tvShowId)
+                .pipe(map(media => ({ media, watchlist: item })))
+            )
+          )
+        )
+      )
+      .subscribe({
+        next: watchlist => {
+          this.showWatchlist = watchlist;
+        },
+        complete: () => (this.showWatchlistLoading = false),
+      });
+  }
+
+  getTvListByStatus(status: string) {
+    return this.showWatchlist.filter(item => item.watchlist.status === status);
+  }
+
+  getMovieListByStatus(status: string) {
+    return this.movieWatchlist.filter(item => item.watchlist.status === status);
   }
 
   changeShowStatus(
