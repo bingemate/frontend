@@ -4,6 +4,7 @@ import {
   TvShowResponse,
 } from '../../../shared/models/media.models';
 import { MediaDiscoverService } from '../../../feature/media-info/media-discover.service';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-trending',
@@ -11,6 +12,8 @@ import { MediaDiscoverService } from '../../../feature/media-info/media-discover
   styleUrls: ['./trending.component.less'],
 })
 export class TrendingComponent implements OnInit {
+  isOnPhone = false;
+
   popularMovies: MovieResponse[] = [];
   popularMoviesPage = 1;
   popularMoviesLoading = false;
@@ -31,7 +34,14 @@ export class TrendingComponent implements OnInit {
 
   onlyAvailable = false;
 
-  constructor(private mediaDiscoverService: MediaDiscoverService) {}
+  constructor(
+    private breakpointObserver: BreakpointObserver,
+    private mediaDiscoverService: MediaDiscoverService
+  ) {
+    this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
+      this.isOnPhone = result.matches;
+    });
+  }
 
   ngOnInit(): void {
     this.getPopularMovies();

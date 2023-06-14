@@ -1,6 +1,8 @@
 <nz-page-header nzTitle="Tendances"></nz-page-header>
 
-<nz-tabset nzSize="large" [nzTabBarExtraContent]="onlyAvailable">
+<nz-tabset
+  [nzSize]="isOnPhone ? 'small' : 'large'"
+  [nzTabBarExtraContent]="onlyAvailable">
   <nz-tab nzTitle="Films populaires">
     <nz-skeleton
       *ngIf="popularMoviesLoading"
@@ -73,6 +75,7 @@
 <ng-template #popularMoviesPagination>
   <div (click)="$event.stopPropagation()">
     <nz-pagination
+      [nzSize]="isOnPhone ? 'small' : 'default'"
       [nzPageIndex]="popularMoviesPage"
       [nzTotal]="Math.min(popularMoviesTotalResults, 1000)"
       [nzPageSize]="20"
@@ -83,6 +86,7 @@
 <ng-template #popularTvShowsPagination>
   <div (click)="$event.stopPropagation()">
     <nz-pagination
+      [nzSize]="isOnPhone ? 'small' : 'default'"
       [nzPageIndex]="popularTvShowsPage"
       [nzTotal]="Math.min(popularTvShowsTotalResults, 1000)"
       [nzPageSize]="20"
