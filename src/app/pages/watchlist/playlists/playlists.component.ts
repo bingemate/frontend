@@ -5,7 +5,6 @@ import { MoviePlaylistsService } from '../../../feature/playlist/movie-playlists
 import { EpisodePlaylist } from '../../../shared/models/episode-playlist.model';
 import { MoviePlaylist } from '../../../shared/models/movie-playlist.model';
 import { EpisodePlaylistsService } from '../../../feature/playlist/episode-playlists.service';
-import { StreamingActions } from '../../../feature/streaming/store/streaming.actions';
 import { Observable } from 'rxjs';
 import { UserResponse } from '../../../shared/models/user.models';
 
@@ -17,6 +16,9 @@ import { UserResponse } from '../../../shared/models/user.models';
 export class PlaylistsComponent implements OnInit {
   episodePlaylists: EpisodePlaylist[] = [];
   moviePlaylists: MoviePlaylist[] = [];
+  episodePlaylistLoading = false;
+  moviePlaylistLoading = false;
+
   isPlaylistShown = false;
   isConfirmLoading = false;
   playlistName?: string;
@@ -33,17 +35,33 @@ export class PlaylistsComponent implements OnInit {
   ngOnInit(): void {
     this.user$.subscribe(user => {
       if (user) {
-        this.moviePlaylistsService
-          .getMoviePlaylists(user.id)
-          .subscribe(playlists => {
-            this.moviePlaylists = playlists;
-          });
-        this.episodePlaylistsService
-          .getEpisodePlaylists(user.id)
-          .subscribe(playlists => {
-            this.episodePlaylists = playlists;
-          });
+        this.loadMoviePlaylists(user);
+        this.loadEpisodePlaylists(user);
       }
+    });
+  }
+
+  private loadEpisodePlaylists(user: UserResponse) {
+    this.episodePlaylistLoading = true;
+    this.episodePlaylistsService.getEpisodePlaylists(user.id).subscribe({
+      next: playlists => {
+        this.episodePlaylists = playlists;
+      },
+      complete: () => {
+        this.episodePlaylistLoading = false;
+      },
+    });
+  }
+
+  private loadMoviePlaylists(user: UserResponse) {
+    this.moviePlaylistLoading = true;
+    this.moviePlaylistsService.getMoviePlaylists(user.id).subscribe({
+      next: playlists => {
+        this.moviePlaylists = playlists;
+      },
+      complete: () => {
+        this.moviePlaylistLoading = false;
+      },
     });
   }
 
@@ -101,11 +119,5 @@ export class PlaylistsComponent implements OnInit {
         playlist => playlist.id !== playlistId
       );
     });
-  }
-
-  watchMoviePlaylist(index: number) {
-    this.store.dispatch(
-      new StreamingActions.WatchMoviePlaylist(this.moviePlaylists[index], 0)
-    );
   }
 }
