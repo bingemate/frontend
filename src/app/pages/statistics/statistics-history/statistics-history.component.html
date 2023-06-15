@@ -4,6 +4,7 @@
       <nz-list-item-meta-description>
         <app-media-info
           [type]="item.type"
+          [vertical]="isOnPhone"
           [routerLink]="
             (isSubscribed$ | async)
               ? [mediaStreamPath, item.type, item.mediaId]
@@ -22,7 +23,7 @@
     </nz-list-item-meta>
     <ul nz-list-item-actions>
       <nz-list-item-action>
-        <span nz-typography>
+        <span nz-typography class="hide-on-phone">
           Vu le {{ item.viewedAt | date : 'dd/MM/yyyy à HH:mm' }}
         </span>
       </nz-list-item-action>
@@ -34,7 +35,8 @@
           nz-popconfirm
           nzPopconfirmTitle="Voulez-vous vraiment supprimer cet élément de votre historique ?"
           (nzOnConfirm)="deleteMedia(item)">
-          Supprimer
+          <span nz-icon nzType="delete"></span>
+          <span class="hide-on-phone"> Supprimer </span>
         </button>
       </nz-list-item-action>
     </ul>
