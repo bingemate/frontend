@@ -1,5 +1,15 @@
 <ng-container *ngIf="type === 'movies' && moviePlaylist !== undefined">
   <nz-card [nzTitle]="moviePlaylist!.name" [nzExtra]="search">
+    <nz-input-group
+      class="hide-on-desktop"
+      nzSearch
+      [nzSuffix]="suffixIconSearch">
+      <input
+        nz-input
+        placeholder="Rechercher"
+        [(ngModel)]="query"
+        (ngModelChange)="onQuery()" />
+    </nz-input-group>
     <nz-list
       nzItemLayout="vertical"
       [nzLoading]="playlistLoading"
@@ -25,6 +35,7 @@
               </a>
               <a
                 *nzSpaceItem
+                class="hide-on-phone"
                 [routerLink]="[
                   '/medias/movie-view',
                   item.playlistItem.movieId
@@ -33,6 +44,13 @@
               </a>
             </nz-space>
           </nz-list-item-meta-title>
+          <nz-list-item-meta-description class="hide-on-desktop">
+            <a
+              style="margin-left: 32px"
+              [routerLink]="['/medias/movie-view', item.playlistItem.movieId]">
+              {{ item.playlistItem.movieId | mediaName : 'movie' | async }}
+            </a>
+          </nz-list-item-meta-description>
         </nz-list-item-meta>
         <ul nz-list-item-actions>
           <nz-list-item-action
@@ -44,7 +62,8 @@
               nz-popconfirm
               nzPopconfirmTitle="Êtes-vous sûr de vouloir supprimer ce média ?"
               (nzOnConfirm)="removeItem(item.playlistItem)">
-              Supprimer
+              <span nz-icon nzType="delete"></span>
+              <span class="hide-on-phone"> Supprimer </span>
             </button>
           </nz-list-item-action>
         </ul>
@@ -57,6 +76,16 @@
 </ng-container>
 <ng-container *ngIf="type === 'episodes' && episodePlaylist !== undefined">
   <nz-card [nzTitle]="episodePlaylist!.name" [nzExtra]="search">
+    <nz-input-group
+      class="hide-on-desktop"
+      nzSearch
+      [nzSuffix]="suffixIconSearch">
+      <input
+        nz-input
+        placeholder="Rechercher"
+        [(ngModel)]="query"
+        (ngModelChange)="onQuery()" />
+    </nz-input-group>
     <nz-list
       nzItemLayout="vertical"
       [nzLoading]="playlistLoading"
@@ -82,6 +111,7 @@
               </a>
               <a
                 *nzSpaceItem
+                class="hide-on-phone"
                 [routerLink]="[
                   '/medias/episode-view',
                   item.playlistItem.episodeId
@@ -92,6 +122,16 @@
               </a>
             </nz-space>
           </nz-list-item-meta-title>
+          <nz-list-item-meta-description class="hide-on-desktop">
+            <a
+              style="margin-left: 32px"
+              [routerLink]="[
+                '/medias/episode-view',
+                item.playlistItem.episodeId
+              ]">
+              {{ item.playlistItem.episodeId | mediaName : 'episode' | async }}
+            </a>
+          </nz-list-item-meta-description>
         </nz-list-item-meta>
         <ul nz-list-item-actions>
           <nz-list-item-action
@@ -103,9 +143,10 @@
               nz-popconfirm
               nzPopconfirmTitle="Êtes-vous sûr de vouloir supprimer ce média ?"
               (nzOnConfirm)="removeItem(item.playlistItem)">
-              Supprimer
-            </button></nz-list-item-action
-          >
+              <span nz-icon nzType="delete"></span>
+              <span class="hide-on-phone"> Supprimer </span>
+            </button>
+          </nz-list-item-action>
         </ul>
       </nz-list-item>
     </nz-list>
@@ -116,7 +157,7 @@
 </ng-container>
 
 <ng-template #search>
-  <nz-input-group nzSearch [nzSuffix]="suffixIconSearch">
+  <nz-input-group class="hide-on-phone" nzSearch [nzSuffix]="suffixIconSearch">
     <input
       nz-input
       placeholder="Rechercher"

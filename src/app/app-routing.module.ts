@@ -7,6 +7,7 @@ export interface Link {
   name: string;
   requiredRoles?: string[];
   icon?: string;
+  hideOnPhone?: boolean;
 }
 
 export type NavigationLinks<T extends string> = {

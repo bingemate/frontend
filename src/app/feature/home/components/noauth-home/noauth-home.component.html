@@ -63,7 +63,11 @@
   <h2 nz-typography nz-col>Rejoignez Bingemate</h2>
   <nz-col [nzSpan]="24">
     <nz-row [nzGutter]="[16, 16]">
-      <nz-col nzSpan="8" *ngFor="let category of categories">
+      <nz-col
+        [nzMd]="{ span: 8 }"
+        [nzSm]="{ span: 12 }"
+        [nzXs]="{ span: 12 }"
+        *ngFor="let category of categories">
         <nz-card [nzTitle]="category.title" [nzCover]="cardCover">
           <ng-template #cardCover>
             <img

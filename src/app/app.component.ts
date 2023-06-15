@@ -22,6 +22,7 @@ import { isMatchingRoles, UserResponse } from './shared/models/user.models';
 import { KeycloakService } from 'keycloak-angular';
 import { adminLinks, uploadLink } from './pages/admin/admin-routing.module';
 import { UserService } from './feature/user/user.service';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-root',
@@ -30,8 +31,10 @@ import { UserService } from './feature/user/user.service';
 })
 export class AppComponent implements OnInit {
   readonly environment = environment;
+  isOnPhone = false;
 
   constructor(
+    private breakpointObserver: BreakpointObserver,
     private readonly router: Router,
     private route: ActivatedRoute,
     public readonly notificationsService: NotificationsService,
@@ -40,6 +43,10 @@ export class AppComponent implements OnInit {
     private readonly keycloak: KeycloakService,
     private readonly userService: UserService
   ) {
+    this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
+      this.isOnPhone = result.matches;
+    });
+
     this.isSubscribed$.subscribe(isSubscribed => {
       this.subscriptionLinks = Object.values(subscriptionLinks)
         .filter(
@@ -240,6 +247,12 @@ export class AppComponent implements OnInit {
       path: `${navigationRoot.admin.path}/${link.path}`,
     };
   });
+
+  onLinkClick() {
+    if (this.isOnPhone) {
+      this.isNavbarCollapsed = true;
+    }
+  }
 
   protected readonly uploadLink = uploadLink;
   protected readonly mediaSearchPath = mediaSearchPath;

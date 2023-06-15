@@ -8,6 +8,7 @@
 
 <ng-template #card>
   <nz-card
+    [nzSize]="isOnPhone ? 'small' : 'default'"
     nzHoverable
     class="tv-poster"
     (click)="onViewTvShow()"
@@ -24,7 +25,12 @@
 <ng-template #description>
   {{ tv?.releaseDate | date : 'yyyy' }}
   <br />
-  <nz-rate [ngModel]="getRate()" nzAllowHalf nzDisabled></nz-rate>
+  <nz-rate
+    class="hide-on-phone"
+    [ngModel]="getRate()"
+    nzAllowHalf
+    nzDisabled></nz-rate>
+  <i class="hide-on-desktop" nz-icon nzType="star" nzTheme="fill"></i>
   {{ ((tv?.voteAverage ?? 0) / 2).toFixed(2) }}
 </ng-template>
 

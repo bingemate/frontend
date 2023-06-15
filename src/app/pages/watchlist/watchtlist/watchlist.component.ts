@@ -23,6 +23,7 @@ import {
 } from '../../../shared/models/tv-show-watchlist.models';
 import { MovieWatchlistService } from '../../../feature/watchlist/movie-watchlist.service';
 import { UserResponse } from '../../../shared/models/user.models';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-watchlist',
@@ -30,6 +31,8 @@ import { UserResponse } from '../../../shared/models/user.models';
   styleUrls: ['./watchlist.component.less'],
 })
 export class WatchlistComponent implements OnInit, OnDestroy {
+  isOnPhone = false;
+
   @Select(AuthState.user) user$!: Observable<UserResponse | null>;
 
   readonly movieStatusNames = Object.values(MovieWatchListStatus);
@@ -54,12 +57,17 @@ export class WatchlistComponent implements OnInit, OnDestroy {
   queryTimeout = 0;
 
   constructor(
+    private breakpointObserver: BreakpointObserver,
     private readonly store: Store,
     private readonly mediaService: MediaInfoService,
     private tvShowWatchlistService: TvShowWatchlistService,
     private movieWatchlistService: MovieWatchlistService,
     private notifService: NotificationsService
-  ) {}
+  ) {
+    this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
+      this.isOnPhone = result.matches;
+    });
+  }
 
   ngOnInit(): void {
     this.user$.subscribe(user => {

@@ -2,7 +2,7 @@
   nz-row
   [nzGutter]="{ xs: 8, sm: 12, md: 16, lg: 24 }"
   style="margin-bottom: 1rem">
-  <div nz-col nzSpan="6" class="gutter-row">
+  <div nz-col [nzXs]="{ span: 12 }" [nzMd]="{ span: 6 }" class="gutter-row">
     <nz-card>
       <div nz-row nzJustify="center">
         <nz-statistic
@@ -15,7 +15,7 @@
       </div>
     </nz-card>
   </div>
-  <div nz-col nzSpan="6" class="gutter-row">
+  <div nz-col [nzXs]="{ span: 12 }" [nzMd]="{ span: 6 }" class="gutter-row">
     <nz-card>
       <div nz-row nzJustify="center">
         <nz-statistic
@@ -28,7 +28,7 @@
       </div>
     </nz-card>
   </div>
-  <div nz-col nzSpan="6" class="gutter-row">
+  <div nz-col [nzXs]="{ span: 12 }" [nzMd]="{ span: 6 }" class="gutter-row">
     <nz-card>
       <div nz-row nzJustify="center">
         <nz-statistic
@@ -41,7 +41,7 @@
       </div>
     </nz-card>
   </div>
-  <div nz-col nzSpan="6" class="gutter-row">
+  <div nz-col [nzXs]="{ span: 12 }" [nzMd]="{ span: 6 }" class="gutter-row">
     <nz-card>
       <div nz-row nzJustify="center">
         <nz-statistic
@@ -54,7 +54,7 @@
   </div>
 </div>
 <div nz-row [nzGutter]="{ xs: 32, sm: 32, md: 32, lg: 32 }">
-  <div nz-col nzSpan="12" class="gutter-row">
+  <div nz-col [nzXs]="{ span: 24 }" [nzMd]="{ span: 12 }" class="gutter-row">
     <app-stats-daily-views
       [movieStats]="movieStats"
       [episodeStats]="episodeStats"
@@ -65,17 +65,19 @@
       style="margin-top: 1rem">
       <app-stats-movie-daily-viewed-genre
         nz-col
-        nzSpan="12"
+        [nzXs]="{ span: 24 }"
+        [nzMd]="{ span: 12 }"
         [movieStats]="movieStats"
         class="stats-item"></app-stats-movie-daily-viewed-genre>
       <app-stats-show-daily-viewed-genre
         nz-col
-        nzSpan="12"
+        [nzXs]="{ span: 24 }"
+        [nzMd]="{ span: 12 }"
         [episodeStats]="episodeStats"
         class="stats-item"></app-stats-show-daily-viewed-genre>
     </div>
   </div>
-  <div nz-col nzSpan="12" class="gutter-row">
+  <div nz-col [nzXs]="{ span: 24 }" [nzMd]="{ span: 12 }" class="gutter-row">
     <app-stats-daily-viewed-medias
       [movieStats]="movieStats"
       [episodeStats]="episodeStats"

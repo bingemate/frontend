@@ -4,6 +4,7 @@
     nzCollapsible
     nzWidth="256px"
     nzBreakpoint="md"
+    [nzCollapsedWidth]="isOnPhone ? 0 : 70"
     [(nzCollapsed)]="isNavbarCollapsed"
     [nzTrigger]="null">
     <div class="sidebar-logo">
@@ -23,12 +24,16 @@
         <li
           *ngIf="isAuthenticated"
           nz-submenu
-          nzOpen
+          [nzOpen]="!isOnPhone"
           nzTitle="Médiathèque"
           [nzIcon]="navigationRoot.medias.icon!">
           <ul>
             <li
               *ngFor="let mediaLink of mediasLinks"
+              [class]='{
+              "hide-on-phone": mediaLink.hideOnPhone,
+              }'
+              (click)="onLinkClick()"
               nz-menu-item
               nzMatchRouter>
               <a [routerLink]="mediaLink.path">{{ mediaLink.name }}</a>
@@ -43,6 +48,10 @@
           <ul>
             <li
               *ngFor="let watchlistLink of watchlistLinks"
+              [class]='{
+              "hide-on-phone": watchlistLink.hideOnPhone,
+              }'
+              (click)="onLinkClick()"
               nz-menu-item
               nzMatchRouter>
               <a [routerLink]="watchlistLink.path"> {{ watchlistLink.name }}</a>
@@ -58,6 +67,10 @@
             <li
               *ngFor="let statisticLink of statisticsLinks"
               nz-menu-item
+              (click)="onLinkClick()"
+              [class]='{
+              "hide-on-phone": statisticLink.hideOnPhone,
+              }'
               nzMatchRouter>
               <a [routerLink]="statisticLink.path"> {{ statisticLink.name }}</a>
             </li>
@@ -72,6 +85,10 @@
             <li
               *ngFor="let socialNetworkLink of socialNetworkLinks"
               nz-menu-item
+              (click)="onLinkClick()"
+              [class]='{
+              "hide-on-phone": socialNetworkLink.hideOnPhone,
+              }'
               nzMatchRouter>
               <a [routerLink]="socialNetworkLink.path">
                 {{ socialNetworkLink.name }}</a
@@ -83,7 +100,7 @@
       <ul nz-menu nzMode="inline" [nzInlineCollapsed]="isNavbarCollapsed">
         <nz-divider></nz-divider>
         <li
-          *ngIf="isAdmin"
+          *ngIf="isAdmin && !isOnPhone"
           nz-submenu
           nzTitle="Administration"
           [nzIcon]="navigationRoot.admin.icon!">
@@ -102,6 +119,10 @@
             <li
               *ngFor="let subscriptionLink of subscriptionLinks"
               nz-menu-item
+              (click)="onLinkClick()"
+              [class]='{
+              "hide-on-phone": subscriptionLink.hideOnPhone,
+              }'
               nzMatchRouter>
               <a [routerLink]="subscriptionLink.path">
                 {{ subscriptionLink.name }}</a
@@ -113,6 +134,10 @@
           <ul>
             <li
               *ngFor="let accountLink of accountLinks"
+              (click)="onLinkClick()"
+              [class]='{
+              "hide-on-phone": accountLink.hideOnPhone,
+              }'
               nz-menu-item
               nzMatchRouter>
               <a [routerLink]="accountLink.path">{{ accountLink.name }}</a>
@@ -157,18 +182,6 @@
   </nz-sider>
   <nz-layout>
     <nz-header>
-      <!--      <div class="app-header">
-      <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
-        <span
-          class="trigger"
-          nz-icon
-          [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"></span>
-      </span>
-      <span
-        >Current section : {{ currentSection }} -
-        {{ currentSectionName }}</span
-      >
-    </div>-->
       <nz-page-header class="app-header">
         <nz-page-header-title>
           <span
@@ -181,7 +194,7 @@
           </span>
           {{ currentSectionName }}
         </nz-page-header-title>
-        <nz-page-header-extra *ngIf="isAuthenticated">
+        <nz-page-header-extra class="hide-on-phone">
           <nz-space nzAlign="baseline" nzSize="small">
             <button
               [hidden]="!isAdmin"
@@ -238,29 +251,3 @@
     </nz-content>
   </nz-layout>
 </nz-layout>
-
-<nz-dropdown-menu #notifications="nzDropdownMenu">
-  <ul nz-menu>
-    <nz-space nzDirection="vertical">
-      <li nz-menu-item *nzSpaceItem>
-        <nz-badge nzColor="red" nzText="Notification 1"></nz-badge>
-      </li>
-      <li nz-menu-item *nzSpaceItem>
-        <nz-badge nzColor="green" nzText="Notification 2"></nz-badge>
-      </li>
-      <li nz-menu-item *nzSpaceItem>
-        <nz-badge nzColor="blue" nzText="Notification 3"></nz-badge>
-      </li>
-      <li nz-menu-divider *nzSpaceItem></li>
-      <li nz-menu-item *nzSpaceItem>
-        <nz-badge nzColor="pink" nzText="Coucou"></nz-badge>
-      </li>
-    </nz-space>
-  </ul>
-</nz-dropdown-menu>
-
-<ng-template #customSpinnerTemplate>
-  <div class="custom-spinner">
-    <nz-spin [nzSpinning]="true" [nzSize]="'large'"></nz-spin>
-  </div>
-</ng-template>
