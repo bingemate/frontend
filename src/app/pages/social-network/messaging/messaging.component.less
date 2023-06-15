@@ -15,6 +15,7 @@
   display: inline-block;
 }
 
+
 .sent {
   background-color: #ff7118;
   padding: 10px;
@@ -22,6 +23,15 @@
   max-width: 50%;
   display: inline-block;
   float: right;
+}
+
+@media (max-width: 600px) {
+  .received {
+    max-width: 80%;
+  }
+  .sent {
+    max-width: 80%;
+  }
 }
 
 .friend-item:hover {
