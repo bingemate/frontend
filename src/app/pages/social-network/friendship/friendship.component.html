@@ -1,4 +1,7 @@
-<nz-tabset title="Relations" nzSize="large" [nzTabBarExtraContent]="reload">
+<nz-tabset
+  title="Relations"
+  [nzSize]="isOnPhone ? 'small' : 'large'"
+  [nzTabBarExtraContent]="reload">
   <nz-tab nzTitle="Amis">
     <nz-spin
       nzSpinning
