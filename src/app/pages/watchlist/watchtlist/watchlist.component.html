@@ -6,7 +6,7 @@
       [(ngModel)]="query"
       (ngModelChange)="onQuery()" />
   </nz-input-group>
-  <nz-tabset *nzSpaceItem nzSize="large">
+  <nz-tabset *nzSpaceItem [nzSize]="isOnPhone ? 'small' : 'large'">
     <nz-tab nzTitle="Séries">
       <ng-template nz-tab>
         <nz-collapse>
@@ -41,11 +41,11 @@
                   </nz-list-item-meta-title>
                 </nz-list-item-meta>
                 <nz-list-item-extra>
-                  <nz-space nzDirection="horizontal">
+                  <nz-space nzDirection="horizontal" nzSize="large">
                     <span *nzSpaceItem>
                       <nz-input-number
                         nzBorderless
-                        [nzSize]="'small'"
+                        nzSize="small"
                         [nzMin]="0"
                         [nzMax]="item.media.seasonsCount"
                         [(ngModel)]="
