@@ -3,8 +3,8 @@
   #table
   nzShowPagination
   nzShowSizeChanger
-  [nzData]="invoices"
-  *ngIf="invoices.length > 0">
+  [nzLoading]="invoiceLoading"
+  [nzData]="invoices">
   <thead>
     <tr>
       <th>Tarif</th>
@@ -44,7 +44,7 @@
 <nz-empty
   [nzNotFoundContent]="contentTpl"
   [nzNotFoundFooter]="footerTpl"
-  *ngIf="invoices.length === 0">
+  *ngIf="!invoiceLoading && invoices.length === 0">
   <ng-template #contentTpl>
     <span> Vous n'avez actuellement pas de facture </span>
   </ng-template>
