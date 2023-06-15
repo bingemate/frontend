@@ -24,7 +24,7 @@
             nzPopconfirmTitle="Voulez-vous vraiment supprimer cette playlist ?"
             (nzOnConfirm)="deleteMoviePlaylist(item.id)">
             <span nz-icon nzType="delete"></span>
-            Supprimer
+            <span class="hide-on-phone"> Supprimer </span>
           </button>
         </nz-list-item-action>
       </ul>
@@ -52,7 +52,7 @@
             nzPopconfirmTitle="Voulez-vous vraiment supprimer cette playlist ?"
             (nzOnConfirm)="deleteEpisodePlaylist(item.id)">
             <span nz-icon nzType="delete"></span>
-            Supprimer
+            <span class="hide-on-phone"> Supprimer </span>
           </button>
         </nz-list-item-action>
       </ul>
