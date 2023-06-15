@@ -22,6 +22,7 @@ import { EpisodePlaylistsService } from '../../../feature/playlist/episode-playl
 import { Select } from '@ngxs/store';
 import { AuthState } from '../../../core/auth/store/auth.state';
 import { Observable } from 'rxjs';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-user-view',
@@ -29,6 +30,8 @@ import { Observable } from 'rxjs';
   styleUrls: ['./user-view.component.less'],
 })
 export class UserViewComponent {
+  isOnPhone = false;
+
   @Select(AuthState.isAdmin)
   isAdmin$!: Observable<boolean>;
   isAdmin = false;
@@ -57,6 +60,7 @@ export class UserViewComponent {
   friendsLoading = false;
 
   constructor(
+    private breakpointObserver: BreakpointObserver,
     private readonly currentRoute: ActivatedRoute,
     private readonly router: Router,
     private readonly commentService: CommentService,
@@ -66,6 +70,11 @@ export class UserViewComponent {
     private readonly episodePlaylistService: EpisodePlaylistsService,
     private readonly moviePlaylistService: MoviePlaylistsService
   ) {
+    this.breakpointObserver
+      .observe([Breakpoints.HandsetPortrait])
+      .subscribe(result => {
+        this.isOnPhone = result.matches;
+      });
     this.currentRoute.params.subscribe(params => {
       this.userID = params['id'];
       this.getUser();
