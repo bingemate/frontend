@@ -63,5 +63,8 @@
       (click)="cancelSubscription()">
       Annuler l'abonnement
     </button>
+    <ng-container *ngIf="subscriptionLoading">
+      <nz-spin *nzSpaceItem nzSpinning style="padding-left: 16px"></nz-spin>
+    </ng-container>
   </nz-space>
 </ng-template>

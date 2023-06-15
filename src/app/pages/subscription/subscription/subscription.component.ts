@@ -13,13 +13,16 @@ export class SubscriptionComponent implements OnInit {
   readonly subscriptionBillingPath = `/${navigationRoot.subscriptions.path}/${subscriptionLinks.billing.path}/`;
   loading = false;
   subscription?: SubscriptionModel;
+  subscriptionLoading = false;
 
   constructor(private paymentService: PaymentService) {}
 
   ngOnInit() {
-    this.paymentService
-      .getSubscription()
-      .subscribe(subscription => (this.subscription = subscription));
+    this.subscriptionLoading = true;
+    this.paymentService.getSubscription().subscribe(subscription => {
+      this.subscriptionLoading = false;
+      this.subscription = subscription;
+    });
   }
 
   subscribe() {

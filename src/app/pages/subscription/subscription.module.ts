@@ -28,6 +28,7 @@ import { SubscriptionsComponent } from './subscriptions/subscriptions.component'
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
 import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 
 @NgModule({
   declarations: [
@@ -62,6 +63,7 @@ import { NzTableModule } from 'ng-zorro-antd/table';
     NzTypographyModule,
     NzEmptyModule,
     NzTableModule,
+    NzSpinModule,
   ],
 })
 export class SubscriptionModule {}

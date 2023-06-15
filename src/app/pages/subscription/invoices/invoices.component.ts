@@ -9,12 +9,16 @@ import { Invoice } from '../../../shared/models/payment.models';
 })
 export class InvoicesComponent implements OnInit {
   invoices: Invoice[] = [];
+  invoiceLoading = false;
+
   constructor(private paymentService: PaymentService) {}
 
   ngOnInit() {
-    this.paymentService
-      .getInvoices()
-      .subscribe(invoices => (this.invoices = invoices));
+    this.invoiceLoading = true;
+    this.paymentService.getInvoices().subscribe(invoices => {
+      this.invoiceLoading = false;
+      this.invoices = invoices;
+    });
   }
 
   mapStatus(
