@@ -248,6 +248,12 @@ export class AppComponent implements OnInit {
     };
   });
 
+  onLinkClick() {
+    if (this.isOnPhone) {
+      this.isNavbarCollapsed = true;
+    }
+  }
+
   protected readonly uploadLink = uploadLink;
   protected readonly mediaSearchPath = mediaSearchPath;
 }

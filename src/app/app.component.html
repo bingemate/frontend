@@ -33,6 +33,7 @@
               [class]='{
               "hide-on-phone": mediaLink.hideOnPhone,
               }'
+              (click)="onLinkClick()"
               nz-menu-item
               nzMatchRouter>
               <a [routerLink]="mediaLink.path">{{ mediaLink.name }}</a>
@@ -50,6 +51,7 @@
               [class]='{
               "hide-on-phone": watchlistLink.hideOnPhone,
               }'
+              (click)="onLinkClick()"
               nz-menu-item
               nzMatchRouter>
               <a [routerLink]="watchlistLink.path"> {{ watchlistLink.name }}</a>
@@ -65,6 +67,7 @@
             <li
               *ngFor="let statisticLink of statisticsLinks"
               nz-menu-item
+              (click)="onLinkClick()"
               [class]='{
               "hide-on-phone": statisticLink.hideOnPhone,
               }'
@@ -82,6 +85,7 @@
             <li
               *ngFor="let socialNetworkLink of socialNetworkLinks"
               nz-menu-item
+              (click)="onLinkClick()"
               [class]='{
               "hide-on-phone": socialNetworkLink.hideOnPhone,
               }'
@@ -115,6 +119,10 @@
             <li
               *ngFor="let subscriptionLink of subscriptionLinks"
               nz-menu-item
+              (click)="onLinkClick()"
+              [class]='{
+              "hide-on-phone": subscriptionLink.hideOnPhone,
+              }'
               nzMatchRouter>
               <a [routerLink]="subscriptionLink.path">
                 {{ subscriptionLink.name }}</a
@@ -126,6 +134,10 @@
           <ul>
             <li
               *ngFor="let accountLink of accountLinks"
+              (click)="onLinkClick()"
+              [class]='{
+              "hide-on-phone": accountLink.hideOnPhone,
+              }'
               nz-menu-item
               nzMatchRouter>
               <a [routerLink]="accountLink.path">{{ accountLink.name }}</a>
