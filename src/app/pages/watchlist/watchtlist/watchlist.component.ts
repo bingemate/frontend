@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MediaInfoService } from '../../../feature/media-info/media-info.service';
 import { TvShowWatchlistService } from '../../../feature/watchlist/tv-show-watchlist.service';
 import { AuthState } from '../../../core/auth/store/auth.state';
@@ -29,7 +29,7 @@ import { UserResponse } from '../../../shared/models/user.models';
   templateUrl: './watchlist.component.html',
   styleUrls: ['./watchlist.component.less'],
 })
-export class WatchlistComponent implements OnInit {
+export class WatchlistComponent implements OnInit, OnDestroy {
   @Select(AuthState.user) user$!: Observable<UserResponse | null>;
 
   readonly movieStatusNames = Object.values(MovieWatchListStatus);
@@ -49,6 +49,10 @@ export class WatchlistComponent implements OnInit {
     [];
   showWatchlistLoading = false;
 
+  query = '';
+  filter = '';
+  queryTimeout = 0;
+
   constructor(
     private readonly store: Store,
     private readonly mediaService: MediaInfoService,
@@ -64,6 +68,13 @@ export class WatchlistComponent implements OnInit {
         this.loadMovieWatchlist(user);
       }
     });
+  }
+
+  onQuery() {
+    clearTimeout(this.queryTimeout);
+    this.queryTimeout = setTimeout(() => {
+      this.filter = this.query;
+    }, 300);
   }
 
   private loadMovieWatchlist(user: UserResponse) {
@@ -113,11 +124,19 @@ export class WatchlistComponent implements OnInit {
   }
 
   getTvListByStatus(status: string) {
-    return this.showWatchlist.filter(item => item.watchlist.status === status);
+    return this.showWatchlist.filter(
+      item =>
+        item.watchlist.status === status &&
+        item.media.title.toLowerCase().includes(this.filter.toLowerCase())
+    );
   }
 
   getMovieListByStatus(status: string) {
-    return this.movieWatchlist.filter(item => item.watchlist.status === status);
+    return this.movieWatchlist.filter(
+      item =>
+        item.watchlist.status === status &&
+        item.media.title.toLowerCase().includes(this.filter.toLowerCase())
+    );
   }
 
   changeShowStatus(
@@ -182,6 +201,10 @@ export class WatchlistComponent implements OnInit {
           `${item.media.title} a été retiré`
         );
       });
+  }
+
+  ngOnDestroy(): void {
+    clearTimeout(this.queryTimeout);
   }
 
   protected readonly movieViewPath = movieViewPath;

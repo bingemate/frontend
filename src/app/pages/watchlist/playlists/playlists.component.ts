@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { AuthState } from '../../../core/auth/store/auth.state';
 import { MoviePlaylistsService } from '../../../feature/playlist/movie-playlists.service';
@@ -13,11 +13,15 @@ import { UserResponse } from '../../../shared/models/user.models';
   templateUrl: './playlists.component.html',
   styleUrls: ['./playlists.component.less'],
 })
-export class PlaylistsComponent implements OnInit {
+export class PlaylistsComponent implements OnInit, OnDestroy {
   episodePlaylists: EpisodePlaylist[] = [];
   moviePlaylists: MoviePlaylist[] = [];
   episodePlaylistLoading = false;
   moviePlaylistLoading = false;
+
+  query = '';
+  filter = '';
+  queryTimeout = 0;
 
   isPlaylistShown = false;
   isConfirmLoading = false;
@@ -31,6 +35,29 @@ export class PlaylistsComponent implements OnInit {
     private readonly moviePlaylistsService: MoviePlaylistsService,
     private readonly episodePlaylistsService: EpisodePlaylistsService
   ) {}
+
+  onQuery() {
+    clearTimeout(this.queryTimeout);
+    this.queryTimeout = setTimeout(() => {
+      this.filter = this.query;
+    }, 300);
+  }
+
+  ngOnDestroy(): void {
+    clearTimeout(this.queryTimeout);
+  }
+
+  filteredMoviePlaylists(): MoviePlaylist[] {
+    return this.moviePlaylists.filter(playlist =>
+      playlist.name.toLowerCase().includes(this.filter.toLowerCase())
+    );
+  }
+
+  filteredEpisodePlaylists(): EpisodePlaylist[] {
+    return this.episodePlaylists.filter(playlist =>
+      playlist.name.toLowerCase().includes(this.filter.toLowerCase())
+    );
+  }
 
   ngOnInit(): void {
     this.user$.subscribe(user => {
