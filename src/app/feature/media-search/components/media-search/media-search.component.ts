@@ -8,6 +8,7 @@ import { debounceTime } from 'rxjs/operators';
 import { Select, Store } from '@ngxs/store';
 import { MediaSearchState } from '../../store/media-search.state';
 import { MediaSearchActions } from '../../store/media-search.actions';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-media-search',
@@ -15,6 +16,8 @@ import { MediaSearchActions } from '../../store/media-search.actions';
   styleUrls: ['./media-search.component.less'],
 })
 export class MediaSearchComponent implements OnDestroy {
+  isOnPhone = false;
+
   @Select(MediaSearchState.query)
   query$!: Observable<string>;
   query = '';
@@ -37,7 +40,13 @@ export class MediaSearchComponent implements OnDestroy {
   @Select(MediaSearchState.tvShowsCurrentPage)
   tvResultsPage$!: Observable<number>;
 
-  constructor(private store: Store) {
+  constructor(
+    private breakpointObserver: BreakpointObserver,
+    private store: Store
+  ) {
+    this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
+      this.isOnPhone = result.matches;
+    });
     this.subscription = this.inputSubject
       .pipe(debounceTime(1000))
       .subscribe(() => {

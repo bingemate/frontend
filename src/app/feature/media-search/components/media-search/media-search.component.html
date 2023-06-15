@@ -12,8 +12,9 @@
       </nz-input-group>
       <ng-template #suffixIconButton>
         <nz-space
+          class="hide-on-phone"
           nzDirection="horizontal"
-          nzSize="large"
+          [nzSize]="isOnPhone ? 'small' : 'large'"
           style="padding-left: 10px">
           <label
             *nzSpaceItem
@@ -26,6 +27,13 @@
           </button>
         </nz-space>
       </ng-template>
+      <label
+        style="margin-top: 12px"
+        class="hide-on-desktop"
+        nz-checkbox
+        (nzCheckedChange)="onOnlyAvailableChecked($event.valueOf())">
+        Disponibles
+      </label>
       <nz-progress
         *ngIf="(searchingMovie$ | async) || (searchingTv$ | async)"
         nzStatus="active"
@@ -34,30 +42,38 @@
     </nz-card>
   </nz-col>
   <nz-col [nzSpan]="24">
-    <nz-tabset nzSize="large">
+    <nz-tabset [nzSize]="isOnPhone ? 'small' : 'large'">
       <nz-tab nzTitle="Films">
-        <nz-card [nzExtra]="moviesPagination" [nzActions]="[moviesPagination]">
-          <nz-empty
-            *ngIf="
-              (movieResults$ | async)?.results?.length === 0 &&
-              (searchingMovie$ | async) === false
-            "></nz-empty>
-          <app-movie-list
-            [movies]="(movieResults$ | async)?.results ?? []"></app-movie-list>
-        </nz-card>
+        <ng-template nz-tab>
+          <nz-card
+            [nzExtra]="moviesPagination"
+            [nzActions]="[moviesPagination]">
+            <nz-empty
+              *ngIf="
+                (movieResults$ | async)?.results?.length === 0 &&
+                (searchingMovie$ | async) === false
+              "></nz-empty>
+            <app-movie-list
+              [movies]="
+                (movieResults$ | async)?.results ?? []
+              "></app-movie-list>
+          </nz-card>
+        </ng-template>
       </nz-tab>
       <nz-tab nzTitle="Séries">
-        <nz-card
-          [nzExtra]="tvShowsPagination"
-          [nzActions]="[tvShowsPagination]">
-          <nz-empty
-            *ngIf="
-              (tvResults$ | async)?.results?.length === 0 &&
-              (searchingTv$ | async) === false
-            "></nz-empty>
-          <app-tv-list
-            [tvShows]="(tvResults$ | async)?.results ?? []"></app-tv-list>
-        </nz-card>
+        <ng-template nz-tab>
+          <nz-card
+            [nzExtra]="tvShowsPagination"
+            [nzActions]="[tvShowsPagination]">
+            <nz-empty
+              *ngIf="
+                (tvResults$ | async)?.results?.length === 0 &&
+                (searchingTv$ | async) === false
+              "></nz-empty>
+            <app-tv-list
+              [tvShows]="(tvResults$ | async)?.results ?? []"></app-tv-list>
+          </nz-card>
+        </ng-template>
       </nz-tab>
     </nz-tabset>
   </nz-col>
@@ -65,6 +81,7 @@
 
 <ng-template #moviesPagination>
   <nz-pagination
+    [nzSize]="isOnPhone ? 'small' : 'default'"
     [nzPageIndex]="movieResultsPage$ | async"
     [nzTotal]="Math.min((movieResults$ | async)?.totalResult ?? 0, 1000)"
     [nzPageSize]="20"
@@ -73,6 +90,7 @@
 </ng-template>
 <ng-template #tvShowsPagination>
   <nz-pagination
+    [nzSize]="isOnPhone ? 'small' : 'default'"
     [nzPageIndex]="tvResultsPage$ | async"
     [nzTotal]="Math.min((tvResults$ | async)?.totalResult ?? 0, 1000)"
     [nzPageSize]="20"
