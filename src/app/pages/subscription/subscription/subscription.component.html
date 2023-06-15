@@ -1,7 +1,41 @@
 <nz-descriptions
   nzTitle="Détails de l'abonnement"
   nzBordered
+  [nzSize]="isOnPhone ? 'small' : 'default'"
+  [nzLayout]="isOnPhone ? 'vertical' : 'horizontal'"
   [nzExtra]="extraTpl">
+  <nz-descriptions-item nzTitle="Actions">
+    <nz-space nzSize="small" nzDirection="vertical" nzAlign="start">
+      <a *nzSpaceItem [routerLink]="subscriptionBillingPath">
+        <span nz-icon nzType="dollar-circle" nzTheme="fill"></span>
+        Voir les factures
+      </a>
+      <a
+        *nzSpaceItem
+        (click)="changePaymentMethod()"
+        nzTooltipTitle="Changer le moyen de paiement"
+        nzTooltipPlacement="top"
+        nz-tooltip>
+        <span nz-icon nzType="edit" nzTheme="outline"></span>
+        Changer de moyen de paiement
+      </a>
+      <button
+        *nzSpaceItem
+        nz-button
+        nzType="primary"
+        nzDanger
+        nzShape="round"
+        [nzSize]="isOnPhone ? 'small' : 'large'"
+        [disabled]="loading"
+        nz-popconfirm
+        nzPopconfirmTitle="Voulez-vous vraiment mettre fin à votre abonnement ?"
+        (nzOnConfirm)="cancelSubscription()"
+        nzPopconfirmPlacement="bottomRight"
+        (click)="cancelSubscription()">
+        Annuler l'abonnement
+      </button>
+    </nz-space>
+  </nz-descriptions-item>
   <nz-descriptions-item nzTitle="Type">
     Abonnement Standard
   </nz-descriptions-item>
@@ -33,7 +67,7 @@
   </nz-descriptions-item>
 </nz-descriptions>
 <ng-template #extraTpl>
-  <nz-space nzSize="small">
+  <nz-space nzSize="small" class="hide-on-phone">
     <a *nzSpaceItem [routerLink]="subscriptionBillingPath">
       <span nz-icon nzType="dollar-circle" nzTheme="fill"></span>
       Voir les factures
