@@ -10,6 +10,7 @@
 
     <nz-card
       *ngIf="tvShows.length > 0"
+      [nzSize]="isOnPhone ? 'small' : 'default'"
       [nzExtra]="moviesPagination"
       [nzActions]="[moviesPagination]">
       <app-tv-list [tvShows]="tvShows"></app-tv-list>
@@ -20,6 +21,7 @@
 <ng-template #moviesPagination>
   <div (click)="$event.stopPropagation()">
     <nz-pagination
+      [nzSize]="isOnPhone ? 'small' : 'default'"
       [nzPageIndex]="tvShowsPage"
       [nzTotal]="Math.min(tvShowsTotalResults, 1000)"
       [nzPageSize]="20"
