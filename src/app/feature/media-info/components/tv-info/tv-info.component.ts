@@ -12,6 +12,7 @@ import {
   TvShowWatchlistItem,
   TvShowWatchListStatus,
 } from '../../../../shared/models/tv-show-watchlist.models';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-tv-info',
@@ -22,6 +23,8 @@ export class TvInfoComponent implements OnChanges {
   @Select(AuthState.user)
   readonly user$!: Observable<UserResponse>;
   userId = '';
+
+  isOnPhone = false;
 
   readonly tvsByGenrePath = `/${navigationRoot.medias.path}/${mediasLinks.tv_shows_by_genre.path}/`;
   readonly tvsByActorPath = `/${navigationRoot.medias.path}/${mediasLinks.tv_show_by_actor.path}/`;
@@ -35,9 +38,16 @@ export class TvInfoComponent implements OnChanges {
   watchlistItem: TvShowWatchlistItem | undefined;
 
   constructor(
+    private breakpointObserver: BreakpointObserver,
     private readonly notificationsService: NotificationsService,
     private watchlistService: TvShowWatchlistService
   ) {
+    this.breakpointObserver
+      .observe([Breakpoints.HandsetPortrait])
+      .subscribe(result => {
+        this.isOnPhone = result.matches;
+      });
+
     this.user$.subscribe(user => {
       if (user) {
         this.userId = user.id;
