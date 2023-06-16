@@ -1,11 +1,11 @@
-<nz-tabset nzSize="large">
+<nz-tabset [nzSize]="isOnPhone ? 'small' : 'large'">
   <nz-tab nzTitle="Informations">
     <app-user-info *ngIf="user !== null" [user]="user"></app-user-info>
   </nz-tab>
   <nz-tab nzTitle="Commentaires" (nzClick)="onRefreshAllComments()">
     <ng-template nz-tab>
       <nz-row [nzGutter]="[16, 16]">
-        <nz-col [nzXl]="12" [nzMd]="24">
+        <nz-col [nzLg]="12" [nzXs]="24">
           <nz-card [nzExtra]="movieCommentsListPagination" nzTitle="Films">
             <app-comment-list
               [mediaType]="'movie'"
@@ -13,7 +13,7 @@
               [showMedia]="true"></app-comment-list>
           </nz-card>
         </nz-col>
-        <nz-col [nzXl]="12" [nzMd]="24">
+        <nz-col [nzLg]="12" [nzXs]="24">
           <nz-card [nzExtra]="tvCommentsListPagination" nzTitle="Séries">
             <app-comment-list
               [mediaType]="'tv'"
@@ -27,7 +27,7 @@
   <nz-tab nzTitle="Notes" (nzClick)="onRefreshAllRatings()">
     <ng-template nz-tab>
       <nz-row [nzGutter]="[16, 16]">
-        <nz-col [nzXl]="12" [nzMd]="24">
+        <nz-col [nzLg]="12" [nzXs]="24">
           <nz-card [nzExtra]="movieRatingsListPagination" nzTitle="Films">
             <app-rating-list
               [mediaType]="'movie'"
@@ -35,7 +35,7 @@
               [ratings]="movieRatings.results"></app-rating-list>
           </nz-card>
         </nz-col>
-        <nz-col [nzXl]="12" [nzMd]="24">
+        <nz-col [nzLg]="12" [nzXs]="24">
           <nz-card [nzExtra]="tvRatingsListPagination" nzTitle="Séries">
             <app-rating-list
               [mediaType]="'tv'"

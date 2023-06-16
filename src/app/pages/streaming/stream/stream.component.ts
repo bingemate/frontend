@@ -16,6 +16,7 @@ import { EpisodePlaylist } from '../../../shared/models/episode-playlist.model';
 import { MoviePlaylist } from '../../../shared/models/movie-playlist.model';
 import { StreamingState } from '../../../feature/streaming/store/streaming.state';
 import { StreamingActions } from '../../../feature/streaming/store/streaming.actions';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-stream',
@@ -35,12 +36,19 @@ export class StreamComponent implements OnInit, OnDestroy {
   progress = 0;
   socket?: Socket;
 
+  isOnPhone = false;
+
   constructor(
+    private breakpointObserver: BreakpointObserver,
     private route: ActivatedRoute,
     private keycloak: KeycloakService,
     private mediaInfoService: MediaInfoService,
     private store: Store
-  ) {}
+  ) {
+    this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
+      this.isOnPhone = result.matches;
+    });
+  }
 
   ngOnInit(): void {
     this.route.params

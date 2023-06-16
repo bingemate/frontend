@@ -1,17 +1,18 @@
-<h1>Factures</h1>
+<h3 nz-typography>Factures</h3>
 <nz-table
   #table
   nzShowPagination
   nzShowSizeChanger
   [nzLoading]="invoiceLoading"
-  [nzData]="invoices">
+  [nzData]="invoices"
+  [nzSize]="isOnPhone ? 'small' : 'default'"
   <thead>
     <tr>
       <th>Tarif</th>
       <th>Status</th>
-      <th>Date de création</th>
-      <th>Consulter</th>
-      <th>Télécharger</th>
+      <th>Date<span class="hide-on-phone"> de création</span></th>
+      <th><span class="hide-on-phone">Consulter</span></th>
+      <th><span class="hide-on-phone">Télécharger</span></th>
     </tr>
   </thead>
   <tbody>

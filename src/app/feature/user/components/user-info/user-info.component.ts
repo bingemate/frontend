@@ -14,6 +14,7 @@ import {
   FriendResponse,
   FriendState,
 } from '../../../../shared/models/friendship.models';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-user-info',
@@ -21,6 +22,8 @@ import {
   styleUrls: ['./user-info.component.less'],
 })
 export class UserInfoComponent implements OnInit {
+  isOnPhone = false;
+
   @Select(AuthState.user) user$!: Observable<UserResponse>;
   authUser: UserResponse | null = null;
 
@@ -38,11 +41,17 @@ export class UserInfoComponent implements OnInit {
   relationShip: FriendResponse | null = null;
 
   constructor(
+    private breakpointObserver: BreakpointObserver,
     private readonly userService: UserService,
     private readonly fb: FormBuilder,
     private readonly notificationsService: NotificationsService,
     private friendShipService: FriendshipService
   ) {
+    this.breakpointObserver
+      .observe([Breakpoints.HandsetPortrait])
+      .subscribe(result => {
+        this.isOnPhone = result.matches;
+      });
     this.user$.subscribe(user => {
       this.authUser = user;
     });

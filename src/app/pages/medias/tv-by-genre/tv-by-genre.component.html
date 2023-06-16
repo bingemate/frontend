@@ -1,4 +1,4 @@
-<nz-page-header nzTitle="Séries de genre {{ genreName }}"></nz-page-header>
+<h4 nz-typography>Séries de genre {{ genreName }}</h4>
 
 <nz-skeleton
   *ngIf="tvShows.length === 0"
@@ -7,6 +7,7 @@
 
 <nz-card
   *ngIf="tvShows.length > 0"
+  [nzSize]="isOnPhone ? 'small' : 'default'"
   [nzExtra]="tvPagination"
   [nzActions]="[tvPagination]">
   <app-tv-list [tvShows]="tvShows"></app-tv-list>
@@ -15,6 +16,7 @@
 <ng-template #tvPagination>
   <div (click)="$event.stopPropagation()">
     <nz-pagination
+      [nzSize]="isOnPhone ? 'small' : 'default'"
       [nzPageIndex]="tvShowsPage"
       [nzTotal]="Math.min(tvShowsTotalPages, 1000)"
       [nzPageSize]="20"

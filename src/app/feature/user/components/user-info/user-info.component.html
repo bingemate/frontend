@@ -1,5 +1,37 @@
 <nz-card>
-  <nz-descriptions nzBordered [nzExtra]="toggleEdit" *ngIf="!editMode">
+  <nz-space nzDirection="vertical" class="hide-on-desktop">
+    <ng-container *ngIf="canEdit() && !editMode">
+      <button
+        *nzSpaceItem
+        nz-button
+        nzType="primary"
+        (click)="toggleEditMode()">
+        Modifier
+      </button>
+    </ng-container>
+    <ng-container *ngIf="user?.id !== authUser?.id">
+      <button
+        *nzSpaceItem
+        nz-button
+        nzType="default"
+        [routerLink]="['/social-network/chat', user?.id]">
+        Envoyer un message
+      </button>
+    </ng-container>
+    <ng-container *ngIf="!editMode">
+      <app-delete-user
+        *nzSpaceItem
+        [admin]="isAdmin"
+        [owner]="owner"
+        [userId]="user?.id ?? ''"></app-delete-user>
+    </ng-container>
+  </nz-space>
+  <nz-descriptions
+    [nzSize]="isOnPhone ? 'small' : 'default'"
+    [nzLayout]="isOnPhone ? 'vertical' : 'horizontal'"
+    nzBordered
+    [nzExtra]="toggleEdit"
+    *ngIf="!editMode">
     <nz-descriptions-item nzTitle="Pseudo" [nzSpan]="3">
       {{ user?.username }}
     </nz-descriptions-item>
@@ -83,6 +115,7 @@
             *nzSpaceItem
             nz-button
             nzType="default"
+            nzDanger
             (click)="deleteFriend()">
             Annuler
           </button>
@@ -92,8 +125,10 @@
             *nzSpaceItem
             nz-button
             nzType="default"
+            nzDanger
             (click)="deleteFriend()">
-            Supprimer
+            <i nz-icon nzType="delete"></i>
+            <span>Supprimer</span>
           </button>
         </ng-container>
         <ng-container
@@ -125,6 +160,8 @@
     nz-form
     nzBordered
     [formGroup]="userForm!"
+    [nzSize]="isOnPhone ? 'small' : 'default'"
+    [nzLayout]="isOnPhone ? 'vertical' : 'horizontal'"
     *ngIf="editMode"
     [nzExtra]="toggleSave">
     <nz-descriptions-item nzTitle="Pseudo" [nzSpan]="3">
@@ -179,7 +216,7 @@
 </nz-card>
 
 <ng-template #toggleEdit>
-  <nz-space nzDirection="horizontal">
+  <nz-space nzDirection="horizontal" class="hide-on-phone">
     <ng-container *ngIf="canEdit()">
       <button
         *nzSpaceItem

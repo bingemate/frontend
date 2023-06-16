@@ -4,15 +4,17 @@
   [nzParagraph]="{ rows: 20 }"></nz-skeleton>
 <div class="movie-details-container" *ngIf="movie">
   <nz-row [nzGutter]="[24, 24]" class="movie-details">
-    <div class="movie-poster" nz-col nzSpan="6">
+    <div nz-col [nzXs]="18" [nzLg]="6">
       <img nz-image [nzSrc]="movie.posterUrl" alt="Movie Poster" width="100%" />
     </div>
 
-    <div class="movie-info" nz-col [nzMd]="24" [nzXl]="18">
+    <div class="movie-info" nz-col [nzXs]="24" [nzLg]="18">
       <nz-row [nzGutter]="[24, 24]">
-        <h1 class="movie-title" nz-col nzSpan="24">{{ movie.title }}</h1>
+        <h3 nz-typography nz-col nzSpan="24">{{ movie.title }}</h3>
         <div nz-col nzSpan="24">
-          <nz-space nzSize="small">
+          <nz-space
+            nzSize="small"
+            [nzDirection]="isOnPhone ? 'vertical' : 'horizontal'">
             <ng-container *ngIf="movie.present">
               <button
                 *nzSpaceItem
@@ -65,7 +67,13 @@
           &nbsp;{{ (movie.voteAverage / 2).toFixed(2) }}
         </div>
 
-        <nz-descriptions nzBordered [nzColumn]="1" nz-col nzSpan="24">
+        <nz-descriptions
+          nzBordered
+          [nzColumn]="1"
+          nz-col
+          nzSpan="24"
+          [nzSize]="isOnPhone ? 'small' : 'default'"
+          [nzLayout]="isOnPhone ? 'vertical' : 'horizontal'">
           <nz-descriptions-item nzTitle="Date de sortie">{{
             movie.releaseDate | date : 'dd/MM/yyyy'
           }}</nz-descriptions-item>
@@ -98,7 +106,7 @@
     <div class="actors" nz-col nzSpan="24">
       <h2>Acteurs</h2>
       <nz-list
-        nzSize="large"
+        [nzSize]="isOnPhone ? 'small' : 'large'"
         [nzPagination]="actorListPagination"
         [nzBordered]="false"
         [nzGrid]="{ gutter: 16, xs: 2, sm: 3, md: 4, lg: 6, xl: 6, xxl: 6 }">

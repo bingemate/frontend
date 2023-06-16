@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PaymentService } from '../../../feature/subscription/payment.service';
 import { Invoice } from '../../../shared/models/payment.models';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-invoices',
@@ -8,10 +9,21 @@ import { Invoice } from '../../../shared/models/payment.models';
   styleUrls: ['./invoices.component.less'],
 })
 export class InvoicesComponent implements OnInit {
+  isOnPhone = false;
+
   invoices: Invoice[] = [];
   invoiceLoading = false;
-
-  constructor(private paymentService: PaymentService) {}
+  
+  constructor(
+    private breakpointObserver: BreakpointObserver,
+    private paymentService: PaymentService
+  ) {
+    this.breakpointObserver
+      .observe([Breakpoints.HandsetPortrait])
+      .subscribe(result => {
+        this.isOnPhone = result.matches;
+      });
+  }
 
   ngOnInit() {
     this.invoiceLoading = true;

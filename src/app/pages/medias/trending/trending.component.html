@@ -1,5 +1,5 @@
-<nz-page-header nzTitle="Tendances"></nz-page-header>
-
+<!--<nz-page-header nzTitle="Tendances"></nz-page-header>-->
+<h4 nz-typography>Tendances</h4>
 <nz-tabset
   [nzSize]="isOnPhone ? 'small' : 'large'"
   [nzTabBarExtraContent]="onlyAvailable">
@@ -13,6 +13,7 @@
     <nz-card
       *ngIf="!popularMoviesLoading"
       [nzExtra]="popularMoviesPagination"
+      [nzSize]="isOnPhone ? 'small' : 'default'"
       [nzActions]="[popularMoviesPagination]">
       <app-movie-list [movies]="popularMovies"></app-movie-list>
     </nz-card>
@@ -24,7 +25,9 @@
       [nzParagraph]="{ rows: 10 }"></nz-skeleton>
     <nz-empty
       *ngIf="!recentMoviesLoading && recentMovies.length === 0"></nz-empty>
-    <nz-card *ngIf="!recentMoviesLoading">
+    <nz-card
+      *ngIf="!recentMoviesLoading"
+      [nzSize]="isOnPhone ? 'small' : 'default'">
       <app-movie-list [movies]="recentMovies"></app-movie-list>
     </nz-card>
   </nz-tab>
@@ -38,6 +41,7 @@
     <nz-card
       *ngIf="!popularTvShowsLoading"
       [nzExtra]="popularTvShowsPagination"
+      [nzSize]="isOnPhone ? 'small' : 'default'"
       [nzActions]="[popularTvShowsPagination]">
       <app-tv-list [tvShows]="popularTvShows"></app-tv-list>
     </nz-card>
@@ -49,7 +53,9 @@
       [nzParagraph]="{ rows: 10 }"></nz-skeleton>
     <nz-empty
       *ngIf="!recentTvShowsLoading && recentTvShows.length === 0"></nz-empty>
-    <nz-card *ngIf="!recentTvShowsLoading">
+    <nz-card
+      *ngIf="!recentTvShowsLoading"
+      [nzSize]="isOnPhone ? 'small' : 'default'">
       <app-tv-list [tvShows]="recentTvShows"></app-tv-list>
     </nz-card>
   </nz-tab>
@@ -65,7 +71,9 @@
           !tvShowsByCommentsLoading &&
           mediaByComments.length === 0
         "></nz-empty>
-      <nz-card *ngIf="!moviesByCommentsLoading || !tvShowsByCommentsLoading">
+      <nz-card
+        *ngIf="!moviesByCommentsLoading || !tvShowsByCommentsLoading"
+        [nzSize]="isOnPhone ? 'small' : 'default'">
         <app-media-list [mediaIds]="mediaByComments"></app-media-list>
       </nz-card>
     </ng-template>

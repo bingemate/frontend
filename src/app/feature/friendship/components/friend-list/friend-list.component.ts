@@ -6,6 +6,7 @@ import {
 import { FriendshipService } from '../../friendship.service';
 import { userProfilViewLinks } from '../../../../pages/social-network/social-network-routing.module';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-friend-list',
@@ -13,6 +14,8 @@ import { NotificationsService } from '../../../../core/notifications/notificatio
   styleUrls: ['./friend-list.component.less'],
 })
 export class FriendListComponent {
+  isOnPhone = false;
+
   @Input() friends: FriendResponse[] = [];
   @Input() canAccept = false;
   @Input() canReject = false;
@@ -23,9 +26,16 @@ export class FriendListComponent {
   friendUpdated: EventEmitter<void> = new EventEmitter();
 
   constructor(
+    private breakpointObserver: BreakpointObserver,
     private readonly friendshipService: FriendshipService,
     private readonly notificationsService: NotificationsService
-  ) {}
+  ) {
+    this.breakpointObserver
+      .observe([Breakpoints.HandsetPortrait])
+      .subscribe(result => {
+        this.isOnPhone = result.matches;
+      });
+  }
 
   protected readonly userProfilViewLinks = userProfilViewLinks;
   protected readonly FriendState = FriendState;

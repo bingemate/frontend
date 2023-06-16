@@ -15,6 +15,7 @@ import {
   RatingResults,
 } from '../../../shared/models/rating.models';
 import { RatingService } from '../../../feature/rating/rating.service';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-auth-my-account',
@@ -25,6 +26,8 @@ export class AuthMyAccountComponent implements OnInit {
   @Select(AuthState.user)
   user$!: Observable<UserResponse>;
   user: UserResponse | null = null;
+
+  isOnPhone = false;
 
   httpbinResponse = '{}';
 
@@ -41,10 +44,17 @@ export class AuthMyAccountComponent implements OnInit {
   tvRatingsCurrentPage = 1;
 
   constructor(
+    private breakpointObserver: BreakpointObserver,
     private readonly httpClient: HttpClient,
     private readonly commentService: CommentService,
     private readonly ratingService: RatingService
-  ) {}
+  ) {
+    this.breakpointObserver
+      .observe([Breakpoints.HandsetPortrait])
+      .subscribe(result => {
+        this.isOnPhone = result.matches;
+      });
+  }
 
   ngOnInit() {
     this.subscribeForAuthEvents();

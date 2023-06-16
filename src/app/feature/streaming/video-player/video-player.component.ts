@@ -25,6 +25,7 @@ import {
   TvEpisodeResponse,
 } from '../../../shared/models/media.models';
 import { StreamingActions } from '../store/streaming.actions';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-video-player',
@@ -41,6 +42,8 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
   @Input() timeSeek = 0;
   @Output() streamUpdate = new EventEmitter<StreamUpdateEvent>();
 
+  isOnPhone = false;
+
   audioOptions: BitrateOptions[] = [];
   audioList: string[] = [];
 
@@ -52,9 +55,14 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
   mediaName = '';
 
   constructor(
+    private breakpointObserver: BreakpointObserver,
     private mediaInfoService: MediaInfoService,
     private readonly store: Store
-  ) {}
+  ) {
+    this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
+      this.isOnPhone = result.matches;
+    });
+  }
 
   ngOnInit() {
     this.loadMediaInfo();
@@ -78,6 +86,7 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
         !changes['type'].isFirstChange() &&
         changes['type'].previousValue !== changes['type'].currentValue)
     ) {
+      this.loadMediaInfo();
       this.loadMediaFileInfo();
     }
   }
@@ -96,7 +105,7 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
   private loadMediaFileInfo() {
     if (this.mediaFile && this.type) {
       this.videoUrl = `${API_RESOURCE_URI.STREAMING}/${this.type}/${this.mediaId}/${this.mediaFile.filename}`;
-      console.log(this.videoUrl);
+      // console.log(this.videoUrl);
       this.audioOptions = this.mediaFile.audios.map((audioTrack, index) => {
         return {
           qualityIndex: index,

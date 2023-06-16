@@ -15,6 +15,7 @@ import { KeycloakService } from 'keycloak-angular';
 import { ActivatedRoute } from '@angular/router';
 import { UserResponse } from '../../../shared/models/user.models';
 import { FriendshipService } from '../../../feature/friendship/friendship.service';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-messaging',
@@ -26,6 +27,8 @@ export class MessagingComponent implements OnInit, OnDestroy {
   user$!: Observable<UserResponse>;
   authUserId = '';
 
+  isOnPhone = false;
+
   @ViewChild('messages') messages!: ElementRef;
 
   activeUserId?: string;
@@ -36,11 +39,17 @@ export class MessagingComponent implements OnInit, OnDestroy {
   private socket?: Socket;
 
   constructor(
+    private breakpointObserver: BreakpointObserver,
     private keycloak: KeycloakService,
     private friendshipService: FriendshipService,
     private store: Store,
     private readonly currentRoute: ActivatedRoute
   ) {
+    this.breakpointObserver
+      .observe([Breakpoints.HandsetPortrait])
+      .subscribe(result => {
+        this.isOnPhone = result.matches;
+      });
     this.user$.subscribe(user => {
       this.authUserId = user.id;
     });
