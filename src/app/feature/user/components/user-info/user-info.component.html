@@ -1,6 +1,6 @@
 <nz-card>
   <nz-space nzDirection="vertical" class="hide-on-desktop">
-    <ng-container *ngIf="canEdit()">
+    <ng-container *ngIf="canEdit() && !editMode">
       <button
         *nzSpaceItem
         nz-button
@@ -18,11 +18,13 @@
         Envoyer un message
       </button>
     </ng-container>
-    <app-delete-user
-      *nzSpaceItem
-      [admin]="isAdmin"
-      [owner]="owner"
-      [userId]="user?.id ?? ''"></app-delete-user>
+    <ng-container *ngIf="!editMode">
+      <app-delete-user
+        *nzSpaceItem
+        [admin]="isAdmin"
+        [owner]="owner"
+        [userId]="user?.id ?? ''"></app-delete-user>
+    </ng-container>
   </nz-space>
   <nz-descriptions
     [nzSize]="isOnPhone ? 'small' : 'default'"
