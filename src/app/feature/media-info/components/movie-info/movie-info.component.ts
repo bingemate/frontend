@@ -23,6 +23,7 @@ import {
   MovieWatchListStatus,
 } from '../../../../shared/models/movie-watchlist.models';
 import { MovieWatchlistService } from '../../../watchlist/movie-watchlist.service';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-movie-info',
@@ -36,6 +37,8 @@ export class MovieInfoComponent implements OnInit, OnChanges {
   @Select(AuthState.user)
   readonly user$!: Observable<UserResponse>;
   userId = '';
+
+  isOnPhone = false;
 
   readonly streamPath = `/${navigationRoot.streaming.path}/${streamingLinks.stream.path}/movies/`;
   readonly moviesByGenrePath = `/${navigationRoot.medias.path}/${mediasLinks.movies_by_genre.path}/`;
@@ -52,11 +55,17 @@ export class MovieInfoComponent implements OnInit, OnChanges {
   watchlistItem: MovieWatchlistItem | undefined;
 
   constructor(
+    private breakpointObserver: BreakpointObserver,
     private readonly store: Store,
     private moviePlaylistsService: MoviePlaylistsService,
     private readonly notificationsService: NotificationsService,
     private watchlistService: MovieWatchlistService
   ) {
+    this.breakpointObserver
+      .observe([Breakpoints.HandsetPortrait])
+      .subscribe(result => {
+        this.isOnPhone = result.matches;
+      });
     this.user$.subscribe(user => {
       this.userId = user?.id;
     });
