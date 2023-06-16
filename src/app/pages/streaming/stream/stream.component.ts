@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MediaFile } from '../../../shared/models/media-file.models';
 import { ActivatedRoute } from '@angular/router';
 import { MediaInfoService } from '../../../feature/media-info/media-info.service';
-import { forkJoin, Observable, switchMap } from 'rxjs';
+import { filter, forkJoin, Observable, Subscription, switchMap } from 'rxjs';
 import { StreamUpdateEvent } from '../../../shared/models/streaming.model';
 import { io, Socket } from 'socket.io-client';
 import { environment } from '../../../../environments/environment';
@@ -35,6 +35,7 @@ export class StreamComponent implements OnInit, OnDestroy {
   error: string | undefined;
   progress = 0;
   socket?: Socket;
+  subscriptions: Subscription[] = [];
 
   isOnPhone = false;
 
@@ -51,63 +52,75 @@ export class StreamComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.route.params
-      .pipe(
-        switchMap(params => {
-          this.mediaId = parseInt(params['id']);
-          this.type = params['type'];
-          return forkJoin([
-            this.type === 'movies'
-              ? this.mediaInfoService.getMovieFileInfos(this.mediaId)
-              : this.mediaInfoService.getEpisodeFileInfos(this.mediaId),
-            this.type === 'movies'
-              ? this.mediaInfoService.getMovieInfo(this.mediaId)
-              : this.mediaInfoService.getTvShowEpisodeInfoById(this.mediaId),
-          ]);
-        })
-      )
-      .subscribe({
-        next: async ([mediaFile, mediaInfo]) => {
-          this.mediaInfo = mediaInfo;
-          this.mediaFile = mediaFile;
-          await this.openSocketConnection();
-          if (this.route.snapshot.queryParamMap.has('progress')) {
-            this.progress =
-              mediaFile.duration *
-              Number.parseFloat(
-                this.route.snapshot.queryParamMap.get('progress') || '0'
-              );
-          }
-          if (this.type === 'tv-shows') {
-            this.mediaInfoService
-              .getAvailableEpisodes((mediaInfo as TvEpisodeResponse).tvShowId)
-              .subscribe(episodes =>
-                this.store.dispatch(
-                  new StreamingActions.WatchEpisodePlaylist(
-                    {
-                      id: '',
-                      name: 'Lecture automatique',
-                      userId: '',
-                      items: episodes.map(episodeId => ({
-                        episodeId,
-                      })),
-                    },
-                    episodes.indexOf(this.mediaId),
-                    false
+    this.subscriptions.push(
+      this.route.params
+        .pipe(
+          switchMap(params => {
+            this.mediaId = parseInt(params['id']);
+            this.type = params['type'];
+            return forkJoin([
+              this.type === 'movies'
+                ? this.mediaInfoService.getMovieFileInfos(this.mediaId)
+                : this.mediaInfoService.getEpisodeFileInfos(this.mediaId),
+              this.type === 'movies'
+                ? this.mediaInfoService.getMovieInfo(this.mediaId)
+                : this.mediaInfoService.getTvShowEpisodeInfoById(this.mediaId),
+            ]);
+          })
+        )
+        .subscribe({
+          next: async ([mediaFile, mediaInfo]) => {
+            this.mediaInfo = mediaInfo;
+            this.mediaFile = mediaFile;
+            await this.openSocketConnection();
+            if (this.route.snapshot.queryParamMap.has('progress')) {
+              this.progress =
+                mediaFile.duration *
+                Number.parseFloat(
+                  this.route.snapshot.queryParamMap.get('progress') || '0'
+                );
+            }
+            if (this.type === 'tv-shows') {
+              this.subscriptions.push(
+                this.episodePlaylist$
+                  .pipe(
+                    filter(episodes => !episodes),
+                    switchMap(() =>
+                      this.mediaInfoService.getAvailableEpisodes(
+                        (mediaInfo as TvEpisodeResponse).tvShowId
+                      )
+                    )
                   )
-                )
+                  .subscribe(episodes =>
+                    this.store.dispatch(
+                      new StreamingActions.WatchEpisodePlaylist(
+                        {
+                          id: '',
+                          name: 'Lecture automatique',
+                          userId: '',
+                          items: episodes.map(episodeId => ({
+                            episodeId,
+                          })),
+                        },
+                        episodes.indexOf(this.mediaId),
+                        false
+                      )
+                    )
+                  )
               );
-          }
-        },
-        error: err => {
-          console.error(err.error.error);
-          this.error = err.error.error;
-        },
-      });
+            }
+          },
+          error: err => {
+            console.error(err.error.error);
+            this.error = err.error.error;
+          },
+        })
+    );
   }
   ngOnDestroy(): void {
     this.socket?.close();
     this.store.dispatch(new StreamingActions.ClearPlaylist());
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   onStreamUpdate(event: StreamUpdateEvent) {
