@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Link, navigationRoot } from './app-routing.module';
 import { accountLinks } from './pages/auth/auth-routing.module';
 import { socialNetworkLinks } from './pages/social-network/social-network-routing.module';
@@ -23,13 +23,14 @@ import { KeycloakService } from 'keycloak-angular';
 import { adminLinks, uploadLink } from './pages/admin/admin-routing.module';
 import { UserService } from './feature/user/user.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { MessagingService } from './feature/messaging/messaging.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.less'],
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   readonly environment = environment;
   isOnPhone = false;
 
@@ -41,7 +42,8 @@ export class AppComponent implements OnInit {
     private readonly store: Store,
     private readonly actions: Actions,
     private readonly keycloak: KeycloakService,
-    private readonly userService: UserService
+    private readonly userService: UserService,
+    private readonly messagingService: MessagingService
   ) {
     this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
       this.isOnPhone = result.matches;
@@ -71,6 +73,10 @@ export class AppComponent implements OnInit {
     this.subscribeForAuthEvents();
     this.subscribeForThemeEvents();
     this.isUserLoggedIn();
+  }
+
+  ngOnDestroy() {
+    this.messagingService.closeSocket();
   }
 
   ////////////////////////////////////////////////////////////////////////////
@@ -118,6 +124,7 @@ export class AppComponent implements OnInit {
                   user,
                 })
               );
+              this.messagingService.startMessagingSocket();
             },
             error: () => {
               this.notificationsService.error(

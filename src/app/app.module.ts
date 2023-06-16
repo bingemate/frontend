@@ -46,6 +46,7 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { LottieModule } from 'ngx-lottie';
 import player from 'lottie-web';
+import { MessagingModule } from './feature/messaging/messaging.module';
 
 registerLocaleData(fr);
 
@@ -122,6 +123,7 @@ export function playerFactory() {
     NzMenuModule,
     NzToolTipModule,
     NzSpinModule,
+    MessagingModule,
   ],
   providers: [
     KeycloakInitializerProvider,
