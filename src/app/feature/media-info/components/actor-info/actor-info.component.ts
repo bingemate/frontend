@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Actor } from '../../../../shared/models/media.models';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-actor-info',
@@ -8,4 +9,12 @@ import { Actor } from '../../../../shared/models/media.models';
 })
 export class ActorInfoComponent {
   @Input() actor: Actor | undefined;
+
+  isOnPhone = false;
+
+  constructor(private breakpointObserver: BreakpointObserver) {
+    this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
+      this.isOnPhone = result.matches;
+    });
+  }
 }

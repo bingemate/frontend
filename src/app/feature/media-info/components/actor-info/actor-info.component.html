@@ -5,7 +5,7 @@
 
 <div *ngIf="actor">
   <nz-row [nzGutter]="[24, 24]">
-    <div nz-col [nzMd]="8" [nzXl]="4">
+    <div nz-col [nzXs]="16" [nzLg]="4">
       <img
         nz-image
         [nzSrc]="actor.profileUrl"
@@ -13,11 +13,17 @@
         width="100%" />
     </div>
 
-    <div class="movie-info" nz-col [nzMd]="24" [nzXl]="20">
+    <div nz-col [nzXs]="24" [nzLg]="20">
       <nz-row [nzGutter]="[24, 24]">
-        <h1 class="movie-title" nz-col nzSpan="24">{{ actor.name }}</h1>
+        <h1 nz-col nzSpan="24">{{ actor.name }}</h1>
 
-        <nz-descriptions nzBordered [nzColumn]="1" nz-col nzSpan="24">
+        <nz-descriptions
+          nzBordered
+          [nzColumn]="1"
+          nz-col
+          nzSpan="24"
+          [nzSize]="isOnPhone ? 'small' : 'default'"
+          [nzLayout]="isOnPhone ? 'vertical' : 'horizontal'">
           <nz-descriptions-item nzTitle="Biographie">{{
             actor.overview
           }}</nz-descriptions-item>
