@@ -22,6 +22,7 @@ import {
 import { StreamingState } from '../store/streaming.state';
 import { StreamingActions } from '../store/streaming.actions';
 import { tap } from 'rxjs/operators';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-playlist-stream',
@@ -46,10 +47,17 @@ export class PlaylistStreamComponent implements OnInit, OnDestroy {
   position?: number;
   subscriptions: Subscription[] = [];
 
+  isOnPhone = false;
+
   constructor(
+    private breakpointObserver: BreakpointObserver,
     private readonly store: Store,
     private mediaService: MediaInfoService
-  ) {}
+  ) {
+    this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
+      this.isOnPhone = result.matches;
+    });
+  }
 
   ngOnInit(): void {
     this.type$

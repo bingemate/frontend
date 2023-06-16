@@ -5,3 +5,14 @@
 .media {
   padding: 0.25rem;
 }
+
+.infinite-container {
+  height: 600px;
+  overflow-y: auto;
+}
+
+@media (max-width: 600px) {
+  .infinite-container {
+    max-height: 400px;
+  }
+}
