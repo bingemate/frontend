@@ -4,7 +4,7 @@
   [nzSize]="isOnPhone ? 'small' : 'default'"
   [nzLayout]="isOnPhone ? 'vertical' : 'horizontal'"
   [nzExtra]="extraTpl">
-  <nz-descriptions-item nzTitle="Actions">
+  <nz-descriptions-item nzTitle="Actions" *ngIf="isOnPhone">
     <nz-space nzSize="small" nzDirection="vertical" nzAlign="start">
       <a *nzSpaceItem [routerLink]="subscriptionBillingPath">
         <span nz-icon nzType="dollar-circle" nzTheme="fill"></span>
@@ -30,8 +30,7 @@
         nz-popconfirm
         nzPopconfirmTitle="Voulez-vous vraiment mettre fin à votre abonnement ?"
         (nzOnConfirm)="cancelSubscription()"
-        nzPopconfirmPlacement="bottomRight"
-        (click)="cancelSubscription()">
+        nzPopconfirmPlacement="bottomRight">
         Annuler l'abonnement
       </button>
     </nz-space>
@@ -93,8 +92,7 @@
       nz-popconfirm
       nzPopconfirmTitle="Voulez-vous vraiment mettre fin à votre abonnement ?"
       (nzOnConfirm)="cancelSubscription()"
-      nzPopconfirmPlacement="bottomRight"
-      (click)="cancelSubscription()">
+      nzPopconfirmPlacement="bottomRight">
       Annuler l'abonnement
     </button>
     <ng-container *ngIf="subscriptionLoading">
