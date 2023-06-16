@@ -106,7 +106,6 @@ export class PlaylistComponent implements OnInit, OnDestroy {
                 return this.getMovies(playlist.items);
               }),
               tap(items => {
-                this.playlistLoading = false;
                 this.moviePlaylistItems = items;
               })
             );
@@ -117,14 +116,17 @@ export class PlaylistComponent implements OnInit, OnDestroy {
                 return this.getEpisodes(playlist.items);
               }),
               tap(items => {
-                this.playlistLoading = false;
                 this.episodePlaylistItems = items;
               })
             );
           }
         })
       )
-      .subscribe();
+      .subscribe({
+        complete: () => {
+          this.playlistLoading = false;
+        },
+      });
   }
 
   private getMovies(
