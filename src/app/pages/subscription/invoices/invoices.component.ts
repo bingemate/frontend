@@ -13,7 +13,7 @@ export class InvoicesComponent implements OnInit {
 
   invoices: Invoice[] = [];
   invoiceLoading = false;
-  
+
   constructor(
     private breakpointObserver: BreakpointObserver,
     private paymentService: PaymentService
