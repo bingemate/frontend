@@ -5,16 +5,15 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { Select, Store } from '@ngxs/store';
+import { Select } from '@ngxs/store';
 import { AuthState } from '../../../core/auth/store/auth.state';
-import { Observable } from 'rxjs';
+import { filter, Observable, Subscription, switchMap } from 'rxjs';
 import { Message } from '../../../shared/models/messaging.model';
-import { io, Socket } from 'socket.io-client';
-import { environment } from '../../../../environments/environment';
-import { KeycloakService } from 'keycloak-angular';
 import { ActivatedRoute } from '@angular/router';
 import { UserResponse } from '../../../shared/models/user.models';
 import { FriendshipService } from '../../../feature/friendship/friendship.service';
+import { MessagingService } from '../../../feature/messaging/messaging.service';
+import { MessagingState } from '../../../feature/messaging/store/messaging.state';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
@@ -25,6 +24,10 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 export class MessagingComponent implements OnInit, OnDestroy {
   @Select(AuthState.user)
   user$!: Observable<UserResponse>;
+  @Select(MessagingState.users)
+  users$!: Observable<string[]>;
+  @Select(MessagingState.messages)
+  messages$!: Observable<Message[]>;
   authUserId = '';
 
   isOnPhone = false;
@@ -33,98 +36,70 @@ export class MessagingComponent implements OnInit, OnDestroy {
 
   activeUserId?: string;
   newMessage = '';
-  userList = new Set<string>();
+  userList: string[] = [];
   messageList: Message[] = [];
-
-  private socket?: Socket;
+  subscriptions: Subscription[] = [];
 
   constructor(
     private breakpointObserver: BreakpointObserver,
-    private keycloak: KeycloakService,
     private friendshipService: FriendshipService,
-    private store: Store,
-    private readonly currentRoute: ActivatedRoute
+    private readonly currentRoute: ActivatedRoute,
+    private messagingService: MessagingService
   ) {
     this.breakpointObserver
       .observe([Breakpoints.HandsetPortrait])
       .subscribe(result => {
         this.isOnPhone = result.matches;
       });
-    this.user$.subscribe(user => {
-      this.authUserId = user.id;
-    });
   }
   ngOnInit() {
     this.currentRoute.params.subscribe(params => {
       if (params['id']) {
         this.activeUserId = params['id'];
-        this.userList.add(params['id']);
+        this.userList.push(params['id']);
       }
     });
 
-    this.user$.subscribe(user => {
-      this.friendshipService.getUserFriends(user.id).subscribe(friends => {
-        friends.forEach(friend => this.userList.add(friend.friendId));
-      });
-    });
-
-    this.setupSocket().then();
+    this.subscriptions.push(
+      this.user$
+        .pipe(
+          filter(user => user !== null && user !== undefined),
+          switchMap(user => {
+            this.authUserId = user.id;
+            return this.friendshipService.getUserFriends(user.id);
+          })
+        )
+        .subscribe(friends =>
+          this.setUserList(friends.map(friend => friend.friendId))
+        )
+    );
+    this.messages$.subscribe(messages => (this.messageList = messages));
+    this.users$.subscribe(users => this.setUserList(users));
   }
 
-  private async setupSocket() {
-    const key = await this.keycloak.getToken();
-    this.socket = io(`${environment.websocketUrl}`, {
-      transports: ['polling'],
-      extraHeaders: { Authorization: `Bearer ${key}` },
-      path: '/dev/messaging-service/socket.io',
-    });
-    this.socket.on('messages', message => {
-      this.messageList = message;
-      this.scrollToBottom();
-      this.updateUserList();
-    });
-    this.socket.on('newMessage', message => {
-      this.messageList.push(message);
-      this.scrollToBottom();
-      this.updateUserList();
-    });
-    this.socket.on('deletedMessage', message => {
-      this.messageList = this.messageList.filter(message.messageId);
-      this.scrollToBottom();
-    });
-    this.socket.emit('getMessages');
+  setUserList(users: string[]) {
+    this.userList = [...new Set([...users, ...this.userList])];
   }
 
   ngOnDestroy() {
-    this.socket?.disconnect();
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   sendMessage() {
     if (this.newMessage.trim() !== '') {
-      this.socket?.emit('sendMessage', {
+      this.messagingService.sendMessage({
         text: this.newMessage,
         receiverId: this.activeUserId,
       });
       this.newMessage = '';
+      this.scrollToBottom();
     }
   }
 
   deleteMessage(messageId: string) {
-    this.socket?.emit('deleteMessage', {
-      messageId,
-    });
+    this.messagingService.deleteMessage(messageId);
     this.messageList = this.messageList.filter(
       message => message.id !== messageId
-    );
-  }
-
-  private updateUserList() {
-    this.messageList.forEach(message =>
-      this.userList.add(
-        message.senderId === this.authUserId
-          ? message.receiverId
-          : message.senderId
-      )
     );
   }
 

@@ -1,3 +1,8 @@
+export interface MessagingStateModel {
+  messages: Message[];
+  users: string[];
+}
+
 export interface Message {
   id: string;
   senderId: string;
