@@ -3,7 +3,7 @@
     class="menu-sidebar"
     nzCollapsible
     nzWidth="256px"
-    nzBreakpoint="md"
+    nzBreakpoint="lg"
     [nzCollapsedWidth]="isOnPhone ? 0 : 70"
     [(nzCollapsed)]="isNavbarCollapsed"
     [nzTrigger]="null">
@@ -16,7 +16,7 @@
     <div class="menu-bar">
       <ul nz-menu nzMode="inline" [nzInlineCollapsed]="isNavbarCollapsed">
         <li nz-menu-item nzMatchRouter>
-          <a routerLink="/home">
+          <a routerLink="/home" (click)="onLinkClick()">
             <span nz-icon [nzType]="navigationRoot.home.icon!"> </span
             ><span>Accueil</span>
           </a>
