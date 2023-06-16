@@ -17,6 +17,9 @@ import { RatingModule } from '../../feature/rating/rating.module';
 import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { UserModule } from '../../feature/user/user.module';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzResultModule } from 'ng-zorro-antd/result';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 
 @NgModule({
   declarations: [
@@ -40,6 +43,9 @@ import { UserModule } from '../../feature/user/user.module';
     NzDescriptionsModule,
     NzTagModule,
     UserModule,
+    NzModalModule,
+    NzResultModule,
+    NzSpinModule,
   ],
 })
 export class AuthModule {}

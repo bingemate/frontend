@@ -38,6 +38,7 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { CommentModule } from '../../feature/comment/comment.module';
 import { NzRateModule } from 'ng-zorro-antd/rate';
 import { RatingModule } from '../../feature/rating/rating.module';
+import { NzTypographyModule } from 'ng-zorro-antd/typography';
 
 @NgModule({
   declarations: [
@@ -80,6 +81,7 @@ import { RatingModule } from '../../feature/rating/rating.module';
     CommentModule,
     NzRateModule,
     RatingModule,
+    NzTypographyModule,
   ],
 })
 export class MediasModule {}

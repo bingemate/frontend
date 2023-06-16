@@ -1,34 +1,94 @@
-import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngxs/store';
-import { Playlist, PlaylistType } from '../../../shared/models/playlist.model';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Select, Store } from '@ngxs/store';
 import { AuthState } from '../../../core/auth/store/auth.state';
-import { StreamingActions } from '../../../feature/streaming/store/streaming.actions';
-import { PlaylistsService } from '../../../feature/playlist/playlists.service';
+import { MoviePlaylistsService } from '../../../feature/playlist/movie-playlists.service';
+import { EpisodePlaylist } from '../../../shared/models/episode-playlist.model';
+import { MoviePlaylist } from '../../../shared/models/movie-playlist.model';
+import { EpisodePlaylistsService } from '../../../feature/playlist/episode-playlists.service';
+import { Observable } from 'rxjs';
+import { UserResponse } from '../../../shared/models/user.models';
 
 @Component({
   selector: 'app-playlists',
   templateUrl: './playlists.component.html',
   styleUrls: ['./playlists.component.less'],
 })
-export class PlaylistsComponent implements OnInit {
-  playlists: Playlist[] = [];
+export class PlaylistsComponent implements OnInit, OnDestroy {
+  episodePlaylists: EpisodePlaylist[] = [];
+  moviePlaylists: MoviePlaylist[] = [];
+  episodePlaylistLoading = false;
+  moviePlaylistLoading = false;
+
+  query = '';
+  filter = '';
+  queryTimeout = 0;
+
   isPlaylistShown = false;
   isConfirmLoading = false;
   playlistName?: string;
-  playlistType?: PlaylistType;
+  playlistType?: 'MOVIE' | 'EPISODE';
+
+  @Select(AuthState.user) user$!: Observable<UserResponse | null>;
 
   constructor(
     private readonly store: Store,
-    private readonly playlistsService: PlaylistsService
+    private readonly moviePlaylistsService: MoviePlaylistsService,
+    private readonly episodePlaylistsService: EpisodePlaylistsService
   ) {}
 
+  onQuery() {
+    clearTimeout(this.queryTimeout);
+    this.queryTimeout = setTimeout(() => {
+      this.filter = this.query;
+    }, 300);
+  }
+
+  ngOnDestroy(): void {
+    clearTimeout(this.queryTimeout);
+  }
+
+  filteredMoviePlaylists(): MoviePlaylist[] {
+    return this.moviePlaylists.filter(playlist =>
+      playlist.name.toLowerCase().includes(this.filter.toLowerCase())
+    );
+  }
+
+  filteredEpisodePlaylists(): EpisodePlaylist[] {
+    return this.episodePlaylists.filter(playlist =>
+      playlist.name.toLowerCase().includes(this.filter.toLowerCase())
+    );
+  }
+
   ngOnInit(): void {
-    const userId = this.store.selectSnapshot(AuthState.user)?.id;
-    if (!userId) {
-      return;
-    }
-    this.playlistsService.getPlaylists(userId).subscribe(playlists => {
-      this.playlists = playlists;
+    this.user$.subscribe(user => {
+      if (user) {
+        this.loadMoviePlaylists(user);
+        this.loadEpisodePlaylists(user);
+      }
+    });
+  }
+
+  private loadEpisodePlaylists(user: UserResponse) {
+    this.episodePlaylistLoading = true;
+    this.episodePlaylistsService.getEpisodePlaylists(user.id).subscribe({
+      next: playlists => {
+        this.episodePlaylists = playlists;
+      },
+      complete: () => {
+        this.episodePlaylistLoading = false;
+      },
+    });
+  }
+
+  private loadMoviePlaylists(user: UserResponse) {
+    this.moviePlaylistLoading = true;
+    this.moviePlaylistsService.getMoviePlaylists(user.id).subscribe({
+      next: playlists => {
+        this.moviePlaylists = playlists;
+      },
+      complete: () => {
+        this.moviePlaylistLoading = false;
+      },
     });
   }
 
@@ -49,29 +109,42 @@ export class PlaylistsComponent implements OnInit {
     const name = this.playlistName;
     const type = this.playlistType;
     this.isConfirmLoading = true;
-    this.playlistsService.createPlaylist({ name, type }).subscribe(id => {
-      this.playlists.push({
-        id: id,
-        name,
-        type,
-        userId: '',
-        items: [],
+    if (type === 'MOVIE') {
+      this.moviePlaylistsService.createPlaylist({ name }).subscribe(id => {
+        this.moviePlaylists.push({
+          id: id,
+          name,
+          userId: '',
+          items: [],
+        });
+        this.closeModal();
       });
-      this.closeModal();
-    });
+    } else {
+      this.episodePlaylistsService.createPlaylist({ name }).subscribe(id => {
+        this.episodePlaylists.push({
+          id: id,
+          name,
+          userId: '',
+          items: [],
+        });
+        this.closeModal();
+      });
+    }
   }
 
-  deletePlaylist(playlistId: string) {
-    this.playlistsService.deletePlaylist(playlistId).subscribe(() => {
-      this.playlists = this.playlists.filter(
+  deleteMoviePlaylist(playlistId: string) {
+    this.moviePlaylistsService.deletePlaylist(playlistId).subscribe(() => {
+      this.moviePlaylists = this.moviePlaylists.filter(
         playlist => playlist.id !== playlistId
       );
     });
   }
 
-  watchPlaylist(index: number) {
-    this.store.dispatch(
-      new StreamingActions.WatchPlaylist(this.playlists[index], 0)
-    );
+  deleteEpisodePlaylist(playlistId: string) {
+    this.episodePlaylistsService.deletePlaylist(playlistId).subscribe(() => {
+      this.episodePlaylists = this.episodePlaylists.filter(
+        playlist => playlist.id !== playlistId
+      );
+    });
   }
 }

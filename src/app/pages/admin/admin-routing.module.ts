@@ -3,12 +3,18 @@ import { RouterModule, Routes } from '@angular/router';
 import { NavigationLinks, navigationRoot } from '../../app-routing.module';
 import { UploadScanComponent } from './upload-scan/upload-scan.component';
 import { AdminUsersComponent } from './admin-users/admin-users.component';
+import { MediaFilesComponent } from './media-files/media-files.component';
 
-export const adminLinks: NavigationLinks<'upload' | 'users'> = {
+export const adminLinks: NavigationLinks<'upload' | 'users' | 'media_files'> = {
   upload: {
     path: 'upload',
-    name: 'Envoi de médias',
+    name: 'Envoi / Scan de médias',
     icon: 'upload',
+  },
+  media_files: {
+    path: 'media-files',
+    name: 'Fichiers médias',
+    icon: 'file',
   },
   users: {
     path: 'users',
@@ -34,6 +40,11 @@ const routes: Routes = [
     path: adminLinks.users.path,
     component: AdminUsersComponent,
     data: { title: adminLinks.users.name },
+  },
+  {
+    path: adminLinks.media_files.path,
+    component: MediaFilesComponent,
+    data: { title: adminLinks.media_files.name },
   },
 ];
 

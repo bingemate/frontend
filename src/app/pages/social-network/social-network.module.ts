@@ -36,6 +36,9 @@ import { SharedModule } from '../../shared/shared.module';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzCommentModule } from 'ng-zorro-antd/comment';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
+import { NzSegmentedModule } from 'ng-zorro-antd/segmented';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzResultModule } from 'ng-zorro-antd/result';
 
 @NgModule({
   declarations: [
@@ -79,6 +82,9 @@ import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
     NzAvatarModule,
     NzCommentModule,
     NzPopconfirmModule,
+    NzSegmentedModule,
+    NzModalModule,
+    NzResultModule,
   ],
 })
 export class SocialNetworkModule {}

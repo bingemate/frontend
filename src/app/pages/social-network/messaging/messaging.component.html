@@ -1,16 +1,17 @@
 <nz-row [nzGutter]="[16, 16]">
-  <div nz-col [nzMd]="{ span: 8 }" [nzSm]="{ span: 24 }">
+  <div nz-col [nzMd]="{ span: 8 }" [nzXs]="{ span: 24 }">
     <h2>Utilisateurs</h2>
-    <nz-list nzItemLayout="vertical" [nzLoading]="friendLoading" nzBordered>
+    <nz-list
+      nzItemLayout="vertical"
+      nzBordered
+      [nzSize]="isOnPhone ? 'small' : 'default'">
       <nz-list-item
-        [class]="
-          isSelected(friend.friendId) ? 'friend-item-selected' : 'friend-item'
-        "
-        *ngFor="let friend of friendList"
-        (click)="selectFriend(friend.friendId)">
+        [class]="isSelected(user) ? 'friend-item-selected' : 'friend-item'"
+        *ngFor="let user of userList"
+        (click)="selectUser(user)">
         <nz-list-item-meta
           [nzAvatar]="avatar"
-          nzTitle="{{ friend.friendId | username | async }}">
+          nzTitle="{{ user | username | async }}">
         </nz-list-item-meta>
       </nz-list-item>
       <ng-template #avatar>
@@ -18,21 +19,25 @@
       </ng-template>
     </nz-list>
   </div>
-  <nz-col [nzMd]="{ span: 16 }" [nzSm]="{ span: 24 }">
+  <nz-col [nzMd]="{ span: 16 }" [nzXs]="{ span: 24 }">
     <nz-space nzDirection="vertical" nzSize="large" style="width: 100%">
       <h2 *nzSpaceItem>Conversation</h2>
-      <nz-row *nzSpaceItem class="message-list" [nzGutter]="[16, 16]" #messages>
+      <nz-row
+        *nzSpaceItem
+        class="message-list"
+        [nzGutter]="isOnPhone ? [8, 8] : [16, 16]"
+        #messages>
         <ng-container *ngFor="let message of messageList">
           <ng-container
             *ngIf="
-              activeFriendId === message.receiverId ||
-              activeFriendId === message.senderId
+              activeUserId === message.receiverId ||
+              activeUserId === message.senderId
             ">
             <nz-col
               [nzLg]="{ span: 4 }"
-              [nzMd]="{ span: 0 }"
+              [nzXs]="{ span: 0 }"
               *ngIf="message.senderId === authUserId"></nz-col>
-            <nz-col [nzLg]="{ span: 20 }" [nzMd]="{ span: 24 }">
+            <nz-col [nzLg]="{ span: 20 }" [nzXs]="{ span: 24 }">
               <nz-comment
                 [ngClass]="{
                   received: message.receiverId === (user$ | async)?.id,
@@ -67,7 +72,7 @@
             </nz-col>
             <nz-col
               [nzLg]="{ span: 4 }"
-              [nzMd]="{ span: 0 }"
+              [nzXs]="{ span: 0 }"
               *ngIf="message.receiverId === authUserId"></nz-col>
           </ng-container>
         </ng-container>
@@ -79,7 +84,7 @@
         nzSize="large">
         <input
           nz-input
-          [disabled]="!activeFriendId"
+          [disabled]="!activeUserId"
           [(ngModel)]="newMessage"
           (keyup.enter)="sendMessage()"
           placeholder="Saisissez votre message" />
@@ -93,7 +98,7 @@
     nzType="primary"
     nzSize="large"
     nzSearch
-    [disabled]="!activeFriendId || !newMessage || newMessage.length === 0"
+    [disabled]="!activeUserId || !newMessage || newMessage.length === 0"
     (click)="sendMessage()">
     Envoyer
   </button>

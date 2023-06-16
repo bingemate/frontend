@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import {
-  MediaResponse,
-  MediaType,
+  MovieResponse,
+  TvEpisodeResponse,
 } from '../../../../shared/models/media.models';
 import { MediaInfoService } from '../../media-info.service';
 
@@ -13,31 +13,31 @@ import { MediaInfoService } from '../../media-info.service';
 export class MediaInfoComponent implements OnInit {
   readonly emptyImage = '';
   @Input() mediaId = 0;
+  @Input()
+  type: 'movies' | 'tv-shows' = 'movies';
 
   @Input()
   vertical = false;
 
-  media: MediaResponse | undefined;
+  movieMedia: MovieResponse | undefined;
+  episodeMedia: TvEpisodeResponse | undefined;
   posterUrl = this.emptyImage;
 
   constructor(private mediaInfoService: MediaInfoService) {}
 
   ngOnInit(): void {
-    this.mediaInfoService.getMediaInfo(this.mediaId).subscribe({
-      next: (media: MediaResponse) => {
-        this.media = media;
-        if (media.mediaType === MediaType.Episode) {
-          this.mediaInfoService
-            .getTvShowEpisodeInfoById(media.id)
-            .subscribe(episode => {
-              this.posterUrl = episode.posterUrl;
-            });
-        } else if (media.mediaType === MediaType.Movie) {
-          this.mediaInfoService.getMovieInfo(media.id).subscribe(movie => {
-            this.posterUrl = movie.backdropUrl;
-          });
-        }
-      },
-    });
+    if (this.type === 'tv-shows') {
+      this.mediaInfoService
+        .getTvShowEpisodeInfoById(this.mediaId)
+        .subscribe(episode => {
+          this.episodeMedia = episode;
+          this.posterUrl = episode.posterUrl;
+        });
+    } else {
+      this.mediaInfoService.getMovieInfo(this.mediaId).subscribe(movie => {
+        this.movieMedia = movie;
+        this.posterUrl = movie.backdropUrl;
+      });
+    }
   }
 }

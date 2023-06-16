@@ -1,0 +1,102 @@
+<nz-row [nzGutter]="[16, 16]">
+  <nz-col [nzSpan]="24">
+    <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton" nzSize="large">
+      <input
+        (input)="onInput()"
+        (change)="manualSearch()"
+        [(ngModel)]="query"
+        type="text"
+        nz-input
+        placeholder="entrez le nom d'un épisode où d'une série" />
+    </nz-input-group>
+    <ng-template #suffixIconButton>
+      <button nz-button nzType="primary" nzSearch>
+        <span nz-icon nzType="search"></span>
+      </button>
+    </ng-template>
+    <nz-progress
+      *ngIf="loading"
+      nzStatus="active"
+      [nzShowInfo]="false"
+      [nzPercent]="100"></nz-progress>
+  </nz-col>
+  <nz-col [nzSpan]="24">
+    <nz-table
+      [nzData]="episodeFilesResults.results"
+      [nzFrontPagination]="false"
+      [nzLoading]="loading"
+      [nzTotal]="episodeFilesResults.total"
+      [nzPageSize]="pageSize"
+      [nzPageIndex]="currentPage"
+      [nzPageSizeOptions]="[5, 10, 20, 50]"
+      nzShowSizeChanger
+      nzShowPagination
+      (nzPageIndexChange)="onPageIndexChange($event)"
+      (nzPageSizeChange)="onPageSizeChange($event)">
+      <thead>
+        <tr>
+          <th>Série</th>
+          <th>Nom</th>
+          <th>Saison</th>
+          <th>Épisode</th>
+          <th>Date de sortie</th>
+          <th>Durée</th>
+          <th>Taille</th>
+          <th>Ajouté le</th>
+          <th>Langues</th>
+          <th>Sous-titres</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-template
+          ngFor
+          let-episodeFile
+          [ngForOf]="episodeFilesResults.results">
+          <tr>
+            <td>
+              <a [routerLink]="[tvShowViewPath, episodeFile.tvShowId]">
+                {{ episodeFile.tvShowName }}
+              </a>
+            </td>
+            <td>
+              {{ episodeFile.name }}
+            </td>
+            <td>{{ episodeFile.seasonNumber }}</td>
+            <td>{{ episodeFile.episodeNumber }}</td>
+            <td>{{ episodeFile.releaseDate | date : 'dd/MM/yyyy' }}</td>
+            <td>{{ episodeFile.file.duration | duration }}</td>
+            <td>{{ episodeFile.file.size | nzBytes : 2 }}</td>
+            <td>{{ episodeFile.file.createdAt | date : 'dd/MM/yyyy' }}</td>
+            <td>
+              <nz-tag
+                *ngFor="let audio of episodeFile.file.audios"
+                [nzColor]="getBadgeColor(audio.language)">
+                {{ audio.language }}
+              </nz-tag>
+            </td>
+            <td>
+              <nz-tag
+                *ngFor="let subtitle of episodeFile.file.subtitles"
+                [nzColor]="getBadgeColor(subtitle.language)">
+                {{ subtitle.language }}
+              </nz-tag>
+            </td>
+            <td>
+              <button
+                nz-button
+                nzType="primary"
+                nzDanger
+                nzShape="circle"
+                nz-popconfirm
+                nzPopconfirmTitle="Êtes-vous sûr de vouloir supprimer ce film ?"
+                (nzOnConfirm)="onDelete(episodeFile.file.id)">
+                <span nz-icon nzType="delete"></span>
+              </button>
+            </td>
+          </tr>
+        </ng-template>
+      </tbody>
+    </nz-table>
+  </nz-col>
+</nz-row>

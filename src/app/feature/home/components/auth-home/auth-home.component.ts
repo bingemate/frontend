@@ -2,18 +2,19 @@ import { Component, OnInit } from '@angular/core';
 import { AuthState } from '../../../../core/auth/store/auth.state';
 import { Select } from '@ngxs/store';
 import { UserResponse } from '../../../../shared/models/user.models';
-import { map, Observable, switchMap } from 'rxjs';
-import { HistoryModel } from '../../../../shared/models/history.models';
+import { forkJoin, Observable } from 'rxjs';
 import { navigationRoot } from '../../../../app-routing.module';
 import { streamingLinks } from '../../../../pages/streaming/streaming-routing.module';
-import { HistoryService } from '../../../history/history.service';
+import { EpisodeHistoryService } from '../../../history/episode-history.service';
 import {
-  MediaType,
   MovieResponse,
   TvShowResponse,
 } from '../../../../shared/models/media.models';
 import { MediaInfoService } from '../../../media-info/media-info.service';
 import { MediaDiscoverService } from '../../../media-info/media-discover.service';
+import { HistoryModel } from '../../../../shared/models/history.models';
+import { MovieHistoryService } from '../../../history/movie-history.service';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-auth-home',
@@ -37,11 +38,19 @@ export class AuthHomeComponent implements OnInit {
   popularMovies: MovieResponse[] = [];
   popularTvShows: TvShowResponse[] = [];
 
+  isOnPhone = false;
+
   constructor(
-    private readonly historyService: HistoryService,
+    private breakpointObserver: BreakpointObserver,
+    private readonly episodeHistoryService: EpisodeHistoryService,
+    private readonly movieHistoryService: MovieHistoryService,
     private readonly mediaInfoService: MediaInfoService,
     private readonly mediaDiscoverService: MediaDiscoverService
   ) {
+    this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
+      this.isOnPhone = result.matches;
+    });
+
     this.user$.subscribe(user => (this.user = user));
     this.isSubscribed$.subscribe(
       isSubscribed => (this.isSubscribed = isSubscribed)
@@ -49,9 +58,15 @@ export class AuthHomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.historyService.getHistory().subscribe(history => {
-      this.history = history.filter(history => history.stoppedAt < 0.9);
-    });
+    forkJoin([
+      this.episodeHistoryService.getEpisodeHistory(),
+      this.movieHistoryService.getMovieHistory(),
+    ]).subscribe(
+      ([episodeHistory, movieHistory]) =>
+        (this.history = [...episodeHistory, ...movieHistory]
+          .filter(history => history.stoppedAt < 0.9)
+          .sort((a, b) => b.viewedAt.getTime() - a.viewedAt.getTime()))
+    );
     this.mediaDiscoverService.getPopularMovies().subscribe(movies => {
       this.popularMovies = movies.results;
     });

@@ -11,6 +11,7 @@ import { NotificationsService } from '../../../../core/notifications/notificatio
 })
 export class NewCommentComponent {
   @Input() mediaId = 0;
+  @Input() type?: 'tv-shows' | 'movies';
   @Output() newComment: EventEmitter<CommentResponse> = new EventEmitter();
 
   form: FormGroup;
@@ -26,12 +27,19 @@ export class NewCommentComponent {
   }
 
   onSubmit(): void {
-    this.commentService
-      .createComment(this.mediaId, this.form.value.comment)
-      .subscribe(comment => {
-        this.notificationsService.success('Commentaire ajouté');
-        this.newComment.emit(comment);
-        this.form.reset();
-      });
+    (this.type === 'movies'
+      ? this.commentService.createMovieComment(
+          this.mediaId,
+          this.form.value.comment
+        )
+      : this.commentService.createTvShowComment(
+          this.mediaId,
+          this.form.value.comment
+        )
+    ).subscribe(comment => {
+      this.notificationsService.success('Commentaire ajouté');
+      this.newComment.emit(comment);
+      this.form.reset();
+    });
   }
 }

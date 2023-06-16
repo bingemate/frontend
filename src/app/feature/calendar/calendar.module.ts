@@ -7,6 +7,7 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { RouterLink } from '@angular/router';
 import { CalendarLinksComponent } from './components/calendar-links/calendar-links.component';
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
+import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
 
 @NgModule({
   declarations: [MediaCalendarComponent, CalendarLinksComponent],
@@ -17,6 +18,7 @@ import { NzTypographyModule } from 'ng-zorro-antd/typography';
     NzToolTipModule,
     RouterLink,
     NzTypographyModule,
+    NzDescriptionsModule,
   ],
   exports: [MediaCalendarComponent, CalendarLinksComponent],
 })

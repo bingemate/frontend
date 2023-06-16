@@ -2,12 +2,23 @@
   <nz-list nzBordered nzSize="small" nzItemLayout="vertical">
     <nz-list-item *cdkVirtualFor="let comment of comments">
       <nz-comment
-        [nzAuthor]="
-          showMedia
-            ? (comment.mediaId | mediaName | async) ?? 'No name'
-            : (comment.userId | username | async) ?? 'No name'
-        "
+        [nzAuthor]="author"
         nzDatetime="{{ comment.createdAt | date : 'dd/MM/yyyy HH:mm' }}">
+        <ng-template #author>
+          <a
+            [routerLink]="
+              showMedia
+                ? (comment.mediaId | mediaLink : mediaType | async) ?? ''
+                : [userViewLink, comment.userId]
+            ">
+            {{
+              showMedia
+                ? (comment.mediaId | mediaName : mediaType | async) ??
+                  'No title'
+                : (comment.userId | username | async) ?? 'No name'
+            }}
+          </a>
+        </ng-template>
         <nz-comment-content>
           <p
             nz-typography
@@ -18,24 +29,6 @@
             [(nzContent)]="comment.content"></p>
         </nz-comment-content>
         <nz-comment-action>
-          <button
-            *ngIf="showMedia"
-            [routerLink]="
-              showMedia ? (comment.mediaId | mediaLink | async) ?? '' : '/'
-            "
-            nz-button
-            nzType="link"
-            nzSize="small">
-            <i nz-icon nzType="eye"></i>
-          </button>
-          <button
-            *ngIf="!showMedia"
-            [routerLink]="[userViewLink, comment.userId]"
-            nz-button
-            nzType="link"
-            nzSize="small">
-            <i nz-icon nzType="eye"></i>
-          </button>
           <button
             *ngIf="canUpdateOrDeleteComment(comment)"
             nz-popconfirm

@@ -14,44 +14,51 @@
       <nz-list-item-action
         *ngIf="canAccept && friend.state !== FriendState.ACCEPTED">
         <button
+          title="Accepter la demande d'ami"
           nz-button
           nzType="primary"
           nzSize="small"
           (click)="acceptFriend(friend.friendId)">
           <i nz-icon nzType="check"></i>
-          Accepter
+          <span class="hide-on-phone">Accepter</span>
         </button>
       </nz-list-item-action>
       <nz-list-item-action
         *ngIf="canReject && friend.state !== FriendState.REJECTED">
         <button
+          title="Refuser la demande d'ami"
           nz-button
+          nzType="primary"
           nzDanger
           nzSize="small"
           (click)="rejectFriend(friend.friendId)">
           <i nz-icon nzType="close"></i>
-          Refuser
+          <span class="hide-on-phone">Refuser</span>
         </button>
       </nz-list-item-action>
       <nz-list-item-action
         *ngIf="canBlock && friend.state !== FriendState.BLOCKED">
         <button
+          title="Bloquer l'utilisateur"
           nz-button
+          nzType="primary"
           nzDanger
           nzSize="small"
           (click)="blockFriend(friend.friendId)">
           <i nz-icon nzType="stop"></i>
-          Bloquer
+          <span class="hide-on-phone">Bloquer</span>
         </button>
       </nz-list-item-action>
       <nz-list-item-action *ngIf="canDelete && friend.state">
         <button
+          title="Supprimer la demande d'ami"
           nz-button
+          nzType="primary"
           nzDanger
           nzSize="small"
           (click)="deleteFriend(friend.friendId)">
           <i nz-icon nzType="delete"></i>
-          Supprimer
+          <span class="hide-on-phone">Supprimer</span>
         </button>
       </nz-list-item-action>
     </ul>

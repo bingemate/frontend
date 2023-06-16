@@ -11,7 +11,7 @@
     style="max-height: 100px"
     alt="" />
   <h5 nz-typography *nzSpaceItem>
-    {{ media?.name }}
+    {{ type === 'movies' ? movieMedia?.title : episodeMedia?.name }}
   </h5>
 </nz-space>
 <nz-space
@@ -26,7 +26,7 @@
     [nzSrc]="posterUrl"
     style="width: 250px"
     alt="" />
-  <h4 *nzSpaceItem>
-    {{ media?.name }}
-  </h4>
+  <h5 nz-typography *nzSpaceItem>
+    {{ type === 'movies' ? movieMedia?.title : episodeMedia?.name }}
+  </h5>
 </nz-space>

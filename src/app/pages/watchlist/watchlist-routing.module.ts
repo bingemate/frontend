@@ -12,6 +12,7 @@ export const watchlistLinks: NavigationLinks<
   calendar: {
     name: 'Calendrier',
     path: 'calendar',
+    hideOnPhone: true,
   },
   lists: {
     name: 'Liste de suivie',
@@ -39,7 +40,7 @@ const routes: Routes = [
     component: PlaylistsComponent,
   },
   {
-    path: watchlistLinks.playlists.path + '/:id',
+    path: watchlistLinks.playlists.path + '/:type/:id',
     component: PlaylistComponent,
   },
 ];

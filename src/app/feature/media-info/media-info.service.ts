@@ -1,26 +1,22 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {
-  MediaResponse,
   MovieResponse,
   TvEpisodeResponse,
   TvShowResponse,
 } from '../../shared/models/media.models';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { API_RESOURCE_URI } from '../../shared/api-resource-uri/api-resources-uri';
 import { MediaFile } from '../../shared/models/media-file.models';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MediaInfoService {
+  private readonly tvNames = new Map<number, TvShowResponse>();
+  private readonly movieNames = new Map<number, MovieResponse>();
   constructor(private readonly http: HttpClient) {}
-
-  getMediaInfo(tmdbId: number): Observable<MediaResponse> {
-    return this.http.get<MediaResponse>(
-      API_RESOURCE_URI.MEDIA_INFO + '/media/base-tmdb/' + tmdbId
-    );
-  }
 
   getMovieInfo(tmdbId: number): Observable<MovieResponse> {
     return this.http.get<MovieResponse>(
@@ -29,9 +25,15 @@ export class MediaInfoService {
   }
 
   getMovieShortInfo(tmdbId: number): Observable<MovieResponse> {
-    return this.http.get<MovieResponse>(
-      API_RESOURCE_URI.MEDIA_INFO + '/media/movie-tmdb/' + tmdbId + '/short'
-    );
+    const movieTitle = this.movieNames.get(tmdbId);
+    if (movieTitle) {
+      return of(movieTitle);
+    }
+    return this.http
+      .get<MovieResponse>(
+        API_RESOURCE_URI.MEDIA_INFO + '/media/movie-tmdb/' + tmdbId + '/short'
+      )
+      .pipe(tap(title => this.movieNames.set(tmdbId, title)));
   }
 
   getTvShowInfo(tmdbId: number): Observable<TvShowResponse> {
@@ -41,9 +43,15 @@ export class MediaInfoService {
   }
 
   getTvShowShortInfo(tmdbId: number): Observable<TvShowResponse> {
-    return this.http.get<TvShowResponse>(
-      API_RESOURCE_URI.MEDIA_INFO + '/media/tvshow-tmdb/' + tmdbId + '/short'
-    );
+    const tvTitle = this.tvNames.get(tmdbId);
+    if (tvTitle) {
+      return of(tvTitle);
+    }
+    return this.http
+      .get<TvShowResponse>(
+        API_RESOURCE_URI.MEDIA_INFO + '/media/tvshow-tmdb/' + tmdbId + '/short'
+      )
+      .pipe(tap(title => this.tvNames.set(tmdbId, title)));
   }
 
   getTvShowEpisodeInfo(
@@ -81,9 +89,21 @@ export class MediaInfoService {
     );
   }
 
-  getFileInfos(mediaId: number): Observable<MediaFile> {
+  getMovieFileInfos(mediaId: number): Observable<MediaFile> {
     return this.http.get<MediaFile>(
-      API_RESOURCE_URI.MEDIA_INFO + '/media-file/file-tmdb/' + mediaId
+      API_RESOURCE_URI.MEDIA_INFO + '/file/movie/' + mediaId
+    );
+  }
+
+  getEpisodeFileInfos(mediaId: number): Observable<MediaFile> {
+    return this.http.get<MediaFile>(
+      API_RESOURCE_URI.MEDIA_INFO + '/file/episode/' + mediaId
+    );
+  }
+
+  getAvailableEpisodes(mediaId: number): Observable<number[]> {
+    return this.http.get<number[]>(
+      `${API_RESOURCE_URI.MEDIA_INFO}/file/tv/${mediaId}/available`
     );
   }
 }

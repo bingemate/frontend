@@ -24,7 +24,7 @@ export class NoauthHomeComponent {
     path: 'assets/animations/watch-a-movie-with-popcorn.json',
   };
 
-  features: Feature[] = [
+  readonly features: Feature[] = [
     {
       title: 'Regardez vos films préférés',
       description: 'Découvrez une large sélection de films de tous genres',
@@ -74,7 +74,7 @@ export class NoauthHomeComponent {
     },
   ];
 
-  categories: Category[] = [
+  readonly categories: Category[] = [
     {
       title: 'Films',
       description: 'Découvrez les derniers films ajoutés à notre catalogue',
@@ -98,5 +98,12 @@ export class NoauthHomeComponent {
       image: 'assets/line-graph.png',
     },
   ];
+
+  readonly welcomeTexts = [
+    'Le meilleur endroit pour trouver des séries et des films à regarder.',
+    'Découvrez de nouveaux films et séries télévisées ',
+    'Regardez vos favoris, créez des listes de lecture personnalisées et suivez votre avancement.',
+  ];
+
   protected readonly loginLink = loginLink;
 }

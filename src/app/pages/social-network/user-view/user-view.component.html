@@ -1,104 +1,192 @@
-<nz-tabset nzSize="large" nzDirection="vertical">
+<nz-tabset [nzSize]="isOnPhone ? 'small' : 'large'">
   <nz-tab nzTitle="Informations">
     <app-user-info *ngIf="user !== null" [user]="user"></app-user-info>
   </nz-tab>
-  <nz-tab nzTitle="Commentaires" (nzClick)="onRefreshUserComments()">
+  <nz-tab nzTitle="Commentaires" (nzClick)="onRefreshAllComments()">
     <ng-template nz-tab>
-      <nz-card [nzExtra]="commentsListPagination">
-        <app-comment-list
-          [comments]="comments.results"
-          [showMedia]="true"></app-comment-list>
-      </nz-card>
+      <nz-row [nzGutter]="[16, 16]">
+        <nz-col [nzLg]="12" [nzXs]="24">
+          <nz-card [nzExtra]="movieCommentsListPagination" nzTitle="Films">
+            <app-comment-list
+              [mediaType]="'movie'"
+              [comments]="movieComments.results"
+              [showMedia]="true"></app-comment-list>
+          </nz-card>
+        </nz-col>
+        <nz-col [nzLg]="12" [nzXs]="24">
+          <nz-card [nzExtra]="tvCommentsListPagination" nzTitle="Séries">
+            <app-comment-list
+              [mediaType]="'tv'"
+              [comments]="tvComments.results"
+              [showMedia]="true"></app-comment-list>
+          </nz-card>
+        </nz-col>
+      </nz-row>
     </ng-template>
   </nz-tab>
-  <nz-tab nzTitle="Notes" (nzClick)="onRefreshUserRatings()">
+  <nz-tab nzTitle="Notes" (nzClick)="onRefreshAllRatings()">
     <ng-template nz-tab>
-      <nz-card [nzExtra]="ratingsListPagination">
-        <app-rating-list
-          [editable]="true"
-          [showMedia]="true"
-          [ratings]="ratings.results"></app-rating-list>
-      </nz-card>
+      <nz-row [nzGutter]="[16, 16]">
+        <nz-col [nzLg]="12" [nzXs]="24">
+          <nz-card [nzExtra]="movieRatingsListPagination" nzTitle="Films">
+            <app-rating-list
+              [mediaType]="'movie'"
+              [showMedia]="true"
+              [ratings]="movieRatings.results"></app-rating-list>
+          </nz-card>
+        </nz-col>
+        <nz-col [nzLg]="12" [nzXs]="24">
+          <nz-card [nzExtra]="tvRatingsListPagination" nzTitle="Séries">
+            <app-rating-list
+              [mediaType]="'tv'"
+              [editable]="isAdmin"
+              [ratings]="tvRatings.results"></app-rating-list>
+          </nz-card>
+        </nz-col>
+      </nz-row>
     </ng-template>
   </nz-tab>
   <nz-tab nzTitle="Listes de lecture" (nzClick)="onGetUserPlaylists()">
     <ng-template nz-tab>
-      <nz-spin
-        nzSpinning
-        nzSize="large"
-        style="padding: 20px"
-        *ngIf="playlistsLoading"></nz-spin>
-      <nz-list
-        *ngIf="!playlistsLoading"
-        nzItemLayout="vertical"
-        [nzLoading]="false">
-        <nz-list-item *ngFor="let item of playlists; let index = index">
-          <nz-list-item-meta>
-            <nz-list-item-meta-title>
-              <a [routerLink]="[playlistViewLinks, item.id]">{{ item.name }}</a>
-            </nz-list-item-meta-title>
-          </nz-list-item-meta>
-        </nz-list-item>
-        <nz-list-empty
-          *ngIf="playlists.length === 0"
-          nzNoResult="Aucune playlist">
-        </nz-list-empty>
-      </nz-list>
+      <nz-card>
+        <nz-spin
+          nzSpinning
+          nzSize="large"
+          style="padding: 20px"
+          *ngIf="playlistsLoading"></nz-spin>
+        <ng-container *ngIf="!playlistsLoading">
+          <nz-divider nzText="Films" nzOrientation="left"></nz-divider>
+          <nz-list nzItemLayout="vertical" [nzLoading]="false">
+            <nz-list-item
+              *ngFor="let item of moviePlaylists; let index = index">
+              <nz-list-item-meta>
+                <nz-list-item-meta-title>
+                  <a [routerLink]="[playlistViewLinks, 'movies', item.id]">{{
+                    item.name
+                  }}</a>
+                </nz-list-item-meta-title>
+              </nz-list-item-meta>
+            </nz-list-item>
+          </nz-list>
+          <nz-divider nzText="Episodes" nzOrientation="left"></nz-divider>
+          <nz-list nzItemLayout="vertical" [nzLoading]="false">
+            <nz-list-item
+              *ngFor="let item of episodePlaylists; let index = index">
+              <nz-list-item-meta>
+                <nz-list-item-meta-title>
+                  <a [routerLink]="[playlistViewLinks, 'episodes', item.id]">{{
+                    item.name
+                  }}</a>
+                </nz-list-item-meta-title>
+              </nz-list-item-meta>
+            </nz-list-item>
+            <nz-list-empty
+              *ngIf="moviePlaylists.length + episodePlaylists.length === 0"
+              nzNoResult="Aucune playlist">
+            </nz-list-empty>
+          </nz-list>
+        </ng-container>
+      </nz-card>
     </ng-template>
   </nz-tab>
   <nz-tab nzTitle="Amis" (nzClick)="onGetUserFriends()">
     <ng-template nz-tab>
-      <nz-spin
-        nzSpinning
-        nzSize="large"
-        style="padding: 20px"
-        *ngIf="friendsLoading"></nz-spin>
-      <app-friend-list
-        *ngIf="!friendsLoading"
-        [friends]="friends"></app-friend-list>
+      <nz-card>
+        <nz-spin
+          nzSpinning
+          nzSize="large"
+          style="padding: 20px"
+          *ngIf="friendsLoading"></nz-spin>
+        <app-friend-list
+          *ngIf="!friendsLoading"
+          [friends]="friends"></app-friend-list>
+      </nz-card>
     </ng-template>
   </nz-tab>
 </nz-tabset>
 
-<ng-template #commentsListPagination>
+<ng-template #movieCommentsListPagination>
   <nz-space>
     <nz-pagination
       *nzSpaceItem
-      [nzPageIndex]="commentsCurrentPage"
-      [nzTotal]="comments.totalResult"
+      [nzPageIndex]="movieCommentsCurrentPage"
+      [nzTotal]="movieComments.totalResult"
       [nzPageSize]="5"
       [nzShowSizeChanger]="false"
       [nzSize]="'small'"
-      (nzPageIndexChange)="onCommentsPageChange($event)"></nz-pagination>
+      (nzPageIndexChange)="onMovieCommentsPageChange($event)"></nz-pagination>
     <button
       *nzSpaceItem
       nz-button
       nzType="primary"
       nzShape="circle"
       nzSize="small"
-      (click)="onRefreshUserComments()">
+      (click)="onRefreshMovieComments()">
       <i nz-icon nzType="sync"></i>
     </button>
   </nz-space>
 </ng-template>
 
-<ng-template #ratingsListPagination>
+<ng-template #movieRatingsListPagination>
   <nz-space>
     <nz-pagination
       *nzSpaceItem
-      [nzPageIndex]="ratingsCurrentPage"
-      [nzTotal]="ratings.totalResult"
+      [nzPageIndex]="movieRatingsCurrentPage"
+      [nzTotal]="movieRatings.totalResult"
       [nzPageSize]="5"
       [nzShowSizeChanger]="false"
       [nzSize]="'small'"
-      (nzPageIndexChange)="onRatingsPageChange($event)"></nz-pagination>
+      (nzPageIndexChange)="onMovieRatingsPageChange($event)"></nz-pagination>
     <button
       *nzSpaceItem
       nz-button
       nzType="primary"
       nzShape="circle"
       nzSize="small"
-      (click)="onRefreshUserRatings()">
+      (click)="onRefreshMovieRatings()">
+      <i nz-icon nzType="sync"></i>
+    </button>
+  </nz-space>
+</ng-template>
+<ng-template #tvCommentsListPagination>
+  <nz-space>
+    <nz-pagination
+      *nzSpaceItem
+      [nzPageIndex]="tvCommentsCurrentPage"
+      [nzTotal]="tvComments.totalResult"
+      [nzPageSize]="5"
+      [nzShowSizeChanger]="false"
+      [nzSize]="'small'"
+      (nzPageIndexChange)="onTvCommentsPageChange($event)"></nz-pagination>
+    <button
+      *nzSpaceItem
+      nz-button
+      nzType="primary"
+      nzShape="circle"
+      nzSize="small"
+      (click)="onRefreshTvComments()">
+      <i nz-icon nzType="sync"></i>
+    </button>
+  </nz-space>
+</ng-template>
+
+<ng-template #tvRatingsListPagination>
+  <nz-space>
+    <nz-pagination
+      *nzSpaceItem
+      [nzPageIndex]="tvRatingsCurrentPage"
+      [nzTotal]="tvRatings.totalResult"
+      [nzPageSize]="5"
+      [nzShowSizeChanger]="false"
+      [nzSize]="'small'"
+      (nzPageIndexChange)="onTvRatingsPageChange($event)"></nz-pagination>
+    <button
+      *nzSpaceItem
+      nz-button
+      nzType="primary"
+      nzShape="circle"
+      nzSize="small"
+      (click)="onRefreshTvRatings()">
       <i nz-icon nzType="sync"></i>
     </button>
   </nz-space>

@@ -1,46 +1,171 @@
-<h2>
-  {{ playlist?.name }}
-</h2>
-<nz-list
-  nzItemLayout="vertical"
-  [nzLoading]="false"
-  cdkDropList
-  (cdkDropListDropped)="itemMoved($event)">
-  <nz-list-item *ngFor="let item of playlistItems; let index = index" cdkDrag>
-    <nz-list-item-meta>
-      <nz-list-item-meta-title>
-        <nz-space>
-          <nz-space nzAlign="center">
-            <span *nzSpaceItem> {{ index }}. </span>
-          </nz-space>
-          <a (click)="watchMedia(index)">
-            <img
-              class="media-image"
-              width="160"
-              height="90"
-              alt="logo"
-              ngSrc="{{ item.media.imageUrl }}" />
-          </a>
-          <nz-space nzDirection="vertical">
-            <a [routerLink]="['/medias/movie-view', item.playlistItem.mediaId]">
-              {{ item.media.name }}
+<ng-container *ngIf="type === 'movies' && moviePlaylist !== undefined">
+  <nz-card [nzTitle]="moviePlaylist!.name" [nzExtra]="search">
+    <nz-input-group
+      class="hide-on-desktop"
+      nzSearch
+      [nzSuffix]="suffixIconSearch">
+      <input
+        nz-input
+        placeholder="Rechercher"
+        [(ngModel)]="query"
+        (ngModelChange)="onQuery()" />
+    </nz-input-group>
+    <nz-list
+      nzItemLayout="vertical"
+      [nzLoading]="playlistLoading"
+      cdkDropList
+      (cdkDropListDropped)="itemMoved($event)">
+      <nz-list-item
+        *ngFor="let item of filteredMovieItems(); let index = index"
+        cdkDrag>
+        <nz-list-item-meta>
+          <nz-list-item-meta-title>
+            <nz-space
+              nzAlign="center"
+              nzDirection="horizontal"
+              style="padding-right: 16px">
+              <span *nzSpaceItem> {{ index }}. </span>
+              <a *nzSpaceItem (click)="watchMedia(index)">
+                <img
+                  class="media-image"
+                  width="160"
+                  height="90"
+                  alt="logo"
+                  ngSrc="{{ item.media.imageUrl }}" />
+              </a>
+              <a
+                *nzSpaceItem
+                class="hide-on-phone"
+                [routerLink]="[
+                  '/medias/movie-view',
+                  item.playlistItem.movieId
+                ]">
+                {{ item.playlistItem.movieId | mediaName : 'movie' | async }}
+              </a>
+            </nz-space>
+          </nz-list-item-meta-title>
+          <nz-list-item-meta-description class="hide-on-desktop">
+            <a
+              style="margin-left: 32px"
+              [routerLink]="['/medias/movie-view', item.playlistItem.movieId]">
+              {{ item.playlistItem.movieId | mediaName : 'movie' | async }}
             </a>
-            <span *ngIf="playlist && playlist.type === 'EPISODE'">
-              {{ item.playlistItem.season }}x{{ item.playlistItem.episode }}
-            </span>
-          </nz-space>
-        </nz-space>
-      </nz-list-item-meta-title>
-    </nz-list-item-meta>
-    <ul nz-list-item-actions>
-      <nz-list-item-action *ngIf="playlist?.userId === user?.id || isAdmin"
-        ><a (click)="removeItem(item.playlistItem)"
-          >Supprimer</a
-        ></nz-list-item-action
-      >
-    </ul>
-  </nz-list-item>
-  <nz-list-empty
-    *ngIf="playlistItems.length === 0"
-    nzNoResult="Aucun média"></nz-list-empty>
-</nz-list>
+          </nz-list-item-meta-description>
+        </nz-list-item-meta>
+        <ul nz-list-item-actions>
+          <nz-list-item-action
+            *ngIf="moviePlaylist?.userId === user?.id || isAdmin">
+            <button
+              nz-button
+              nzType="primary"
+              nzDanger
+              nz-popconfirm
+              nzPopconfirmTitle="Êtes-vous sûr de vouloir supprimer ce média ?"
+              (nzOnConfirm)="removeItem(item.playlistItem)">
+              <span nz-icon nzType="delete"></span>
+              <span class="hide-on-phone"> Supprimer </span>
+            </button>
+          </nz-list-item-action>
+        </ul>
+      </nz-list-item>
+    </nz-list>
+    <nz-list-empty
+      *ngIf="moviePlaylistItems.length === 0 && !playlistLoading"
+      nzNoResult="Aucun média"></nz-list-empty>
+  </nz-card>
+</ng-container>
+<ng-container *ngIf="type === 'episodes' && episodePlaylist !== undefined">
+  <nz-card [nzTitle]="episodePlaylist!.name" [nzExtra]="search">
+    <nz-input-group
+      class="hide-on-desktop"
+      nzSearch
+      [nzSuffix]="suffixIconSearch">
+      <input
+        nz-input
+        placeholder="Rechercher"
+        [(ngModel)]="query"
+        (ngModelChange)="onQuery()" />
+    </nz-input-group>
+    <nz-list
+      nzItemLayout="vertical"
+      [nzLoading]="playlistLoading"
+      cdkDropList
+      (cdkDropListDropped)="itemMoved($event)">
+      <nz-list-item
+        *ngFor="let item of filteredEpisodeItems(); let index = index"
+        cdkDrag>
+        <nz-list-item-meta>
+          <nz-list-item-meta-title>
+            <nz-space
+              nzAlign="center"
+              nzDirection="horizontal"
+              style="padding-right: 16px">
+              <span *nzSpaceItem> {{ index }}. </span>
+              <a *nzSpaceItem (click)="watchMedia(index)">
+                <img
+                  class="media-image"
+                  width="160"
+                  height="90"
+                  alt="logo"
+                  ngSrc="{{ item.media.imageUrl }}" />
+              </a>
+              <a
+                *nzSpaceItem
+                class="hide-on-phone"
+                [routerLink]="[
+                  '/medias/episode-view',
+                  item.playlistItem.episodeId
+                ]">
+                {{
+                  item.playlistItem.episodeId | mediaName : 'episode' | async
+                }}
+              </a>
+            </nz-space>
+          </nz-list-item-meta-title>
+          <nz-list-item-meta-description class="hide-on-desktop">
+            <a
+              style="margin-left: 32px"
+              [routerLink]="[
+                '/medias/episode-view',
+                item.playlistItem.episodeId
+              ]">
+              {{ item.playlistItem.episodeId | mediaName : 'episode' | async }}
+            </a>
+          </nz-list-item-meta-description>
+        </nz-list-item-meta>
+        <ul nz-list-item-actions>
+          <nz-list-item-action
+            *ngIf="episodePlaylist?.userId === user?.id || isAdmin"
+            ><button
+              nz-button
+              nzType="primary"
+              nzDanger
+              nz-popconfirm
+              nzPopconfirmTitle="Êtes-vous sûr de vouloir supprimer ce média ?"
+              (nzOnConfirm)="removeItem(item.playlistItem)">
+              <span nz-icon nzType="delete"></span>
+              <span class="hide-on-phone"> Supprimer </span>
+            </button>
+          </nz-list-item-action>
+        </ul>
+      </nz-list-item>
+    </nz-list>
+    <nz-list-empty
+      *ngIf="episodePlaylistItems.length === 0 && !playlistLoading"
+      nzNoResult="Aucun média"></nz-list-empty>
+  </nz-card>
+</ng-container>
+
+<ng-template #search>
+  <nz-input-group class="hide-on-phone" nzSearch [nzSuffix]="suffixIconSearch">
+    <input
+      nz-input
+      placeholder="Rechercher"
+      [(ngModel)]="query"
+      (ngModelChange)="onQuery()" />
+  </nz-input-group>
+</ng-template>
+
+<ng-template #suffixIconSearch>
+  <span nz-icon nzType="search"></span>
+</ng-template>

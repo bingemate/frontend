@@ -10,7 +10,7 @@
       (nzChange)="handleChange($event)">
       <p class="drag-text">
         <i nz-icon nzType="inbox"></i>
-        Déposez des {{ type === 'movie' ? 'films' : 'séries' }} ici ou cliquez
+        Déposez des {{ type === 'movies' ? 'films' : 'séries' }} ici ou cliquez
         pour les sélectionner
       </p>
     </nz-upload>
@@ -48,6 +48,12 @@
     </nz-list>
   </nz-col>
   <nz-col nzSpan="24">
-    <button nz-button nzType="primary" (click)="uploadFiles()">Envoyer</button>
+    <button
+      nz-button
+      [disabled]="disabled || uploadQueue.length === 0"
+      nzType="primary"
+      (click)="uploadFiles()">
+      Envoyer
+    </button>
   </nz-col>
 </nz-row>

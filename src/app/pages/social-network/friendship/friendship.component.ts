@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FriendshipService } from '../../../feature/friendship/friendship.service';
 import { FriendResponse } from '../../../shared/models/friendship.models';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-friendship',
@@ -8,12 +9,23 @@ import { FriendResponse } from '../../../shared/models/friendship.models';
   styleUrls: ['./friendship.component.less'],
 })
 export class FriendshipComponent implements OnInit {
+  isOnPhone = false;
+
   friends: FriendResponse[] = [];
   pendingFriends: FriendResponse[] = [];
   friendRequests: FriendResponse[] = [];
   loading = false;
 
-  constructor(private readonly friendshipService: FriendshipService) {}
+  constructor(
+    private breakpointObserver: BreakpointObserver,
+    private readonly friendshipService: FriendshipService
+  ) {
+    this.breakpointObserver
+      .observe([Breakpoints.HandsetPortrait])
+      .subscribe(result => {
+        this.isOnPhone = result.matches;
+      });
+  }
 
   ngOnInit() {
     this.getRelationship();

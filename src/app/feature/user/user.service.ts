@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { API_RESOURCE_URI } from '../../shared/api-resource-uri/api-resources-uri';
 import {
   RoleRequest,
@@ -10,17 +10,25 @@ import {
   UserResponse,
   UserResults,
 } from '../../shared/models/user.models';
+import { delay, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
+  private readonly usernames = new Map<string, UsernameResponse>();
   constructor(private readonly http: HttpClient) {}
 
   getUsername(userId: string): Observable<UsernameResponse> {
-    return this.http.get<UsernameResponse>(
-      `${API_RESOURCE_URI.KEYCLOAK_SERVICE}/user-info/username/${userId}`
-    );
+    const username = this.usernames.get(userId);
+    if (username) {
+      return of(username);
+    }
+    return this.http
+      .get<UsernameResponse>(
+        `${API_RESOURCE_URI.KEYCLOAK_SERVICE}/user-info/username/${userId}`
+      )
+      .pipe(tap(username => this.usernames.set(userId, username)));
   }
 
   searchUsers(query: string, includeRoles = false): Observable<UserResponse[]> {
@@ -39,6 +47,12 @@ export class UserService {
     );
   }
 
+  getMe(): Observable<UserResponse> {
+    return this.http.get<UserResponse>(
+      `${API_RESOURCE_URI.KEYCLOAK_SERVICE}/user-info/me`
+    );
+  }
+
   update(updateUser: UpdateUserRequest): Observable<UserResponse> {
     return this.http.put<UserResponse>(
       `${API_RESOURCE_URI.KEYCLOAK_SERVICE}/user-edit`,
@@ -52,6 +66,12 @@ export class UserService {
     return this.http.put<string>(
       `${API_RESOURCE_URI.KEYCLOAK_SERVICE}/user-edit/password`,
       updatePassword
+    );
+  }
+
+  delete(): Observable<string> {
+    return this.http.delete<string>(
+      `${API_RESOURCE_URI.KEYCLOAK_SERVICE}/user-edit`
     );
   }
 
@@ -110,6 +130,12 @@ export class UserService {
     return this.http.get<UserResults>(
       `${API_RESOURCE_URI.KEYCLOAK_SERVICE}/user-admin/search`,
       { params }
+    );
+  }
+
+  adminDeleteUser(userId: string): Observable<string> {
+    return this.http.delete<string>(
+      `${API_RESOURCE_URI.KEYCLOAK_SERVICE}/user-admin/delete/${userId}`
     );
   }
 }

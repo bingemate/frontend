@@ -35,6 +35,12 @@ import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { NzImageModule } from 'ng-zorro-antd/image';
 import { RouterLink } from '@angular/router';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
+import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { NzDividerModule } from 'ng-zorro-antd/divider';
+import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 
 @NgModule({
   declarations: [
@@ -78,6 +84,12 @@ import { RouterLink } from '@angular/router';
     NzInputNumberModule,
     NzImageModule,
     RouterLink,
+    NzSpinModule,
+    NzDescriptionsModule,
+    NzCheckboxModule,
+    NzCardModule,
+    NzDividerModule,
+    NzPopconfirmModule,
   ],
 })
 export class WatchlistModule {}

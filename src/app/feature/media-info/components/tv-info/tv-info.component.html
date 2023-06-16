@@ -4,15 +4,19 @@
   [nzParagraph]="{ rows: 20 }"></nz-skeleton>
 <div class="tv-details-container" *ngIf="tv">
   <nz-row [nzGutter]="[24, 24]" class="tv-details">
-    <div class="tv-poster" nz-col nzSpan="6">
-      <img nz-image [nzSrc]="tv.posterUrl" alt="Movie Poster" width="100%" />
+    <div nz-col [nzXs]="18" [nzLg]="6">
+      <img nz-image [nzSrc]="tv.posterUrl" alt="tv poster" width="100%" />
     </div>
 
-    <div class="tv-info" nz-col [nzMd]="24" [nzXl]="18">
+    <div nz-col [nzXs]="24" [nzLg]="18">
       <nz-row [nzGutter]="[24, 24]">
-        <h1 class="tv-title" nz-col nzSpan="24">{{ tv.title }}</h1>
+        <h3 nz-typography class="tv-title" nz-col nzSpan="24">
+          {{ tv.title }}
+        </h3>
         <div nz-col nzSpan="24">
-          <nz-space nzSize="small">
+          <nz-space
+            nzSize="small"
+            [nzDirection]="isOnPhone ? 'vertical' : 'horizontal'">
             <button
               *nzSpaceItem
               nz-button
@@ -25,7 +29,7 @@
               [nzDropdownMenu]="watchlistMenu">
               <span *ngIf="!isMediaInWatchList">Suivre cette série</span>
               <span *ngIf="isMediaInWatchList">{{
-                watchlistItem!.status | watchlistStatus
+                watchlistItem!.status | tvShowWatchlistStatus
               }}</span>
               <span nz-icon nzType="down"></span>
             </button>
@@ -36,7 +40,13 @@
           &nbsp;{{ (tv.voteAverage / 2).toFixed(2) }}
         </div>
 
-        <nz-descriptions nzBordered [nzColumn]="1" nz-col nzSpan="24">
+        <nz-descriptions
+          nzBordered
+          [nzColumn]="1"
+          nz-col
+          nzSpan="24"
+          [nzSize]="isOnPhone ? 'small' : 'default'"
+          [nzLayout]="isOnPhone ? 'vertical' : 'horizontal'">
           <nz-descriptions-item nzTitle="Date de sortie">{{
             tv.releaseDate | date : 'dd/MM/yyyy'
           }}</nz-descriptions-item>
@@ -71,7 +81,7 @@
       <nz-card>
         <nz-tabset
           nzTabPosition="left"
-          nzSize="large"
+          [nzSize]="isOnPhone ? 'small' : 'large'"
           style="max-height: 500px">
           <nz-tab
             *ngFor="let seasonNumber of getSeasons()"
@@ -89,7 +99,7 @@
     <div class="actors" nz-col nzSpan="24">
       <h2>Acteurs</h2>
       <nz-list
-        nzSize="large"
+        [nzSize]="isOnPhone ? 'small' : 'large'"
         [nzPagination]="actorListPagination"
         [nzBordered]="false"
         [nzGrid]="{ gutter: 16, xs: 2, sm: 3, md: 4, lg: 6, xl: 6, xxl: 6 }">
@@ -124,7 +134,7 @@
         nz-menu-item
         *ngFor="let status of statusNames"
         (click)="addToWatchlist(status)">
-        {{ status | watchlistStatus }}
+        {{ status | tvShowWatchlistStatus }}
       </li>
     </ng-container>
     <ng-container *ngIf="isMediaInWatchList">
@@ -133,7 +143,7 @@
         *ngFor="let status of statusNames"
         (click)="changeShowStatus(status)"
         [nzDisabled]="status === watchlistItem?.status">
-        {{ status | watchlistStatus }}
+        {{ status | tvShowWatchlistStatus }}
       </li>
       <li nz-menu-item nzDanger (click)="removeShowWatchlist()">Retirer</li>
     </ng-container>

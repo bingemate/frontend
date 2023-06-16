@@ -6,9 +6,14 @@
   <nz-col>
     <nz-space nzAlign="center" nzDirection="vertical">
       <h1 nz-typography *nzSpaceItem>Bingemate</h1>
-      <h3 nz-typography *nzSpaceItem>
-        Le meilleur endroit pour trouver des séries et des films à regarder.
-      </h3>
+      <ngx-typed-js
+        *nzSpaceItem
+        [strings]="welcomeTexts"
+        [typeSpeed]="15"
+        [backDelay]="4000"
+        [backSpeed]="10">
+        <h3 nz-typography class="typing"></h3>
+      </ngx-typed-js>
     </nz-space>
   </nz-col>
   <nz-divider nz-col [nzSpan]="24"></nz-divider>
@@ -58,7 +63,11 @@
   <h2 nz-typography nz-col>Rejoignez Bingemate</h2>
   <nz-col [nzSpan]="24">
     <nz-row [nzGutter]="[16, 16]">
-      <nz-col nzSpan="8" *ngFor="let category of categories">
+      <nz-col
+        [nzMd]="{ span: 8 }"
+        [nzSm]="{ span: 12 }"
+        [nzXs]="{ span: 12 }"
+        *ngFor="let category of categories">
         <nz-card [nzTitle]="category.title" [nzCover]="cardCover">
           <ng-template #cardCover>
             <img

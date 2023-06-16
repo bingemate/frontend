@@ -1,0 +1,60 @@
+<h3 nz-typography>Factures</h3>
+<nz-table
+  #table
+  nzShowPagination
+  nzShowSizeChanger
+  [nzLoading]="invoiceLoading"
+  [nzData]="invoices"
+  [nzSize]="isOnPhone ? 'small' : 'default'">
+  <thead>
+    <tr>
+      <th>Tarif</th>
+      <th>Status</th>
+      <th>Date<span class="hide-on-phone"> de création</span></th>
+      <th><span class="hide-on-phone">Consulter</span></th>
+      <th><span class="hide-on-phone">Télécharger</span></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of table.data">
+      <td>
+        {{
+          data.price / 100
+            | currency : data.currency.toUpperCase() : 'symbol' : '0.2-2' : 'fr'
+        }}
+      </td>
+      <td>
+        <span nz-typography [nzType]="mapStatus(data.status)">
+          {{ data.status }}
+        </span>
+      </td>
+      <td>{{ data.created | date : 'dd/MM/yyyy' }}</td>
+      <td>
+        <a [href]="data.invoiceUrl" target="_blank">
+          <span nz-icon nzType="link" nzTheme="outline"></span>
+        </a>
+      </td>
+      <td>
+        <a [href]="data.invoicePdfUrl" target="_blank">
+          <span nz-icon nzType="download" nzTheme="outline"></span>
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</nz-table>
+<nz-empty
+  [nzNotFoundContent]="contentTpl"
+  [nzNotFoundFooter]="footerTpl"
+  *ngIf="!invoiceLoading && invoices.length === 0">
+  <ng-template #contentTpl>
+    <span> Vous n'avez actuellement pas de facture </span>
+  </ng-template>
+  <ng-template #footerTpl>
+    <a
+      nz-button
+      nzType="primary"
+      [routerLink]="['/subscriptions/subscriptions-list']">
+      Abonnez vous
+    </a>
+  </ng-template>
+</nz-empty>

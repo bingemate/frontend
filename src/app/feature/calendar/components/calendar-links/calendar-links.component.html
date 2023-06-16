@@ -1,9 +1,23 @@
-<b>Liens Ical (à copier dans votre application de calendrier)</b>
-<ul>
-  <li nz-typography nzCopyable [nzCopyText]="calendarLinks.movies + user?.id">
+<nz-descriptions
+  nzTitle="Liens Ical (à copier dans votre application de calendrier)"
+  nzSize="small"
+  nzBordered>
+  <nz-descriptions-item [nzTitle]="film" nzSpan="3">
+    {{ calendarLinks.movies + user?.id }}
+  </nz-descriptions-item>
+  <nz-descriptions-item [nzTitle]="series" nzSpan="3">
+    {{ calendarLinks.tvShows + user?.id }}
+  </nz-descriptions-item>
+</nz-descriptions>
+
+<ng-template #film>
+  <nz-typography nzCopyable [nzCopyText]="calendarLinks.movies + user?.id">
     Films
-  </li>
-  <li nz-typography nzCopyable [nzCopyText]="calendarLinks.tvShows + user?.id">
+  </nz-typography>
+</ng-template>
+
+<ng-template #series>
+  <nz-typography nzCopyable [nzCopyText]="calendarLinks.tvShows + user?.id">
     Séries
-  </li>
-</ul>
+  </nz-typography>
+</ng-template>

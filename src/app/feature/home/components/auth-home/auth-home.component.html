@@ -1,9 +1,13 @@
 <nz-row [nzGutter]="[16, 16]">
-  <nz-page-header nz-col [nzSpan]="24" nzTitle="Continuer à regarder">
+  <nz-page-header
+    nz-col
+    [nzSpan]="24"
+    nzTitle="Continuer à regarder"
+    *ngIf="history.length > 0">
   </nz-page-header>
 
-  <nz-col [nzSpan]="24">
-    <nz-card>
+  <nz-col [nzSpan]="24" *ngIf="history.length > 0">
+    <nz-card [ngClass]="isSubscribed ? '' : 'disabled-overlay'">
       <cdk-virtual-scroll-viewport
         orientation="horizontal"
         itemSize="250"
@@ -13,13 +17,14 @@
             <div *nzSpaceItem class="item">
               <app-media-info
                 [routerLink]="
-                  (isSubscribed$ | async) ? [mediaStreamPath, item.mediaId] : []
+                  isSubscribed ? [mediaStreamPath, item.type, item.mediaId] : []
                 "
                 [queryParams]="{
                   progress: item.stoppedAt > 0.95 ? 0 : item.stoppedAt
                 }"
                 style="cursor: pointer"
                 [mediaId]="item.mediaId"
+                [type]="item.type"
                 [vertical]="true"></app-media-info>
               <div style="width: 220px">
                 <nz-progress

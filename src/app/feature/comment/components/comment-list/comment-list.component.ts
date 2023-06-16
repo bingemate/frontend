@@ -7,6 +7,7 @@ import { CommentService } from '../../comment.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 import { userProfilViewLinks } from '../../../../pages/social-network/social-network-routing.module';
 import { UserResponse } from '../../../../shared/models/user.models';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-comment-list',
@@ -16,6 +17,7 @@ import { UserResponse } from '../../../../shared/models/user.models';
 export class CommentListComponent {
   @Input() comments: CommentResponse[] = [];
   @Input() showMedia = false;
+  @Input() mediaType: 'movie' | 'tv' = 'movie';
 
   @Select(AuthState.user)
   user$!: Observable<UserResponse>;
@@ -44,16 +46,34 @@ export class CommentListComponent {
   }
 
   onUpdateComment(comment: CommentResponse, content: string): void {
-    this.commentService.updateComment(comment.id, content).subscribe(() => {
-      this.notificationsService.success('Commentaire mis à jour');
-      comment.content = content;
-    });
+    if (this.mediaType === 'movie') {
+      this.commentService
+        .updateMovieComment(comment.id, content)
+        .subscribe(() => {
+          this.notificationsService.success('Commentaire mis à jour');
+          comment.content = content;
+        });
+    } else {
+      this.commentService
+        .updateTvShowComment(comment.id, content)
+        .subscribe(() => {
+          this.notificationsService.success('Commentaire mis à jour');
+          comment.content = content;
+        });
+    }
   }
 
   onDeleteComment(comment: CommentResponse): void {
-    this.commentService.deleteComment(comment.id).subscribe(() => {
-      this.notificationsService.success('Commentaire supprimé');
-      this.comments = this.comments.filter(c => c.id !== comment.id);
-    });
+    if (this.mediaType === 'movie') {
+      this.commentService.deleteMovieComment(comment.id).subscribe(() => {
+        this.notificationsService.success('Commentaire supprimé');
+        this.comments = this.comments.filter(c => c.id !== comment.id);
+      });
+    } else {
+      this.commentService.deleteTvShowComment(comment.id).subscribe(() => {
+        this.notificationsService.success('Commentaire supprimé');
+        this.comments = this.comments.filter(c => c.id !== comment.id);
+      });
+    }
   }
 }

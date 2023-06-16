@@ -14,6 +14,7 @@ import {
   FriendResponse,
   FriendState,
 } from '../../../../shared/models/friendship.models';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-user-info',
@@ -21,12 +22,16 @@ import {
   styleUrls: ['./user-info.component.less'],
 })
 export class UserInfoComponent implements OnInit {
+  isOnPhone = false;
+
   @Select(AuthState.user) user$!: Observable<UserResponse>;
   authUser: UserResponse | null = null;
 
   @Select(AuthState.isAdmin) isAdmin$!: Observable<boolean>;
   isAdmin = false;
   roles: string[] = [];
+
+  @Input() owner = false;
 
   @Input() user: UserResponse | null = null;
 
@@ -36,11 +41,17 @@ export class UserInfoComponent implements OnInit {
   relationShip: FriendResponse | null = null;
 
   constructor(
+    private breakpointObserver: BreakpointObserver,
     private readonly userService: UserService,
     private readonly fb: FormBuilder,
     private readonly notificationsService: NotificationsService,
     private friendShipService: FriendshipService
   ) {
+    this.breakpointObserver
+      .observe([Breakpoints.HandsetPortrait])
+      .subscribe(result => {
+        this.isOnPhone = result.matches;
+      });
     this.user$.subscribe(user => {
       this.authUser = user;
     });
@@ -179,13 +190,6 @@ export class UserInfoComponent implements OnInit {
     };
   }
 
-  getBadgeColor(role: string): string {
-    const index = role
-      .split('')
-      .reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    return badgeColors[index % badgeColors.length];
-  }
-
   onRoleChange(role: string, checked: boolean): void {
     if (checked) {
       this.userService
@@ -224,6 +228,13 @@ export class UserInfoComponent implements OnInit {
   }
 
   protected readonly FriendState = FriendState;
+}
+
+export function getBadgeColor(role: string): string {
+  const index = role
+    .split('')
+    .reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  return badgeColors[index % badgeColors.length];
 }
 
 const badgeColors = [

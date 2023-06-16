@@ -8,6 +8,7 @@
 
 <ng-template #card>
   <nz-card
+    [nzSize]="isOnPhone ? 'small' : 'default'"
     nzHoverable
     class="movie-poster"
     [nzCover]="cover"
@@ -19,13 +20,23 @@
 </ng-template>
 
 <ng-template #cover>
-  <img nz-image nzDisablePreview [nzSrc]="movie?.posterUrl!" alt="" />
+  <img
+    nz-image
+    nzDisablePreview
+    [nzSrc]="movie?.posterUrl!"
+    width="100%"
+    alt="" />
 </ng-template>
 
 <ng-template #description>
   {{ movie?.releaseDate | date : 'yyyy' }}
   <br />
-  <nz-rate [ngModel]="getRate()" nzAllowHalf nzDisabled></nz-rate>
+  <nz-rate
+    class="hide-on-phone"
+    [ngModel]="getRate()"
+    nzAllowHalf
+    nzDisabled></nz-rate>
+  <i class="hide-on-desktop" nz-icon nzType="star" nzTheme="fill"></i>
   {{ ((movie?.voteAverage ?? 0) / 2).toFixed(2) }}
 </ng-template>
 

@@ -1,13 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Link, navigationRoot } from './app-routing.module';
 import { accountLinks } from './pages/auth/auth-routing.module';
 import { socialNetworkLinks } from './pages/social-network/social-network-routing.module';
-import {
-  ActivatedRoute,
-  NavigationEnd,
-  NavigationStart,
-  Router,
-} from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { subscriptionLinks } from './pages/subscription/subscriptions-routing.module';
 import {
   mediaSearchPath,
@@ -26,31 +21,43 @@ import { AuthState } from './core/auth/store/auth.state';
 import { isMatchingRoles, UserResponse } from './shared/models/user.models';
 import { KeycloakService } from 'keycloak-angular';
 import { adminLinks, uploadLink } from './pages/admin/admin-routing.module';
+import { UserService } from './feature/user/user.service';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { MessagingService } from './feature/messaging/messaging.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.less'],
 })
-export class AppComponent implements OnInit {
-  isLoading = true;
+export class AppComponent implements OnInit, OnDestroy {
   readonly environment = environment;
+  isOnPhone = false;
 
   constructor(
+    private breakpointObserver: BreakpointObserver,
     private readonly router: Router,
     private route: ActivatedRoute,
     public readonly notificationsService: NotificationsService,
     private readonly store: Store,
     private readonly actions: Actions,
-    private readonly keycloak: KeycloakService
+    private readonly keycloak: KeycloakService,
+    private readonly userService: UserService,
+    private readonly messagingService: MessagingService
   ) {
+    this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
+      this.isOnPhone = result.matches;
+    });
+
     this.isSubscribed$.subscribe(isSubscribed => {
       this.subscriptionLinks = Object.values(subscriptionLinks)
         .filter(
           link =>
-            ![isSubscribed ? 'subscriptions-list' : 'my-subscription'].includes(
-              link.path
-            )
+            ![
+              isSubscribed ? 'subscriptions-list' : 'my-subscription',
+              'success',
+              'canceled',
+            ].includes(link.path)
         )
         .map(link => {
           return {
@@ -62,17 +69,14 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.router.events.subscribe(e => {
-      if (e instanceof NavigationStart) {
-        this.isLoading = true;
-      } else if (e instanceof NavigationEnd) {
-        this.isLoading = false;
-      }
-    });
     this.subscribeForRouterEvents();
     this.subscribeForAuthEvents();
     this.subscribeForThemeEvents();
     this.isUserLoggedIn();
+  }
+
+  ngOnDestroy() {
+    this.messagingService.closeSocket();
   }
 
   ////////////////////////////////////////////////////////////////////////////
@@ -113,22 +117,21 @@ export class AppComponent implements OnInit {
       .isLoggedIn()
       .then(logged => {
         if (logged) {
-          this.keycloak
-            .loadUserProfile()
-            .then(profile => {
-              const roles = this.keycloak.getUserRoles();
+          this.userService.getMe().subscribe({
+            next: user => {
               this.store.dispatch(
                 new AuthActions.LoggedIn({
-                  profile,
-                  roles,
+                  user,
                 })
               );
-            })
-            .catch(() => {
+              this.messagingService.startMessagingSocket();
+            },
+            error: () => {
               this.notificationsService.error(
                 'Une erreur est survenue lors de la connexion'
               );
-            });
+            },
+          });
         }
       })
       .catch(() => {
@@ -176,6 +179,7 @@ export class AppComponent implements OnInit {
   }
 
   readonly chatLink = `${navigationRoot.socialNetwork.path}/${socialNetworkLinks.chat.path}`;
+  readonly calendarLink = `${navigationRoot.watchlist.path}/${watchlistLinks.calendar.path}`;
 
   accountLinks: Link[] = [];
 
@@ -250,6 +254,12 @@ export class AppComponent implements OnInit {
       path: `${navigationRoot.admin.path}/${link.path}`,
     };
   });
+
+  onLinkClick() {
+    if (this.isOnPhone) {
+      this.isNavbarCollapsed = true;
+    }
+  }
 
   protected readonly uploadLink = uploadLink;
   protected readonly mediaSearchPath = mediaSearchPath;

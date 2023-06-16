@@ -1,39 +1,41 @@
-<div nz-row nzJustify="space-between">
-  <h3>Temps de visionnage quotidien</h3>
-  <nz-button-group>
-    <button nz-button nz-dropdown [nzDropdownMenu]="menu4">
-      {{ selectedPeriod }}
-      <span nz-icon nzType="down"></span>
-    </button>
-  </nz-button-group>
-</div>
-<canvas
-  baseChart
-  class="chart"
-  [data]="lineChartData"
-  [options]="lineChartOptions"
-  [type]="lineChartType">
-</canvas>
+<nz-card>
+  <div nz-row nzJustify="space-between">
+    <h3>Temps de visionnage quotidien</h3>
+    <nz-button-group>
+      <button nz-button nz-dropdown [nzDropdownMenu]="menu4">
+        {{ selectedPeriod }}
+        <span nz-icon nzType="down"></span>
+      </button>
+    </nz-button-group>
+  </div>
+  <canvas
+    baseChart
+    class="chart"
+    [data]="lineChartData"
+    [options]="lineChartOptions"
+    [type]="lineChartType">
+  </canvas>
 
-<nz-dropdown-menu #menu4="nzDropdownMenu">
-  <ul nz-menu>
-    <li
-      nz-menu-item
-      (click)="setDailyViewSevenDaysPeriod()"
-      [nzSelected]="selectedPeriod === '7 jours'">
-      7 jours
-    </li>
-    <li
-      nz-menu-item
-      (click)="setDailyViewMonthPeriod()"
-      [nzSelected]="selectedPeriod === '1 mois'">
-      1 mois
-    </li>
-    <li
-      nz-menu-item
-      (click)="setDailyViewSemesterPeriod()"
-      [nzSelected]="selectedPeriod === '6 mois'">
-      6 mois
-    </li>
-  </ul>
-</nz-dropdown-menu>
+  <nz-dropdown-menu #menu4="nzDropdownMenu">
+    <ul nz-menu>
+      <li
+        nz-menu-item
+        (click)="setDailyViewSevenDaysPeriod()"
+        [nzSelected]="selectedPeriod === '7 jours'">
+        7 jours
+      </li>
+      <li
+        nz-menu-item
+        (click)="setDailyViewMonthPeriod()"
+        [nzSelected]="selectedPeriod === '1 mois'">
+        1 mois
+      </li>
+      <li
+        nz-menu-item
+        (click)="setDailyViewSemesterPeriod()"
+        [nzSelected]="selectedPeriod === '6 mois'">
+        6 mois
+      </li>
+    </ul>
+  </nz-dropdown-menu>
+</nz-card>

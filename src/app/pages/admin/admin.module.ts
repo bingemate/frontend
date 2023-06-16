@@ -7,9 +7,12 @@ import { UploadScanModule } from '../../feature/upload-scan/upload-scan.module';
 import { AdminRoutingModule } from './admin-routing.module';
 import { AdminUsersComponent } from './admin-users/admin-users.component';
 import { UserModule } from '../../feature/user/user.module';
+import { MediaFilesComponent } from './media-files/media-files.component';
+import { MediaFileModule } from '../../feature/media-file/media-file.module';
+import { NzCardModule } from 'ng-zorro-antd/card';
 
 @NgModule({
-  declarations: [UploadScanComponent, AdminUsersComponent],
+  declarations: [UploadScanComponent, AdminUsersComponent, MediaFilesComponent],
   imports: [
     CommonModule,
     AdminRoutingModule,
@@ -17,6 +20,8 @@ import { UserModule } from '../../feature/user/user.module';
     NzTabsModule,
     UploadScanModule,
     UserModule,
+    MediaFileModule,
+    NzCardModule,
   ],
 })
 export class AdminModule {}

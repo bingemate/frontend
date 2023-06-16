@@ -1,0 +1,21 @@
+<nz-row [nzGutter]="[16, 16]">
+  <nz-col [nzSpan]="24">
+    <app-file-stats></app-file-stats>
+  </nz-col>
+  <nz-col [nzSpan]="24">
+    <nz-card>
+      <nz-tabset nzSize="large">
+        <nz-tab nzTitle="Films">
+          <ng-template nz-tab>
+            <app-movie-file-list></app-movie-file-list>
+          </ng-template>
+        </nz-tab>
+        <nz-tab nzTitle="Séries">
+          <ng-template nz-tab>
+            <app-episode-file-list></app-episode-file-list>
+          </ng-template>
+        </nz-tab>
+      </nz-tabset>
+    </nz-card>
+  </nz-col>
+</nz-row>

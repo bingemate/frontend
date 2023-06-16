@@ -4,6 +4,7 @@ import {
   TvShowResponse,
 } from '../../../shared/models/media.models';
 import { MediaDiscoverService } from '../../../feature/media-info/media-discover.service';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-trending',
@@ -11,6 +12,8 @@ import { MediaDiscoverService } from '../../../feature/media-info/media-discover
   styleUrls: ['./trending.component.less'],
 })
 export class TrendingComponent implements OnInit {
+  isOnPhone = false;
+
   popularMovies: MovieResponse[] = [];
   popularMoviesPage = 1;
   popularMoviesLoading = false;
@@ -25,12 +28,20 @@ export class TrendingComponent implements OnInit {
   recentTvShows: TvShowResponse[] = [];
   recentTvShowsLoading = false;
 
-  mediaByComments: number[] = [];
-  mediaByCommentsLoading = false;
+  mediaByComments: { type: 'movie' | 'tv'; id: number }[] = [];
+  moviesByCommentsLoading = false;
+  tvShowsByCommentsLoading = false;
 
   onlyAvailable = false;
 
-  constructor(private mediaDiscoverService: MediaDiscoverService) {}
+  constructor(
+    private breakpointObserver: BreakpointObserver,
+    private mediaDiscoverService: MediaDiscoverService
+  ) {
+    this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
+      this.isOnPhone = result.matches;
+    });
+  }
 
   ngOnInit(): void {
     this.getPopularMovies();
@@ -98,12 +109,28 @@ export class TrendingComponent implements OnInit {
   }
 
   onGetMediaByComments() {
-    this.mediaByCommentsLoading = true;
+    this.moviesByCommentsLoading = true;
+    this.tvShowsByCommentsLoading = true;
+    this.mediaByComments = [];
     this.mediaDiscoverService
-      .getMediasByComments(this.onlyAvailable)
+      .getMoviesByComments(this.onlyAvailable)
       .subscribe(media => {
-        this.mediaByCommentsLoading = false;
-        this.mediaByComments = media;
+        this.moviesByCommentsLoading = false;
+        this.mediaByComments.push(
+          ...media.map(
+            m => ({ type: 'movie', id: m } as { type: 'movie'; id: number })
+          )
+        );
+      });
+    this.mediaDiscoverService
+      .getTvShowsByComments(this.onlyAvailable)
+      .subscribe(media => {
+        this.tvShowsByCommentsLoading = false;
+        this.mediaByComments.push(
+          ...media.map(
+            m => ({ type: 'tv', id: m } as { type: 'tv'; id: number })
+          )
+        );
       });
   }
 

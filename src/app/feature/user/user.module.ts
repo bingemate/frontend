@@ -29,6 +29,13 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { AdminUserListComponent } from './components/admin-user-list/admin-user-list.component';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { NzTableModule } from 'ng-zorro-antd/table';
+import { DeleteUserComponent } from './components/delete-user/delete-user.component';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzResultModule } from 'ng-zorro-antd/result';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { UpdatePasswordComponent } from './components/update-password/update-password.component';
+import { NzPopoverModule } from 'ng-zorro-antd/popover';
+import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 
 @NgModule({
   declarations: [
@@ -36,6 +43,8 @@ import { NzTableModule } from 'ng-zorro-antd/table';
     UserListComponent,
     UserInfoComponent,
     AdminUserListComponent,
+    DeleteUserComponent,
+    UpdatePasswordComponent,
   ],
   imports: [
     CommonModule,
@@ -62,7 +71,17 @@ import { NzTableModule } from 'ng-zorro-antd/table';
     NzCheckboxModule,
     NzTabsModule,
     NzTableModule,
+    NzModalModule,
+    NzResultModule,
+    NzSpinModule,
+    NzPopoverModule,
+    NzPopconfirmModule,
   ],
-  exports: [UserSearchComponent, UserInfoComponent, AdminUserListComponent],
+  exports: [
+    UserSearchComponent,
+    UserInfoComponent,
+    AdminUserListComponent,
+    UpdatePasswordComponent,
+  ],
 })
 export class UserModule {}

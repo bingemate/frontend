@@ -11,6 +11,7 @@
               *nzSpaceItem
               [editable]="true"
               [rating]="userRating"
+              [type]="'movie'"
               (updateRating)="onRefreshRatings()"></app-rating-view>
             <app-rating-list
               *nzSpaceItem
@@ -25,10 +26,7 @@
           [nzActions]="[newComment]"
           nzTitle="Commentaires"
           [nzExtra]="commentsListPagination">
-          <app-comment-list
-            nz-col
-            nzSpan="24"
-            [comments]="comments.results"></app-comment-list>
+          <app-comment-list [comments]="comments.results"></app-comment-list>
         </nz-card>
       </ng-template>
     </nz-tab>
@@ -63,6 +61,7 @@
 <ng-template #newComment>
   <app-new-comment
     [mediaId]="movieId ?? 0"
+    [type]="'movies'"
     (newComment)="onRefreshComments()"></app-new-comment>
 </ng-template>
 

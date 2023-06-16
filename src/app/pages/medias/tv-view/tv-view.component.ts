@@ -71,7 +71,7 @@ export class TvViewComponent {
 
   onGetMediaComments() {
     this.commentService
-      .getMediaComments(this.tvId ?? 0, this.commentsCurrentPage)
+      .getTvShowComments(this.tvId ?? 0, this.commentsCurrentPage)
       .subscribe(comments => {
         this.comments = comments;
       });
@@ -89,7 +89,7 @@ export class TvViewComponent {
 
   onGetUserRating() {
     this.ratingService
-      .getUserMediaRating(this.user?.id ?? '', this.tvId ?? 0)
+      .getUserTvRating(this.user?.id ?? '', this.tvId ?? 0)
       .subscribe(rating => {
         this.userRating = rating;
       });
@@ -97,7 +97,7 @@ export class TvViewComponent {
 
   onGetMediaRatings() {
     this.ratingService
-      .getMediaRating(this.tvId ?? 0, this.ratingsCurrentPage)
+      .getTvRating(this.tvId ?? 0, this.ratingsCurrentPage)
       .subscribe(ratings => {
         this.ratings = ratings;
         console.log(ratings);

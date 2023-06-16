@@ -5,17 +5,16 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { Select, Store } from '@ngxs/store';
+import { Select } from '@ngxs/store';
 import { AuthState } from '../../../core/auth/store/auth.state';
-import { Observable } from 'rxjs';
+import { filter, Observable, Subscription, switchMap } from 'rxjs';
 import { Message } from '../../../shared/models/messaging.model';
-import { io, Socket } from 'socket.io-client';
-import { environment } from '../../../../environments/environment';
-import { KeycloakService } from 'keycloak-angular';
 import { ActivatedRoute } from '@angular/router';
 import { UserResponse } from '../../../shared/models/user.models';
 import { FriendshipService } from '../../../feature/friendship/friendship.service';
-import { FriendResponse } from '../../../shared/models/friendship.models';
+import { MessagingService } from '../../../feature/messaging/messaging.service';
+import { MessagingState } from '../../../feature/messaging/store/messaging.state';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-messaging',
@@ -25,112 +24,92 @@ import { FriendResponse } from '../../../shared/models/friendship.models';
 export class MessagingComponent implements OnInit, OnDestroy {
   @Select(AuthState.user)
   user$!: Observable<UserResponse>;
+  @Select(MessagingState.users)
+  users$!: Observable<string[]>;
+  @Select(MessagingState.messages)
+  messages$!: Observable<Message[]>;
   authUserId = '';
+
+  isOnPhone = false;
 
   @ViewChild('messages') messages!: ElementRef;
 
-  activeFriendId?: string;
+  activeUserId?: string;
   newMessage = '';
-  userList = new Set<string>();
+  userList: string[] = [];
   messageList: Message[] = [];
-
-  friendList: FriendResponse[] = [];
-  friendLoading = false;
-
-  private socket?: Socket;
+  subscriptions: Subscription[] = [];
 
   constructor(
-    private keycloak: KeycloakService,
+    private breakpointObserver: BreakpointObserver,
     private friendshipService: FriendshipService,
-    private store: Store,
-    private readonly currentRoute: ActivatedRoute
+    private readonly currentRoute: ActivatedRoute,
+    private messagingService: MessagingService
   ) {
-    this.user$.subscribe(user => {
-      this.authUserId = user.id;
-    });
+    this.breakpointObserver
+      .observe([Breakpoints.HandsetPortrait])
+      .subscribe(result => {
+        this.isOnPhone = result.matches;
+      });
   }
   ngOnInit() {
     this.currentRoute.params.subscribe(params => {
       if (params['id']) {
-        this.activeFriendId = params['id'];
+        this.activeUserId = params['id'];
+        this.userList.push(params['id']);
       }
     });
 
-    this.user$.subscribe(user => {
-      this.friendLoading = true;
-      this.friendshipService.getUserFriends(user.id).subscribe(friends => {
-        this.friendLoading = false;
-        this.friendList = friends;
-      });
-    });
-
-    this.setupSocket().then();
+    this.subscriptions.push(
+      this.user$
+        .pipe(
+          filter(user => user !== null && user !== undefined),
+          switchMap(user => {
+            this.authUserId = user.id;
+            return this.friendshipService.getUserFriends(user.id);
+          })
+        )
+        .subscribe(friends =>
+          this.setUserList(friends.map(friend => friend.friendId))
+        )
+    );
+    this.messages$.subscribe(messages => (this.messageList = messages));
+    this.users$.subscribe(users => this.setUserList(users));
   }
 
-  private async setupSocket() {
-    const key = await this.keycloak.getToken();
-    this.socket = io(`${environment.websocketUrl}`, {
-      transports: ['polling'],
-      extraHeaders: { Authorization: `Bearer ${key}` },
-      path: '/dev/messaging-service/socket.io',
-    });
-    this.socket.on('messages', message => {
-      this.messageList = message;
-      this.scrollToBottom();
-      this.updateUserList();
-    });
-    this.socket.on('newMessage', message => {
-      this.messageList.push(message);
-      this.scrollToBottom();
-      this.updateUserList();
-    });
-    this.socket.on('deletedMessage', message => {
-      this.messageList = this.messageList.filter(message.messageId);
-      this.scrollToBottom();
-    });
-    this.socket.emit('getMessages');
+  setUserList(users: string[]) {
+    this.userList = [...new Set([...users, ...this.userList])];
   }
 
   ngOnDestroy() {
-    this.socket?.disconnect();
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   sendMessage() {
     if (this.newMessage.trim() !== '') {
-      this.socket?.emit('sendMessage', {
+      this.messagingService.sendMessage({
         text: this.newMessage,
-        receiverId: this.activeFriendId,
+        receiverId: this.activeUserId,
       });
       this.newMessage = '';
+      this.scrollToBottom();
     }
   }
 
   deleteMessage(messageId: string) {
-    this.socket?.emit('deleteMessage', {
-      messageId,
-    });
+    this.messagingService.deleteMessage(messageId);
     this.messageList = this.messageList.filter(
       message => message.id !== messageId
     );
   }
 
-  private updateUserList() {
-    this.messageList.forEach(message =>
-      this.userList.add(
-        message.senderId === this.authUserId
-          ? message.receiverId
-          : message.senderId
-      )
-    );
-  }
-
-  selectFriend(userId: string) {
-    this.activeFriendId = userId;
+  selectUser(userId: string) {
+    this.activeUserId = userId;
     this.scrollToBottom();
   }
 
   isSelected(userId: string) {
-    return this.activeFriendId === userId;
+    return this.activeUserId === userId;
   }
 
   scrollToBottom() {

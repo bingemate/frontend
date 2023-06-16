@@ -19,9 +19,13 @@ import {
   StreamStatusEnum,
   StreamUpdateEvent,
 } from '../../../shared/models/streaming.model';
-import { StreamingActions } from '../store/streaming.actions';
 import { Store } from '@ngxs/store';
-import { MediaResponse } from '../../../shared/models/media.models';
+import {
+  MovieResponse,
+  TvEpisodeResponse,
+} from '../../../shared/models/media.models';
+import { StreamingActions } from '../store/streaming.actions';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-video-player',
@@ -32,10 +36,13 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
   mediaViewLink = `/${navigationRoot.medias.path}/`;
 
   @Input() mediaId: number | undefined;
-  @Input() mediaInfo: MediaResponse | undefined;
+  @Input() mediaInfo: MovieResponse | TvEpisodeResponse | undefined;
   @Input() mediaFile: MediaFile | undefined;
+  @Input() type: 'movies' | 'tv-shows' | undefined;
   @Input() timeSeek = 0;
   @Output() streamUpdate = new EventEmitter<StreamUpdateEvent>();
+
+  isOnPhone = false;
 
   audioOptions: BitrateOptions[] = [];
   audioList: string[] = [];
@@ -45,11 +52,17 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
   videoUrl = '';
   currentAudio = '';
   subscriptions: Subscription[] = [];
+  mediaName = '';
 
   constructor(
+    private breakpointObserver: BreakpointObserver,
     private mediaInfoService: MediaInfoService,
     private readonly store: Store
-  ) {}
+  ) {
+    this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
+      this.isOnPhone = result.matches;
+    });
+  }
 
   ngOnInit() {
     this.loadMediaInfo();
@@ -62,43 +75,37 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (
-      changes['mediaFile'] &&
-      !changes['mediaFile'].isFirstChange() &&
-      changes['mediaFile'].previousValue !== changes['mediaFile'].currentValue
-    ) {
-      this.loadMediaFileInfo();
-    }
-    if (
-      changes['mediaId'] &&
-      !changes['mediaId'].isFirstChange() &&
-      changes['mediaId'].previousValue !== changes['mediaId'].currentValue
+      (changes['mediaFile'] &&
+        !changes['mediaFile'].isFirstChange() &&
+        changes['mediaFile'].previousValue !==
+          changes['mediaFile'].currentValue) ||
+      (changes['mediaId'] &&
+        !changes['mediaId'].isFirstChange() &&
+        changes['mediaId'].previousValue !== changes['mediaId'].currentValue) ||
+      (changes['type'] &&
+        !changes['type'].isFirstChange() &&
+        changes['type'].previousValue !== changes['type'].currentValue)
     ) {
       this.loadMediaInfo();
+      this.loadMediaFileInfo();
     }
   }
 
   private loadMediaInfo() {
-    if (this.mediaInfo) {
-      switch (this.mediaInfo.mediaType) {
-        case 'Movie':
-          this.mediaViewLink += `${mediasLinks.movie_view.path}/${this.mediaId}`;
-          break;
-        case 'Episode':
-          this.subscriptions.push(
-            this.mediaInfoService
-              .getTvShowEpisodeInfoById(this.mediaInfo.id)
-              .subscribe(episode => {
-                this.mediaViewLink += `${mediasLinks.tv_show_view.path}/${episode.tvShowId}`;
-              })
-          );
-          break;
-      }
+    if (this.type && this.type === 'movies') {
+      const movie = this.mediaInfo as MovieResponse;
+      this.mediaName = movie.title;
+      this.mediaViewLink += `${mediasLinks.movie_view.path}/${this.mediaId}`;
+    } else {
+      const episode = this.mediaInfo as TvEpisodeResponse;
+      this.mediaName = episode.name;
+      this.mediaViewLink += `${mediasLinks.tv_show_view.path}/${episode.tvShowId}`;
     }
   }
   private loadMediaFileInfo() {
-    if (this.mediaFile) {
-      this.videoUrl = `${API_RESOURCE_URI.STREAMING}/${this.mediaId}/${this.mediaFile.filename}`;
-      console.log(this.videoUrl);
+    if (this.mediaFile && this.type) {
+      this.videoUrl = `${API_RESOURCE_URI.STREAMING}/${this.type}/${this.mediaId}/${this.mediaFile.filename}`;
+      // console.log(this.videoUrl);
       this.audioOptions = this.mediaFile.audios.map((audioTrack, index) => {
         return {
           qualityIndex: index,
@@ -111,13 +118,13 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
       });
       this.audioList = this.mediaFile.audios.map(
         audioTrack =>
-          `${API_RESOURCE_URI.STREAMING}/${this.mediaId}/${audioTrack.filename}`
+          `${API_RESOURCE_URI.STREAMING}/${this.type}/${this.mediaId}/${audioTrack.filename}`
       );
       this.subtitleList = this.mediaFile.subtitles.map(
         (subtitleTrack, index) => {
           return {
             srcLang: subtitleTrack.language.toLowerCase(),
-            url: `${API_RESOURCE_URI.STREAMING}/${this.mediaId}/${subtitleTrack.filename}`,
+            url: `${API_RESOURCE_URI.STREAMING}/${this.type}/${this.mediaId}/${subtitleTrack.filename}`,
             default: index === 0,
           };
         }
@@ -138,7 +145,7 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
         .subscribe(() =>
           this.streamUpdate.emit({
             watchStatus: StreamStatusEnum.PLAYING,
-            stoppedAt: api.currentTime / api.duration,
+            stoppedAt: api.currentTime / api.duration || 0,
           })
         )
     );
@@ -146,7 +153,7 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
       api.getDefaultMedia().subscriptions.pause.subscribe(() =>
         this.streamUpdate.emit({
           watchStatus: StreamStatusEnum.STOPPED,
-          stoppedAt: api.currentTime / api.duration,
+          stoppedAt: api.currentTime / api.duration || 0,
         })
       )
     );
@@ -154,7 +161,7 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
       api.getDefaultMedia().subscriptions.play.subscribe(() =>
         this.streamUpdate.emit({
           watchStatus: StreamStatusEnum.STARTED,
-          stoppedAt: api.currentTime / api.duration,
+          stoppedAt: api.currentTime / api.duration || 0,
         })
       )
     );

@@ -1,12 +1,20 @@
-<nz-row [nzGutter]="16">
+<nz-row [nzGutter]="[16, 16]">
   <nz-col [nzSpan]="24">
-    <nz-tabset>
-      <nz-tab nzTitle="Films">
-        <app-upload [type]="'movie'"></app-upload>
-      </nz-tab>
-      <nz-tab nzTitle="Series">
-        <app-upload [type]="'tv'"></app-upload>
-      </nz-tab>
-    </nz-tabset>
+    <nz-card>
+      <nz-tabset>
+        <nz-tab nzTitle="Films">
+          <app-upload [disabled]="jobRunning" [type]="'movies'"></app-upload>
+        </nz-tab>
+        <nz-tab nzTitle="Series">
+          <app-upload [disabled]="jobRunning" [type]="'tv-shows'"></app-upload>
+        </nz-tab>
+      </nz-tabset>
+    </nz-card>
+  </nz-col>
+  <nz-col [nzSpan]="24">
+    <app-scan [disabled]="jobRunning"></app-scan>
+  </nz-col>
+  <nz-col [nzSpan]="24">
+    <app-logs [logs]="jobLogs" [jobRunning]="jobRunning"></app-logs>
   </nz-col>
 </nz-row>
