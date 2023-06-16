@@ -60,31 +60,33 @@ export class PlaylistStreamComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.type$
-      .pipe(
-        switchMap(type => {
-          if (type === 'movies') {
-            return this.moviePlaylist$.pipe(
-              mergeMap(playlist => {
-                return this.getMovies(playlist.items);
-              }),
-              tap(items => {
-                this.moviePlaylistItems = items;
-              })
-            );
-          } else {
-            return this.episodePlaylist$.pipe(
-              mergeMap(playlist => {
-                return this.getEpisodes(playlist.items);
-              }),
-              tap(items => {
-                this.episodePlaylistItems = items;
-              })
-            );
-          }
-        })
-      )
-      .subscribe();
+    this.subscriptions.push(
+      this.type$
+        .pipe(
+          switchMap(type => {
+            if (type === 'movies') {
+              return this.moviePlaylist$.pipe(
+                mergeMap(playlist => {
+                  return this.getMovies(playlist.items);
+                }),
+                tap(items => {
+                  this.moviePlaylistItems = items;
+                })
+              );
+            } else {
+              return this.episodePlaylist$.pipe(
+                mergeMap(playlist => {
+                  return this.getEpisodes(playlist.items);
+                }),
+                tap(items => {
+                  this.episodePlaylistItems = items;
+                })
+              );
+            }
+          })
+        )
+        .subscribe()
+    );
     this.subscriptions.push(
       this.autoplay$.subscribe(autoplay => (this.autoplay = autoplay))
     );
