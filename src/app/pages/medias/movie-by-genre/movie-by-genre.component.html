@@ -1,4 +1,5 @@
-<nz-page-header nzTitle="Films de genre {{ genreName }}"> </nz-page-header>
+<!--<nz-page-header nzTitle="Films de genre {{ genreName }}"> </nz-page-header>-->
+<h4 nz-typography>Films de genre {{ genreName }}</h4>
 
 <nz-skeleton
   *ngIf="movies.length === 0"
@@ -7,6 +8,7 @@
 
 <nz-card
   *ngIf="movies.length > 0"
+  [nzSize]="isOnPhone ? 'small' : 'default'"
   [nzExtra]="moviesPagination"
   [nzActions]="[moviesPagination]">
   <app-movie-list [movies]="movies"></app-movie-list>
@@ -15,6 +17,7 @@
 <ng-template #moviesPagination>
   <div (click)="$event.stopPropagation()">
     <nz-pagination
+      [nzSize]="isOnPhone ? 'small' : 'default'"
       [nzPageIndex]="moviesPage"
       [nzTotal]="Math.min(moviesTotalResults, 1000)"
       [nzPageSize]="20"

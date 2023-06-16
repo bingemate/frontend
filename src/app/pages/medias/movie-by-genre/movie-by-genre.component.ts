@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { MediaDiscoverService } from '../../../feature/media-info/media-discover.service';
 import { MovieResponse } from '../../../shared/models/media.models';
 import { MediaAssetsService } from '../../../feature/media-info/media-assets.service';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-movie-by-genre',
@@ -18,12 +19,18 @@ export class MovieByGenreComponent implements OnInit {
   moviesPage = 1;
   moviesTotalPages = 0;
   moviesTotalResults = 0;
+  isOnPhone = false;
 
   constructor(
+    private breakpointObserver: BreakpointObserver,
+
     private route: ActivatedRoute,
     private mediaDiscoverService: MediaDiscoverService,
     private mediaAssetsService: MediaAssetsService
   ) {
+    this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
+      this.isOnPhone = result.matches;
+    });
     this.route.params.subscribe(params => {
       this.genreId = params['id'];
     });
