@@ -11,6 +11,7 @@ import { NotificationsService } from '../../../../core/notifications/notificatio
 import { AuthState } from '../../../../core/auth/store/auth.state';
 import { EpisodePlaylist } from '../../../../shared/models/episode-playlist.model';
 import { EpisodePlaylistsService } from '../../../playlist/episode-playlists.service';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-episode-info-list',
@@ -27,6 +28,7 @@ export class EpisodeInfoListComponent implements OnInit {
   playlists$!: Observable<EpisodePlaylist[]>;
   @Input() tvShowId = 0;
   @Input() seasonNumber = 0;
+  isOnPhone = false;
 
   loading = false;
 
@@ -34,11 +36,18 @@ export class EpisodeInfoListComponent implements OnInit {
   selectedEpisode?: TvEpisodeResponse;
 
   constructor(
+    private breakpointObserver: BreakpointObserver,
     private readonly store: Store,
     private mediaInfoService: MediaInfoService,
     private episodePlaylistsService: EpisodePlaylistsService,
     private readonly notificationsService: NotificationsService
-  ) {}
+  ) {
+    this.breakpointObserver
+      .observe([Breakpoints.HandsetPortrait])
+      .subscribe(result => {
+        this.isOnPhone = result.matches;
+      });
+  }
 
   ngOnInit(): void {
     this.loading = true;
