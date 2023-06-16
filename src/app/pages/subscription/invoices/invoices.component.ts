@@ -12,6 +12,8 @@ export class InvoicesComponent implements OnInit {
   isOnPhone = false;
 
   invoices: Invoice[] = [];
+  invoiceLoading = false;
+
   constructor(
     private breakpointObserver: BreakpointObserver,
     private paymentService: PaymentService
@@ -24,9 +26,11 @@ export class InvoicesComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.paymentService
-      .getInvoices()
-      .subscribe(invoices => (this.invoices = invoices));
+    this.invoiceLoading = true;
+    this.paymentService.getInvoices().subscribe(invoices => {
+      this.invoiceLoading = false;
+      this.invoices = invoices;
+    });
   }
 
   mapStatus(

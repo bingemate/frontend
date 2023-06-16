@@ -107,6 +107,7 @@ export class StreamComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy(): void {
     this.socket?.close();
+    this.store.dispatch(new StreamingActions.ClearPlaylist());
   }
 
   onStreamUpdate(event: StreamUpdateEvent) {
@@ -117,12 +118,16 @@ export class StreamComponent implements OnInit, OnDestroy {
     if (this.socket) {
       this.socket.close();
     }
-    const key = await this.keycloak.getToken();
-    this.socket = io(`${environment.websocketUrl}`, {
-      transports: ['polling'],
-      extraHeaders: { Authorization: `Bearer ${key}` },
-      path: '/dev/watch-service/socket.io',
-      query: { mediaId: this.mediaId, type: this.type },
+    this.keycloak.keycloakEvents$.subscribe(async event => {
+      if (event.type === KeycloakEventType.OnTokenExpired) {
+        await this.keycloak.updateToken(1);
+      } else if (
+        this.socket &&
+        event.type === KeycloakEventType.OnAuthRefreshSuccess
+      ) {
+        this.socket.disconnect();
+        await this.initSocketConnection();
+      }
     });
     this.keycloak.keycloakEvents$.subscribe(async event => {
       if (event.type === KeycloakEventType.OnTokenExpired && this.socket) {
@@ -130,6 +135,15 @@ export class StreamComponent implements OnInit, OnDestroy {
         this.socket.auth = { Authorization: `Bearer ${key}` };
       }
     });
-    this.socket.connect();
+  }
+
+  private async initSocketConnection() {
+    const key = await this.keycloak.getToken();
+    this.socket = io(`${environment.websocketUrl}`, {
+      transports: ['polling'],
+      extraHeaders: { Authorization: `Bearer ${key}` },
+      path: `${environment.production ? '' : '/dev'}/watch-service/socket.io`,
+      query: { mediaId: this.mediaId, type: this.type },
+    });
   }
 }

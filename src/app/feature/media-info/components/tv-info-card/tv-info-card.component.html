@@ -20,7 +20,12 @@
 </ng-template>
 
 <ng-template #cover>
-  <img nz-image nzDisablePreview [nzSrc]="tv?.posterUrl!" [alt]="" />
+  <img
+    nz-image
+    nzDisablePreview
+    [nzSrc]="tv?.posterUrl!"
+    [alt]=""
+    width="100%" />
 </ng-template>
 <ng-template #description>
   {{ tv?.releaseDate | date : 'yyyy' }}

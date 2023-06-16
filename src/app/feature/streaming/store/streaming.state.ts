@@ -148,4 +148,14 @@ export class StreamingState {
       autoplay: payload.autoplay,
     });
   }
+
+  @Action(StreamingActions.ClearPlaylist)
+  clearPlaylist(ctx: StateContext<StreamingStateModel>) {
+    ctx.patchState({
+      episodePlaylist: undefined,
+      moviePlaylist: undefined,
+      type: undefined,
+      position: 0,
+    });
+  }
 }
