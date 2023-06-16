@@ -25,4 +25,7 @@ export namespace StreamingActions {
     static readonly type = '[Streaming] Toggle Autoplay';
     constructor(public autoplay: boolean) {}
   }
+  export class ClearPlaylist {
+    static readonly type = '[Streaming] Clear Playlist';
+  }
 }
