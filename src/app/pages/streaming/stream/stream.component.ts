@@ -118,6 +118,7 @@ export class StreamComponent implements OnInit, OnDestroy {
     if (this.socket) {
       this.socket.close();
     }
+    await this.initSocketConnection();
     this.keycloak.keycloakEvents$.subscribe(async event => {
       if (event.type === KeycloakEventType.OnTokenExpired) {
         await this.keycloak.updateToken(1);
