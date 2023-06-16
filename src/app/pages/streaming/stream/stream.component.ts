@@ -99,6 +99,7 @@ export class StreamComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy(): void {
     this.socket?.close();
+    this.store.dispatch(new StreamingActions.ClearPlaylist());
   }
 
   onStreamUpdate(event: StreamUpdateEvent) {
