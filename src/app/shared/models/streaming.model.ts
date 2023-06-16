@@ -61,7 +61,7 @@ export function toSubscription(
     price: subscription.price,
     status: subscription.status,
     isCanceled: subscription.isCanceled,
-    startedAt: new Date(subscription.nextPaymentAt * 1000),
+    startedAt: new Date(subscription.startedAt * 1000),
     nextPaymentAt: new Date(subscription.nextPaymentAt * 1000),
     endAt: new Date(subscription.endAt * 1000),
   };
