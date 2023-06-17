@@ -10,7 +10,7 @@ import { navigationRoot } from '../../../../app-routing.module';
 import { streamingLinks } from '../../../../pages/streaming/streaming-routing.module';
 import { mediasLinks } from '../../../../pages/medias/medias-routing.module';
 import { Select, Store } from '@ngxs/store';
-import { Observable } from 'rxjs';
+import { filter, Observable, switchMap } from 'rxjs';
 import { PlaylistState } from '../../../playlist/store/playlist.state';
 import { PlaylistActions } from '../../../playlist/store/playlist.actions';
 import { MoviePlaylistsService } from '../../../playlist/movie-playlists.service';
@@ -24,6 +24,8 @@ import {
 } from '../../../../shared/models/movie-watchlist.models';
 import { MovieWatchlistService } from '../../../watchlist/movie-watchlist.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { FriendshipService } from '../../../friendship/friendship.service';
+import { WatchTogetherService } from '../../../watch-together/watch-together.service';
 
 @Component({
   selector: 'app-movie-info',
@@ -53,13 +55,18 @@ export class MovieInfoComponent implements OnInit, OnChanges {
   actorsPageSize = 5;
   isMediaInWatchList = false;
   watchlistItem: MovieWatchlistItem | undefined;
+  showWatchTogether = false;
+  selectedFriends: string[] = [];
+  friends: string[] = [];
 
   constructor(
     private breakpointObserver: BreakpointObserver,
     private readonly store: Store,
     private moviePlaylistsService: MoviePlaylistsService,
     private readonly notificationsService: NotificationsService,
-    private watchlistService: MovieWatchlistService
+    private watchlistService: MovieWatchlistService,
+    private friendshipService: FriendshipService,
+    private watchTogetherService: WatchTogetherService
   ) {
     this.breakpointObserver
       .observe([Breakpoints.HandsetPortrait])
@@ -73,6 +80,14 @@ export class MovieInfoComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.store.dispatch(new PlaylistActions.GetCurrentUserPlaylists());
+    this.user$
+      .pipe(
+        filter(user => user !== null && user !== undefined),
+        switchMap(user => this.friendshipService.getUserFriends(user.id))
+      )
+      .subscribe(
+        friends => (this.friends = friends.map(friend => friend.friendId))
+      );
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -158,5 +173,25 @@ export class MovieInfoComponent implements OnInit, OnChanges {
           'Le film a été retiré des films suivis'
         );
       });
+  }
+
+  watchTogetherModal() {
+    this.showWatchTogether = true;
+  }
+
+  cancelCreation() {
+    this.showWatchTogether = false;
+    this.selectedFriends = [];
+  }
+
+  createRoom() {
+    if (this.movie) {
+      this.watchTogetherService.createRoom({
+        invitedUsers: this.selectedFriends,
+        mediaIds: [this.movie.id],
+        mediaType: 'movies',
+        playlistPosition: 0,
+      });
+    }
   }
 }

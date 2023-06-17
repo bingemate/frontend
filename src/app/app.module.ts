@@ -47,6 +47,7 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { LottieModule } from 'ngx-lottie';
 import player from 'lottie-web';
 import { MessagingModule } from './feature/messaging/messaging.module';
+import { WatchTogetherModule } from './feature/watch-together/watch-together.module';
 
 registerLocaleData(fr);
 
@@ -124,6 +125,7 @@ export function playerFactory() {
     NzToolTipModule,
     NzSpinModule,
     MessagingModule,
+    WatchTogetherModule,
   ],
   providers: [
     KeycloakInitializerProvider,

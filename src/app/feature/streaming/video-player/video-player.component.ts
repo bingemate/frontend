@@ -11,21 +11,23 @@ import {
 import { MediaFile } from '../../../shared/models/media-file.models';
 import { BitrateOptions, VgApiService } from '@videogular/ngx-videogular/core';
 import { API_RESOURCE_URI } from '../../../shared/api-resource-uri/api-resources-uri';
-import { Subscription, throttleTime } from 'rxjs';
+import { Observable, Subscription, throttleTime } from 'rxjs';
 import { navigationRoot } from '../../../app-routing.module';
-import { MediaInfoService } from '../../media-info/media-info.service';
 import { mediasLinks } from '../../../pages/medias/medias-routing.module';
 import {
   StreamStatusEnum,
   StreamUpdateEvent,
 } from '../../../shared/models/streaming.model';
-import { Store } from '@ngxs/store';
+import { Select, Store } from '@ngxs/store';
 import {
   MovieResponse,
   TvEpisodeResponse,
 } from '../../../shared/models/media.models';
 import { StreamingActions } from '../store/streaming.actions';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { WatchTogetherState } from '../../watch-together/store/watch-together.state';
+import { WatchTogetherRoom } from '../../../shared/models/watch-together.models';
+import { WatchTogetherService } from '../../watch-together/watch-together.service';
 
 @Component({
   selector: 'app-video-player',
@@ -34,6 +36,8 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 })
 export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
   mediaViewLink = `/${navigationRoot.medias.path}/`;
+  @Select(WatchTogetherState.joinedRoom)
+  room$!: Observable<WatchTogetherRoom>;
 
   @Input() mediaId: number | undefined;
   @Input() mediaInfo: MovieResponse | TvEpisodeResponse | undefined;
@@ -43,6 +47,8 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
   @Output() streamUpdate = new EventEmitter<StreamUpdateEvent>();
 
   isOnPhone = false;
+
+  room?: WatchTogetherRoom;
 
   audioOptions: BitrateOptions[] = [];
   audioList: string[] = [];
@@ -55,9 +61,9 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
   mediaName = '';
 
   constructor(
+    private readonly store: Store,
     private breakpointObserver: BreakpointObserver,
-    private mediaInfoService: MediaInfoService,
-    private readonly store: Store
+    private watchTogetherService: WatchTogetherService
   ) {
     this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
       this.isOnPhone = result.matches;
@@ -67,6 +73,7 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
   ngOnInit() {
     this.loadMediaInfo();
     this.loadMediaFileInfo();
+    this.room$.subscribe(room => (this.room = room));
   }
 
   ngOnDestroy(): void {
@@ -142,35 +149,47 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
             leading: true,
           })
         )
-        .subscribe(() =>
+        .subscribe(() => {
+          const position = api.currentTime / api.duration || 0;
+          console.log(position);
           this.streamUpdate.emit({
             watchStatus: StreamStatusEnum.PLAYING,
-            stoppedAt: api.currentTime / api.duration || 0,
-          })
-        )
+            stoppedAt: position,
+          });
+          if (this.room) {
+            this.watchTogetherService.playing(position);
+          }
+        })
     );
     this.subscriptions.push(
-      api.getDefaultMedia().subscriptions.pause.subscribe(() =>
+      api.getDefaultMedia().subscriptions.pause.subscribe(() => {
         this.streamUpdate.emit({
           watchStatus: StreamStatusEnum.STOPPED,
           stoppedAt: api.currentTime / api.duration || 0,
-        })
-      )
+        });
+        if (this.room) {
+          this.watchTogetherService.pause();
+        }
+      })
     );
     this.subscriptions.push(
-      api.getDefaultMedia().subscriptions.play.subscribe(() =>
+      api.getDefaultMedia().subscriptions.play.subscribe(() => {
         this.streamUpdate.emit({
           watchStatus: StreamStatusEnum.STARTED,
           stoppedAt: api.currentTime / api.duration || 0,
-        })
-      )
+        });
+        if (this.room) {
+          this.watchTogetherService.play();
+        }
+      })
     );
     this.subscriptions.push(
-      api
-        .getDefaultMedia()
-        .subscriptions.ended.subscribe(() =>
-          this.store.dispatch(new StreamingActions.MediaEndedPlaylist())
-        )
+      api.getDefaultMedia().subscriptions.ended.subscribe(() => {
+        this.store.dispatch(new StreamingActions.MediaEndedPlaylist());
+        if (this.room) {
+          this.watchTogetherService.changeMedia(this.room.playlistPosition + 1);
+        }
+      })
     );
     api.seekTime(this.timeSeek);
   }

@@ -24,6 +24,7 @@ import { adminLinks, uploadLink } from './pages/admin/admin-routing.module';
 import { UserService } from './feature/user/user.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MessagingService } from './feature/messaging/messaging.service';
+import { WatchTogetherService } from './feature/watch-together/watch-together.service';
 
 @Component({
   selector: 'app-root',
@@ -43,7 +44,8 @@ export class AppComponent implements OnInit, OnDestroy {
     private readonly actions: Actions,
     private readonly keycloak: KeycloakService,
     private readonly userService: UserService,
-    private readonly messagingService: MessagingService
+    private readonly messagingService: MessagingService,
+    private readonly watchTogetherService: WatchTogetherService
   ) {
     this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
       this.isOnPhone = result.matches;
@@ -77,6 +79,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.messagingService.closeSocket();
+    this.watchTogetherService.closeSocket();
   }
 
   ////////////////////////////////////////////////////////////////////////////
@@ -125,6 +128,7 @@ export class AppComponent implements OnInit, OnDestroy {
                 })
               );
               this.messagingService.startMessagingSocket();
+              this.watchTogetherService.startWatchTogetherSocket();
             },
             error: () => {
               this.notificationsService.error(
