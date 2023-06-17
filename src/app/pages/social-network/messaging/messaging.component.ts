@@ -5,7 +5,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { Select } from '@ngxs/store';
+import { Select, Store } from '@ngxs/store';
 import { AuthState } from '../../../core/auth/store/auth.state';
 import { filter, Observable, Subscription, switchMap } from 'rxjs';
 import { Message } from '../../../shared/models/messaging.model';
@@ -15,6 +15,7 @@ import { FriendshipService } from '../../../feature/friendship/friendship.servic
 import { MessagingService } from '../../../feature/messaging/messaging.service';
 import { MessagingState } from '../../../feature/messaging/store/messaging.state';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { MessagingActions } from '../../../feature/messaging/store/messaging.actions';
 
 @Component({
   selector: 'app-messaging',
@@ -44,7 +45,8 @@ export class MessagingComponent implements OnInit, OnDestroy {
     private breakpointObserver: BreakpointObserver,
     private friendshipService: FriendshipService,
     private readonly currentRoute: ActivatedRoute,
-    private messagingService: MessagingService
+    private messagingService: MessagingService,
+    private readonly store: Store
   ) {
     this.breakpointObserver
       .observe([Breakpoints.HandsetPortrait])
@@ -59,7 +61,7 @@ export class MessagingComponent implements OnInit, OnDestroy {
         this.userList.push(params['id']);
       }
     });
-
+    this.store.dispatch(new MessagingActions.ClearUnreadMessages());
     this.subscriptions.push(
       this.user$
         .pipe(
