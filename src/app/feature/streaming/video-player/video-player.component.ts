@@ -205,7 +205,10 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
     this.subscriptions.push(
       api.getDefaultMedia().subscriptions.ended.subscribe(() => {
         this.store.dispatch(new StreamingActions.MediaEndedPlaylist());
-        if (this.room) {
+        if (
+          this.room &&
+          this.room.mediaIds.length < this.room.playlistPosition
+        ) {
           this.watchTogetherService.changeMedia(this.room.playlistPosition + 1);
         }
       })
