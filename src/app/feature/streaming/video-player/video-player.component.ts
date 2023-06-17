@@ -149,7 +149,7 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
 
   onPlayerReady(api: VgApiService) {
     this.position$.subscribe(position => {
-      position = api.duration;
+      position = position * api.duration;
       if (position > api.currentTime + 2 || position < api.currentTime - 2) {
         api.seekTime(position);
       }
@@ -171,6 +171,7 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
         )
         .subscribe(() => {
           const position = api.currentTime / api.duration || 0;
+          console.log('playing', position);
           this.streamUpdate.emit({
             watchStatus: StreamStatusEnum.PLAYING,
             stoppedAt: position,
@@ -215,8 +216,9 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
     );
     this.subscriptions.push(
       api.getDefaultMedia().subscriptions.seeked.subscribe(() => {
+        const position = api.currentTime / api.duration || 0;
         if (this.room) {
-          this.watchTogetherService.seek(api.currentTime / api.duration || 0);
+          this.watchTogetherService.seek(position);
         }
       })
     );
