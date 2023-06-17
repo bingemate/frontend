@@ -24,7 +24,7 @@
     <nz-table
       [nzData]="movieFilesResults.results"
       [nzFrontPagination]="false"
-      [nzLoading]="loading"
+      [nzLoading]="loading || movieDeleting"
       [nzTotal]="movieFilesResults.total"
       [nzPageSize]="pageSize"
       [nzPageIndex]="currentPage"

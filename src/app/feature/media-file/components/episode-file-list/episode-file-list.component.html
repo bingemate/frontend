@@ -24,7 +24,7 @@
     <nz-table
       [nzData]="episodeFilesResults.results"
       [nzFrontPagination]="false"
-      [nzLoading]="loading"
+      [nzLoading]="loading || episodeDeleting"
       [nzTotal]="episodeFilesResults.total"
       [nzPageSize]="pageSize"
       [nzPageIndex]="currentPage"

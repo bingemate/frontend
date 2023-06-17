@@ -37,7 +37,9 @@
               *nzSpaceItem
               nz-checkbox
               [nzDisabled]="
-                selectedEpisode !== undefined && selectedEpisode !== episode
+                (selectedEpisode !== undefined &&
+                  selectedEpisode !== episode) ||
+                !episode.present
               "
               [ngModel]="false"
               (ngModelChange)="onEpisodeSelection(episode)"></label>
