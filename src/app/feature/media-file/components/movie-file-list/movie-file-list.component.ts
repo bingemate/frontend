@@ -23,6 +23,7 @@ export class MovieFileListComponent implements OnInit, OnDestroy {
   pageSize = 10;
   loading = false;
   query = '';
+  movieDeleting = false;
 
   inputSubject: Subject<string> = new Subject<string>();
   private subscription: Subscription;
@@ -77,11 +78,17 @@ export class MovieFileListComponent implements OnInit, OnDestroy {
   }
 
   onDelete(id: string) {
-    this.mediaFileService.deleteMediaFile(id).subscribe(() => {
-      this.notificationsService.success(
-        'Le fichier du film a bien été supprimé'
-      );
-      this.search();
+    this.movieDeleting = true;
+    this.mediaFileService.deleteMediaFile(id).subscribe({
+      next: () => {
+        this.notificationsService.success(
+          'Le fichier du film a bien été supprimé'
+        );
+        this.search();
+      },
+      complete: () => {
+        this.movieDeleting = false;
+      },
     });
   }
 

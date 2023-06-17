@@ -23,6 +23,7 @@ export class EpisodeFileListComponent implements OnInit, OnDestroy {
   pageSize = 10;
   loading = false;
   query = '';
+  episodeDeleting = false;
 
   inputSubject: Subject<string> = new Subject<string>();
   private subscription: Subscription;
@@ -77,11 +78,17 @@ export class EpisodeFileListComponent implements OnInit, OnDestroy {
   }
 
   onDelete(id: string) {
-    this.mediaFileService.deleteMediaFile(id).subscribe(() => {
-      this.notificationsService.success(
-        "Le fichier de l'épisode a bien été supprimé"
-      );
-      this.search();
+    this.episodeDeleting = true;
+    this.mediaFileService.deleteMediaFile(id).subscribe({
+      next: () => {
+        this.notificationsService.success(
+          "Le fichier de l'épisode a bien été supprimé"
+        );
+        this.search();
+      },
+      complete: () => {
+        this.episodeDeleting = false;
+      },
     });
   }
 
