@@ -26,7 +26,10 @@ import {
 import { StreamingActions } from '../store/streaming.actions';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { WatchTogetherState } from '../../watch-together/store/watch-together.state';
-import { WatchTogetherRoom } from '../../../shared/models/watch-together.models';
+import {
+  WatchTogetherRoom,
+  WatchTogetherStatus,
+} from '../../../shared/models/watch-together.models';
 import { WatchTogetherService } from '../../watch-together/watch-together.service';
 
 @Component({
@@ -38,6 +41,10 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
   mediaViewLink = `/${navigationRoot.medias.path}/`;
   @Select(WatchTogetherState.joinedRoom)
   room$!: Observable<WatchTogetherRoom>;
+  @Select(WatchTogetherState.status)
+  status$!: Observable<WatchTogetherStatus>;
+  @Select(WatchTogetherState.position)
+  position$!: Observable<number>;
 
   @Input() mediaId: number | undefined;
   @Input() mediaInfo: MovieResponse | TvEpisodeResponse | undefined;
@@ -141,6 +148,19 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   onPlayerReady(api: VgApiService) {
+    this.position$.subscribe(position => {
+      position = api.duration;
+      if (position > api.currentTime + 2 || position < api.currentTime - 2) {
+        api.seekTime(position);
+      }
+    });
+    this.status$.subscribe(status => {
+      if (status === WatchTogetherStatus.PAUSED) {
+        api.pause();
+      } else if (status === WatchTogetherStatus.PLAYING) {
+        api.play();
+      }
+    });
     this.subscriptions.push(
       api
         .getDefaultMedia()
@@ -151,7 +171,6 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
         )
         .subscribe(() => {
           const position = api.currentTime / api.duration || 0;
-          console.log(position);
           this.streamUpdate.emit({
             watchStatus: StreamStatusEnum.PLAYING,
             stoppedAt: position,
@@ -188,6 +207,13 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
         this.store.dispatch(new StreamingActions.MediaEndedPlaylist());
         if (this.room) {
           this.watchTogetherService.changeMedia(this.room.playlistPosition + 1);
+        }
+      })
+    );
+    this.subscriptions.push(
+      api.getDefaultMedia().subscriptions.seeked.subscribe(() => {
+        if (this.room) {
+          this.watchTogetherService.seek(api.currentTime / api.duration || 0);
         }
       })
     );
