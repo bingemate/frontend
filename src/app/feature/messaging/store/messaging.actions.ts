@@ -13,4 +13,8 @@ export namespace MessagingActions {
     static readonly type = '[Messaging] Remove Message';
     constructor(public messageId: string) {}
   }
+
+  export class ClearUnreadMessages {
+    static readonly type = '[Messaging] Clear Unread Messages';
+  }
 }

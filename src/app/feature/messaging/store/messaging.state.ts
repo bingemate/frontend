@@ -3,17 +3,19 @@ import { Injectable } from '@angular/core';
 import { MessagingActions } from './messaging.actions';
 import { MessagingStateModel } from '../../../shared/models/messaging.model';
 import { AuthState } from '../../../core/auth/store/auth.state';
+import { ActivatedRoute } from '@angular/router';
 
 @State<MessagingStateModel>({
   name: 'messaging',
   defaults: {
     messages: [],
     users: [],
+    unreadMessages: false,
   },
 })
 @Injectable()
 export class MessagingState {
-  constructor(private store: Store) {}
+  constructor(private store: Store, private currentRoute: ActivatedRoute) {}
 
   @Selector()
   static messages(state: MessagingStateModel) {
@@ -22,6 +24,11 @@ export class MessagingState {
   @Selector()
   static users(state: MessagingStateModel) {
     return state.users;
+  }
+
+  @Selector()
+  static unreadMessages(state: MessagingStateModel) {
+    return state.unreadMessages;
   }
 
   @Action(MessagingActions.SetMessages)
@@ -48,6 +55,10 @@ export class MessagingState {
     payload: MessagingActions.AddMessage
   ) {
     const userId = this.store.selectSnapshot(AuthState.user)?.id;
+    const unread = !this.currentRoute.snapshot.url.some(segment =>
+      segment.path.includes('chat')
+    );
+
     ctx.patchState({
       users: [
         ...new Set(ctx.getState().users).add(
@@ -57,6 +68,7 @@ export class MessagingState {
         ),
       ],
       messages: [...ctx.getState().messages, payload.message],
+      unreadMessages: unread,
     });
   }
 
@@ -70,5 +82,10 @@ export class MessagingState {
         .getState()
         .messages.filter(message => message.id !== payload.messageId),
     });
+  }
+
+  @Action(MessagingActions.ClearUnreadMessages)
+  clearUnreadMessages(ctx: StateContext<MessagingStateModel>) {
+    ctx.patchState({ unreadMessages: false });
   }
 }
