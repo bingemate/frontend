@@ -31,6 +31,7 @@ import {
   WatchTogetherStatus,
 } from '../../../shared/models/watch-together.models';
 import { WatchTogetherService } from '../../watch-together/watch-together.service';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-video-player',
@@ -171,7 +172,6 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
         )
         .subscribe(() => {
           const position = api.currentTime / api.duration || 0;
-          console.log('playing', position);
           this.streamUpdate.emit({
             watchStatus: StreamStatusEnum.PLAYING,
             stoppedAt: position,
@@ -215,12 +215,15 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
       })
     );
     this.subscriptions.push(
-      api.getDefaultMedia().subscriptions.seeked.subscribe(() => {
-        const position = api.currentTime / api.duration || 0;
-        if (this.room) {
-          this.watchTogetherService.seek(position);
-        }
-      })
+      api
+        .getDefaultMedia()
+        .subscriptions.seeking.pipe(debounceTime(300))
+        .subscribe(() => {
+          const position = api.currentTime / api.duration || 0;
+          if (this.room) {
+            this.watchTogetherService.seek(position);
+          }
+        })
     );
     api.seekTime(this.timeSeek);
   }
