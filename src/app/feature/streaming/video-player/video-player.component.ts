@@ -156,9 +156,12 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
       }
     });
     this.status$.subscribe(status => {
-      if (status === WatchTogetherStatus.PAUSED) {
+      if (status === WatchTogetherStatus.PAUSED && api.state === 'playing') {
         api.pause();
-      } else if (status === WatchTogetherStatus.PLAYING) {
+      } else if (
+        status === WatchTogetherStatus.PLAYING &&
+        api.state === 'paused'
+      ) {
         api.play();
       }
     });
@@ -221,6 +224,7 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
         .subscribe(() => {
           const position = api.currentTime / api.duration || 0;
           if (this.room) {
+            api.pause();
             this.watchTogetherService.seek(position);
           }
         })
