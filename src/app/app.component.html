@@ -216,13 +216,11 @@
               <span nz-icon nzType="search"></span>
               Rechercher
             </button>
-            <button
-              *nzSpaceItem
-              nz-button
-              nzShape="round"
-              [routerLink]="chatLink">
-              <span nz-icon nzType="message"></span>&nbsp;Chat
-            </button>
+            <nz-badge *nzSpaceItem nzDot [nzShowDot]="unreadMessages$ | async">
+              <button nz-button nzShape="round" [routerLink]="chatLink">
+                <span nz-icon nzType="message"></span>&nbsp;Chat
+              </button>
+            </nz-badge>
             <button
               *nzSpaceItem
               nz-button
