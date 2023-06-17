@@ -17,6 +17,9 @@ import { MoviePlaylist } from '../../../shared/models/movie-playlist.model';
 import { StreamingState } from '../../../feature/streaming/store/streaming.state';
 import { StreamingActions } from '../../../feature/streaming/store/streaming.actions';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { WatchTogetherState } from '../../../feature/watch-together/store/watch-together.state';
+import { WatchTogetherRoom } from '../../../shared/models/watch-together.models';
+import { WatchTogetherService } from '../../../feature/watch-together/watch-together.service';
 
 @Component({
   selector: 'app-stream',
@@ -28,6 +31,8 @@ export class StreamComponent implements OnInit, OnDestroy {
   episodePlaylist$!: Observable<EpisodePlaylist>;
   @Select(StreamingState.moviePlaylist)
   moviePlaylist$!: Observable<MoviePlaylist>;
+  @Select(WatchTogetherState.joinedRoom)
+  room$!: Observable<WatchTogetherRoom>;
   mediaId = 0;
   type?: 'tv-shows' | 'movies';
   mediaFile: MediaFile | undefined;
@@ -40,11 +45,12 @@ export class StreamComponent implements OnInit, OnDestroy {
   isOnPhone = false;
 
   constructor(
+    private store: Store,
     private breakpointObserver: BreakpointObserver,
     private route: ActivatedRoute,
     private keycloak: KeycloakService,
     private mediaInfoService: MediaInfoService,
-    private store: Store
+    private watchTogetherService: WatchTogetherService
   ) {
     this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
       this.isOnPhone = result.matches;
@@ -120,6 +126,11 @@ export class StreamComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.socket?.close();
     this.store.dispatch(new StreamingActions.ClearPlaylist());
+    this.subscriptions.push(
+      this.room$
+        .pipe(filter(room => room !== null && room !== undefined))
+        .subscribe(() => this.watchTogetherService.leaveRoom())
+    );
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
