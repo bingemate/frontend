@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthState } from '../../../../core/auth/store/auth.state';
 import { Select } from '@ngxs/store';
 import { UserResponse } from '../../../../shared/models/user.models';
-import { forkJoin, Observable } from 'rxjs';
+import { filter, forkJoin, Observable } from 'rxjs';
 import { navigationRoot } from '../../../../app-routing.module';
 import { streamingLinks } from '../../../../pages/streaming/streaming-routing.module';
 import { EpisodeHistoryService } from '../../../history/episode-history.service';
@@ -15,6 +15,10 @@ import { MediaDiscoverService } from '../../../media-info/media-discover.service
 import { HistoryModel } from '../../../../shared/models/history.models';
 import { MovieHistoryService } from '../../../history/movie-history.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { WatchTogetherRoom } from '../../../../shared/models/watch-together.models';
+import { WatchTogetherState } from '../../../watch-together/store/watch-together.state';
+import { WatchTogetherService } from '../../../watch-together/watch-together.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-auth-home',
@@ -28,9 +32,13 @@ export class AuthHomeComponent implements OnInit {
   user: UserResponse | null = null;
 
   @Select(AuthState.isSubscribed) isSubscribed$!: Observable<boolean>;
+  @Select(WatchTogetherState.invitedRooms) invitedRooms$!: Observable<
+    WatchTogetherRoom[]
+  >;
   isSubscribed = false;
 
   history: HistoryModel[] = [];
+  rooms: WatchTogetherRoom[] = [];
 
   recentMovies: MovieResponse[] = [];
   recentTvShows: TvShowResponse[] = [];
@@ -41,11 +49,13 @@ export class AuthHomeComponent implements OnInit {
   isOnPhone = false;
 
   constructor(
+    private router: Router,
     private breakpointObserver: BreakpointObserver,
     private readonly episodeHistoryService: EpisodeHistoryService,
     private readonly movieHistoryService: MovieHistoryService,
     private readonly mediaInfoService: MediaInfoService,
-    private readonly mediaDiscoverService: MediaDiscoverService
+    private readonly mediaDiscoverService: MediaDiscoverService,
+    private readonly watchTogetherService: WatchTogetherService
   ) {
     this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
       this.isOnPhone = result.matches;
@@ -79,5 +89,23 @@ export class AuthHomeComponent implements OnInit {
     this.mediaDiscoverService.getRecentMovies(true).subscribe(movies => {
       this.recentMovies = movies;
     });
+    this.invitedRooms$
+      .pipe(filter(rooms => rooms?.length > 0))
+      .subscribe(rooms => (this.rooms = rooms));
+    this.watchTogetherService.getRooms();
+  }
+
+  joinWatchTogetherRoom(room: WatchTogetherRoom) {
+    this.watchTogetherService.joinRoom(room.id);
+    this.router.navigate(
+      [
+        this.mediaStreamPath,
+        room.mediaType,
+        room.mediaIds[room.playlistPosition],
+      ],
+      {
+        queryParams: { progress: room.position > 0.95 ? 0 : room.position },
+      }
+    );
   }
 }
