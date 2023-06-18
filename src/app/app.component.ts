@@ -24,6 +24,7 @@ import { adminLinks, uploadLink } from './pages/admin/admin-routing.module';
 import { UserService } from './feature/user/user.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MessagingService } from './feature/messaging/messaging.service';
+import { MessagingState } from './feature/messaging/store/messaging.state';
 import { WatchTogetherService } from './feature/watch-together/watch-together.service';
 
 @Component({
@@ -34,6 +35,9 @@ import { WatchTogetherService } from './feature/watch-together/watch-together.se
 export class AppComponent implements OnInit, OnDestroy {
   readonly environment = environment;
   isOnPhone = false;
+
+  @Select(MessagingState.unreadMessages)
+  unreadMessages$!: Observable<boolean>;
 
   constructor(
     private breakpointObserver: BreakpointObserver,

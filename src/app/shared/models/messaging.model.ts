@@ -1,4 +1,5 @@
 export interface MessagingStateModel {
+  unreadMessages: boolean;
   messages: Message[];
   users: string[];
 }
