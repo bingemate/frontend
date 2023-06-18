@@ -91,7 +91,7 @@ export class StreamComponent implements OnInit, OnDestroy {
           next: async ([mediaFile, mediaInfo]) => {
             this.mediaInfo = mediaInfo;
             this.mediaFile = mediaFile;
-            await this.openSocketConnection();
+            await this.initSocketConnection();
             if (this.route.snapshot.queryParamMap.has('progress')) {
               this.progress =
                 mediaFile.duration *
@@ -151,14 +151,10 @@ export class StreamComponent implements OnInit, OnDestroy {
     this.socket?.emit('updateMediaHistory', event);
   }
 
-  private async openSocketConnection() {
+  private async initSocketConnection() {
     if (this.socket) {
       this.socket.close();
     }
-    await this.initSocketConnection();
-  }
-
-  private async initSocketConnection() {
     const key = await this.keycloak.getToken();
     this.socket = io(`${environment.websocketUrl}`, {
       transports: ['polling'],
