@@ -10,7 +10,7 @@ import {
   UserResponse,
   UserResults,
 } from '../../shared/models/user.models';
-import { delay, tap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
