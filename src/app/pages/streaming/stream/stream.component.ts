@@ -59,6 +59,19 @@ export class StreamComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscriptions.push(
+      this.keycloak.keycloakEvents$.subscribe(async event => {
+        if (event.type === KeycloakEventType.OnTokenExpired) {
+          await this.keycloak.updateToken(1);
+        } else if (
+          this.socket &&
+          event.type === KeycloakEventType.OnAuthRefreshSuccess
+        ) {
+          this.socket.close();
+          await this.initSocketConnection();
+        }
+      })
+    );
+    this.subscriptions.push(
       this.route.params
         .pipe(
           switchMap(params => {
@@ -143,23 +156,6 @@ export class StreamComponent implements OnInit, OnDestroy {
       this.socket.close();
     }
     await this.initSocketConnection();
-    this.keycloak.keycloakEvents$.subscribe(async event => {
-      if (event.type === KeycloakEventType.OnTokenExpired) {
-        await this.keycloak.updateToken(1);
-      } else if (
-        this.socket &&
-        event.type === KeycloakEventType.OnAuthRefreshSuccess
-      ) {
-        this.socket.disconnect();
-        await this.initSocketConnection();
-      }
-    });
-    this.keycloak.keycloakEvents$.subscribe(async event => {
-      if (event.type === KeycloakEventType.OnTokenExpired && this.socket) {
-        const key = await this.keycloak.getToken();
-        this.socket.auth = { Authorization: `Bearer ${key}` };
-      }
-    });
   }
 
   private async initSocketConnection() {
