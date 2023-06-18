@@ -51,6 +51,10 @@ export class WatchTogetherService {
     this.socket.on('roomStatus', room =>
       this.store.dispatch(new WatchTogetherActions.JoinRoom(room))
     );
+    this.socket.on('roomJoined', room =>
+      this.store.dispatch(new WatchTogetherActions.RoomJoined(room))
+    );
+    this.socket.on('roomCreated', roomId => this.joinRoom(roomId));
   }
 
   createRoom(room: CreateWatchTogetherRoomRequest) {

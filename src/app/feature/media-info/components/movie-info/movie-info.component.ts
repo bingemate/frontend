@@ -10,7 +10,7 @@ import { navigationRoot } from '../../../../app-routing.module';
 import { streamingLinks } from '../../../../pages/streaming/streaming-routing.module';
 import { mediasLinks } from '../../../../pages/medias/medias-routing.module';
 import { Select, Store } from '@ngxs/store';
-import { filter, Observable, switchMap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { PlaylistState } from '../../../playlist/store/playlist.state';
 import { PlaylistActions } from '../../../playlist/store/playlist.actions';
 import { MoviePlaylistsService } from '../../../playlist/movie-playlists.service';
@@ -82,11 +82,8 @@ export class MovieInfoComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.store.dispatch(new PlaylistActions.GetCurrentUserPlaylists());
-    this.user$
-      .pipe(
-        filter(user => user !== null && user !== undefined),
-        switchMap(user => this.friendshipService.getUserFriends(user.id))
-      )
+    this.friendshipService
+      .getFriendships()
       .subscribe(
         friends => (this.friends = friends.map(friend => friend.friendId))
       );

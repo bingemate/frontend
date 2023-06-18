@@ -8,11 +8,7 @@ export namespace StreamingActions {
   }
   export class WatchEpisodePlaylist {
     static readonly type = '[Streaming] Watch Episode Playlist';
-    constructor(
-      public playlist: EpisodePlaylist,
-      public position: number,
-      public redirect = true
-    ) {}
+    constructor(public playlist: EpisodePlaylist, public position: number) {}
   }
   export class SeekMediaPlaylist {
     static readonly type = '[Streaming] Playlist Seek Media';

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthState } from '../../../../core/auth/store/auth.state';
-import { Select } from '@ngxs/store';
+import { Select, Store } from '@ngxs/store';
 import { UserResponse } from '../../../../shared/models/user.models';
-import { filter, forkJoin, Observable } from 'rxjs';
+import { filter, forkJoin, interval, Observable } from 'rxjs';
 import { navigationRoot } from '../../../../app-routing.module';
 import { streamingLinks } from '../../../../pages/streaming/streaming-routing.module';
 import { EpisodeHistoryService } from '../../../history/episode-history.service';
@@ -49,6 +49,7 @@ export class AuthHomeComponent implements OnInit {
   isOnPhone = false;
 
   constructor(
+    private store: Store,
     private router: Router,
     private breakpointObserver: BreakpointObserver,
     private readonly episodeHistoryService: EpisodeHistoryService,
@@ -90,22 +91,12 @@ export class AuthHomeComponent implements OnInit {
       this.recentMovies = movies;
     });
     this.invitedRooms$
-      .pipe(filter(rooms => rooms?.length > 0))
+      .pipe(filter(rooms => rooms !== undefined && rooms !== null))
       .subscribe(rooms => (this.rooms = rooms));
-    this.watchTogetherService.getRooms();
+    interval(5000).subscribe(() => this.watchTogetherService.getRooms());
   }
 
   joinWatchTogetherRoom(room: WatchTogetherRoom) {
     this.watchTogetherService.joinRoom(room.id);
-    this.router.navigate(
-      [
-        this.mediaStreamPath,
-        room.mediaType,
-        room.mediaIds[room.playlistPosition],
-      ],
-      {
-        queryParams: { progress: room.position > 0.95 ? 0 : room.position },
-      }
-    );
   }
 }

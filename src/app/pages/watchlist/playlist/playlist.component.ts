@@ -7,7 +7,7 @@ import {
   EpisodePlaylistItemMedia,
 } from '../../../shared/models/episode-playlist.model';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MoviePlaylistsService } from '../../../feature/playlist/movie-playlists.service';
 import { MediaInfoService } from '../../../feature/media-info/media-info.service';
 import { AuthState } from '../../../core/auth/store/auth.state';
@@ -54,6 +54,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private store: Store,
     private moviePlaylistsService: MoviePlaylistsService,
     private episodePlaylistsService: EpisodePlaylistsService,
@@ -222,10 +223,24 @@ export class PlaylistComponent implements OnInit, OnDestroy {
       this.store.dispatch(
         new StreamingActions.WatchMoviePlaylist(this.moviePlaylist, index)
       );
+      this.router
+        .navigate([
+          '/streaming/stream',
+          'movies',
+          this.moviePlaylist.items[index].movieId,
+        ])
+        .then();
     } else if (this.type === 'episodes' && this.episodePlaylist) {
       this.store.dispatch(
         new StreamingActions.WatchEpisodePlaylist(this.episodePlaylist, index)
       );
+      this.router
+        .navigate([
+          '/streaming/stream',
+          'tv-shows',
+          this.episodePlaylist?.items[index].episodeId,
+        ])
+        .then();
     }
   }
 
