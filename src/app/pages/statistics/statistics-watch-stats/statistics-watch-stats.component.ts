@@ -37,24 +37,11 @@ export class StatisticsWatchStatsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const sixMonthAgo = new Date();
-    sixMonthAgo.setDate(1);
-    sixMonthAgo.setMonth(sixMonthAgo.getMonth() - 6);
+    const sixMonthsAgo = this.getSixMonthsAgo();
     this.user$
       .pipe(
         filter(user => user !== null && user !== undefined),
-        mergeMap(user =>
-          forkJoin([
-            this.episodeStatisticsService.getStatisticsByUserId(user.id),
-            this.movieStatisticsService.getStatisticsByUserId(user.id),
-            this.commentService.getCommentCount(),
-            this.ratingService.getRatingCount(),
-            this.commentService.getCommentHistory(
-              new Date().toDateString(),
-              sixMonthAgo.toDateString()
-            ),
-          ])
-        )
+        mergeMap(user => this.getData(user.id, sixMonthsAgo))
       )
       .subscribe(
         ([episodeStats, movieStats, commentsCount, ratingsCount, comments]) => {
@@ -63,20 +50,48 @@ export class StatisticsWatchStatsComponent implements OnInit {
           this.commentsCount = commentsCount;
           this.ratingsCount = ratingsCount;
           this.commentStats = comments;
-          this.watchTime = episodeStats
-            .map(stat =>
-              millisToHours(stat.stoppedAt.getTime() - stat.startedAt.getTime())
-            )
-            .reduce((a, b) => a + b);
-          this.watchTime += movieStats
-            .map(stat =>
-              millisToHours(stat.stoppedAt.getTime() - stat.startedAt.getTime())
-            )
-            .reduce((a, b) => a + b);
+          this.watchTime =
+            this.calculateWatchTime(episodeStats) +
+            this.calculateWatchTime(movieStats);
           this.watchedMediaCount =
-            new Set(episodeStats.map(stat => stat.mediaId)).size +
-            new Set(movieStats.map(stat => stat.mediaId)).size;
+            this.calculateWatchedMediaCount(episodeStats) +
+            this.calculateWatchedMediaCount(movieStats);
         }
       );
+  }
+
+  private getSixMonthsAgo(): Date {
+    const sixMonthsAgo = new Date();
+    sixMonthsAgo.setDate(1);
+    sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+    return sixMonthsAgo;
+  }
+
+  private getData(
+    userId: string,
+    sixMonthsAgo: Date
+  ): Observable<[Statistic[], Statistic[], number, number, CommentStat[]]> {
+    return forkJoin([
+      this.episodeStatisticsService.getStatisticsByUserId(userId),
+      this.movieStatisticsService.getStatisticsByUserId(userId),
+      this.commentService.getCommentCount(),
+      this.ratingService.getRatingCount(),
+      this.commentService.getCommentHistory(
+        new Date().toDateString(),
+        sixMonthsAgo.toDateString()
+      ),
+    ]);
+  }
+
+  private calculateWatchTime(stats: Statistic[]): number {
+    return stats
+      .map(stat =>
+        millisToHours(stat.stoppedAt.getTime() - stat.startedAt.getTime())
+      )
+      .reduce((a, b) => a + b, 0);
+  }
+
+  private calculateWatchedMediaCount(stats: Statistic[]): number {
+    return new Set(stats.map(stat => stat.mediaId)).size;
   }
 }
