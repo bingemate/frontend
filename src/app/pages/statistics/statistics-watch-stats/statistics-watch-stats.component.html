@@ -1,8 +1,3 @@
 <app-statistic-view
-  [episodeStats]="episodeStats"
-  [movieStats]="movieStats"
-  [commentStats]="commentStats"
-  [watchTime]="watchTime"
-  [commentsCount]="commentsCount"
-  [ratingsCount]="ratingsCount"
-  [watchedMediaCount]="watchedMediaCount"></app-statistic-view>
+  *ngIf="userID !== ''"
+  [userID]="userID"></app-statistic-view>

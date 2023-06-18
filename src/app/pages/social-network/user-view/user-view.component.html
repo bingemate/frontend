@@ -2,6 +2,11 @@
   <nz-tab nzTitle="Informations">
     <app-user-info *ngIf="user !== null" [user]="user"></app-user-info>
   </nz-tab>
+  <nz-tab nzTitle="Statistiques">
+    <ng-template nz-tab>
+      <app-statistic-view [userID]="userID"></app-statistic-view>
+    </ng-template>
+  </nz-tab>
   <nz-tab nzTitle="Commentaires" (nzClick)="onRefreshAllComments()">
     <ng-template nz-tab>
       <nz-row [nzGutter]="[16, 16]">
