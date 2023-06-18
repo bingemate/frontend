@@ -68,6 +68,9 @@ export class WatchTogetherService {
   getRooms() {
     this.socket?.emit('getRooms');
   }
+  getRoomStatus() {
+    this.socket?.emit('getRoomStatus');
+  }
 
   joinRoom(roomId: string) {
     this.socket?.emit('joinRoom', roomId);

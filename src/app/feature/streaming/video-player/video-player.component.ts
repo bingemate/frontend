@@ -11,7 +11,7 @@ import {
 import { MediaFile } from '../../../shared/models/media-file.models';
 import { BitrateOptions, VgApiService } from '@videogular/ngx-videogular/core';
 import { API_RESOURCE_URI } from '../../../shared/api-resource-uri/api-resources-uri';
-import { Observable, Subscription, throttleTime } from 'rxjs';
+import { interval, Observable, Subscription, throttleTime } from 'rxjs';
 import { navigationRoot } from '../../../app-routing.module';
 import { mediasLinks } from '../../../pages/medias/medias-routing.module';
 import {
@@ -149,6 +149,7 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   onPlayerReady(api: VgApiService) {
+    interval(1000).subscribe(() => this.watchTogetherService.getRoomStatus());
     this.position$.subscribe(position => {
       position = position * api.duration;
       if (position > api.currentTime + 2 || position < api.currentTime - 2) {
