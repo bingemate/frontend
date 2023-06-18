@@ -43,6 +43,7 @@ export class StreamComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
 
   isOnPhone = false;
+  room?: WatchTogetherRoom;
 
   constructor(
     private store: Store,
@@ -58,6 +59,7 @@ export class StreamComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.room$.subscribe(room => (this.room = room));
     this.subscriptions.push(
       this.keycloak.keycloakEvents$.subscribe(async event => {
         if (event.type === KeycloakEventType.OnTokenExpired) {

@@ -1,0 +1,19 @@
+<nz-card nzTitle="Ajouter un film">
+  <nz-input-group nzSearch nzSize="large">
+    <input
+      (input)="search()"
+      [(ngModel)]="input"
+      [nzAutocomplete]="auto"
+      type="text"
+      nz-input
+      placeholder="Entrez le nom d'un film" />
+  </nz-input-group>
+  <nz-autocomplete #auto>
+    <nz-auto-option
+      *ngFor="let option of options"
+      (click)="selectedMedia(option.value)"
+      [nzLabel]="option.label">
+      {{ option.label }}
+    </nz-auto-option>
+  </nz-autocomplete>
+</nz-card>

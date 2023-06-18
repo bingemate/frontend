@@ -24,4 +24,8 @@ export namespace StreamingActions {
   export class ClearPlaylist {
     static readonly type = '[Streaming] Clear Playlist';
   }
+  export class AddMedia {
+    static readonly type = '[Streaming] Add Media';
+    constructor(public mediaId: number) {}
+  }
 }

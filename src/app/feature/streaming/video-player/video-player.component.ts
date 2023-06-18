@@ -11,7 +11,7 @@ import {
 import { MediaFile } from '../../../shared/models/media-file.models';
 import { BitrateOptions, VgApiService } from '@videogular/ngx-videogular/core';
 import { API_RESOURCE_URI } from '../../../shared/api-resource-uri/api-resources-uri';
-import { Observable, Subscription, throttleTime } from 'rxjs';
+import { interval, Observable, Subscription, throttleTime } from 'rxjs';
 import { navigationRoot } from '../../../app-routing.module';
 import { mediasLinks } from '../../../pages/medias/medias-routing.module';
 import {
@@ -57,6 +57,7 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
   isOnPhone = false;
 
   room?: WatchTogetherRoom;
+  private interval?: Subscription;
 
   audioOptions: BitrateOptions[] = [];
   audioList: string[] = [];
@@ -81,11 +82,23 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
   ngOnInit() {
     this.loadMediaInfo();
     this.loadMediaFileInfo();
-    this.room$.subscribe(room => (this.room = room));
+    this.subscriptions.push(
+      this.room$.subscribe(room => {
+        this.room = room;
+        if (room && !this.interval) {
+          this.interval = interval(2000).subscribe(() =>
+            this.watchTogetherService.getRoomStatus()
+          );
+        } else if (!room && this.interval) {
+          this.interval.unsubscribe();
+        }
+      })
+    );
   }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(sub => sub.unsubscribe());
+    this.interval?.unsubscribe();
   }
 
   ngOnChanges(changes: SimpleChanges): void {

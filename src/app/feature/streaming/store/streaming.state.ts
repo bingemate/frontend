@@ -138,4 +138,21 @@ export class StreamingState {
       position: 0,
     });
   }
+
+  @Action(StreamingActions.AddMedia)
+  addMedia(
+    ctx: StateContext<StreamingStateModel>,
+    payload: StreamingActions.AddMedia
+  ) {
+    const moviePlaylist = ctx.getState().moviePlaylist;
+    if (ctx.getState().type === 'movies' && moviePlaylist) {
+      const items = [...moviePlaylist.items, { movieId: payload.mediaId }];
+      ctx.patchState({
+        moviePlaylist: {
+          ...moviePlaylist,
+          items,
+        },
+      });
+    }
+  }
 }

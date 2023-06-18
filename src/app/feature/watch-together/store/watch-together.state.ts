@@ -52,6 +52,11 @@ export class WatchTogetherState {
     return state.invitedRooms;
   }
 
+  @Selector()
+  static mediaIds(state: WatchTogetherStateModel) {
+    return state.joinedRoom?.mediaIds;
+  }
+
   @Action(WatchTogetherActions.SetRooms)
   setRooms(
     ctx: StateContext<WatchTogetherStateModel>,
@@ -72,10 +77,10 @@ export class WatchTogetherState {
     });
   }
 
-  @Action(WatchTogetherActions.JoinRoom)
+  @Action(WatchTogetherActions.UpdateJoinedRoom)
   joinRoom(
     ctx: StateContext<WatchTogetherStateModel>,
-    payload: WatchTogetherActions.JoinRoom
+    payload: WatchTogetherActions.UpdateJoinedRoom
   ) {
     ctx.patchState({
       joinedRoom: payload.room,
@@ -87,6 +92,9 @@ export class WatchTogetherState {
     ctx: StateContext<WatchTogetherStateModel>,
     payload: WatchTogetherActions.RoomJoined
   ) {
+    ctx.patchState({
+      joinedRoom: payload.room,
+    });
     if (payload.room.mediaType === 'movies') {
       this.store.dispatch(
         new StreamingActions.WatchMoviePlaylist(

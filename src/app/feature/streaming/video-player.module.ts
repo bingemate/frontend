@@ -18,9 +18,17 @@ import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
 import { NzListModule } from 'ng-zorro-antd/list';
 import { CdkFixedSizeVirtualScroll } from '@angular/cdk/scrolling';
+import { AddMediaStreamComponent } from './add-media-stream/add-media-stream.component';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
 
 @NgModule({
-  declarations: [VideoPlayerComponent, PlaylistStreamComponent],
+  declarations: [
+    VideoPlayerComponent,
+    PlaylistStreamComponent,
+    AddMediaStreamComponent,
+  ],
   imports: [
     CommonModule,
     VgCoreModule,
@@ -45,7 +53,14 @@ import { CdkFixedSizeVirtualScroll } from '@angular/cdk/scrolling';
     NgOptimizedImage,
     NzListModule,
     CdkFixedSizeVirtualScroll,
+    NzButtonModule,
+    NzInputModule,
+    NzAutocompleteModule,
   ],
-  exports: [VideoPlayerComponent, PlaylistStreamComponent],
+  exports: [
+    VideoPlayerComponent,
+    PlaylistStreamComponent,
+    AddMediaStreamComponent,
+  ],
 })
 export class VideoPlayerModule {}

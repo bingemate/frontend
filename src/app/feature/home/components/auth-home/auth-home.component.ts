@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AuthState } from '../../../../core/auth/store/auth.state';
 import { Select, Store } from '@ngxs/store';
 import { UserResponse } from '../../../../shared/models/user.models';
-import { filter, forkJoin, interval, Observable } from 'rxjs';
+import { filter, forkJoin, interval, Observable, Subscription } from 'rxjs';
 import { navigationRoot } from '../../../../app-routing.module';
 import { streamingLinks } from '../../../../pages/streaming/streaming-routing.module';
 import { EpisodeHistoryService } from '../../../history/episode-history.service';
@@ -25,7 +25,7 @@ import { Router } from '@angular/router';
   templateUrl: './auth-home.component.html',
   styleUrls: ['./auth-home.component.less'],
 })
-export class AuthHomeComponent implements OnInit {
+export class AuthHomeComponent implements OnInit, OnDestroy {
   mediaStreamPath = `/${navigationRoot.streaming.path}/${streamingLinks.stream.path}/`;
 
   @Select(AuthState.user) user$!: Observable<UserResponse>;
@@ -47,6 +47,7 @@ export class AuthHomeComponent implements OnInit {
   popularTvShows: TvShowResponse[] = [];
 
   isOnPhone = false;
+  subscriptions: Subscription[] = [];
 
   constructor(
     private store: Store,
@@ -93,10 +94,17 @@ export class AuthHomeComponent implements OnInit {
     this.invitedRooms$
       .pipe(filter(rooms => rooms !== undefined && rooms !== null))
       .subscribe(rooms => (this.rooms = rooms));
-    interval(5000).subscribe(() => this.watchTogetherService.getRooms());
+    this.subscriptions.push(
+      interval(5000).subscribe(() => this.watchTogetherService.getRooms())
+    );
+    this.watchTogetherService.getRooms();
   }
 
   joinWatchTogetherRoom(room: WatchTogetherRoom) {
     this.watchTogetherService.joinRoom(room.id);
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 }

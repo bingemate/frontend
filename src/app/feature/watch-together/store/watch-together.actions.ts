@@ -8,8 +8,8 @@ export namespace WatchTogetherActions {
     static readonly type = '[WatchTogether] Set Rooms';
     constructor(public rooms: WatchTogetherRoom[]) {}
   }
-  export class JoinRoom {
-    static readonly type = '[WatchTogether] Join Room';
+  export class UpdateJoinedRoom {
+    static readonly type = '[WatchTogether] Update Joined Room';
     constructor(public room: WatchTogetherRoom) {}
   }
   export class RoomJoined {

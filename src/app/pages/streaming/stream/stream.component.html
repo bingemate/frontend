@@ -20,6 +20,8 @@
     *ngIf="(episodePlaylist$ | async) || (moviePlaylist$ | async)"
     [nzXs]="24"
     [nzLg]="6">
+    <app-add-media-stream
+      *ngIf="room && room.mediaType === 'movies'"></app-add-media-stream>
     <app-playlist-stream></app-playlist-stream>
   </nz-col>
   <nz-col *ngIf="!mediaFile && !error" [nzSpan]="24">
