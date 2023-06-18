@@ -20,6 +20,7 @@ import {
 } from '../../../shared/models/movie-playlist.model';
 import { EpisodePlaylistsService } from '../../../feature/playlist/episode-playlists.service';
 import { tap } from 'rxjs/operators';
+import { NotificationsService } from '../../../core/notifications/notifications.service';
 
 @Component({
   selector: 'app-playlist',
@@ -56,7 +57,8 @@ export class PlaylistComponent implements OnInit, OnDestroy {
     private store: Store,
     private moviePlaylistsService: MoviePlaylistsService,
     private episodePlaylistsService: EpisodePlaylistsService,
-    private mediaService: MediaInfoService
+    private mediaService: MediaInfoService,
+    private readonly notificationsService: NotificationsService
   ) {
     this.user$.subscribe(user => (this.user = user));
     this.isAdmin$.subscribe(isAdmin => (this.isAdmin = isAdmin));
@@ -123,8 +125,15 @@ export class PlaylistComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe({
-        complete: () => {
+        next: () => {
           this.playlistLoading = false;
+        },
+        error: err => {
+          this.playlistLoading = false;
+          this.notificationsService.error(
+            'Erreur lors de la récupération de la playlist',
+            err.error.message
+          );
         },
       });
   }
@@ -167,7 +176,18 @@ export class PlaylistComponent implements OnInit, OnDestroy {
       .updatePlaylistOrder(this.episodePlaylist.id, {
         items: this.episodePlaylistItems.map(item => item.playlistItem),
       })
-      .subscribe(() => (this.episodePlaylistItems = items));
+      .subscribe({
+        complete: () => {
+          this.notificationsService.success('Playlist mise à jour', '');
+          this.episodePlaylistItems = items;
+        },
+        error: err => {
+          this.notificationsService.error(
+            'Erreur lors de la mise à jour de la playlist',
+            err.error.message
+          );
+        },
+      });
   }
 
   itemMovieMoved(event: CdkDragDrop<MoviePlaylistItem[]>) {
@@ -180,7 +200,18 @@ export class PlaylistComponent implements OnInit, OnDestroy {
       .updatePlaylistOrder(this.moviePlaylist.id, {
         items: this.moviePlaylistItems.map(item => item.playlistItem),
       })
-      .subscribe(() => (this.moviePlaylistItems = items));
+      .subscribe({
+        complete: () => {
+          this.notificationsService.success('Playlist mise à jour', '');
+          this.moviePlaylistItems = items;
+        },
+        error: err => {
+          this.notificationsService.error(
+            'Erreur lors de la mise à jour de la playlist',
+            err.error.message
+          );
+        },
+      });
   }
 
   watchMedia(index: number) {
@@ -212,10 +243,19 @@ export class PlaylistComponent implements OnInit, OnDestroy {
     }
     this.moviePlaylistsService
       .deletePlaylistMedia(this.moviePlaylist.id, deletedItem.movieId)
-      .subscribe(() => {
-        this.moviePlaylistItems = (
-          this.moviePlaylistItems as MoviePlaylistItemMedia[]
-        ).filter(item => item.playlistItem.movieId !== deletedItem.movieId);
+      .subscribe({
+        complete: () => {
+          this.notificationsService.success('Élément supprimé');
+          this.moviePlaylistItems = this.moviePlaylistItems.filter(
+            item => item.playlistItem.movieId !== deletedItem.movieId
+          );
+        },
+        error: err => {
+          this.notificationsService.error(
+            "Erreur lors de la suppression de l'élément",
+            err.error.message
+          );
+        },
       });
   }
 
@@ -225,10 +265,19 @@ export class PlaylistComponent implements OnInit, OnDestroy {
     }
     this.episodePlaylistsService
       .deletePlaylistMedia(this.episodePlaylist.id, deletedItem.episodeId)
-      .subscribe(() => {
-        this.episodePlaylistItems = (
-          this.episodePlaylistItems as EpisodePlaylistItemMedia[]
-        ).filter(item => item.playlistItem.episodeId !== deletedItem.episodeId);
+      .subscribe({
+        complete: () => {
+          this.notificationsService.success('Élément supprimé');
+          this.episodePlaylistItems = this.episodePlaylistItems.filter(
+            item => item.playlistItem.episodeId !== deletedItem.episodeId
+          );
+        },
+        error: err => {
+          this.notificationsService.error(
+            "Erreur lors de la suppression de l'élément",
+            err.error.message
+          );
+        },
       });
   }
 

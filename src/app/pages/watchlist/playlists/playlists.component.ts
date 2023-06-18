@@ -7,6 +7,7 @@ import { MoviePlaylist } from '../../../shared/models/movie-playlist.model';
 import { EpisodePlaylistsService } from '../../../feature/playlist/episode-playlists.service';
 import { Observable } from 'rxjs';
 import { UserResponse } from '../../../shared/models/user.models';
+import { NotificationsService } from '../../../core/notifications/notifications.service';
 
 @Component({
   selector: 'app-playlists',
@@ -33,7 +34,8 @@ export class PlaylistsComponent implements OnInit, OnDestroy {
   constructor(
     private readonly store: Store,
     private readonly moviePlaylistsService: MoviePlaylistsService,
-    private readonly episodePlaylistsService: EpisodePlaylistsService
+    private readonly episodePlaylistsService: EpisodePlaylistsService,
+    private readonly notificationsService: NotificationsService
   ) {}
 
   onQuery() {
@@ -74,6 +76,12 @@ export class PlaylistsComponent implements OnInit, OnDestroy {
       next: playlists => {
         this.episodePlaylists = playlists;
       },
+      error: err => {
+        this.notificationsService.error(
+          "Erreur lors du chargement des playlists d'épisodes",
+          err.error
+        );
+      },
       complete: () => {
         this.episodePlaylistLoading = false;
       },
@@ -85,6 +93,12 @@ export class PlaylistsComponent implements OnInit, OnDestroy {
     this.moviePlaylistsService.getMoviePlaylists(user.id).subscribe({
       next: playlists => {
         this.moviePlaylists = playlists;
+      },
+      error: err => {
+        this.notificationsService.error(
+          'Erreur lors du chargement des playlists de films',
+          err.error
+        );
       },
       complete: () => {
         this.moviePlaylistLoading = false;
@@ -110,41 +124,77 @@ export class PlaylistsComponent implements OnInit, OnDestroy {
     const type = this.playlistType;
     this.isConfirmLoading = true;
     if (type === 'MOVIE') {
-      this.moviePlaylistsService.createPlaylist({ name }).subscribe(id => {
-        this.moviePlaylists.push({
-          id: id,
-          name,
-          userId: '',
-          items: [],
-        });
-        this.closeModal();
+      this.moviePlaylistsService.createPlaylist({ name }).subscribe({
+        next: id => {
+          this.moviePlaylists.push({
+            id: id,
+            name,
+            userId: '',
+            items: [],
+          });
+          this.closeModal();
+          this.notificationsService.success('Playlist créée');
+        },
+        error: err => {
+          this.notificationsService.error(
+            'Erreur lors de la création de la playlist',
+            err.error
+          );
+        },
       });
     } else {
-      this.episodePlaylistsService.createPlaylist({ name }).subscribe(id => {
-        this.episodePlaylists.push({
-          id: id,
-          name,
-          userId: '',
-          items: [],
-        });
-        this.closeModal();
+      this.episodePlaylistsService.createPlaylist({ name }).subscribe({
+        next: id => {
+          this.notificationsService.success('Playlist créée');
+          this.episodePlaylists.push({
+            id: id,
+            name,
+            userId: '',
+            items: [],
+          });
+          this.closeModal();
+        },
+        error: err => {
+          this.notificationsService.error(
+            'Erreur lors de la création de la playlist',
+            err.error
+          );
+        },
       });
     }
   }
 
   deleteMoviePlaylist(playlistId: string) {
-    this.moviePlaylistsService.deletePlaylist(playlistId).subscribe(() => {
-      this.moviePlaylists = this.moviePlaylists.filter(
-        playlist => playlist.id !== playlistId
-      );
+    this.moviePlaylistsService.deletePlaylist(playlistId).subscribe({
+      next: () => {
+        this.notificationsService.success('Playlist supprimée');
+        this.moviePlaylists = this.moviePlaylists.filter(
+          playlist => playlist.id !== playlistId
+        );
+      },
+      error: err => {
+        this.notificationsService.error(
+          'Erreur lors de la suppression de la playlist',
+          err.error
+        );
+      },
     });
   }
 
   deleteEpisodePlaylist(playlistId: string) {
-    this.episodePlaylistsService.deletePlaylist(playlistId).subscribe(() => {
-      this.episodePlaylists = this.episodePlaylists.filter(
-        playlist => playlist.id !== playlistId
-      );
+    this.episodePlaylistsService.deletePlaylist(playlistId).subscribe({
+      next: () => {
+        this.notificationsService.success('Playlist supprimée');
+        this.episodePlaylists = this.episodePlaylists.filter(
+          playlist => playlist.id !== playlistId
+        );
+      },
+      error: err => {
+        this.notificationsService.error(
+          'Erreur lors de la suppression de la playlist',
+          err.error
+        );
+      },
     });
   }
 }
