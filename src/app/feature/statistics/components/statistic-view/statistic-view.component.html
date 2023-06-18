@@ -2,6 +2,40 @@
   nz-row
   [nzGutter]="{ xs: 8, sm: 12, md: 16, lg: 24 }"
   style="margin-bottom: 1rem">
+  <div
+    nz-col
+    [nzXs]="{ span: 12 }"
+    [nzMd]="{ span: 6 }"
+    class="gutter-row"
+    *ngIf="userID === ''">
+    <nz-card>
+      <div nz-row nzJustify="center">
+        <nz-statistic
+          [nzValue]="userCount"
+          nzTitle="Nombre d'utilisateurs"
+          [nzPrefix]="userIc"></nz-statistic>
+        <ng-template #userIc><span nz-icon nzType="user"></span></ng-template>
+      </div>
+    </nz-card>
+  </div>
+  <div
+    nz-col
+    [nzXs]="{ span: 12 }"
+    [nzMd]="{ span: 6 }"
+    class="gutter-row"
+    *ngIf="userID === ''">
+    <nz-card>
+      <div nz-row nzJustify="center">
+        <nz-statistic
+          [nzValue]="subscriberCount"
+          nzTitle="Nombre d'abonnés"
+          [nzPrefix]="subIc"></nz-statistic>
+        <ng-template #subIc
+          ><span nz-icon nzType="dollar-circle"></span
+        ></ng-template>
+      </div>
+    </nz-card>
+  </div>
   <div nz-col [nzXs]="{ span: 12 }" [nzMd]="{ span: 6 }" class="gutter-row">
     <nz-card>
       <div nz-row nzJustify="center">

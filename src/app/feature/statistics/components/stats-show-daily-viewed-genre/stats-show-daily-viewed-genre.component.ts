@@ -32,8 +32,17 @@ export class StatsShowDailyViewedGenreComponent implements OnInit, OnChanges {
   readonly lineChartOptions: ChartConfiguration['options'] = {
     scales: {
       r: {
+        grid: {
+          color: 'rgba(47,255,0,0.2)',
+        },
+        pointLabels: {
+          font: {
+            size: 12,
+          },
+        },
         ticks: {
           precision: 0,
+          display: false,
         },
       },
     },
