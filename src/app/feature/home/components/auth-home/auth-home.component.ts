@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthState } from '../../../../core/auth/store/auth.state';
 import { Select, Store } from '@ngxs/store';
 import { UserResponse } from '../../../../shared/models/user.models';
-import { filter, forkJoin, Observable, timer } from 'rxjs';
+import { filter, forkJoin, interval, Observable } from 'rxjs';
 import { navigationRoot } from '../../../../app-routing.module';
 import { streamingLinks } from '../../../../pages/streaming/streaming-routing.module';
 import { EpisodeHistoryService } from '../../../history/episode-history.service';
@@ -93,7 +93,7 @@ export class AuthHomeComponent implements OnInit {
     this.invitedRooms$
       .pipe(filter(rooms => rooms !== undefined && rooms !== null))
       .subscribe(rooms => (this.rooms = rooms));
-    timer(5000).subscribe(() => this.watchTogetherService.getRooms());
+    interval(5000).subscribe(() => this.watchTogetherService.getRooms());
   }
 
   joinWatchTogetherRoom(room: WatchTogetherRoom) {
