@@ -42,7 +42,7 @@ export class WatchTogetherService {
       path: `${environment.production ? '' : '/dev'}/watch-service/socket.io`,
     });
     this.socket.on('invitedToRoom', room => {
-      this.notificationsService.info('Invitation à une lecture partager');
+      this.notificationsService.info('Invitation à une lecture partagée');
       this.store.dispatch(new WatchTogetherActions.AddRoom(room));
     });
     this.socket.on('rooms', rooms =>
