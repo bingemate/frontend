@@ -4,8 +4,11 @@ import { NavigationLinks, navigationRoot } from '../../app-routing.module';
 import { UploadScanComponent } from './upload-scan/upload-scan.component';
 import { AdminUsersComponent } from './admin-users/admin-users.component';
 import { MediaFilesComponent } from './media-files/media-files.component';
+import { StatisticsComponent } from './statistics/statistics.component';
 
-export const adminLinks: NavigationLinks<'upload' | 'users' | 'media_files'> = {
+export const adminLinks: NavigationLinks<
+  'upload' | 'users' | 'media_files' | 'statistics'
+> = {
   upload: {
     path: 'upload',
     name: 'Envoi / Scan de médias',
@@ -20,6 +23,11 @@ export const adminLinks: NavigationLinks<'upload' | 'users' | 'media_files'> = {
     path: 'users',
     name: 'Utilisateurs',
     icon: 'user',
+  },
+  statistics: {
+    path: 'statistics',
+    name: 'Statistiques',
+    icon: 'bar-chart',
   },
 };
 
@@ -45,6 +53,11 @@ const routes: Routes = [
     path: adminLinks.media_files.path,
     component: MediaFilesComponent,
     data: { title: adminLinks.media_files.name },
+  },
+  {
+    path: adminLinks.statistics.path,
+    component: StatisticsComponent,
+    data: { title: adminLinks.statistics.name },
   },
 ];
 
