@@ -19,4 +19,12 @@ export class MovieStatisticsService {
       )
       .pipe(map(response => toMovieStatistics(response)));
   }
+
+  getStatistics(): Observable<Statistic[]> {
+    return this.http
+      .get<MovieStatisticApiResponse[]>(
+        `${API_RESOURCE_URI.WATCH_SERVICE}/movie-stats/`
+      )
+      .pipe(map(response => toMovieStatistics(response)));
+  }
 }
