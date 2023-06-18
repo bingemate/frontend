@@ -41,6 +41,7 @@ export class EpisodeInfoListComponent implements OnInit {
   showWatchTogether = false;
   selectedFriends: string[] = [];
   friends: string[] = [];
+  private watchTogetherEpisodeId = 0;
 
   constructor(
     private breakpointObserver: BreakpointObserver,
@@ -98,13 +99,15 @@ export class EpisodeInfoListComponent implements OnInit {
     }
   }
 
-  watchTogetherModal() {
+  watchTogetherModal(episodeId: number) {
+    this.watchTogetherEpisodeId = episodeId;
     this.showWatchTogether = true;
   }
 
   cancelCreation() {
     this.showWatchTogether = false;
     this.selectedFriends = [];
+    this.watchTogetherEpisodeId = 0;
   }
 
   createRoom() {
@@ -116,7 +119,7 @@ export class EpisodeInfoListComponent implements OnInit {
             invitedUsers: this.selectedFriends,
             mediaIds: episodes,
             mediaType: 'tv-shows',
-            playlistPosition: 0,
+            playlistPosition: episodes.indexOf(this.watchTogetherEpisodeId),
           })
         );
     }

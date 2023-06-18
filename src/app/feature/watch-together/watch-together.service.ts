@@ -50,7 +50,7 @@ export class WatchTogetherService {
       this.store.dispatch(new WatchTogetherActions.SetRooms(rooms))
     );
     this.socket.on('roomStatus', room =>
-      this.store.dispatch(new WatchTogetherActions.JoinRoom(room))
+      this.store.dispatch(new WatchTogetherActions.UpdateJoinedRoom(room))
     );
     this.socket.on('roomJoined', room =>
       this.store.dispatch(new WatchTogetherActions.RoomJoined(room))

@@ -77,10 +77,10 @@ export class WatchTogetherState {
     });
   }
 
-  @Action(WatchTogetherActions.JoinRoom)
+  @Action(WatchTogetherActions.UpdateJoinedRoom)
   joinRoom(
     ctx: StateContext<WatchTogetherStateModel>,
-    payload: WatchTogetherActions.JoinRoom
+    payload: WatchTogetherActions.UpdateJoinedRoom
   ) {
     ctx.patchState({
       joinedRoom: payload.room,
