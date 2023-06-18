@@ -144,29 +144,18 @@
             </li>
           </ul>
         </li>
-        <li
-          nz-submenu
-          nzTitle="Paramètres"
-          [nzIcon]="navigationRoot.settings.icon!">
-          <ul>
-            <li nz-menu-item>
-              <nz-space nzAlign="center">
-                <i
-                  *nzSpaceItem
-                  class="trigger"
-                  nz-icon
-                  nzType="bg-colors"
-                  nzTheme="outline"></i>
-                <span *nzSpaceItem>Thème sombre</span>
-                <nz-switch
-                  *nzSpaceItem
-                  nzSize="small"
-                  [(ngModel)]="isDarkTheme"
-                  (click)="toggleTheme()">
-                </nz-switch>
-              </nz-space>
-            </li>
-          </ul>
+        <li nz-menu-item (click)="toggleTheme()">
+          <nz-space nzAlign="center">
+            <i
+              *nzSpaceItem
+              class="trigger"
+              nz-icon
+              nzType="bg-colors"
+              nzTheme="outline"></i>
+            <span *nzSpaceItem>Thème sombre</span>
+            <nz-switch *nzSpaceItem nzSize="small" [(ngModel)]="isDarkTheme">
+            </nz-switch>
+          </nz-space>
         </li>
         <li nz-menu-item nzMatchRouter>
           <a href="https://github.com/bingemate" target="_blank">
