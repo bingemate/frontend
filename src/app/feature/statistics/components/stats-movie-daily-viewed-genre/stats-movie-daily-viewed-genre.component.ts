@@ -6,15 +6,15 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { ChartConfiguration, ChartType } from 'chart.js';
-import { getDateDays } from '../../utils/date.utils';
-import { MediaInfoService } from '../../../feature/media-info/media-info.service';
 import { forkJoin, map } from 'rxjs';
-import { Genre } from '../../models/media.models';
+import { MediaInfoService } from '../../../media-info/media-info.service';
 import {
   STAT_COLORS,
   StatDisplay,
   Statistic,
-} from '../../models/statistic.models';
+} from '../../../../shared/models/statistic.models';
+import { getDateDays } from '../../../../shared/utils/date.utils';
+import { Genre } from '../../../../shared/models/media.models';
 
 @Component({
   selector: 'app-stats-movie-daily-viewed-genre',
@@ -54,6 +54,7 @@ export class StatsMovieDailyViewedGenreComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.updateMovieData();
   }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (
       changes['movieStats'].currentValue !== changes['movieStats'].previousValue

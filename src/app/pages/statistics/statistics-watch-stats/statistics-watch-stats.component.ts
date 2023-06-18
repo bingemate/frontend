@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { EpisodeStatisticsService } from '../episode-statistics.service';
 import { AuthState } from '../../../core/auth/store/auth.state';
 import { Select } from '@ngxs/store';
-import { MovieStatisticsService } from '../movie-statistics.service';
 import {
   CommentStat,
   Statistic,
@@ -12,6 +10,8 @@ import { RatingService } from '../../../feature/rating/rating.service';
 import { filter, forkJoin, mergeMap, Observable } from 'rxjs';
 import { UserResponse } from '../../../shared/models/user.models';
 import { millisToHours } from '../../../shared/utils/date.utils';
+import { EpisodeStatisticsService } from '../../../feature/statistics/episode-statistics.service';
+import { MovieStatisticsService } from '../../../feature/statistics/movie-statistics.service';
 
 @Component({
   selector: 'app-statistics-watch-stats',

@@ -6,14 +6,14 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { ChartConfiguration, ChartType } from 'chart.js';
-import { getDateDays } from '../../utils/date.utils';
 import { fr } from 'date-fns/locale';
 import { format } from 'date-fns';
 import {
   STAT_COLORS,
   StatDisplay,
   Statistic,
-} from '../../models/statistic.models';
+} from '../../../../shared/models/statistic.models';
+import { getDateDays } from '../../../../shared/utils/date.utils';
 
 @Component({
   selector: 'app-stats-daily-viewed-medias',

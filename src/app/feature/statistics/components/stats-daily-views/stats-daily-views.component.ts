@@ -6,14 +6,17 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { ChartConfiguration, ChartType } from 'chart.js';
-import { getDateDays, millisToSeconds } from '../../utils/date.utils';
 import { fr } from 'date-fns/locale';
 import { format } from 'date-fns';
 import {
   STAT_COLORS,
   StatDisplay,
   Statistic,
-} from '../../models/statistic.models';
+} from '../../../../shared/models/statistic.models';
+import {
+  getDateDays,
+  millisToSeconds,
+} from '../../../../shared/utils/date.utils';
 
 @Component({
   selector: 'app-stats-daily-views',

@@ -6,15 +6,15 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { ChartConfiguration, ChartType } from 'chart.js';
-import { getDateDays } from '../../utils/date.utils';
-import { MediaInfoService } from '../../../feature/media-info/media-info.service';
 import { forkJoin, map, switchMap } from 'rxjs';
-import { Genre } from '../../models/media.models';
 import {
   STAT_COLORS,
   StatDisplay,
   Statistic,
-} from '../../models/statistic.models';
+} from '../../../../shared/models/statistic.models';
+import { MediaInfoService } from '../../../media-info/media-info.service';
+import { getDateDays } from '../../../../shared/utils/date.utils';
+import { Genre } from '../../../../shared/models/media.models';
 
 @Component({
   selector: 'app-stats-show-daily-viewed-genre',
