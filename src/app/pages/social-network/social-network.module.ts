@@ -39,6 +39,7 @@ import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 import { NzSegmentedModule } from 'ng-zorro-antd/segmented';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzResultModule } from 'ng-zorro-antd/result';
+import { StatisticsFeatureModule } from '../../feature/statistics/statistics-feature.module';
 
 @NgModule({
   declarations: [
@@ -85,6 +86,7 @@ import { NzResultModule } from 'ng-zorro-antd/result';
     NzSegmentedModule,
     NzModalModule,
     NzResultModule,
+    StatisticsFeatureModule,
   ],
 })
 export class SocialNetworkModule {}

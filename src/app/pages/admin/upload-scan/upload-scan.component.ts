@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { JobLog } from '../../../shared/models/upload-scan.models';
 import { UploadScanService } from '../../../feature/upload-scan/upload-scan.service';
-import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { Subscription } from 'rxjs';
 
 @Component({

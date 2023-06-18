@@ -7,7 +7,6 @@ import { CommentService } from '../../comment.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 import { userProfilViewLinks } from '../../../../pages/social-network/social-network-routing.module';
 import { UserResponse } from '../../../../shared/models/user.models';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-comment-list',

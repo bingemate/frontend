@@ -4,39 +4,26 @@ import { StatisticsWatchStatsComponent } from './statistics-watch-stats/statisti
 import { StatisticsHistoryComponent } from './statistics-history/statistics-history.component';
 import { StatisticsRoutingModule } from './statistics-routing.module';
 import { NgChartsModule } from 'ng2-charts';
-import { StatsDailyViewsComponent } from '../../shared/components/stats-daily-views/stats-daily-views.component';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzButtonModule } from 'ng-zorro-antd/button';
-import { StatsDailyViewedMediasComponent } from '../../shared/components/stats-daily-viewed-medias/stats-daily-viewed-medias.component';
-import { EpisodeStatisticsService } from './episode-statistics.service';
-import { StatsShowDailyViewedGenreComponent } from '../../shared/components/stats-show-daily-viewed-genre/stats-show-daily-viewed-genre.component';
 import { MediaInfoModule } from '../../feature/media-info/media-info.module';
 import { NzListModule } from 'ng-zorro-antd/list';
 import { NzProgressModule } from 'ng-zorro-antd/progress';
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
-import { MovieStatisticsService } from './movie-statistics.service';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { SharedModule } from '../../shared/shared.module';
 import { NzStatisticModule } from 'ng-zorro-antd/statistic';
-import { StatsMovieDailyViewedGenreComponent } from '../../shared/components/stats-movie-daily-viewed-genre/stats-movie-daily-viewed-genre.component';
-import { StatsDailySentCommentsComponent } from '../../shared/components/stats-daily-sent-comments/stats-daily-sent-comments.component';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
+import { StatisticsFeatureModule } from '../../feature/statistics/statistics-feature.module';
 
 @NgModule({
-  declarations: [
-    StatisticsWatchStatsComponent,
-    StatisticsHistoryComponent,
-    StatsDailyViewedMediasComponent,
-    StatsDailySentCommentsComponent,
-    StatsDailyViewsComponent,
-    StatsShowDailyViewedGenreComponent,
-    StatsMovieDailyViewedGenreComponent,
-  ],
+  declarations: [StatisticsWatchStatsComponent, StatisticsHistoryComponent],
   imports: [
     CommonModule,
+    StatisticsFeatureModule,
     StatisticsRoutingModule,
     NgChartsModule,
     NzGridModule,
@@ -53,6 +40,7 @@ import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
     NzStatisticModule,
     NzPopconfirmModule,
   ],
-  providers: [EpisodeStatisticsService, MovieStatisticsService],
+  providers: [],
+  exports: [],
 })
 export class StatisticsModule {}

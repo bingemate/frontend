@@ -6,21 +6,21 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { ChartConfiguration, ChartType } from 'chart.js';
-import { getDateDays, millisToSeconds } from '../../utils/date.utils';
 import { fr } from 'date-fns/locale';
 import { format } from 'date-fns';
 import {
   STAT_COLORS,
   StatDisplay,
   Statistic,
-} from '../../models/statistic.models';
+} from '../../../../shared/models/statistic.models';
+import { getDateDays } from '../../../../shared/utils/date.utils';
 
 @Component({
-  selector: 'app-stats-daily-views',
-  templateUrl: './stats-daily-views.component.html',
-  styleUrls: ['./stats-daily-views.component.less'],
+  selector: 'app-stats-daily-viewed-medias',
+  templateUrl: './stats-daily-viewed-medias.component.html',
+  styleUrls: ['./stats-daily-viewed-medias.component.less'],
 })
-export class StatsDailyViewsComponent implements OnInit, OnChanges {
+export class StatsDailyViewedMediasComponent implements OnInit, OnChanges {
   @Input()
   movieStats: Statistic[] = [];
   @Input()
@@ -34,18 +34,10 @@ export class StatsDailyViewsComponent implements OnInit, OnChanges {
     },
     scales: {
       y: {
-        position: 'left',
         ticks: {
-          stepSize: 3600,
-          callback: label => this.formatTime(label as number),
+          precision: 0,
         },
-      },
-    },
-    plugins: {
-      tooltip: {
-        callbacks: {
-          label: label => this.formatLabelTime(label),
-        },
+        position: 'left',
       },
     },
   };
@@ -150,49 +142,32 @@ export class StatsDailyViewsComponent implements OnInit, OnChanges {
     statsFiltered = statsFiltered.sort(
       (a, b) => a.startedAt.getTime() - b.startedAt.getTime()
     );
-    const watchTimePerDay = this.getWatchTimePerDay(statsFiltered);
+    const watchTimePerDay = this.getWatchedMediasPerDay(statsFiltered);
     const labels = Array.from(watchTimePerDay.keys());
     const data = Array.from(watchTimePerDay.values());
     return { data, labels };
   }
 
-  private getWatchTimePerDay(stats: Statistic[]) {
+  private getWatchedMediasPerDay(stats: Statistic[]) {
     const data: Map<string, number> = new Map<string, number>();
+    const ids: Map<string, Set<number>> = new Map<string, Set<number>>();
     stats.forEach(stat => {
       const key = format(stat.startedAt, 'dd MMMM', { locale: fr });
+      let elements = ids.get(key);
+      if (!elements) {
+        elements = new Set();
+        ids.set(key, elements);
+      } else if (elements.has(stat.mediaId)) {
+        return;
+      }
+      elements.add(stat.mediaId);
       const value = data.get(key);
       if (!data.has(key) || !value) {
-        data.set(
-          key,
-          millisToSeconds(stat.stoppedAt.getTime() - stat.startedAt.getTime())
-        );
+        data.set(key, 1);
       } else {
-        data.set(
-          key,
-          value +
-            millisToSeconds(stat.stoppedAt.getTime() - stat.startedAt.getTime())
-        );
+        data.set(key, value + 1);
       }
     });
     return data;
-  }
-  private formatLabelTime(context: any) {
-    let label = context.dataset.label || '';
-
-    if (label) {
-      label += ': ';
-    }
-    if (context.parsed.y !== null) {
-      label += this.formatTime(context.parsed.y);
-    }
-    return label;
-  }
-  private formatTime(secs: number) {
-    const hours = Math.floor(secs / (60 * 60));
-
-    const divisor_for_minutes = secs % (60 * 60);
-    const minutes = Math.floor(divisor_for_minutes / 60);
-
-    return hours + 'h' + minutes + 'm';
   }
 }

@@ -22,7 +22,7 @@ export class CommentService {
     );
   }
 
-  getCommentHistory(start?: string, end?: string): Observable<CommentStat[]> {
+  getCommentStat(start?: string, end?: string): Observable<CommentStat[]> {
     const params = new HttpParams();
     if (start) {
       params.set('start', start);
@@ -34,6 +34,33 @@ export class CommentService {
       .get<CommentHistory[]>(`${API_RESOURCE_URI.MEDIA_INFO}/comment/history`, {
         params,
       })
+      .pipe(
+        map(comments =>
+          comments.map(comment => ({
+            date: new Date(comment.date),
+            count: comment.count,
+          }))
+        )
+      );
+  }
+
+  getUserCommentStat(
+    userId: string,
+    start?: string,
+    end?: string
+  ): Observable<CommentStat[]> {
+    const params = new HttpParams();
+    if (start) {
+      params.set('start', start);
+    }
+    if (end) {
+      params.set('end', end);
+    }
+    return this.http
+      .get<CommentHistory[]>(
+        `${API_RESOURCE_URI.MEDIA_INFO}/comment/user/history/${userId}`,
+        { params }
+      )
       .pipe(
         map(comments =>
           comments.map(comment => ({

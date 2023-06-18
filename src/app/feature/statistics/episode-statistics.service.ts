@@ -19,4 +19,12 @@ export class EpisodeStatisticsService {
       )
       .pipe(map(response => toEpisodeStatistics(response)));
   }
+
+  getStatistics(): Observable<Statistic[]> {
+    return this.http
+      .get<EpisodeStatisticApiResponse[]>(
+        `${API_RESOURCE_URI.WATCH_SERVICE}/episode-stats/`
+      )
+      .pipe(map(response => toEpisodeStatistics(response)));
+  }
 }
