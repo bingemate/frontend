@@ -19,7 +19,6 @@ import { WatchTogetherRoom } from '../../../../shared/models/watch-together.mode
 import { WatchTogetherState } from '../../../watch-together/store/watch-together.state';
 import { WatchTogetherService } from '../../../watch-together/watch-together.service';
 import { Router } from '@angular/router';
-import { StreamingActions } from '../../../streaming/store/streaming.actions';
 
 @Component({
   selector: 'app-auth-home',
@@ -99,42 +98,5 @@ export class AuthHomeComponent implements OnInit {
 
   joinWatchTogetherRoom(room: WatchTogetherRoom) {
     this.watchTogetherService.joinRoom(room.id);
-    if (room.mediaType === 'movies') {
-      this.store.dispatch(
-        new StreamingActions.WatchMoviePlaylist(
-          {
-            id: '',
-            name: 'Lecture partager',
-            userId: '',
-            items: room.mediaIds.map(movieId => ({ movieId })),
-          },
-          room.playlistPosition
-        )
-      );
-    } else {
-      this.store.dispatch(
-        new StreamingActions.WatchEpisodePlaylist(
-          {
-            id: '',
-            name: 'Lecture partager',
-            userId: '',
-            items: room.mediaIds.map(episodeId => ({
-              episodeId,
-            })),
-          },
-          room.playlistPosition
-        )
-      );
-    }
-    this.router.navigate(
-      [
-        this.mediaStreamPath,
-        room.mediaType,
-        room.mediaIds[room.playlistPosition],
-      ],
-      {
-        queryParams: { progress: room.position > 0.95 ? 0 : room.position },
-      }
-    );
   }
 }
