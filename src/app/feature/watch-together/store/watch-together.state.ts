@@ -87,6 +87,9 @@ export class WatchTogetherState {
     ctx: StateContext<WatchTogetherStateModel>,
     payload: WatchTogetherActions.RoomJoined
   ) {
+    ctx.patchState({
+      joinedRoom: payload.room,
+    });
     if (payload.room.mediaType === 'movies') {
       this.store.dispatch(
         new StreamingActions.WatchMoviePlaylist(
