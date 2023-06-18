@@ -12,6 +12,10 @@ export namespace WatchTogetherActions {
     static readonly type = '[WatchTogether] Join Room';
     constructor(public room: WatchTogetherRoom) {}
   }
+  export class RoomJoined {
+    static readonly type = '[WatchTogether] Room Joined';
+    constructor(public room: WatchTogetherRoom) {}
+  }
   export class LeaveRoom {
     static readonly type = '[WatchTogether] Leave Room';
   }

@@ -66,6 +66,22 @@
               nzShape="circle">
               <span nz-icon nzType="play-circle" nzTheme="fill"></span>
             </button>
+            <button
+              *nzSpaceItem
+              [hidden]="!episode.present"
+              [disabled]="(isSubscribed$ | async) === false"
+              nz-button
+              nz-tooltip
+              [nzTooltipTitle]="
+                (isSubscribed$ | async) === false
+                  ? 'Vous devez être abonné pour regarder cette série'
+                  : 'Lecture partager'
+              "
+              (click)="watchTogetherModal()"
+              nzType="primary"
+              nzShape="circle">
+              <span nz-icon nzType="usergroup-add" nzTheme="outline"></span>
+            </button>
             <span *nzSpaceItem class="hide-on-phone">
               {{ episode.overview }}
             </span>
@@ -78,3 +94,40 @@
     </nz-list-item>
   </nz-list>
 </cdk-virtual-scroll-viewport>
+
+<nz-modal
+  nzTitle="Choisissez des amis"
+  [(nzVisible)]="showWatchTogether"
+  (nzOnCancel)="cancelCreation()"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter">
+  <ng-template #modalContent>
+    <div nz-row>
+      <nz-select
+        nz-col
+        nzSpan="24"
+        [nzMaxTagCount]="4"
+        [nzMaxTagPlaceholder]="tagPlaceHolder"
+        nzMode="multiple"
+        nzSize="large"
+        nzPlaceHolder="Choisissez des amis"
+        [(ngModel)]="selectedFriends">
+        <nz-option
+          *ngFor="let item of friends"
+          [nzLabel]="item | username | async"
+          [nzValue]="item"></nz-option>
+      </nz-select>
+      <ng-template #tagPlaceHolder let-selectedList>
+        et {{ selectedList.length }} amis
+      </ng-template>
+    </div>
+  </ng-template>
+  <ng-template #modalFooter>
+    <button nz-button nzType="default" (click)="cancelCreation()">
+      Annuler
+    </button>
+    <button nz-button nzType="primary" (click)="createRoom()">
+      Créer la salle
+    </button>
+  </ng-template>
+</nz-modal>

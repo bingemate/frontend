@@ -1,7 +1,11 @@
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { WatchTogetherStateModel } from '../../../shared/models/watch-together.models';
 import { WatchTogetherActions } from './watch-together.actions';
+import { StreamingActions } from '../../streaming/store/streaming.actions';
+import { navigationRoot } from '../../../app-routing.module';
+import { streamingLinks } from '../../../pages/streaming/streaming-routing.module';
+import { Router } from '@angular/router';
 
 @State<WatchTogetherStateModel>({
   name: 'watchTogether',
@@ -12,7 +16,12 @@ import { WatchTogetherActions } from './watch-together.actions';
 })
 @Injectable()
 export class WatchTogetherState {
-  constructor(private store: Store) {}
+  readonly mediaStreamPath = `/${navigationRoot.streaming.path}/${streamingLinks.stream.path}/`;
+  constructor(
+    private store: Store,
+    private router: Router,
+    private ngZone: NgZone
+  ) {}
 
   @Selector()
   static joinedRoom(state: WatchTogetherStateModel) {
@@ -71,6 +80,54 @@ export class WatchTogetherState {
     ctx.patchState({
       joinedRoom: payload.room,
     });
+  }
+
+  @Action(WatchTogetherActions.RoomJoined)
+  roomJoined(
+    ctx: StateContext<WatchTogetherStateModel>,
+    payload: WatchTogetherActions.RoomJoined
+  ) {
+    if (payload.room.mediaType === 'movies') {
+      this.store.dispatch(
+        new StreamingActions.WatchMoviePlaylist(
+          {
+            id: '',
+            name: 'Lecture partager',
+            userId: '',
+            items: payload.room.mediaIds.map(movieId => ({ movieId })),
+          },
+          payload.room.playlistPosition
+        )
+      );
+    } else {
+      this.store.dispatch(
+        new StreamingActions.WatchEpisodePlaylist(
+          {
+            id: '',
+            name: 'Lecture partager',
+            userId: '',
+            items: payload.room.mediaIds.map(episodeId => ({
+              episodeId,
+            })),
+          },
+          payload.room.playlistPosition
+        )
+      );
+    }
+    this.ngZone.run(() =>
+      this.router.navigate(
+        [
+          this.mediaStreamPath,
+          payload.room.mediaType,
+          payload.room.mediaIds[payload.room.playlistPosition],
+        ],
+        {
+          queryParams: {
+            progress: payload.room.position > 0.95 ? 0 : payload.room.position,
+          },
+        }
+      )
+    );
   }
 
   @Action(WatchTogetherActions.LeaveRoom)

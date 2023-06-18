@@ -121,8 +121,7 @@ export class StreamComponent implements OnInit, OnDestroy {
                             episodeId,
                           })),
                         },
-                        episodes.indexOf(this.mediaId),
-                        false
+                        episodes.indexOf(this.mediaId)
                       )
                     )
                   )
