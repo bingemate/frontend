@@ -26,6 +26,7 @@ import { MovieWatchlistService } from '../../../watchlist/movie-watchlist.servic
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { FriendshipService } from '../../../friendship/friendship.service';
 import { WatchTogetherService } from '../../../watch-together/watch-together.service';
+import { subscriptionLinks } from '../../../../pages/subscription/subscriptions-routing.module';
 
 @Component({
   selector: 'app-movie-info',
@@ -46,6 +47,7 @@ export class MovieInfoComponent implements OnInit, OnChanges {
   readonly moviesByGenrePath = `/${navigationRoot.medias.path}/${mediasLinks.movies_by_genre.path}/`;
   readonly moviesByActorPath = `/${navigationRoot.medias.path}/${mediasLinks.movies_by_actor.path}/`;
   readonly moviesByStudioPath = `/${navigationRoot.medias.path}/${mediasLinks.movies_by_studio.path}/`;
+  readonly subscriptionPath = `/${navigationRoot.subscriptions.path}/${subscriptionLinks.subscriptions.path}/`;
   readonly statusNames = Object.values(MovieWatchListStatus);
 
   @Select(PlaylistState.moviePlaylists)

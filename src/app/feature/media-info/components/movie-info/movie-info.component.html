@@ -15,18 +15,11 @@
           <nz-space
             nzSize="small"
             [nzDirection]="isOnPhone ? 'vertical' : 'horizontal'">
-            <ng-container *ngIf="movie.present">
+            <ng-container *ngIf="movie.present && (isSubscribed$ | async)">
               <button
                 *nzSpaceItem
                 [routerLink]="streamPath + movie.id"
-                [disabled]="(isSubscribed$ | async) === false"
                 nz-button
-                nz-tooltip
-                [nzTooltipTitle]="
-                  (isSubscribed$ | async) === false
-                    ? 'Vous devez être abonné pour regarder ce film'
-                    : ''
-                "
                 nzType="primary"
                 nz-dropdown
                 [nzDropdownMenu]="watchMenu"
@@ -43,6 +36,18 @@
                 [nzDropdownMenu]="playlistMenu">
                 Ajouter à une playlist
                 <span nz-icon nzType="down"></span>
+              </button>
+            </ng-container>
+            <ng-container
+              *ngIf="movie.present && (isSubscribed$ | async) === false">
+              <button
+                *nzSpaceItem
+                nz-button
+                nzType="primary"
+                nzShape="round"
+                [routerLink]="subscriptionPath">
+                <span nz-icon nzType="barcode" nzTheme="outline"></span>
+                Abonnez-vous pour regarder
               </button>
             </ng-container>
             <button

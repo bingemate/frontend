@@ -12,6 +12,7 @@ import { AuthState } from '../../../../core/auth/store/auth.state';
 import { EpisodePlaylist } from '../../../../shared/models/episode-playlist.model';
 import { EpisodePlaylistsService } from '../../../playlist/episode-playlists.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { subscriptionLinks } from '../../../../pages/subscription/subscriptions-routing.module';
 
 @Component({
   selector: 'app-episode-info-list',
@@ -23,6 +24,7 @@ export class EpisodeInfoListComponent implements OnInit {
   isSubscribed$!: Observable<boolean>;
 
   readonly streamPath = `/${navigationRoot.streaming.path}/${streamingLinks.stream.path}/tv-shows/`;
+  readonly subscriptionPath = `/${navigationRoot.subscriptions.path}/${subscriptionLinks.subscriptions.path}/`;
 
   @Select(PlaylistState.episodePlaylists)
   playlists$!: Observable<EpisodePlaylist[]>;

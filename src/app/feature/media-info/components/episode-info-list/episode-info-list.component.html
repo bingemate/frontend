@@ -52,19 +52,21 @@
               alt="" />
             <button
               *nzSpaceItem
-              [hidden]="!episode.present"
-              [disabled]="(isSubscribed$ | async) === false"
+              [hidden]="!episode.present || (isSubscribed$ | async) === false"
               [routerLink]="[streamPath, episode.id]"
               nz-button
-              nz-tooltip
-              [nzTooltipTitle]="
-                (isSubscribed$ | async) === false
-                  ? 'Vous devez être abonné pour regarder cette série'
-                  : ''
-              "
               nzType="primary"
               nzShape="circle">
               <span nz-icon nzType="play-circle" nzTheme="fill"></span>
+            </button>
+            <button
+              *nzSpaceItem
+              [hidden]="!episode.present || (isSubscribed$ | async) === true"
+              [routerLink]="[subscriptionPath]"
+              nz-button
+              nzType="primary"
+              nzShape="circle">
+              <span nz-icon nzType="barcode" nzTheme="outline"></span>
             </button>
             <span *nzSpaceItem class="hide-on-phone">
               {{ episode.overview }}
