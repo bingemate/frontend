@@ -6,6 +6,7 @@ import { environment } from '../../../environments/environment';
 import { NotificationsService } from '../../core/notifications/notifications.service';
 import { CreateWatchTogetherRoomRequest } from '../../shared/models/watch-together.models';
 import { WatchTogetherActions } from './store/watch-together.actions';
+import { StreamingActions } from '../streaming/store/streaming.actions';
 
 @Injectable({
   providedIn: 'root',
@@ -55,6 +56,9 @@ export class WatchTogetherService {
       this.store.dispatch(new WatchTogetherActions.RoomJoined(room))
     );
     this.socket.on('roomCreated', roomId => this.joinRoom(roomId));
+    this.socket.on('addedMedia', mediaId =>
+      this.store.dispatch(new StreamingActions.AddMedia(mediaId))
+    );
   }
 
   createRoom(room: CreateWatchTogetherRoomRequest) {

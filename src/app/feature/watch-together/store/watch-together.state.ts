@@ -52,6 +52,11 @@ export class WatchTogetherState {
     return state.invitedRooms;
   }
 
+  @Selector()
+  static mediaIds(state: WatchTogetherStateModel) {
+    return state.joinedRoom?.mediaIds;
+  }
+
   @Action(WatchTogetherActions.SetRooms)
   setRooms(
     ctx: StateContext<WatchTogetherStateModel>,
