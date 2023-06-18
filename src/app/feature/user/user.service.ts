@@ -138,4 +138,16 @@ export class UserService {
       `${API_RESOURCE_URI.KEYCLOAK_SERVICE}/user-admin/delete/${userId}`
     );
   }
+
+  adminCountUsers(): Observable<number> {
+    return this.http.get<number>(
+      `${API_RESOURCE_URI.KEYCLOAK_SERVICE}/user-admin/count`
+    );
+  }
+
+  adminCountUsersByRole(role: string): Observable<number> {
+    return this.http.get<number>(
+      `${API_RESOURCE_URI.KEYCLOAK_SERVICE}/user-admin/count/${role}`
+    );
+  }
 }
