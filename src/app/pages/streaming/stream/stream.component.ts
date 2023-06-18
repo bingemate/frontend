@@ -59,6 +59,19 @@ export class StreamComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscriptions.push(
+      this.keycloak.keycloakEvents$.subscribe(async event => {
+        if (event.type === KeycloakEventType.OnTokenExpired) {
+          await this.keycloak.updateToken(1);
+        } else if (
+          this.socket &&
+          event.type === KeycloakEventType.OnAuthRefreshSuccess
+        ) {
+          this.socket.close();
+          await this.initSocketConnection();
+        }
+      })
+    );
+    this.subscriptions.push(
       this.route.params
         .pipe(
           switchMap(params => {
@@ -78,7 +91,7 @@ export class StreamComponent implements OnInit, OnDestroy {
           next: async ([mediaFile, mediaInfo]) => {
             this.mediaInfo = mediaInfo;
             this.mediaFile = mediaFile;
-            await this.openSocketConnection();
+            await this.initSocketConnection();
             if (this.route.snapshot.queryParamMap.has('progress')) {
               this.progress =
                 mediaFile.duration *
@@ -138,31 +151,10 @@ export class StreamComponent implements OnInit, OnDestroy {
     this.socket?.emit('updateMediaHistory', event);
   }
 
-  private async openSocketConnection() {
+  private async initSocketConnection() {
     if (this.socket) {
       this.socket.close();
     }
-    await this.initSocketConnection();
-    this.keycloak.keycloakEvents$.subscribe(async event => {
-      if (event.type === KeycloakEventType.OnTokenExpired) {
-        await this.keycloak.updateToken(1);
-      } else if (
-        this.socket &&
-        event.type === KeycloakEventType.OnAuthRefreshSuccess
-      ) {
-        this.socket.disconnect();
-        await this.initSocketConnection();
-      }
-    });
-    this.keycloak.keycloakEvents$.subscribe(async event => {
-      if (event.type === KeycloakEventType.OnTokenExpired && this.socket) {
-        const key = await this.keycloak.getToken();
-        this.socket.auth = { Authorization: `Bearer ${key}` };
-      }
-    });
-  }
-
-  private async initSocketConnection() {
     const key = await this.keycloak.getToken();
     this.socket = io(`${environment.websocketUrl}`, {
       transports: ['polling'],
