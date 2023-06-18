@@ -57,15 +57,6 @@ export class StreamingState {
       episodePlaylist: undefined,
       position: payload.position,
     });
-    this.ngZone.run(() => {
-      this.router
-        .navigate([
-          '/streaming/stream',
-          'movies',
-          ctx.getState().moviePlaylist?.items[payload.position].movieId,
-        ])
-        .then();
-    });
   }
 
   @Action(StreamingActions.WatchEpisodePlaylist)
@@ -79,17 +70,6 @@ export class StreamingState {
       episodePlaylist: payload.playlist,
       position: payload.position,
     });
-    if (payload.redirect) {
-      this.ngZone.run(() => {
-        this.router
-          .navigate([
-            '/streaming/stream',
-            'tv-shows',
-            ctx.getState().episodePlaylist?.items[payload.position].episodeId,
-          ])
-          .then();
-      });
-    }
   }
 
   @Action(StreamingActions.SeekMediaPlaylist)

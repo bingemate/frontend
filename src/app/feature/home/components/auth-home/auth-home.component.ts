@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthState } from '../../../../core/auth/store/auth.state';
-import { Select } from '@ngxs/store';
+import { Select, Store } from '@ngxs/store';
 import { UserResponse } from '../../../../shared/models/user.models';
 import { filter, forkJoin, Observable } from 'rxjs';
 import { navigationRoot } from '../../../../app-routing.module';
@@ -19,6 +19,7 @@ import { WatchTogetherRoom } from '../../../../shared/models/watch-together.mode
 import { WatchTogetherState } from '../../../watch-together/store/watch-together.state';
 import { WatchTogetherService } from '../../../watch-together/watch-together.service';
 import { Router } from '@angular/router';
+import { StreamingActions } from '../../../streaming/store/streaming.actions';
 
 @Component({
   selector: 'app-auth-home',
@@ -49,6 +50,7 @@ export class AuthHomeComponent implements OnInit {
   isOnPhone = false;
 
   constructor(
+    private store: Store,
     private router: Router,
     private breakpointObserver: BreakpointObserver,
     private readonly episodeHistoryService: EpisodeHistoryService,
@@ -97,6 +99,33 @@ export class AuthHomeComponent implements OnInit {
 
   joinWatchTogetherRoom(room: WatchTogetherRoom) {
     this.watchTogetherService.joinRoom(room.id);
+    if (room.mediaType === 'movies') {
+      this.store.dispatch(
+        new StreamingActions.WatchMoviePlaylist(
+          {
+            id: '',
+            name: 'Lecture partager',
+            userId: '',
+            items: room.mediaIds.map(movieId => ({ movieId })),
+          },
+          room.playlistPosition
+        )
+      );
+    } else {
+      this.store.dispatch(
+        new StreamingActions.WatchEpisodePlaylist(
+          {
+            id: '',
+            name: 'Lecture partager',
+            userId: '',
+            items: room.mediaIds.map(episodeId => ({
+              episodeId,
+            })),
+          },
+          room.playlistPosition
+        )
+      );
+    }
     this.router.navigate(
       [
         this.mediaStreamPath,

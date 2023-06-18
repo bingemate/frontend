@@ -12,6 +12,8 @@ import { AuthState } from '../../../../core/auth/store/auth.state';
 import { EpisodePlaylist } from '../../../../shared/models/episode-playlist.model';
 import { EpisodePlaylistsService } from '../../../playlist/episode-playlists.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { WatchTogetherService } from '../../../watch-together/watch-together.service';
+import { FriendshipService } from '../../../friendship/friendship.service';
 
 @Component({
   selector: 'app-episode-info-list',
@@ -34,13 +36,18 @@ export class EpisodeInfoListComponent implements OnInit {
 
   seasonEpisodes: TvEpisodeResponse[] = [];
   selectedEpisode?: TvEpisodeResponse;
+  showWatchTogether = false;
+  selectedFriends: string[] = [];
+  friends: string[] = [];
 
   constructor(
     private breakpointObserver: BreakpointObserver,
     private readonly store: Store,
     private mediaInfoService: MediaInfoService,
     private episodePlaylistsService: EpisodePlaylistsService,
-    private readonly notificationsService: NotificationsService
+    private readonly notificationsService: NotificationsService,
+    private friendshipService: FriendshipService,
+    private readonly watchTogetherService: WatchTogetherService
   ) {
     this.breakpointObserver
       .observe([Breakpoints.HandsetPortrait])
@@ -62,6 +69,11 @@ export class EpisodeInfoListComponent implements OnInit {
           this.loading = false;
         },
       });
+    this.friendshipService
+      .getFriendships()
+      .subscribe(
+        friends => (this.friends = friends.map(friend => friend.friendId))
+      );
   }
 
   onEpisodeSelection(episode: TvEpisodeResponse) {
@@ -80,6 +92,30 @@ export class EpisodeInfoListComponent implements OnInit {
         })
         .subscribe(() =>
           this.notificationsService.success('Episode ajouté à la playlist')
+        );
+    }
+  }
+
+  watchTogetherModal() {
+    this.showWatchTogether = true;
+  }
+
+  cancelCreation() {
+    this.showWatchTogether = false;
+    this.selectedFriends = [];
+  }
+
+  createRoom() {
+    if (this.tvShowId) {
+      this.mediaInfoService
+        .getAvailableEpisodes(this.tvShowId)
+        .subscribe(episodes =>
+          this.watchTogetherService.createRoom({
+            invitedUsers: this.selectedFriends,
+            mediaIds: episodes,
+            mediaType: 'tv-shows',
+            playlistPosition: 0,
+          })
         );
     }
   }
