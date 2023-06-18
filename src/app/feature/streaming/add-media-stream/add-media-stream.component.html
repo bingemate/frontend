@@ -1,7 +1,7 @@
 <nz-card nzTitle="Ajouter un film">
-  <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton" nzSize="large">
+  <nz-input-group nzSearch nzSize="large">
     <input
-      (change)="search()"
+      (input)="search()"
       [(ngModel)]="input"
       [nzAutocomplete]="auto"
       type="text"
@@ -16,10 +16,4 @@
       {{ option.label }}
     </nz-auto-option>
   </nz-autocomplete>
-
-  <ng-template #suffixIconButton>
-    <button nz-button nzType="primary" nzSearch>
-      <span nz-icon nzType="search"></span>
-    </button>
-  </ng-template>
 </nz-card>
