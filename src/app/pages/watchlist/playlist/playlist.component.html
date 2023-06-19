@@ -109,28 +109,17 @@
                   alt="logo"
                   ngSrc="{{ item.media.imageUrl }}" />
               </a>
-              <a
-                *nzSpaceItem
-                class="hide-on-phone"
-                [routerLink]="[
-                  '/medias/episode-view',
-                  item.playlistItem.episodeId
-                ]">
+              <span *nzSpaceItem class="hide-on-phone">
                 {{
                   item.playlistItem.episodeId | mediaName : 'episode' | async
                 }}
-              </a>
+              </span>
             </nz-space>
           </nz-list-item-meta-title>
           <nz-list-item-meta-description class="hide-on-desktop">
-            <a
-              style="margin-left: 32px"
-              [routerLink]="[
-                '/medias/episode-view',
-                item.playlistItem.episodeId
-              ]">
+            <span style="margin-left: 32px">
               {{ item.playlistItem.episodeId | mediaName : 'episode' | async }}
-            </a>
+            </span>
           </nz-list-item-meta-description>
         </nz-list-item-meta>
         <ul nz-list-item-actions>
