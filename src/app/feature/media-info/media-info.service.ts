@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import {
   MovieResponse,
   TvEpisodeResponse,
@@ -36,6 +36,16 @@ export class MediaInfoService {
       .pipe(tap(title => this.movieNames.set(tmdbId, title)));
   }
 
+  getMoviesShortInfo(tmdbIds: number[]): Observable<MovieResponse[]> {
+    const queryParams = new HttpParams({
+      fromObject: { ids: tmdbIds },
+    });
+    return this.http.get<MovieResponse[]>(
+      API_RESOURCE_URI.MEDIA_INFO + '/media/movies-tmdb',
+      { params: queryParams }
+    );
+  }
+
   getTvShowInfo(tmdbId: number): Observable<TvShowResponse> {
     return this.http.get<TvShowResponse>(
       API_RESOURCE_URI.MEDIA_INFO + '/media/tvshow-tmdb/' + tmdbId
@@ -52,6 +62,16 @@ export class MediaInfoService {
         API_RESOURCE_URI.MEDIA_INFO + '/media/tvshow-tmdb/' + tmdbId + '/short'
       )
       .pipe(tap(title => this.tvNames.set(tmdbId, title)));
+  }
+
+  getTvShowsShortInfo(tmdbIds: number[]): Observable<TvShowResponse[]> {
+    const queryParams = new HttpParams({
+      fromObject: { ids: tmdbIds },
+    });
+    return this.http.get<TvShowResponse[]>(
+      API_RESOURCE_URI.MEDIA_INFO + '/media/tvshows-tmdb',
+      { params: queryParams }
+    );
   }
 
   getTvShowEpisodeInfo(
@@ -73,6 +93,18 @@ export class MediaInfoService {
   getTvShowEpisodeInfoById(tmdbId: number): Observable<TvEpisodeResponse> {
     return this.http.get<TvEpisodeResponse>(
       API_RESOURCE_URI.MEDIA_INFO + '/media/episode-tmdb/' + tmdbId
+    );
+  }
+
+  getTvShowEpisodesInfoByIds(
+    tmdbIds: number[]
+  ): Observable<TvEpisodeResponse[]> {
+    const queryParams = new HttpParams({
+      fromObject: { ids: tmdbIds },
+    });
+    return this.http.get<TvEpisodeResponse[]>(
+      API_RESOURCE_URI.MEDIA_INFO + '/media/episodes-tmdb',
+      { params: queryParams }
     );
   }
 
