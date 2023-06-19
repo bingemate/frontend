@@ -101,7 +101,7 @@ export class StatsMovieDailyViewedGenreComponent implements OnInit, OnChanges {
   }
 
   private updateMovieData() {
-    forkJoin(
+    /*forkJoin(
       this.movieStats.map(stat =>
         this.mediaService.getMovieShortInfo(stat.mediaId).pipe(
           map(media => ({
@@ -110,18 +110,32 @@ export class StatsMovieDailyViewedGenreComponent implements OnInit, OnChanges {
           }))
         )
       )
-    ).subscribe(stats => {
-      this.sevenMovieDays = this.getPeriodData(stats, 7);
-      this.oneMovieMonth = this.getPeriodData(stats, 30);
-      this.sixMovieMonth = this.getPeriodData(stats, 180);
-      if (this.selectedPeriod === '7 jours') {
-        this.setDailyViewSevenDaysPeriod();
-      } else if (this.selectedPeriod === '1 mois') {
-        this.setDailyViewMonthPeriod();
-      } else {
-        this.setDailyViewSemesterPeriod();
-      }
-    });
+    )*/
+    const mediaIds = this.movieStats.map(stat => stat.mediaId);
+    this.mediaService
+      .getMoviesShortInfo(mediaIds)
+      .pipe(
+        map(medias => {
+          return medias.map(media => {
+            const stat = this.movieStats.find(
+              stat => stat.mediaId === media.id
+            )!;
+            return { stat, media };
+          });
+        })
+      )
+      .subscribe(stats => {
+        this.sevenMovieDays = this.getPeriodData(stats, 7);
+        this.oneMovieMonth = this.getPeriodData(stats, 30);
+        this.sixMovieMonth = this.getPeriodData(stats, 180);
+        if (this.selectedPeriod === '7 jours') {
+          this.setDailyViewSevenDaysPeriod();
+        } else if (this.selectedPeriod === '1 mois') {
+          this.setDailyViewMonthPeriod();
+        } else {
+          this.setDailyViewSemesterPeriod();
+        }
+      });
   }
 
   private getPeriodData(

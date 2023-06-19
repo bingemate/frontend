@@ -105,7 +105,7 @@ export class StatsShowDailyViewedGenreComponent implements OnInit, OnChanges {
   }
 
   private updateTvData() {
-    forkJoin(
+    /*forkJoin(
       this.episodeStats.map(stat =>
         this.mediaService.getTvShowEpisodeInfoById(stat.mediaId).pipe(
           switchMap(episode =>
@@ -117,18 +117,44 @@ export class StatsShowDailyViewedGenreComponent implements OnInit, OnChanges {
           }))
         )
       )
-    ).subscribe(stats => {
-      this.sevenTvDays = this.getPeriodData(stats, 7);
-      this.oneTvMonth = this.getPeriodData(stats, 30);
-      this.sixTvMonth = this.getPeriodData(stats, 180);
-      if (this.selectedPeriod === '7 jours') {
-        this.setDailyViewSevenDaysPeriod();
-      } else if (this.selectedPeriod === '1 mois') {
-        this.setDailyViewMonthPeriod();
-      } else {
-        this.setDailyViewSemesterPeriod();
-      }
-    });
+    )*/
+    const episodesIds = this.episodeStats.map(stat => stat.mediaId);
+    const episodeTvMap = new Map<number, number>();
+
+    this.mediaService
+      .getTvShowEpisodesInfoByIds(episodesIds)
+      .pipe(
+        switchMap(episodes => {
+          const tvShowsIds = episodes.map(episode => {
+            episodeTvMap.set(episode.id, episode.tvShowId);
+            return episode.tvShowId;
+          });
+          return this.mediaService.getTvShowsShortInfo(tvShowsIds);
+        }),
+        map(tvShows => {
+          return this.episodeStats.map(stat => {
+            const tvShow = tvShows.find(
+              tv => tv.id === episodeTvMap.get(stat.mediaId)
+            )!;
+            return {
+              stat,
+              media: tvShow,
+            };
+          });
+        })
+      )
+      .subscribe(stats => {
+        this.sevenTvDays = this.getPeriodData(stats, 7);
+        this.oneTvMonth = this.getPeriodData(stats, 30);
+        this.sixTvMonth = this.getPeriodData(stats, 180);
+        if (this.selectedPeriod === '7 jours') {
+          this.setDailyViewSevenDaysPeriod();
+        } else if (this.selectedPeriod === '1 mois') {
+          this.setDailyViewMonthPeriod();
+        } else {
+          this.setDailyViewSemesterPeriod();
+        }
+      });
   }
 
   private getPeriodData(
