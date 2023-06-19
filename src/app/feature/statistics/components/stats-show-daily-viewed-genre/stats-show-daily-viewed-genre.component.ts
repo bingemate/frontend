@@ -6,7 +6,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { ChartConfiguration, ChartType } from 'chart.js';
-import { forkJoin, map, switchMap } from 'rxjs';
+import { forkJoin, map, of, switchMap } from 'rxjs';
 import {
   STAT_COLORS,
   StatDisplay,
@@ -14,7 +14,11 @@ import {
 } from '../../../../shared/models/statistic.models';
 import { MediaInfoService } from '../../../media-info/media-info.service';
 import { getDateDays } from '../../../../shared/utils/date.utils';
-import { Genre } from '../../../../shared/models/media.models';
+import {
+  Genre,
+  TvEpisodeResponse,
+  TvShowResponse,
+} from '../../../../shared/models/media.models';
 
 @Component({
   selector: 'app-stats-show-daily-viewed-genre',
@@ -128,7 +132,7 @@ export class StatsShowDailyViewedGenreComponent implements OnInit, OnChanges {
   }
 
   private getPeriodData(
-    stats: readonly { stat: Statistic; media: any }[],
+    stats: readonly { stat: Statistic; media: TvShowResponse }[],
     period: number
   ) {
     let statsFiltered = stats.filter(
@@ -146,7 +150,9 @@ export class StatsShowDailyViewedGenreComponent implements OnInit, OnChanges {
     return { labels, data };
   }
 
-  private getWatchTimePerDay(stats: { stat: Statistic; media: any }[]) {
+  private getWatchTimePerDay(
+    stats: { stat: Statistic; media: TvShowResponse }[]
+  ) {
     const data: Map<string, number> = new Map<string, number>();
     const ids: Map<string, Set<number>> = new Map<string, Set<number>>();
     stats.forEach(stat => {

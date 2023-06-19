@@ -14,7 +14,7 @@ import {
   Statistic,
 } from '../../../../shared/models/statistic.models';
 import { getDateDays } from '../../../../shared/utils/date.utils';
-import { Genre } from '../../../../shared/models/media.models';
+import { Genre, MovieResponse } from '../../../../shared/models/media.models';
 
 @Component({
   selector: 'app-stats-movie-daily-viewed-genre',
@@ -125,7 +125,7 @@ export class StatsMovieDailyViewedGenreComponent implements OnInit, OnChanges {
   }
 
   private getPeriodData(
-    stats: readonly { stat: Statistic; media: any }[],
+    stats: readonly { stat: Statistic; media: MovieResponse }[],
     period: number
   ) {
     let statsFiltered = stats.filter(
@@ -143,7 +143,9 @@ export class StatsMovieDailyViewedGenreComponent implements OnInit, OnChanges {
     return { labels, data };
   }
 
-  private getWatchTimePerDay(stats: { stat: Statistic; media: any }[]) {
+  private getWatchTimePerDay(
+    stats: { stat: Statistic; media: MovieResponse }[]
+  ) {
     const data: Map<string, number> = new Map<string, number>();
     const ids: Map<string, Set<number>> = new Map<string, Set<number>>();
     stats.forEach(stat => {
