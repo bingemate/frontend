@@ -123,11 +123,11 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
     if (this.type && this.type === 'movies') {
       const movie = this.mediaInfo as MovieResponse;
       this.mediaName = movie.title;
-      this.mediaViewLink += `${mediasLinks.movie_view.path}/${this.mediaId}`;
+      this.mediaViewLink = `/${navigationRoot.medias.path}/${mediasLinks.movie_view.path}/${this.mediaId}`;
     } else {
       const episode = this.mediaInfo as TvEpisodeResponse;
       this.mediaName = episode.name;
-      this.mediaViewLink += `${mediasLinks.tv_show_view.path}/${episode.tvShowId}`;
+      this.mediaViewLink = `/${navigationRoot.medias.path}/${mediasLinks.tv_show_view.path}/${episode.tvShowId}`;
     }
   }
   private loadMediaFileInfo() {
