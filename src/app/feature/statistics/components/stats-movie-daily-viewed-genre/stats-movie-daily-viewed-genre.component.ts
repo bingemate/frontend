@@ -14,7 +14,7 @@ import {
   Statistic,
 } from '../../../../shared/models/statistic.models';
 import { getDateDays } from '../../../../shared/utils/date.utils';
-import { Genre } from '../../../../shared/models/media.models';
+import { Genre, MovieResponse } from '../../../../shared/models/media.models';
 
 @Component({
   selector: 'app-stats-movie-daily-viewed-genre',
@@ -101,7 +101,7 @@ export class StatsMovieDailyViewedGenreComponent implements OnInit, OnChanges {
   }
 
   private updateMovieData() {
-    forkJoin(
+    /*forkJoin(
       this.movieStats.map(stat =>
         this.mediaService.getMovieShortInfo(stat.mediaId).pipe(
           map(media => ({
@@ -110,22 +110,36 @@ export class StatsMovieDailyViewedGenreComponent implements OnInit, OnChanges {
           }))
         )
       )
-    ).subscribe(stats => {
-      this.sevenMovieDays = this.getPeriodData(stats, 7);
-      this.oneMovieMonth = this.getPeriodData(stats, 30);
-      this.sixMovieMonth = this.getPeriodData(stats, 180);
-      if (this.selectedPeriod === '7 jours') {
-        this.setDailyViewSevenDaysPeriod();
-      } else if (this.selectedPeriod === '1 mois') {
-        this.setDailyViewMonthPeriod();
-      } else {
-        this.setDailyViewSemesterPeriod();
-      }
-    });
+    )*/
+    const mediaIds = this.movieStats.map(stat => stat.mediaId);
+    this.mediaService
+      .getMoviesShortInfo(mediaIds)
+      .pipe(
+        map(medias => {
+          return medias.map(media => {
+            const stat = this.movieStats.find(
+              stat => stat.mediaId === media.id
+            )!;
+            return { stat, media };
+          });
+        })
+      )
+      .subscribe(stats => {
+        this.sevenMovieDays = this.getPeriodData(stats, 7);
+        this.oneMovieMonth = this.getPeriodData(stats, 30);
+        this.sixMovieMonth = this.getPeriodData(stats, 180);
+        if (this.selectedPeriod === '7 jours') {
+          this.setDailyViewSevenDaysPeriod();
+        } else if (this.selectedPeriod === '1 mois') {
+          this.setDailyViewMonthPeriod();
+        } else {
+          this.setDailyViewSemesterPeriod();
+        }
+      });
   }
 
   private getPeriodData(
-    stats: readonly { stat: Statistic; media: any }[],
+    stats: readonly { stat: Statistic; media: MovieResponse }[],
     period: number
   ) {
     let statsFiltered = stats.filter(
@@ -143,7 +157,9 @@ export class StatsMovieDailyViewedGenreComponent implements OnInit, OnChanges {
     return { labels, data };
   }
 
-  private getWatchTimePerDay(stats: { stat: Statistic; media: any }[]) {
+  private getWatchTimePerDay(
+    stats: { stat: Statistic; media: MovieResponse }[]
+  ) {
     const data: Map<string, number> = new Map<string, number>();
     const ids: Map<string, Set<number>> = new Map<string, Set<number>>();
     stats.forEach(stat => {

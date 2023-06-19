@@ -84,7 +84,7 @@ export class StreamComponent implements OnInit, OnDestroy {
                 ? this.mediaInfoService.getMovieFileInfos(this.mediaId)
                 : this.mediaInfoService.getEpisodeFileInfos(this.mediaId),
               this.type === 'movies'
-                ? this.mediaInfoService.getMovieInfo(this.mediaId)
+                ? this.mediaInfoService.getMovieShortInfo(this.mediaId)
                 : this.mediaInfoService.getTvShowEpisodeInfoById(this.mediaId),
             ]);
           })

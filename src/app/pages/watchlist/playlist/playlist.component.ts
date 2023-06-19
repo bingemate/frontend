@@ -142,7 +142,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
   private getMovies(
     items: MoviePlaylistItem[]
   ): Observable<MoviePlaylistItemMedia[]> {
-    return forkJoin(
+    /*return forkJoin(
       items.map(item =>
         this.mediaService.getMovieInfo(item.movieId).pipe(
           map(media => {
@@ -156,6 +156,21 @@ export class PlaylistComponent implements OnInit, OnDestroy {
           })
         )
       )
+    );*/
+    const movieIds = items.map(item => item.movieId);
+    return this.mediaService.getMoviesShortInfo(movieIds).pipe(
+      map(movies => {
+        return movies.map(movie => {
+          const item = items.find(i => i.movieId === movie.id);
+          return {
+            media: {
+              name: movie.title,
+              imageUrl: movie.backdropUrl,
+            },
+            playlistItem: item!,
+          };
+        });
+      })
     );
   }
 
@@ -299,7 +314,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
   private getEpisodes(
     items: EpisodePlaylistItem[]
   ): Observable<EpisodePlaylistItemMedia[]> {
-    return forkJoin(
+    /*    return forkJoin(
       items.map(item =>
         this.mediaService.getTvShowEpisodeInfoById(item.episodeId).pipe(
           map(media => {
@@ -315,6 +330,23 @@ export class PlaylistComponent implements OnInit, OnDestroy {
           })
         )
       )
+    );*/
+    const episodeIds = items.map(item => item.episodeId);
+    return this.mediaService.getTvShowEpisodesInfoByIds(episodeIds).pipe(
+      map(episodes => {
+        return episodes.map(episode => {
+          const item = items.find(i => i.episodeId === episode.id);
+          return {
+            media: {
+              name: episode.name,
+              imageUrl: episode.posterUrl,
+              episode: episode.episodeNumber,
+              season: episode.seasonNumber,
+            },
+            playlistItem: item!,
+          };
+        });
+      })
     );
   }
 }
