@@ -90,15 +90,23 @@ export class WatchlistComponent implements OnInit, OnDestroy {
     this.movieWatchlistService
       .getWatchlistByUserId(user.id)
       .pipe(
-        mergeMap(watchlist =>
-          forkJoin(
+        mergeMap(watchlist => /*forkJoin(
             watchlist.map(item =>
               this.mediaService
                 .getMovieShortInfo(item.movieId)
                 .pipe(map(media => ({ media, watchlist: item })))
             )
-          )
-        )
+          )*/ {
+          const movieIds = watchlist.map(item => item.movieId);
+          return this.mediaService.getMoviesShortInfo(movieIds).pipe(
+            map(movies =>
+              movies.map(movie => ({
+                media: movie,
+                watchlist: watchlist.find(item => item.movieId === movie.id)!,
+              }))
+            )
+          );
+        })
       )
       .subscribe({
         next: watchlist => {
@@ -114,13 +122,24 @@ export class WatchlistComponent implements OnInit, OnDestroy {
       .getWatchlistByUserId(user.id)
       .pipe(
         mergeMap(watchlist =>
-          forkJoin(
+          /*forkJoin(
             watchlist.map(item =>
               this.mediaService
                 .getTvShowShortInfo(item.tvShowId)
                 .pipe(map(media => ({ media, watchlist: item })))
             )
-          )
+          )*/
+          {
+            const tvShowIds = watchlist.map(item => item.tvShowId);
+            return this.mediaService.getTvShowsShortInfo(tvShowIds).pipe(
+              map(shows =>
+                shows.map(show => ({
+                  media: show,
+                  watchlist: watchlist.find(item => item.tvShowId === show.id)!,
+                }))
+              )
+            );
+          }
         )
       )
       .subscribe({
