@@ -34,7 +34,7 @@ export class MediaInfoComponent implements OnInit {
           this.posterUrl = episode.posterUrl;
         });
     } else {
-      this.mediaInfoService.getMovieInfo(this.mediaId).subscribe(movie => {
+      this.mediaInfoService.getMovieShortInfo(this.mediaId).subscribe(movie => {
         this.movieMedia = movie;
         this.posterUrl = movie.backdropUrl;
       });
