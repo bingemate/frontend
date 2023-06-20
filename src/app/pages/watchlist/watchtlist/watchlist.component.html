@@ -40,43 +40,72 @@
                     </a>
                   </nz-list-item-meta-title>
                 </nz-list-item-meta>
+                <nz-collapse class="episode-list">
+                  <nz-collapse-panel [nzHeader]="'Épisodes'">
+                    <nz-list
+                      nzItemLayout="vertical"
+                      [nzLoading]="showWatchlistLoading"
+                      nzBordered>
+                      <cdk-virtual-scroll-viewport
+                        orientation="vertical"
+                        itemSize="101"
+                        class="viewport">
+                        <nz-list-item
+                          *ngFor="let episode of item.watchlist.episodes">
+                          <nz-list-item-meta>
+                            <nz-list-item-meta-title
+                              >{{ episode.name }}
+                            </nz-list-item-meta-title>
+                          </nz-list-item-meta>
+                          <nz-list-item-extra>
+                            <button
+                              nz-button
+                              nz-dropdown
+                              [nzDropdownMenu]="menu"
+                              [nzPlacement]="'bottomLeft'">
+                              {{ episode.status | tvShowWatchlistStatus }}
+                            </button>
+                            <nz-dropdown-menu #menu="nzDropdownMenu">
+                              <ul nz-menu>
+                                <li
+                                  nz-menu-item
+                                  [nzSelected]="episode.status === status"
+                                  *ngFor="let status of tvShowStatusNames"
+                                  (click)="
+                                    changeEpisodeStatus(episode, status)
+                                  ">
+                                  {{ statusMap[status] }}
+                                </li>
+                              </ul>
+                            </nz-dropdown-menu>
+                          </nz-list-item-extra>
+                        </nz-list-item>
+                      </cdk-virtual-scroll-viewport>
+                    </nz-list>
+                  </nz-collapse-panel>
+                </nz-collapse>
                 <nz-list-item-extra>
-                  <nz-space nzDirection="horizontal" nzSize="large">
-                    <span *nzSpaceItem>
-                      <nz-input-number
-                        nzBorderless
-                        nzSize="small"
-                        [nzMin]="0"
-                        [nzMax]="item.media.seasonsCount"
-                        [(ngModel)]="
-                          item.watchlist.viewedEpisodes
-                        "></nz-input-number>
-                      /
-                      {{ item.media.seasonsCount }}
-                    </span>
-                    <button
-                      *nzSpaceItem
-                      nz-button
-                      nz-dropdown
-                      [nzDropdownMenu]="menu"
-                      [nzPlacement]="'bottomLeft'">
-                      {{ statusMap[item.watchlist.status] }}
-                    </button>
-                    <nz-dropdown-menu #menu="nzDropdownMenu">
-                      <ul nz-menu>
-                        <li
-                          nz-menu-item
-                          [nzSelected]="item.watchlist.status === status"
-                          *ngFor="let status of tvShowStatusNames"
-                          (click)="changeShowStatus(item, status)">
-                          {{ statusMap[status] }}
-                        </li>
-                        <li nz-menu-item (click)="removeShowWatchlist(item)">
-                          Retirer
-                        </li>
-                      </ul>
-                    </nz-dropdown-menu>
-                  </nz-space>
+                  <button
+                    nz-button
+                    nz-dropdown
+                    [nzDropdownMenu]="menu"
+                    [nzPlacement]="'bottomLeft'">
+                    {{ statusMap[item.watchlist.status] }}
+                  </button>
+                  <nz-dropdown-menu #menu="nzDropdownMenu">
+                    <ul nz-menu>
+                      <li
+                        nz-menu-item
+                        [nzSelected]="item.watchlist.status === status"
+                        *ngFor="let status of tvShowStatusNames"
+                        (click)="changeShowStatus(item, status)">
+                        {{ statusMap[status] }}
+                      </li>
+                      <li nz-menu-item (click)="removeShowWatchlist(item)">
+                        Retirer
+                      </li>
+                    </ul>
+                  </nz-dropdown-menu>
                 </nz-list-item-extra>
               </nz-list-item>
             </nz-list>

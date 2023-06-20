@@ -16,7 +16,7 @@ export class TvShowWatchlistStatusPipe implements PipeTransform {
       case TvShowWatchListStatus.ABANDONED:
         return 'Abandonné';
       default:
-        return '';
+        return '-';
     }
   }
 }
