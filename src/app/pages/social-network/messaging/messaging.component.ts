@@ -47,20 +47,23 @@ export class MessagingComponent implements OnInit, OnDestroy {
     private readonly currentRoute: ActivatedRoute,
     private messagingService: MessagingService,
     private readonly store: Store
-  ) {
-    this.breakpointObserver
-      .observe([Breakpoints.HandsetPortrait])
-      .subscribe(result => {
-        this.isOnPhone = result.matches;
-      });
-  }
+  ) {}
   ngOnInit() {
-    this.currentRoute.params.subscribe(params => {
-      if (params['id']) {
-        this.activeUserId = params['id'];
-        this.userList.push(params['id']);
-      }
-    });
+    this.subscriptions.push(
+      this.breakpointObserver
+        .observe([Breakpoints.HandsetPortrait])
+        .subscribe(result => {
+          this.isOnPhone = result.matches;
+        })
+    );
+    this.subscriptions.push(
+      this.currentRoute.params.subscribe(params => {
+        if (params['id']) {
+          this.activeUserId = params['id'];
+          this.userList.push(params['id']);
+        }
+      })
+    );
     this.store.dispatch(new MessagingActions.ClearUnreadMessages());
     this.subscriptions.push(
       this.user$
