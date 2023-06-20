@@ -54,7 +54,7 @@ export class SubscriptionComponent implements OnInit {
   cancelSubscription() {
     this.loading = true;
     this.paymentService
-      .cancelSubscription()
+      .stopSubscription()
       .subscribe({ complete: () => (this.loading = false) });
   }
 

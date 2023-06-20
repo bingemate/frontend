@@ -1,5 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { UserResults } from '../../../../shared/models/user.models';
+import {
+  UserResponse,
+  UserResults,
+} from '../../../../shared/models/user.models';
 import { UserService } from '../../user.service';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
@@ -19,6 +22,8 @@ export class AdminUserListComponent implements OnInit, OnDestroy {
   pageSize = 10;
   loading = false;
   query = '';
+  subscriptionModalVisible = false;
+  subModalUser?: UserResponse;
 
   inputSubject: Subject<string> = new Subject<string>();
   private subscription: Subscription;
@@ -74,4 +79,13 @@ export class AdminUserListComponent implements OnInit, OnDestroy {
   }
 
   protected readonly userProfilViewLinks = userProfilViewLinks;
+
+  showSubscriptionModal(user: UserResponse) {
+    this.subscriptionModalVisible = true;
+    this.subModalUser = user;
+  }
+
+  closeSubscriptionModal() {
+    this.subscriptionModalVisible = false;
+  }
 }

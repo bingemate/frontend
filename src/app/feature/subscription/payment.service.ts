@@ -8,6 +8,8 @@ import {
   toInvoice,
 } from '../../shared/models/payment.models';
 import {
+  CreateSubscriptionRequest,
+  SubscriptionIdResponse,
   SubscriptionModel,
   SubscriptionResponse,
   toSubscription,
@@ -31,7 +33,7 @@ export class PaymentService {
     );
   }
 
-  cancelSubscription() {
+  stopSubscription() {
     return this.http.delete(`${API_RESOURCE_URI.PAYMENT_SERVICE}/subscription`);
   }
 
@@ -47,5 +49,34 @@ export class PaymentService {
         `${API_RESOURCE_URI.PAYMENT_SERVICE}/subscription`
       )
       .pipe(map(toSubscription));
+  }
+
+  cancelSubscription(subscriptionId: string): Observable<void> {
+    return this.http.delete<void>(
+      `${API_RESOURCE_URI.PAYMENT_SERVICE}/subscription/cancel/${subscriptionId}`
+    );
+  }
+
+  createSubscription(create: CreateSubscriptionRequest): Observable<string> {
+    return this.http
+      .post<SubscriptionIdResponse>(
+        `${API_RESOURCE_URI.PAYMENT_SERVICE}/subscription/create`,
+        create
+      )
+      .pipe(map(dto => dto.id));
+  }
+
+  getSubscriptionDetails(userId: string): Observable<SubscriptionModel> {
+    return this.http
+      .get<SubscriptionResponse>(
+        `${API_RESOURCE_URI.PAYMENT_SERVICE}/subscription/details/${userId}`
+      )
+      .pipe(map(toSubscription));
+  }
+
+  getCustomer(userId: string) {
+    return this.http.get<void>(
+      `${API_RESOURCE_URI.PAYMENT_SERVICE}/customer/${userId}`
+    );
   }
 }

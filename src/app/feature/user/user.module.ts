@@ -36,6 +36,9 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { UpdatePasswordComponent } from './components/update-password/update-password.component';
 import { NzPopoverModule } from 'ng-zorro-antd/popover';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { SharedModule } from '../../shared/shared.module';
+import { PaymentModule } from '../subscription/payment.module';
 
 @NgModule({
   declarations: [
@@ -76,6 +79,9 @@ import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
     NzSpinModule,
     NzPopoverModule,
     NzPopconfirmModule,
+    NzSelectModule,
+    SharedModule,
+    PaymentModule,
   ],
   exports: [
     UserSearchComponent,

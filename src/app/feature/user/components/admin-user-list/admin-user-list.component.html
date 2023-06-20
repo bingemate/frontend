@@ -46,6 +46,7 @@
             <th>Email</th>
             <th>Date d'inscription</th>
             <th>Roles</th>
+            <th>Abonnement</th>
           </tr>
         </thead>
         <tbody>
@@ -77,9 +78,35 @@
                 </ng-container>
               </nz-space>
             </td>
+            <td>
+              <button
+                nz-button
+                nzType="default"
+                nzShape="circle"
+                (click)="showSubscriptionModal(user); $event.stopPropagation()">
+                <span nz-icon nzType="eye" nzTheme="outline"></span>
+              </button>
+            </td>
           </tr>
         </tbody>
       </nz-table>
     </nz-card>
   </nz-col>
 </nz-row>
+<nz-modal
+  nzTitle="Gérer l'abonnement de {{ subModalUser?.username }}"
+  [(nzVisible)]="subscriptionModalVisible"
+  (nzOnCancel)="closeSubscriptionModal()"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter">
+  <ng-template #modalContent>
+    <app-subscription-admin
+      [user]="subModalUser"
+      (close)="closeSubscriptionModal()"></app-subscription-admin>
+  </ng-template>
+  <ng-template #modalFooter>
+    <button nz-button nzType="default" (click)="closeSubscriptionModal()">
+      Fermer
+    </button>
+  </ng-template>
+</nz-modal>
