@@ -10,7 +10,7 @@
     <nz-card [ngClass]="isSubscribed ? '' : 'disabled-overlay'">
       <cdk-virtual-scroll-viewport
         orientation="horizontal"
-        itemSize="250"
+        itemSize="300"
         class="viewport">
         <nz-space nzDirection="horizontal" nzSize="large">
           <ng-container *cdkVirtualFor="let room of rooms">
@@ -49,7 +49,7 @@
     <nz-card [ngClass]="isSubscribed ? '' : 'disabled-overlay'">
       <cdk-virtual-scroll-viewport
         orientation="horizontal"
-        itemSize="250"
+        itemSize="300"
         class="viewport">
         <nz-space nzDirection="horizontal" nzSize="large">
           <ng-container *cdkVirtualFor="let item of history">
@@ -89,7 +89,7 @@
     <nz-card nzTitle="Films">
       <cdk-virtual-scroll-viewport
         orientation="horizontal"
-        itemSize="220"
+        [itemSize]="isOnPhone ? 150 : 200"
         class="viewport-media">
         <nz-space nzDirection="horizontal" nzSize="large">
           <ng-container *cdkVirtualFor="let movie of recentMovies">
@@ -106,7 +106,7 @@
     <nz-card nzTitle="Séries">
       <cdk-virtual-scroll-viewport
         orientation="horizontal"
-        itemSize="220"
+        itemSize="isOnPhone ? 150 : 200"
         class="viewport-media">
         <nz-space nzDirection="horizontal" nzSize="large">
           <ng-container *cdkVirtualFor="let tvshow of recentTvShows">
@@ -126,7 +126,7 @@
     <nz-card nzTitle="Films">
       <cdk-virtual-scroll-viewport
         orientation="horizontal"
-        itemSize="220"
+        itemSize="isOnPhone ? 150 : 200"
         class="viewport-media">
         <nz-space nzDirection="horizontal" nzSize="large">
           <ng-container *cdkVirtualFor="let movie of popularMovies">
@@ -143,7 +143,7 @@
     <nz-card nzTitle="Séries">
       <cdk-virtual-scroll-viewport
         orientation="horizontal"
-        itemSize="220"
+        itemSize="isOnPhone ? 150 : 200"
         class="viewport-media">
         <nz-space nzDirection="horizontal" nzSize="large">
           <ng-container *cdkVirtualFor="let tvshow of popularTvShows">

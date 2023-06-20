@@ -24,8 +24,9 @@
     nz-image
     nzDisablePreview
     [nzSrc]="tv?.posterUrl!"
-    [alt]=""
-    width="100%" />
+    [width]="isOnPhone ? 135 : 180"
+    [height]="isOnPhone ? 180 : 270"
+    alt="" />
 </ng-template>
 <ng-template #description>
   {{ tv?.releaseDate | date : 'yyyy' }}

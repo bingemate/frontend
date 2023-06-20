@@ -24,7 +24,8 @@
     nz-image
     nzDisablePreview
     [nzSrc]="movie?.posterUrl!"
-    width="100%"
+    [width]="isOnPhone ? 135 : 180"
+    [height]="isOnPhone ? 180 : 270"
     alt="" />
 </ng-template>
 

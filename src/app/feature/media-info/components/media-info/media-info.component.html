@@ -1,6 +1,5 @@
 <nz-space
-  *ngIf="!vertical"
-  nzDirection="horizontal"
+  [nzDirection]="vertical ? 'vertical' : 'horizontal'"
   nzSize="large"
   nzAlign="center">
   <img
@@ -8,24 +7,8 @@
     nzDisablePreview
     nz-image
     [nzSrc]="posterUrl"
-    style="max-height: 100px"
-    alt="" />
-  <h5 nz-typography *nzSpaceItem>
-    {{ type === 'movies' ? movieMedia?.title : episodeMedia?.name }}
-  </h5>
-</nz-space>
-<nz-space
-  *ngIf="vertical"
-  nzDirection="vertical"
-  nzSize="large"
-  nzAlign="center">
-  <img
-    *nzSpaceItem
-    nzDisablePreview
-    nz-image
-    [nzSrc]="posterUrl"
-    style="width: 250px"
-    alt="" />
+    alt=""
+    [ngClass]="{ vertical: vertical, horizontal: !vertical }" />
   <h5 nz-typography *nzSpaceItem>
     {{ type === 'movies' ? movieMedia?.title : episodeMedia?.name }}
   </h5>
