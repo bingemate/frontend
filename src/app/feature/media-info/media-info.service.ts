@@ -37,12 +37,11 @@ export class MediaInfoService {
   }
 
   getMoviesShortInfo(tmdbIds: number[]): Observable<MovieResponse[]> {
-    const queryParams = new HttpParams({
-      fromObject: { ids: tmdbIds },
-    });
-    return this.http.get<MovieResponse[]>(
+    return this.http.post<MovieResponse[]>(
       API_RESOURCE_URI.MEDIA_INFO + '/media/movies-tmdb',
-      { params: queryParams }
+      {
+        ids: tmdbIds,
+      }
     );
   }
 
@@ -65,12 +64,11 @@ export class MediaInfoService {
   }
 
   getTvShowsShortInfo(tmdbIds: number[]): Observable<TvShowResponse[]> {
-    const queryParams = new HttpParams({
-      fromObject: { ids: tmdbIds },
-    });
-    return this.http.get<TvShowResponse[]>(
+    return this.http.post<TvShowResponse[]>(
       API_RESOURCE_URI.MEDIA_INFO + '/media/tvshows-tmdb',
-      { params: queryParams }
+      {
+        ids: tmdbIds,
+      }
     );
   }
 
@@ -99,12 +97,11 @@ export class MediaInfoService {
   getTvShowEpisodesInfoByIds(
     tmdbIds: number[]
   ): Observable<TvEpisodeResponse[]> {
-    const queryParams = new HttpParams({
-      fromObject: { ids: tmdbIds },
-    });
-    return this.http.get<TvEpisodeResponse[]>(
+    return this.http.post<TvEpisodeResponse[]>(
       API_RESOURCE_URI.MEDIA_INFO + '/media/episodes-tmdb',
-      { params: queryParams }
+      {
+        ids: tmdbIds,
+      }
     );
   }
 
@@ -118,6 +115,18 @@ export class MediaInfoService {
         tmdbId +
         '/' +
         seasonNumber
+    );
+  }
+
+  getTvShowAllEpisodes(mediaId: number): Observable<TvEpisodeResponse[]> {
+    return this.http.get<TvEpisodeResponse[]>(
+      `${API_RESOURCE_URI.MEDIA_INFO}/media/tvshow-episodes-tmdb/${mediaId}`
+    );
+  }
+
+  getTvShowAllEpisodesIds(mediaId: number): Observable<number[]> {
+    return this.http.get<number[]>(
+      `${API_RESOURCE_URI.MEDIA_INFO}/media/tvshow-episodes-tmdb/${mediaId}/ids`
     );
   }
 

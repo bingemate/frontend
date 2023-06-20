@@ -19,6 +19,7 @@ import {
   TvEpisodeResponse,
   TvShowResponse,
 } from '../../../../shared/models/media.models';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-stats-show-daily-viewed-genre',
@@ -65,7 +66,9 @@ export class StatsShowDailyViewedGenreComponent implements OnInit, OnChanges {
   constructor(private mediaService: MediaInfoService) {}
 
   ngOnInit(): void {
-    this.updateTvData();
+    if (this.episodeStats.length > 0) {
+      this.updateTvData();
+    }
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (
@@ -129,9 +132,17 @@ export class StatsShowDailyViewedGenreComponent implements OnInit, OnChanges {
             episodeTvMap.set(episode.id, episode.tvShowId);
             return episode.tvShowId;
           });
-          return this.mediaService.getTvShowsShortInfo(tvShowsIds);
+          return this.mediaService.getTvShowsShortInfo(tvShowsIds).pipe(
+            tap(tvShows => {
+              console.log('HERE');
+              console.log(tvShows);
+            })
+          );
         }),
         map(tvShows => {
+          console.log('HERE');
+          console.log(tvShows);
+          console.log(episodeTvMap);
           return this.episodeStats.map(stat => {
             const tvShow = tvShows.find(
               tv => tv.id === episodeTvMap.get(stat.mediaId)
