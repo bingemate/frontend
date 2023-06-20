@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   CommentStat,
   Statistic,
@@ -7,7 +7,7 @@ import { EpisodeStatisticsService } from '../../episode-statistics.service';
 import { MovieStatisticsService } from '../../movie-statistics.service';
 import { CommentService } from '../../../comment/comment.service';
 import { RatingService } from '../../../rating/rating.service';
-import { forkJoin, Observable } from 'rxjs';
+import { forkJoin, Observable, Subscription } from 'rxjs';
 import { millisToHours } from '../../../../shared/utils/date.utils';
 import { UserService } from '../../../user/user.service';
 
@@ -16,7 +16,7 @@ import { UserService } from '../../../user/user.service';
   templateUrl: './statistic-view.component.html',
   styleUrls: ['./statistic-view.component.less'],
 })
-export class StatisticViewComponent implements OnInit {
+export class StatisticViewComponent implements OnInit, OnDestroy {
   @Input()
   userID = '';
 
@@ -31,6 +31,7 @@ export class StatisticViewComponent implements OnInit {
   userCount = 0;
   subscriberCount = 0;
 
+  private subscriptions: Subscription[] = [];
   constructor(
     private episodeStatisticsService: EpisodeStatisticsService,
     private movieStatisticsService: MovieStatisticsService,
@@ -48,48 +49,52 @@ export class StatisticViewComponent implements OnInit {
   }
 
   private loadUserStatistics(): void {
-    this.getUserData(this.userID, this.getSixMonthsAgo()).subscribe(
-      ([episodeStats, movieStats, commentsCount, ratingsCount, comments]) => {
-        this.episodeStats = episodeStats;
-        this.movieStats = movieStats;
-        this.commentsCount = commentsCount;
-        this.ratingsCount = ratingsCount;
-        this.commentStats = comments;
-        this.watchTime =
-          this.calculateWatchTime(episodeStats) +
-          this.calculateWatchTime(movieStats);
-        this.watchedMediaCount =
-          this.calculateWatchedMediaCount(episodeStats) +
-          this.calculateWatchedMediaCount(movieStats);
-      }
+    this.subscriptions.push(
+      this.getUserData(this.userID, this.getSixMonthsAgo()).subscribe(
+        ([episodeStats, movieStats, commentsCount, ratingsCount, comments]) => {
+          this.episodeStats = episodeStats;
+          this.movieStats = movieStats;
+          this.commentsCount = commentsCount;
+          this.ratingsCount = ratingsCount;
+          this.commentStats = comments;
+          this.watchTime =
+            this.calculateWatchTime(episodeStats) +
+            this.calculateWatchTime(movieStats);
+          this.watchedMediaCount =
+            this.calculateWatchedMediaCount(episodeStats) +
+            this.calculateWatchedMediaCount(movieStats);
+        }
+      )
     );
   }
 
   private loadAllStatistics(): void {
-    this.getAllData(this.getSixMonthsAgo()).subscribe(
-      ([
-        episodeStats,
-        movieStats,
-        commentsCount,
-        ratingsCount,
-        comments,
-        userCount,
-        SubscriberCount,
-      ]) => {
-        this.episodeStats = episodeStats;
-        this.movieStats = movieStats;
-        this.commentsCount = commentsCount;
-        this.ratingsCount = ratingsCount;
-        this.commentStats = comments;
-        this.watchTime =
-          this.calculateWatchTime(episodeStats) +
-          this.calculateWatchTime(movieStats);
-        this.watchedMediaCount =
-          this.calculateWatchedMediaCount(episodeStats) +
-          this.calculateWatchedMediaCount(movieStats);
-        this.userCount = userCount;
-        this.subscriberCount = SubscriberCount;
-      }
+    this.subscriptions.push(
+      this.getAllData(this.getSixMonthsAgo()).subscribe(
+        ([
+          episodeStats,
+          movieStats,
+          commentsCount,
+          ratingsCount,
+          comments,
+          userCount,
+          SubscriberCount,
+        ]) => {
+          this.episodeStats = episodeStats;
+          this.movieStats = movieStats;
+          this.commentsCount = commentsCount;
+          this.ratingsCount = ratingsCount;
+          this.commentStats = comments;
+          this.watchTime =
+            this.calculateWatchTime(episodeStats) +
+            this.calculateWatchTime(movieStats);
+          this.watchedMediaCount =
+            this.calculateWatchedMediaCount(episodeStats) +
+            this.calculateWatchedMediaCount(movieStats);
+          this.userCount = userCount;
+          this.subscriberCount = SubscriberCount;
+        }
+      )
     );
   }
 
@@ -146,5 +151,9 @@ export class StatisticViewComponent implements OnInit {
 
   private calculateWatchedMediaCount(stats: Statistic[]): number {
     return new Set(stats.map(stat => stat.mediaId)).size;
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 }

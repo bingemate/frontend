@@ -2,11 +2,12 @@ import {
   Component,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   SimpleChanges,
 } from '@angular/core';
 import { ChartConfiguration, ChartType } from 'chart.js';
-import { forkJoin, map } from 'rxjs';
+import { forkJoin, map, Subscription } from 'rxjs';
 import { MediaInfoService } from '../../../media-info/media-info.service';
 import {
   STAT_COLORS,
@@ -21,7 +22,9 @@ import { Genre, MovieResponse } from '../../../../shared/models/media.models';
   templateUrl: './stats-movie-daily-viewed-genre.component.html',
   styleUrls: ['./stats-movie-daily-viewed-genre.component.less'],
 })
-export class StatsMovieDailyViewedGenreComponent implements OnInit, OnChanges {
+export class StatsMovieDailyViewedGenreComponent
+  implements OnInit, OnChanges, OnDestroy
+{
   @Input()
   movieStats: Statistic[] = [];
 
@@ -57,6 +60,8 @@ export class StatsMovieDailyViewedGenreComponent implements OnInit, OnChanges {
   lineChartData: ChartConfiguration['data'] = {
     datasets: [],
   };
+
+  subscriptions: Subscription[] = [];
 
   constructor(private mediaService: MediaInfoService) {}
 
@@ -112,30 +117,32 @@ export class StatsMovieDailyViewedGenreComponent implements OnInit, OnChanges {
       )
     )*/
     const mediaIds = this.movieStats.map(stat => stat.mediaId);
-    this.mediaService
-      .getMoviesShortInfo(mediaIds)
-      .pipe(
-        map(medias => {
-          return medias.map(media => {
-            const stat = this.movieStats.find(
-              stat => stat.mediaId === media.id
-            )!;
-            return { stat, media };
-          });
+    this.subscriptions.push(
+      this.mediaService
+        .getMoviesShortInfo(mediaIds)
+        .pipe(
+          map(medias => {
+            return medias.map(media => {
+              const stat = this.movieStats.find(
+                stat => stat.mediaId === media.id
+              )!;
+              return { stat, media };
+            });
+          })
+        )
+        .subscribe(stats => {
+          this.sevenMovieDays = this.getPeriodData(stats, 7);
+          this.oneMovieMonth = this.getPeriodData(stats, 30);
+          this.sixMovieMonth = this.getPeriodData(stats, 180);
+          if (this.selectedPeriod === '7 jours') {
+            this.setDailyViewSevenDaysPeriod();
+          } else if (this.selectedPeriod === '1 mois') {
+            this.setDailyViewMonthPeriod();
+          } else {
+            this.setDailyViewSemesterPeriod();
+          }
         })
-      )
-      .subscribe(stats => {
-        this.sevenMovieDays = this.getPeriodData(stats, 7);
-        this.oneMovieMonth = this.getPeriodData(stats, 30);
-        this.sixMovieMonth = this.getPeriodData(stats, 180);
-        if (this.selectedPeriod === '7 jours') {
-          this.setDailyViewSevenDaysPeriod();
-        } else if (this.selectedPeriod === '1 mois') {
-          this.setDailyViewMonthPeriod();
-        } else {
-          this.setDailyViewSemesterPeriod();
-        }
-      });
+    );
   }
 
   private getPeriodData(
@@ -181,5 +188,9 @@ export class StatsMovieDailyViewedGenreComponent implements OnInit, OnChanges {
       });
     });
     return data;
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 }

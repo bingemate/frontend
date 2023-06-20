@@ -2,11 +2,12 @@ import {
   Component,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   SimpleChanges,
 } from '@angular/core';
 import { ChartConfiguration, ChartType } from 'chart.js';
-import { forkJoin, map, of, switchMap } from 'rxjs';
+import { forkJoin, map, of, Subscription, switchMap } from 'rxjs';
 import {
   STAT_COLORS,
   StatDisplay,
@@ -26,7 +27,9 @@ import { tap } from 'rxjs/operators';
   templateUrl: './stats-show-daily-viewed-genre.component.html',
   styleUrls: ['./stats-show-daily-viewed-genre.component.less'],
 })
-export class StatsShowDailyViewedGenreComponent implements OnInit, OnChanges {
+export class StatsShowDailyViewedGenreComponent
+  implements OnInit, OnChanges, OnDestroy
+{
   @Input()
   episodeStats: Statistic[] = [];
 
@@ -62,6 +65,8 @@ export class StatsShowDailyViewedGenreComponent implements OnInit, OnChanges {
   lineChartData: ChartConfiguration['data'] = {
     datasets: [],
   };
+
+  private subscriptions: Subscription[] = [];
 
   constructor(private mediaService: MediaInfoService) {}
 
@@ -124,47 +129,49 @@ export class StatsShowDailyViewedGenreComponent implements OnInit, OnChanges {
     const episodesIds = this.episodeStats.map(stat => stat.mediaId);
     const episodeTvMap = new Map<number, number>();
 
-    this.mediaService
-      .getTvShowEpisodesInfoByIds(episodesIds)
-      .pipe(
-        switchMap(episodes => {
-          const tvShowsIds = episodes.map(episode => {
-            episodeTvMap.set(episode.id, episode.tvShowId);
-            return episode.tvShowId;
-          });
-          return this.mediaService.getTvShowsShortInfo(tvShowsIds);
-        }),
-        map(tvShows => {
-          if (
-            tvShows.length === 0 ||
-            episodesIds.length === 0 ||
-            episodeTvMap.size === 0
-          ) {
-            return [];
+    this.subscriptions.push(
+      this.mediaService
+        .getTvShowEpisodesInfoByIds(episodesIds)
+        .pipe(
+          switchMap(episodes => {
+            const tvShowsIds = episodes.map(episode => {
+              episodeTvMap.set(episode.id, episode.tvShowId);
+              return episode.tvShowId;
+            });
+            return this.mediaService.getTvShowsShortInfo(tvShowsIds);
+          }),
+          map(tvShows => {
+            if (
+              tvShows.length === 0 ||
+              episodesIds.length === 0 ||
+              episodeTvMap.size === 0
+            ) {
+              return [];
+            }
+            return this.episodeStats.map(stat => {
+              const tvShow = tvShows.find(
+                tv => tv.id === episodeTvMap.get(stat.mediaId)
+              )!;
+              return {
+                stat,
+                media: tvShow,
+              };
+            });
+          })
+        )
+        .subscribe(stats => {
+          this.sevenTvDays = this.getPeriodData(stats, 7);
+          this.oneTvMonth = this.getPeriodData(stats, 30);
+          this.sixTvMonth = this.getPeriodData(stats, 180);
+          if (this.selectedPeriod === '7 jours') {
+            this.setDailyViewSevenDaysPeriod();
+          } else if (this.selectedPeriod === '1 mois') {
+            this.setDailyViewMonthPeriod();
+          } else {
+            this.setDailyViewSemesterPeriod();
           }
-          return this.episodeStats.map(stat => {
-            const tvShow = tvShows.find(
-              tv => tv.id === episodeTvMap.get(stat.mediaId)
-            )!;
-            return {
-              stat,
-              media: tvShow,
-            };
-          });
         })
-      )
-      .subscribe(stats => {
-        this.sevenTvDays = this.getPeriodData(stats, 7);
-        this.oneTvMonth = this.getPeriodData(stats, 30);
-        this.sixTvMonth = this.getPeriodData(stats, 180);
-        if (this.selectedPeriod === '7 jours') {
-          this.setDailyViewSevenDaysPeriod();
-        } else if (this.selectedPeriod === '1 mois') {
-          this.setDailyViewMonthPeriod();
-        } else {
-          this.setDailyViewSemesterPeriod();
-        }
-      });
+    );
   }
 
   private getPeriodData(
@@ -210,5 +217,9 @@ export class StatsShowDailyViewedGenreComponent implements OnInit, OnChanges {
       });
     });
     return data;
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 }
