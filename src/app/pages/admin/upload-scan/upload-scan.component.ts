@@ -13,25 +13,32 @@ export class UploadScanComponent implements OnInit, OnDestroy {
   jobLogs: JobLog[] = [];
 
   private jobSubscription: Subscription = new Subscription();
+  private subscriptions: Subscription[] = [];
   private intervalId!: number;
 
   constructor(private uploadScanService: UploadScanService) {}
 
   ngOnInit(): void {
-    this.uploadScanService.getJobLogs().subscribe(logs => {
-      this.jobLogs = logs;
-    });
-    this.intervalId = window.setInterval(() => {
-      this.uploadScanService.isJobRunning().subscribe(running => {
-        if (running != this.jobRunning) {
-          this.jobRunning = running;
-        }
-      });
+    this.subscriptions.push(
       this.uploadScanService.getJobLogs().subscribe(logs => {
-        if (logs.length != this.jobLogs.length) {
-          this.jobLogs = logs;
-        }
-      });
+        this.jobLogs = logs;
+      })
+    );
+    this.intervalId = window.setInterval(() => {
+      this.subscriptions.push(
+        this.uploadScanService.isJobRunning().subscribe(running => {
+          if (running != this.jobRunning) {
+            this.jobRunning = running;
+          }
+        })
+      );
+      this.subscriptions.push(
+        this.uploadScanService.getJobLogs().subscribe(logs => {
+          if (logs.length != this.jobLogs.length) {
+            this.jobLogs = logs;
+          }
+        })
+      );
     }, 2000);
   }
 
@@ -40,5 +47,6 @@ export class UploadScanComponent implements OnInit, OnDestroy {
       window.clearInterval(this.intervalId);
     }
     this.jobSubscription.unsubscribe();
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 }
