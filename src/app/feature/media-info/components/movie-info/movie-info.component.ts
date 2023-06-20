@@ -2,6 +2,7 @@ import {
   Component,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   SimpleChanges,
 } from '@angular/core';
@@ -10,7 +11,7 @@ import { navigationRoot } from '../../../../app-routing.module';
 import { streamingLinks } from '../../../../pages/streaming/streaming-routing.module';
 import { mediasLinks } from '../../../../pages/medias/medias-routing.module';
 import { Select, Store } from '@ngxs/store';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { PlaylistState } from '../../../playlist/store/playlist.state';
 import { PlaylistActions } from '../../../playlist/store/playlist.actions';
 import { MoviePlaylistsService } from '../../../playlist/movie-playlists.service';
@@ -33,7 +34,7 @@ import { subscriptionLinks } from '../../../../pages/subscription/subscriptions-
   templateUrl: './movie-info.component.html',
   styleUrls: ['./movie-info.component.less'],
 })
-export class MovieInfoComponent implements OnInit, OnChanges {
+export class MovieInfoComponent implements OnInit, OnChanges, OnDestroy {
   @Select(AuthState.isSubscribed)
   isSubscribed$!: Observable<boolean>;
 
@@ -61,6 +62,8 @@ export class MovieInfoComponent implements OnInit, OnChanges {
   selectedFriends: string[] = [];
   friends: string[] = [];
 
+  subscriptions: Subscription[] = [];
+
   constructor(
     private breakpointObserver: BreakpointObserver,
     private readonly store: Store,
@@ -69,24 +72,29 @@ export class MovieInfoComponent implements OnInit, OnChanges {
     private watchlistService: MovieWatchlistService,
     private friendshipService: FriendshipService,
     private watchTogetherService: WatchTogetherService
-  ) {
-    this.breakpointObserver
-      .observe([Breakpoints.HandsetPortrait])
-      .subscribe(result => {
-        this.isOnPhone = result.matches;
-      });
-    this.user$.subscribe(user => {
-      this.userId = user?.id;
-    });
-  }
+  ) {}
 
   ngOnInit(): void {
+    this.subscriptions.push(
+      this.breakpointObserver
+        .observe([Breakpoints.HandsetPortrait])
+        .subscribe(result => {
+          this.isOnPhone = result.matches;
+        })
+    );
+    this.subscriptions.push(
+      this.user$.subscribe(user => {
+        this.userId = user?.id;
+      })
+    );
     this.store.dispatch(new PlaylistActions.GetCurrentUserPlaylists());
-    this.friendshipService
-      .getFriendships()
-      .subscribe(
-        friends => (this.friends = friends.map(friend => friend.friendId))
-      );
+    this.subscriptions.push(
+      this.friendshipService
+        .getFriendships()
+        .subscribe(
+          friends => (this.friends = friends.map(friend => friend.friendId))
+        )
+    );
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -95,14 +103,18 @@ export class MovieInfoComponent implements OnInit, OnChanges {
       changes['movie'].currentValue !== changes['movie'].previousValue &&
       this.movie
     ) {
-      this.watchlistService.getWatchlistItem(this.movie.id).subscribe(item => {
-        if (!item) {
-          this.isMediaInWatchList = false;
-        } else {
-          this.isMediaInWatchList = true;
-          this.watchlistItem = item;
-        }
-      });
+      this.subscriptions.push(
+        this.watchlistService
+          .getWatchlistItem(this.movie.id)
+          .subscribe(item => {
+            if (!item) {
+              this.isMediaInWatchList = false;
+            } else {
+              this.isMediaInWatchList = true;
+              this.watchlistItem = item;
+            }
+          })
+      );
     }
   }
 
@@ -122,56 +134,64 @@ export class MovieInfoComponent implements OnInit, OnChanges {
 
   addToPlaylist(playlistId: string) {
     if (this.movie) {
-      this.moviePlaylistsService
-        .addToPlaylist(playlistId, {
-          movieId: this.movie.id,
-        })
-        .subscribe(() =>
-          this.notificationsService.success('Film ajouté à la playlist')
-        );
+      this.subscriptions.push(
+        this.moviePlaylistsService
+          .addToPlaylist(playlistId, {
+            movieId: this.movie.id,
+          })
+          .subscribe(() =>
+            this.notificationsService.success('Film ajouté à la playlist')
+          )
+      );
     }
   }
 
   addToWatchlist(status: MovieWatchListStatus) {
     if (this.movie) {
-      this.watchlistService
-        .createWatchlistItem({
-          status,
-          movieId: this.movie.id,
-        })
-        .subscribe(() => {
-          this.notificationsService.success(
-            'Le film a été ajouté aux films suivis'
-          );
-          this.isMediaInWatchList = true;
-          this.watchlistItem = {
-            movieId: this.movie!.id,
+      this.subscriptions.push(
+        this.watchlistService
+          .createWatchlistItem({
             status,
-            userId: this.userId,
-          };
-        });
+            movieId: this.movie.id,
+          })
+          .subscribe(() => {
+            this.notificationsService.success(
+              'Le film a été ajouté aux films suivis'
+            );
+            this.isMediaInWatchList = true;
+            this.watchlistItem = {
+              movieId: this.movie!.id,
+              status,
+              userId: this.userId,
+            };
+          })
+      );
     }
   }
 
   changeMovieStatus(status: MovieWatchListStatus) {
     this.watchlistItem!.status = status;
-    this.watchlistService
-      .updateWatchlistItem(this.watchlistItem!)
-      .subscribe(() =>
-        this.notificationsService.success('Liste de suivie modifié')
-      );
+    this.subscriptions.push(
+      this.watchlistService
+        .updateWatchlistItem(this.watchlistItem!)
+        .subscribe(() =>
+          this.notificationsService.success('Liste de suivie modifié')
+        )
+    );
   }
 
   removeMovieWatchlist() {
-    this.watchlistService
-      .removeFromWatchlist(this.watchlistItem!.movieId)
-      .subscribe(() => {
-        this.isMediaInWatchList = false;
-        this.watchlistItem = undefined;
-        this.notificationsService.success(
-          'Le film a été retiré des films suivis'
-        );
-      });
+    this.subscriptions.push(
+      this.watchlistService
+        .removeFromWatchlist(this.watchlistItem!.movieId)
+        .subscribe(() => {
+          this.isMediaInWatchList = false;
+          this.watchlistItem = undefined;
+          this.notificationsService.success(
+            'Le film a été retiré des films suivis'
+          );
+        })
+    );
   }
 
   watchTogetherModal() {
@@ -192,5 +212,9 @@ export class MovieInfoComponent implements OnInit, OnChanges {
         playlistPosition: 0,
       });
     }
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 }

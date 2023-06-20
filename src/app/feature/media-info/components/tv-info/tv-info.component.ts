@@ -1,4 +1,11 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import { navigationRoot } from '../../../../app-routing.module';
 import { mediasLinks } from '../../../../pages/medias/medias-routing.module';
 import { Person, TvShowResponse } from '../../../../shared/models/media.models';
@@ -6,7 +13,7 @@ import { TvShowWatchlistService } from '../../../watchlist/tv-show-watchlist.ser
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 import { Select } from '@ngxs/store';
 import { AuthState } from '../../../../core/auth/store/auth.state';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { UserResponse } from '../../../../shared/models/user.models';
 import {
   TvShowWatchlistItem,
@@ -19,7 +26,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
   templateUrl: './tv-info.component.html',
   styleUrls: ['./tv-info.component.less'],
 })
-export class TvInfoComponent implements OnChanges {
+export class TvInfoComponent implements OnChanges, OnInit, OnDestroy {
   @Select(AuthState.user)
   readonly user$!: Observable<UserResponse>;
   userId = '';
@@ -37,22 +44,29 @@ export class TvInfoComponent implements OnChanges {
   isMediaInWatchList = false;
   watchlistItem: TvShowWatchlistItem | undefined;
 
+  subscriptions: Subscription[] = [];
   constructor(
     private breakpointObserver: BreakpointObserver,
     private readonly notificationsService: NotificationsService,
     private watchlistService: TvShowWatchlistService
-  ) {
-    this.breakpointObserver
-      .observe([Breakpoints.HandsetPortrait])
-      .subscribe(result => {
-        this.isOnPhone = result.matches;
-      });
+  ) {}
 
-    this.user$.subscribe(user => {
-      if (user) {
-        this.userId = user.id;
-      }
-    });
+  ngOnInit(): void {
+    this.subscriptions.push(
+      this.breakpointObserver
+        .observe([Breakpoints.HandsetPortrait])
+        .subscribe(result => {
+          this.isOnPhone = result.matches;
+        })
+    );
+
+    this.subscriptions.push(
+      this.user$.subscribe(user => {
+        if (user) {
+          this.userId = user.id;
+        }
+      })
+    );
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -61,14 +75,16 @@ export class TvInfoComponent implements OnChanges {
       changes['tv'].currentValue !== changes['tv'].previousValue &&
       this.tv
     ) {
-      this.watchlistService.getWatchlistItem(this.tv.id).subscribe(item => {
-        if (!item) {
-          this.isMediaInWatchList = false;
-        } else {
-          this.isMediaInWatchList = true;
-          this.watchlistItem = item;
-        }
-      });
+      this.subscriptions.push(
+        this.watchlistService.getWatchlistItem(this.tv.id).subscribe(item => {
+          if (!item) {
+            this.isMediaInWatchList = false;
+          } else {
+            this.isMediaInWatchList = true;
+            this.watchlistItem = item;
+          }
+        })
+      );
     }
   }
 
@@ -94,45 +110,55 @@ export class TvInfoComponent implements OnChanges {
 
   addToWatchlist(status: TvShowWatchListStatus) {
     if (this.tv) {
-      this.watchlistService
-        .createWatchlistItem({
-          status,
-          tvShowId: this.tv.id,
-          viewedEpisodes: 0,
-        })
-        .subscribe(() => {
-          this.notificationsService.success(
-            'La série a été ajouté aux séries suivis'
-          );
-          this.isMediaInWatchList = true;
-          this.watchlistItem = {
-            tvShowId: this.tv!.id,
+      this.subscriptions.push(
+        this.watchlistService
+          .createWatchlistItem({
             status,
-            userId: this.userId,
+            tvShowId: this.tv.id,
             viewedEpisodes: 0,
-          };
-        });
+          })
+          .subscribe(() => {
+            this.notificationsService.success(
+              'La série a été ajouté aux séries suivis'
+            );
+            this.isMediaInWatchList = true;
+            this.watchlistItem = {
+              tvShowId: this.tv!.id,
+              status,
+              userId: this.userId,
+              viewedEpisodes: 0,
+            };
+          })
+      );
     }
   }
 
   changeShowStatus(status: TvShowWatchListStatus) {
     this.watchlistItem!.status = status;
-    this.watchlistService
-      .updateWatchlistItem(this.watchlistItem!)
-      .subscribe(() =>
-        this.notificationsService.success('Liste de suivie modifié')
-      );
+    this.subscriptions.push(
+      this.watchlistService
+        .updateWatchlistItem(this.watchlistItem!)
+        .subscribe(() =>
+          this.notificationsService.success('Liste de suivie modifié')
+        )
+    );
   }
 
   removeShowWatchlist() {
-    this.watchlistService
-      .removeFromWatchlist(this.watchlistItem!.tvShowId)
-      .subscribe(() => {
-        this.isMediaInWatchList = false;
-        this.watchlistItem = undefined;
-        this.notificationsService.success(
-          'La série a été retiré des séries suivis'
-        );
-      });
+    this.subscriptions.push(
+      this.watchlistService
+        .removeFromWatchlist(this.watchlistItem!.tvShowId)
+        .subscribe(() => {
+          this.isMediaInWatchList = false;
+          this.watchlistItem = undefined;
+          this.notificationsService.success(
+            'La série a été retiré des séries suivis'
+          );
+        })
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 }
