@@ -1,7 +1,8 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, ViewChild } from '@angular/core';
 import { NzUploadComponent, NzUploadFile } from 'ng-zorro-antd/upload';
 import { UploadScanService } from '../../upload-scan.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
+import { Subscription } from 'rxjs';
 
 interface PreviewFile {
   file: File;
@@ -15,7 +16,7 @@ interface PreviewFile {
   templateUrl: './upload.component.html',
   styleUrls: ['./upload.component.less'],
 })
-export class UploadComponent {
+export class UploadComponent implements OnDestroy {
   @Input() type: 'movies' | 'tv-shows' = 'movies';
   @Input() disabled = false;
 
@@ -25,6 +26,7 @@ export class UploadComponent {
   public previewFiles: PreviewFile[] = [];
   public uploading = false;
 
+  subscriptions: Subscription[] = [];
   constructor(
     private uploadService: UploadScanService,
     private readonly notificationsService: NotificationsService
@@ -88,39 +90,43 @@ export class UploadComponent {
     this.previewFiles[index].progress = true;
     // Envoyer la requête d'upload en utilisant HttpClient
     if (this.type === 'movies') {
-      this.uploadService.uploadMovie(file).subscribe(() => {
-        this.notificationsService.success(
-          'Upload terminé',
-          `Le fichier ${file.name} a été uploadé avec succès`
-        );
-        // Upload terminé pour ce fichier
-        this.previewFiles[index].progress = false;
-        this.previewFiles[index].done = true;
-        if (index < this.uploadQueue.length - 1) {
-          this.uploadNextFile(index + 1); // Passer au fichier suivant
-        } else {
-          this.uploading = false;
-          this.uploadQueue = [];
-          this.previewFiles = [];
-        }
-      });
+      this.subscriptions.push(
+        this.uploadService.uploadMovie(file).subscribe(() => {
+          this.notificationsService.success(
+            'Upload terminé',
+            `Le fichier ${file.name} a été uploadé avec succès`
+          );
+          // Upload terminé pour ce fichier
+          this.previewFiles[index].progress = false;
+          this.previewFiles[index].done = true;
+          if (index < this.uploadQueue.length - 1) {
+            this.uploadNextFile(index + 1); // Passer au fichier suivant
+          } else {
+            this.uploading = false;
+            this.uploadQueue = [];
+            this.previewFiles = [];
+          }
+        })
+      );
     } else {
-      this.uploadService.uploadTVShow(file).subscribe(() => {
-        this.notificationsService.success(
-          'Upload terminé',
-          `Le fichier ${file.name} a été uploadé avec succès`
-        );
-        // Upload terminé pour ce fichier
-        this.previewFiles[index].progress = false;
-        this.previewFiles[index].done = true;
-        if (index < this.uploadQueue.length - 1) {
-          this.uploadNextFile(index + 1); // Passer au fichier suivant
-        } else {
-          this.uploading = false;
-          this.uploadQueue = [];
-          this.previewFiles = [];
-        }
-      });
+      this.subscriptions.push(
+        this.uploadService.uploadTVShow(file).subscribe(() => {
+          this.notificationsService.success(
+            'Upload terminé',
+            `Le fichier ${file.name} a été uploadé avec succès`
+          );
+          // Upload terminé pour ce fichier
+          this.previewFiles[index].progress = false;
+          this.previewFiles[index].done = true;
+          if (index < this.uploadQueue.length - 1) {
+            this.uploadNextFile(index + 1); // Passer au fichier suivant
+          } else {
+            this.uploading = false;
+            this.uploadQueue = [];
+            this.previewFiles = [];
+          }
+        })
+      );
     }
   }
 
@@ -138,5 +144,9 @@ export class UploadComponent {
     } else {
       return 'file';
     }
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 }
