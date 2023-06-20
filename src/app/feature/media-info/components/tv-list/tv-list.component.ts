@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { TvShowResponse } from '../../../../shared/models/media.models';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-tv-list',
@@ -8,4 +9,11 @@ import { TvShowResponse } from '../../../../shared/models/media.models';
 })
 export class TvListComponent {
   @Input() tvShows: TvShowResponse[] = [];
+  isOnPhone = false;
+
+  constructor(private breakpointObserver: BreakpointObserver) {
+    this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
+      this.isOnPhone = result.matches;
+    });
+  }
 }

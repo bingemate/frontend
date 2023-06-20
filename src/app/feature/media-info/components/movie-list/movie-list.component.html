@@ -1,10 +1,7 @@
 <nz-row [nzGutter]="[32, 32]">
   <div
     nz-col
-    [nzXs]="12"
-    [nzMd]="6"
-    [nzXl]="4"
-    [nzXXl]="3"
+    [ngStyle]="{ width: isOnPhone ? '150px' : '200px' }"
     *ngFor="let movie of movies">
     <app-movie-info-card
       [movie]="movie"
