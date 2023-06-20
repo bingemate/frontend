@@ -3,7 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 import { API_RESOURCE_URI } from '../../shared/api-resource-uri/api-resources-uri';
 import {
+  CreateEpisodeWatchlistItem,
   CreateTvShowWatchlistItem,
+  EpisodeWatchlistItem,
   TvShowWatchlistItem,
   TvShowWatchlistResponse,
 } from '../../shared/models/tv-show-watchlist.models';
@@ -27,9 +29,23 @@ export class TvShowWatchlistService {
     );
   }
 
+  createEpisodeWatchlistItem(item: CreateEpisodeWatchlistItem) {
+    return this.http.post(
+      `${API_RESOURCE_URI.WATCH_SERVICE}/tv-show-watchlist/${item.tvShowId}/episode/${item.episodeId}`,
+      item
+    );
+  }
+
   updateWatchlistItem(item: TvShowWatchlistItem) {
     return this.http.put(
       `${API_RESOURCE_URI.WATCH_SERVICE}/tv-show-watchlist/${item.tvShowId}`,
+      item
+    );
+  }
+
+  updateEpisodeWatchlistItem(item: EpisodeWatchlistItem) {
+    return this.http.put(
+      `${API_RESOURCE_URI.WATCH_SERVICE}/tv-show-watchlist/episode/${item.episodeId}`,
       item
     );
   }

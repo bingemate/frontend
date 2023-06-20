@@ -98,7 +98,6 @@ export class TvInfoComponent implements OnChanges {
         .createWatchlistItem({
           status,
           tvShowId: this.tv.id,
-          viewedEpisodes: 0,
         })
         .subscribe(() => {
           this.notificationsService.success(
@@ -108,8 +107,6 @@ export class TvInfoComponent implements OnChanges {
           this.watchlistItem = {
             tvShowId: this.tv!.id,
             status,
-            userId: this.userId,
-            viewedEpisodes: 0,
           };
         });
     }
