@@ -1,16 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MovieResponse } from '../../../shared/models/media.models';
 import { ActivatedRoute } from '@angular/router';
 import { MediaDiscoverService } from '../../../feature/media-info/media-discover.service';
 import { MediaAssetsService } from '../../../feature/media-info/media-assets.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-movie-by-studio',
   templateUrl: './movie-by-studio.component.html',
   styleUrls: ['./movie-by-studio.component.less'],
 })
-export class MovieByStudioComponent implements OnInit {
+export class MovieByStudioComponent implements OnInit, OnDestroy {
   studioId = 0;
   studioName = '';
 
@@ -21,23 +22,30 @@ export class MovieByStudioComponent implements OnInit {
 
   isOnPhone = false;
 
+  subscriptions: Subscription[] = [];
+
   constructor(
     private breakpointObserver: BreakpointObserver,
     private route: ActivatedRoute,
     private mediaDiscoverService: MediaDiscoverService,
     private mediaAssetsService: MediaAssetsService
-  ) {
-    this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
-      this.isOnPhone = result.matches;
-    });
-    this.route.params.subscribe(params => {
-      this.studioId = params['id'];
-    });
-  }
+  ) {}
 
   ngOnInit(): void {
-    this.getMovies();
-    this.getStudioName();
+    this.subscriptions.push(
+      this.breakpointObserver
+        .observe([Breakpoints.Handset])
+        .subscribe(result => {
+          this.isOnPhone = result.matches;
+        })
+    );
+    this.subscriptions.push(
+      this.route.params.subscribe(params => {
+        this.studioId = params['id'];
+        this.getMovies();
+        this.getStudioName();
+      })
+    );
   }
 
   getMovies(): void {
@@ -59,6 +67,10 @@ export class MovieByStudioComponent implements OnInit {
   onMoviesPageChange(page: number): void {
     this.moviesPage = page;
     this.getMovies();
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   protected readonly Math = Math;
