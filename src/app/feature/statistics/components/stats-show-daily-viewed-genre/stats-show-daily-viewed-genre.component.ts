@@ -132,17 +132,16 @@ export class StatsShowDailyViewedGenreComponent implements OnInit, OnChanges {
             episodeTvMap.set(episode.id, episode.tvShowId);
             return episode.tvShowId;
           });
-          return this.mediaService.getTvShowsShortInfo(tvShowsIds).pipe(
-            tap(tvShows => {
-              console.log('HERE');
-              console.log(tvShows);
-            })
-          );
+          return this.mediaService.getTvShowsShortInfo(tvShowsIds);
         }),
         map(tvShows => {
-          console.log('HERE');
-          console.log(tvShows);
-          console.log(episodeTvMap);
+          if (
+            tvShows.length === 0 ||
+            episodesIds.length === 0 ||
+            episodeTvMap.size === 0
+          ) {
+            return [];
+          }
           return this.episodeStats.map(stat => {
             const tvShow = tvShows.find(
               tv => tv.id === episodeTvMap.get(stat.mediaId)
