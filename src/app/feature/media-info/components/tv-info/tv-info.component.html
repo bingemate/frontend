@@ -23,9 +23,6 @@
               nzType="default"
               nzShape="round"
               nz-dropdown
-              nzTooltipPlacement="top"
-              nz-tooltip
-              [nzTooltipTrigger]="isMediaInWatchList ? 'hover' : null"
               [nzDropdownMenu]="watchlistMenu">
               <span *ngIf="!isMediaInWatchList">Suivre cette série</span>
               <span *ngIf="isMediaInWatchList">{{

@@ -33,6 +33,13 @@
                 nzType="default"
                 nzShape="round"
                 nz-dropdown
+                [disabled]="(playlists$ | async)?.length === 0"
+                nz-tooltip
+                [nzTooltipTitle]="
+                  (playlists$ | async)?.length === 0
+                    ? 'Vous n\'avez pas de playlist de type film'
+                    : ''
+                "
                 [nzDropdownMenu]="playlistMenu">
                 Ajouter à une playlist
                 <span nz-icon nzType="down"></span>
@@ -56,10 +63,6 @@
               nzType="default"
               nzShape="round"
               nz-dropdown
-              nzTooltipTitle="Film déjà suivi"
-              nzTooltipPlacement="top"
-              nz-tooltip
-              [nzTooltipTrigger]="isMediaInWatchList ? 'hover' : null"
               [nzDropdownMenu]="watchlistMenu">
               <span *ngIf="!isMediaInWatchList">Suivre ce film</span>
               <span *ngIf="isMediaInWatchList">{{

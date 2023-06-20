@@ -7,7 +7,13 @@
   nzType="default"
   nzShape="round"
   nz-dropdown
-  [disabled]="!selectedEpisode"
+  [disabled]="!selectedEpisode || (playlists$ | async)?.length === 0"
+  nz-tooltip
+  [nzTooltipTitle]="
+    (playlists$ | async)?.length === 0
+      ? 'Vous n\'avez pas de playlist de type épisode'
+      : ''
+  "
   [nzDropdownMenu]="playlistMenu">
   Ajouter à une playlist
   <span nz-icon nzType="down"></span>
