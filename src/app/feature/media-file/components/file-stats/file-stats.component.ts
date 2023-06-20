@@ -1,15 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MediaFileService } from '../../media-file.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-file-stats',
   templateUrl: './file-stats.component.html',
   styleUrls: ['./file-stats.component.less'],
 })
-export class FileStatsComponent implements OnInit {
+export class FileStatsComponent implements OnInit, OnDestroy {
   mediaFileTotalSize = 0;
   mediaFileCount = 0;
   availableDiskSpace = 0;
+
+  subscriptions: Subscription[] = [];
   constructor(private readonly mediaFileService: MediaFileService) {}
 
   ngOnInit(): void {
@@ -25,21 +28,27 @@ export class FileStatsComponent implements OnInit {
   }
 
   getMediaFileTotalSize(): void {
-    this.mediaFileService.getMediaFileTotalSize().subscribe(size => {
-      this.mediaFileTotalSize = size;
-    });
+    this.subscriptions.push(
+      this.mediaFileService.getMediaFileTotalSize().subscribe(size => {
+        this.mediaFileTotalSize = size;
+      })
+    );
   }
 
   countMediaFiles(): void {
-    this.mediaFileService.countMediaFiles().subscribe(count => {
-      this.mediaFileCount = count;
-    });
+    this.subscriptions.push(
+      this.mediaFileService.countMediaFiles().subscribe(count => {
+        this.mediaFileCount = count;
+      })
+    );
   }
 
   getAvailableDiskSpace(): void {
-    this.mediaFileService.availableSpace().subscribe(space => {
-      this.availableDiskSpace = space;
-    });
+    this.subscriptions.push(
+      this.mediaFileService.availableSpace().subscribe(space => {
+        this.availableDiskSpace = space;
+      })
+    );
   }
 
   availableDiskSpacePercent(): string {
@@ -48,5 +57,9 @@ export class FileStatsComponent implements OnInit {
         (this.mediaFileTotalSize + this.availableDiskSpace)) *
       100
     ).toFixed(2);
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 }

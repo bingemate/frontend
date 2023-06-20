@@ -26,13 +26,14 @@ export class EpisodeFileListComponent implements OnInit, OnDestroy {
   episodeDeleting = false;
 
   inputSubject: Subject<string> = new Subject<string>();
-  private subscription: Subscription;
+  private searchSubscription: Subscription;
+  subscriptions: Subscription[] = [];
 
   constructor(
     private readonly mediaFileService: MediaFileService,
     private notificationsService: NotificationsService
   ) {
-    this.subscription = this.inputSubject
+    this.searchSubscription = this.inputSubject
       .pipe(debounceTime(1000))
       .subscribe(() => {
         this.search();
@@ -48,9 +49,9 @@ export class EpisodeFileListComponent implements OnInit, OnDestroy {
   }
 
   manualSearch() {
-    this.subscription.unsubscribe();
+    this.searchSubscription.unsubscribe();
     this.search();
-    this.subscription = this.inputSubject
+    this.searchSubscription = this.inputSubject
       .pipe(debounceTime(1000))
       .subscribe(() => {
         this.search();
@@ -59,12 +60,14 @@ export class EpisodeFileListComponent implements OnInit, OnDestroy {
 
   search() {
     this.loading = true;
-    this.mediaFileService
-      .searchEpisodeFiles(this.query, this.currentPage, this.pageSize)
-      .subscribe(episodeFilesResult => {
-        this.episodeFilesResults = episodeFilesResult;
-        this.loading = false;
-      });
+    this.subscriptions.push(
+      this.mediaFileService
+        .searchEpisodeFiles(this.query, this.currentPage, this.pageSize)
+        .subscribe(episodeFilesResult => {
+          this.episodeFilesResults = episodeFilesResult;
+          this.loading = false;
+        })
+    );
   }
 
   onPageIndexChange(pageIndex: number) {
@@ -79,21 +82,24 @@ export class EpisodeFileListComponent implements OnInit, OnDestroy {
 
   onDelete(id: string) {
     this.episodeDeleting = true;
-    this.mediaFileService.deleteMediaFile(id).subscribe({
-      next: () => {
-        this.notificationsService.success(
-          "Le fichier de l'épisode a bien été supprimé"
-        );
-        this.search();
-      },
-      complete: () => {
-        this.episodeDeleting = false;
-      },
-    });
+    this.subscriptions.push(
+      this.mediaFileService.deleteMediaFile(id).subscribe({
+        next: () => {
+          this.notificationsService.success(
+            "Le fichier de l'épisode a bien été supprimé"
+          );
+          this.search();
+        },
+        complete: () => {
+          this.episodeDeleting = false;
+        },
+      })
+    );
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.searchSubscription.unsubscribe();
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
   protected readonly getBadgeColor = getBadgeColor;
