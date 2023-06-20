@@ -53,13 +53,16 @@ export class PlaylistStreamComponent implements OnInit, OnDestroy {
     private breakpointObserver: BreakpointObserver,
     private readonly store: Store,
     private mediaService: MediaInfoService
-  ) {
-    this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
-      this.isOnPhone = result.matches;
-    });
-  }
+  ) {}
 
   ngOnInit(): void {
+    this.subscriptions.push(
+      this.breakpointObserver
+        .observe([Breakpoints.Handset])
+        .subscribe(result => {
+          this.isOnPhone = result.matches;
+        })
+    );
     this.subscriptions.push(
       this.type$
         .pipe(
