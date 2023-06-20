@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthActions } from '../../../../core/auth/store/auth.actions';
 import { KeycloakService } from 'keycloak-angular';
@@ -7,13 +7,14 @@ import { UserService } from '../../user.service';
 import { Store } from '@ngxs/store';
 import { navigationRoot } from '../../../../app-routing.module';
 import { adminLinks } from '../../../../pages/admin/admin-routing.module';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-delete-user',
   templateUrl: './delete-user.component.html',
   styleUrls: ['./delete-user.component.less'],
 })
-export class DeleteUserComponent {
+export class DeleteUserComponent implements OnDestroy {
   @Input() admin = false;
   @Input() owner = false;
   @Input() userId = '';
@@ -23,6 +24,8 @@ export class DeleteUserComponent {
   deleteModalError = false;
   deleteModalErrorMessage = '';
   deleteModalSuccess = false;
+
+  subscriptions: Subscription[] = [];
 
   constructor(
     private readonly store: Store,
@@ -69,17 +72,19 @@ export class DeleteUserComponent {
 
   handleOwnerDelete(): void {
     this.deleteModalLoading = true;
-    this.userService.delete().subscribe({
-      next: () => {
-        this.deleteModalLoading = false;
-        this.deleteModalSuccess = true;
-      },
-      error: (error: HttpErrorResponse) => {
-        this.deleteModalLoading = false;
-        this.deleteModalError = true;
-        this.deleteModalErrorMessage = error.error.message;
-      },
-    });
+    this.subscriptions.push(
+      this.userService.delete().subscribe({
+        next: () => {
+          this.deleteModalLoading = false;
+          this.deleteModalSuccess = true;
+        },
+        error: (error: HttpErrorResponse) => {
+          this.deleteModalLoading = false;
+          this.deleteModalError = true;
+          this.deleteModalErrorMessage = error.error.message;
+        },
+      })
+    );
   }
 
   handleOwnerCancel(): void {
@@ -102,17 +107,19 @@ export class DeleteUserComponent {
 
   handleAdminDelete(): void {
     this.deleteModalLoading = true;
-    this.userService.adminDeleteUser(this.userId).subscribe({
-      next: () => {
-        this.deleteModalLoading = false;
-        this.deleteModalSuccess = true;
-      },
-      error: (error: HttpErrorResponse) => {
-        this.deleteModalLoading = false;
-        this.deleteModalError = true;
-        this.deleteModalErrorMessage = error.error.message;
-      },
-    });
+    this.subscriptions.push(
+      this.userService.adminDeleteUser(this.userId).subscribe({
+        next: () => {
+          this.deleteModalLoading = false;
+          this.deleteModalSuccess = true;
+        },
+        error: (error: HttpErrorResponse) => {
+          this.deleteModalLoading = false;
+          this.deleteModalError = true;
+          this.deleteModalErrorMessage = error.error.message;
+        },
+      })
+    );
   }
 
   handleAdminCancel(): void {
@@ -129,5 +136,9 @@ export class DeleteUserComponent {
         .finally();
     }
     this.deleteModalVisible = false;
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 }

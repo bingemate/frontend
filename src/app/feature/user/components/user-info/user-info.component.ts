@@ -1,10 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   UpdateUserRequest,
   UserResponse,
 } from '../../../../shared/models/user.models';
 import { UserService } from '../../user.service';
-import { Observable } from 'rxjs';
+import { Observable, Subscription, timeout } from 'rxjs';
 import { Select } from '@ngxs/store';
 import { AuthState } from '../../../../core/auth/store/auth.state';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -21,7 +21,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
   templateUrl: './user-info.component.html',
   styleUrls: ['./user-info.component.less'],
 })
-export class UserInfoComponent implements OnInit {
+export class UserInfoComponent implements OnInit, OnDestroy {
   isOnPhone = false;
 
   @Select(AuthState.user) user$!: Observable<UserResponse>;
@@ -37,8 +37,10 @@ export class UserInfoComponent implements OnInit {
 
   userForm: FormGroup | null = null;
   editMode = false;
+  sending = false;
 
   relationShip: FriendResponse | null = null;
+  subscriptions: Subscription[] = [];
 
   constructor(
     private breakpointObserver: BreakpointObserver,
@@ -46,37 +48,46 @@ export class UserInfoComponent implements OnInit {
     private readonly fb: FormBuilder,
     private readonly notificationsService: NotificationsService,
     private friendShipService: FriendshipService
-  ) {
-    this.breakpointObserver
-      .observe([Breakpoints.HandsetPortrait])
-      .subscribe(result => {
-        this.isOnPhone = result.matches;
-      });
-    this.user$.subscribe(user => {
-      this.authUser = user;
-    });
-    this.isAdmin$.subscribe(isAdmin => {
-      this.isAdmin = isAdmin;
-      if (this.isAdmin) {
-        this.userService.getRoles().subscribe(roles => {
-          this.roles = roles
-            .filter(role => role.startsWith('bingemate'))
-            .sort();
-        });
-      }
-    });
-  }
+  ) {}
 
   ngOnInit() {
-    if (this.user?.id !== this.authUser?.id) {
-      this.friendShipService
-        .getRelationShip(this.user?.id ?? 'empty')
-        .subscribe({
-          next: relationShip => {
-            this.relationShip = relationShip;
-          },
-        });
-    }
+    this.subscriptions.push(
+      this.breakpointObserver
+        .observe([Breakpoints.HandsetPortrait])
+        .subscribe(result => {
+          this.isOnPhone = result.matches;
+        })
+    );
+    this.subscriptions.push(
+      this.user$.subscribe(user => {
+        this.authUser = user;
+      })
+    );
+    this.subscriptions.push(
+      this.isAdmin$.subscribe(isAdmin => {
+        this.isAdmin = isAdmin;
+        if (this.isAdmin) {
+          this.userService.getRoles().subscribe(roles => {
+            this.roles = roles
+              .filter(role => role.startsWith('bingemate'))
+              .sort();
+          });
+        }
+      })
+    );
+    setTimeout(() => {
+      if (this.user?.id !== this.authUser?.id) {
+        this.subscriptions.push(
+          this.friendShipService
+            .getRelationShip(this.user?.id ?? 'empty')
+            .subscribe({
+              next: relationShip => {
+                this.relationShip = relationShip;
+              },
+            })
+        );
+      }
+    }, 200);
   }
 
   mapStateToLabel(state: FriendState): string {
@@ -95,59 +106,73 @@ export class UserInfoComponent implements OnInit {
   }
 
   sendFriendRequest() {
-    this.friendShipService
-      .addFriend({
-        friendId: this.user?.id ?? 'empty',
-      })
-      .subscribe(friendRequest => {
-        this.relationShip = friendRequest;
-        this.notificationsService.success('Demande envoyée');
-      });
+    this.sending = true;
+    this.subscriptions.push(
+      this.friendShipService
+        .addFriend({
+          friendId: this.user?.id ?? 'empty',
+        })
+        .subscribe({
+          next: friendRequest => {
+            this.relationShip = friendRequest;
+            this.notificationsService.success('Demande envoyée');
+          },
+          complete: () => (this.sending = false),
+        })
+    );
   }
 
   acceptFriend() {
-    this.friendShipService
-      .updateFriend({
-        friendId: this.user?.id ?? 'empty',
-        state: FriendState.ACCEPTED,
-      })
-      .subscribe(response => {
-        this.notificationsService.success('Demande acceptée');
-        this.relationShip = response;
-      });
+    this.subscriptions.push(
+      this.friendShipService
+        .updateFriend({
+          friendId: this.user?.id ?? 'empty',
+          state: FriendState.ACCEPTED,
+        })
+        .subscribe(response => {
+          this.notificationsService.success('Demande acceptée');
+          this.relationShip = response;
+        })
+    );
   }
 
   rejectFriend() {
-    this.friendShipService
-      .updateFriend({
-        friendId: this.user?.id ?? 'empty',
-        state: FriendState.REJECTED,
-      })
-      .subscribe(response => {
-        this.notificationsService.success('Demande rejetée');
-        this.relationShip = response;
-      });
+    this.subscriptions.push(
+      this.friendShipService
+        .updateFriend({
+          friendId: this.user?.id ?? 'empty',
+          state: FriendState.REJECTED,
+        })
+        .subscribe(response => {
+          this.notificationsService.success('Demande rejetée');
+          this.relationShip = response;
+        })
+    );
   }
 
   blockFriend() {
-    this.friendShipService
-      .updateFriend({
-        friendId: this.user?.id ?? 'empty',
-        state: FriendState.BLOCKED,
-      })
-      .subscribe(response => {
-        this.notificationsService.success('Utilisateur bloqué');
-        this.relationShip = response;
-      });
+    this.subscriptions.push(
+      this.friendShipService
+        .updateFriend({
+          friendId: this.user?.id ?? 'empty',
+          state: FriendState.BLOCKED,
+        })
+        .subscribe(response => {
+          this.notificationsService.success('Utilisateur bloqué');
+          this.relationShip = response;
+        })
+    );
   }
 
   deleteFriend() {
-    this.friendShipService
-      .deleteFriend(this.user?.id ?? 'empty')
-      .subscribe(() => {
-        this.notificationsService.success('Ami supprimé');
-        this.relationShip = null;
-      });
+    this.subscriptions.push(
+      this.friendShipService
+        .deleteFriend(this.user?.id ?? 'empty')
+        .subscribe(() => {
+          this.notificationsService.success('Ami supprimé');
+          this.relationShip = null;
+        })
+    );
   }
 
   canEdit(): boolean {
@@ -166,15 +191,19 @@ export class UserInfoComponent implements OnInit {
       lastname: this.userForm?.value.lastname,
     };
     if (this.isAdmin) {
-      this.userService
-        .updateUser(this.user?.id ?? '', updateUser)
-        .subscribe(() => {
-          this.updateUserSuccess(updateUser);
-        });
+      this.subscriptions.push(
+        this.userService
+          .updateUser(this.user?.id ?? '', updateUser)
+          .subscribe(() => {
+            this.updateUserSuccess(updateUser);
+          })
+      );
     } else {
-      this.userService.update(updateUser).subscribe(() => {
-        this.updateUserSuccess(updateUser);
-      });
+      this.subscriptions.push(
+        this.userService.update(updateUser).subscribe(() => {
+          this.updateUserSuccess(updateUser);
+        })
+      );
     }
   }
 
@@ -192,17 +221,21 @@ export class UserInfoComponent implements OnInit {
 
   onRoleChange(role: string, checked: boolean): void {
     if (checked) {
-      this.userService
-        .addUserRole(this.user?.id ?? '', { role })
-        .subscribe(() => {
-          this.notificationsService.success('Rôle ajouté');
-        });
+      this.subscriptions.push(
+        this.userService
+          .addUserRole(this.user?.id ?? '', { role })
+          .subscribe(() => {
+            this.notificationsService.success('Rôle ajouté');
+          })
+      );
     } else {
-      this.userService
-        .removeUserRole(this.user?.id ?? '', { role })
-        .subscribe(() => {
-          this.notificationsService.success('Rôle retiré');
-        });
+      this.subscriptions.push(
+        this.userService
+          .removeUserRole(this.user?.id ?? '', { role })
+          .subscribe(() => {
+            this.notificationsService.success('Rôle retiré');
+          })
+      );
     }
   }
 
@@ -228,6 +261,10 @@ export class UserInfoComponent implements OnInit {
   }
 
   protected readonly FriendState = FriendState;
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
+  }
 }
 
 export function getBadgeColor(role: string): string {

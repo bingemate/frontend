@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -7,16 +7,19 @@ import {
 } from '@angular/forms';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 import { UserService } from '../../user.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-update-password',
   templateUrl: './update-password.component.html',
   styleUrls: ['./update-password.component.less'],
 })
-export class UpdatePasswordComponent {
+export class UpdatePasswordComponent implements OnDestroy {
   updatePasswordForm: FormGroup;
 
   updatingPassword = false;
+
+  subscriptions: Subscription[] = [];
 
   constructor(
     private readonly fb: FormBuilder,
@@ -34,26 +37,28 @@ export class UpdatePasswordComponent {
   onUpdatePassword() {
     if (this.updatePasswordForm.valid) {
       this.updatingPassword = true;
-      this.userService
-        .updatePassword({
-          password: this.updatePasswordForm.get('newPassword')?.value,
-        })
-        .subscribe({
-          next: () => {
-            this.notificationService.success(
-              'Mot de passe mis à jour avec succès'
-            );
-          },
-          error: () => {
-            this.notificationService.error(
-              'Erreur lors de la mise à jour du mot de passe'
-            );
-          },
-          complete: () => {
-            this.updatingPassword = false;
-            this.updatePasswordForm.reset();
-          },
-        });
+      this.subscriptions.push(
+        this.userService
+          .updatePassword({
+            password: this.updatePasswordForm.get('newPassword')?.value,
+          })
+          .subscribe({
+            next: () => {
+              this.notificationService.success(
+                'Mot de passe mis à jour avec succès'
+              );
+            },
+            error: () => {
+              this.notificationService.error(
+                'Erreur lors de la mise à jour du mot de passe'
+              );
+            },
+            complete: () => {
+              this.updatingPassword = false;
+              this.updatePasswordForm.reset();
+            },
+          })
+      );
     }
   }
 
@@ -68,5 +73,9 @@ export class UpdatePasswordComponent {
     }
 
     return null;
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 }

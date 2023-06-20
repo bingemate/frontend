@@ -28,6 +28,8 @@ export class AdminUserListComponent implements OnInit, OnDestroy {
   inputSubject: Subject<string> = new Subject<string>();
   private subscription: Subscription;
 
+  subscriptions: Subscription[] = [];
+
   constructor(private readonly userService: UserService) {
     this.subscription = this.inputSubject
       .pipe(debounceTime(1000))
@@ -56,12 +58,14 @@ export class AdminUserListComponent implements OnInit, OnDestroy {
 
   search() {
     this.loading = true;
-    this.userService
-      .adminSearchUsers(this.query, this.currentPage, this.pageSize)
-      .subscribe(userResults => {
-        this.userResults = userResults;
-        this.loading = false;
-      });
+    this.subscriptions.push(
+      this.userService
+        .adminSearchUsers(this.query, this.currentPage, this.pageSize)
+        .subscribe(userResults => {
+          this.userResults = userResults;
+          this.loading = false;
+        })
+    );
   }
 
   onPageIndexChange(pageIndex: number) {
@@ -76,6 +80,7 @@ export class AdminUserListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
   protected readonly userProfilViewLinks = userProfilViewLinks;
