@@ -1,12 +1,25 @@
 export interface TvShowWatchlistItem {
   tvShowId: number;
-  userId: string;
-  viewedEpisodes: number;
+  episodes?: EpisodeWatchlistItem[];
   status: TvShowWatchListStatus;
 }
+
+export interface EpisodeWatchlistItem {
+  episodeId: number;
+  tvShowId: number;
+  name: string;
+  saved: boolean;
+  status: string;
+}
+
+export interface CreateEpisodeWatchlistItem {
+  tvShowId: number;
+  episodeId: number;
+  status: TvShowWatchListStatus;
+}
+
 export interface CreateTvShowWatchlistItem {
   tvShowId: number;
-  viewedEpisodes: number;
   status: TvShowWatchListStatus;
 }
 export interface TvShowWatchlistResponse {

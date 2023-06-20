@@ -164,7 +164,11 @@ export class StreamComponent implements OnInit, OnDestroy {
       transports: ['polling'],
       extraHeaders: { Authorization: `Bearer ${key}` },
       path: `${environment.production ? '' : '/dev'}/watch-service/socket.io`,
-      query: { mediaId: this.mediaId, type: this.type },
+      query: {
+        mediaId: this.mediaId,
+        type: this.type,
+        tvShowId: (this.mediaInfo as TvEpisodeResponse)?.tvShowId,
+      },
     });
   }
 }

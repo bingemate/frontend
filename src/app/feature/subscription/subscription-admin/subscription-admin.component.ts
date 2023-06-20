@@ -3,7 +3,6 @@ import {
   EventEmitter,
   Input,
   OnChanges,
-  OnDestroy,
   Output,
   SimpleChanges,
 } from '@angular/core';
@@ -18,11 +17,11 @@ import { NotificationsService } from '../../../core/notifications/notifications.
   templateUrl: './subscription-admin.component.html',
   styleUrls: ['./subscription-admin.component.less'],
 })
-export class SubscriptionAdminComponent implements OnChanges, OnDestroy {
+export class SubscriptionAdminComponent implements OnChanges {
   @Input()
   user: UserResponse | undefined;
   @Output()
-  closeEvent = new EventEmitter();
+  closeModal = new EventEmitter();
   subscription?: SubscriptionModel;
   endDate?: Date;
 
@@ -50,17 +49,15 @@ export class SubscriptionAdminComponent implements OnChanges, OnDestroy {
         error: () => (this.subscription = undefined),
       })
     );
-    this.subscriptions.push(
-      this.paymentService.getCustomer(user.id).subscribe({
-        error: () => {
-          this.notificationsService.info(
-            'Gestion impossible',
-            "L'utilisateur n'est pas rattaché à un moyen de paiement"
-          );
-          this.closeEvent.emit();
-        },
-      })
-    );
+    this.paymentService.getCustomer(user.id).subscribe({
+      error: () => {
+        this.notificationsService.info(
+          'Gestion impossible',
+          "L'utilisateur n'est pas rattaché à un moyen de paiement"
+        );
+        this.closeModal.emit();
+      },
+    });
   }
   canGetDate(current: Date) {
     return current.getTime() < new Date().getTime();

@@ -41,6 +41,10 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
+import {
+  CdkFixedSizeVirtualScroll,
+  CdkVirtualScrollViewport,
+} from '@angular/cdk/scrolling';
 
 @NgModule({
   declarations: [
@@ -90,6 +94,8 @@ import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
     NzCardModule,
     NzDividerModule,
     NzPopconfirmModule,
+    CdkFixedSizeVirtualScroll,
+    CdkVirtualScrollViewport,
   ],
 })
 export class WatchlistModule {}

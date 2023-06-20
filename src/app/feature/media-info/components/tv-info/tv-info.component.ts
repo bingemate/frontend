@@ -111,24 +111,21 @@ export class TvInfoComponent implements OnChanges, OnInit, OnDestroy {
   addToWatchlist(status: TvShowWatchListStatus) {
     if (this.tv) {
       this.subscriptions.push(
-        this.watchlistService
-          .createWatchlistItem({
+      this.watchlistService
+        .createWatchlistItem({
+          status,
+          tvShowId: this.tv.id,
+        })
+        .subscribe(() => {
+          this.notificationsService.success(
+            'La série a été ajouté aux séries suivis'
+          );
+          this.isMediaInWatchList = true;
+          this.watchlistItem = {
+            tvShowId: this.tv!.id,
             status,
-            tvShowId: this.tv.id,
-            viewedEpisodes: 0,
-          })
-          .subscribe(() => {
-            this.notificationsService.success(
-              'La série a été ajouté aux séries suivis'
-            );
-            this.isMediaInWatchList = true;
-            this.watchlistItem = {
-              tvShowId: this.tv!.id,
-              status,
-              userId: this.userId,
-              viewedEpisodes: 0,
-            };
-          })
+          };
+        })
       );
     }
   }
