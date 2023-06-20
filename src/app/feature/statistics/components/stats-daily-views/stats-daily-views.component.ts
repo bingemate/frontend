@@ -144,6 +144,13 @@ export class StatsDailyViewsComponent implements OnInit, OnChanges {
   }
 
   private getPeriodData(stats: readonly Statistic[], period: number) {
+    const dataMap: Map<string, number> = new Map<string, number>();
+    const currentDate = new Date();
+    currentDate.setDate(new Date().getDate() - period);
+    while (currentDate.getTime() <= new Date().getTime()) {
+      dataMap.set(format(new Date(currentDate), 'dd MMMM', { locale: fr }), 0);
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
     let statsFiltered = stats.filter(
       stat =>
         getDateDays(new Date().getTime()) -
@@ -153,14 +160,13 @@ export class StatsDailyViewsComponent implements OnInit, OnChanges {
     statsFiltered = statsFiltered.sort(
       (a, b) => a.startedAt.getTime() - b.startedAt.getTime()
     );
-    const watchTimePerDay = this.getWatchTimePerDay(statsFiltered);
-    const labels = Array.from(watchTimePerDay.keys());
-    const data = Array.from(watchTimePerDay.values());
+    this.getWatchTimePerDay(statsFiltered, dataMap);
+    const labels = Array.from(dataMap.keys());
+    const data = Array.from(dataMap.values());
     return { data, labels };
   }
 
-  private getWatchTimePerDay(stats: Statistic[]) {
-    const data: Map<string, number> = new Map<string, number>();
+  private getWatchTimePerDay(stats: Statistic[], data: Map<string, number>) {
     stats.forEach(stat => {
       const key = format(stat.startedAt, 'dd MMMM', { locale: fr });
       const value = data.get(key);
@@ -177,7 +183,6 @@ export class StatsDailyViewsComponent implements OnInit, OnChanges {
         );
       }
     });
-    return data;
   }
   private formatLabelTime(context: any) {
     let label = context.dataset.label || '';

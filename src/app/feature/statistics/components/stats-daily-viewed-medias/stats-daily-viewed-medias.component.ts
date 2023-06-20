@@ -133,6 +133,13 @@ export class StatsDailyViewedMediasComponent implements OnInit, OnChanges {
   }
 
   private getPeriodData(stats: readonly Statistic[], period: number) {
+    const dataMap: Map<string, number> = new Map<string, number>();
+    const currentDate = new Date();
+    currentDate.setDate(new Date().getDate() - period);
+    while (currentDate.getTime() <= new Date().getTime()) {
+      dataMap.set(format(new Date(currentDate), 'dd MMMM', { locale: fr }), 0);
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
     let statsFiltered = stats.filter(
       stat =>
         getDateDays(new Date().getTime()) -
@@ -142,14 +149,16 @@ export class StatsDailyViewedMediasComponent implements OnInit, OnChanges {
     statsFiltered = statsFiltered.sort(
       (a, b) => a.startedAt.getTime() - b.startedAt.getTime()
     );
-    const watchTimePerDay = this.getWatchedMediasPerDay(statsFiltered);
-    const labels = Array.from(watchTimePerDay.keys());
-    const data = Array.from(watchTimePerDay.values());
+    this.getWatchedMediasPerDay(statsFiltered, dataMap);
+    const labels = Array.from(dataMap.keys());
+    const data = Array.from(dataMap.values());
     return { data, labels };
   }
 
-  private getWatchedMediasPerDay(stats: Statistic[]) {
-    const data: Map<string, number> = new Map<string, number>();
+  private getWatchedMediasPerDay(
+    stats: Statistic[],
+    data: Map<string, number>
+  ) {
     const ids: Map<string, Set<number>> = new Map<string, Set<number>>();
     stats.forEach(stat => {
       const key = format(stat.startedAt, 'dd MMMM', { locale: fr });
@@ -168,6 +177,5 @@ export class StatsDailyViewedMediasComponent implements OnInit, OnChanges {
         data.set(key, value + 1);
       }
     });
-    return data;
   }
 }
