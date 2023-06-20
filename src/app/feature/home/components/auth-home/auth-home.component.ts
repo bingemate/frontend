@@ -58,42 +58,55 @@ export class AuthHomeComponent implements OnInit, OnDestroy {
     private readonly mediaInfoService: MediaInfoService,
     private readonly mediaDiscoverService: MediaDiscoverService,
     private readonly watchTogetherService: WatchTogetherService
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
       this.isOnPhone = result.matches;
     });
 
-    this.user$.subscribe(user => (this.user = user));
-    this.isSubscribed$.subscribe(
-      isSubscribed => (this.isSubscribed = isSubscribed)
+    this.subscriptions.push(this.user$.subscribe(user => (this.user = user)));
+    this.subscriptions.push(
+      this.isSubscribed$.subscribe(
+        isSubscribed => (this.isSubscribed = isSubscribed)
+      )
     );
-  }
-
-  ngOnInit(): void {
-    forkJoin([
-      this.episodeHistoryService.getEpisodeHistory(),
-      this.movieHistoryService.getMovieHistory(),
-    ]).subscribe(
-      ([episodeHistory, movieHistory]) =>
-        (this.history = [...episodeHistory, ...movieHistory]
-          .filter(history => history.stoppedAt < 0.9)
-          .sort((a, b) => b.viewedAt.getTime() - a.viewedAt.getTime()))
+    this.subscriptions.push(
+      forkJoin([
+        this.episodeHistoryService.getEpisodeHistory(),
+        this.movieHistoryService.getMovieHistory(),
+      ]).subscribe(
+        ([episodeHistory, movieHistory]) =>
+          (this.history = [...episodeHistory, ...movieHistory]
+            .filter(history => history.stoppedAt < 0.9)
+            .sort((a, b) => b.viewedAt.getTime() - a.viewedAt.getTime()))
+      )
     );
-    this.mediaDiscoverService.getPopularMovies().subscribe(movies => {
-      this.popularMovies = movies.results;
-    });
-    this.mediaDiscoverService.getPopularTvShows().subscribe(tvShows => {
-      this.popularTvShows = tvShows.results;
-    });
-    this.mediaDiscoverService.getRecentTvShows(true).subscribe(tvShows => {
-      this.recentTvShows = tvShows;
-    });
-    this.mediaDiscoverService.getRecentMovies(true).subscribe(movies => {
-      this.recentMovies = movies;
-    });
-    this.invitedRooms$
-      .pipe(filter(rooms => rooms !== undefined && rooms !== null))
-      .subscribe(rooms => (this.rooms = rooms));
+    this.subscriptions.push(
+      this.mediaDiscoverService.getPopularMovies().subscribe(movies => {
+        this.popularMovies = movies.results;
+      })
+    );
+    this.subscriptions.push(
+      this.mediaDiscoverService.getPopularTvShows().subscribe(tvShows => {
+        this.popularTvShows = tvShows.results;
+      })
+    );
+    this.subscriptions.push(
+      this.mediaDiscoverService.getRecentTvShows(true).subscribe(tvShows => {
+        this.recentTvShows = tvShows;
+      })
+    );
+    this.subscriptions.push(
+      this.mediaDiscoverService.getRecentMovies(true).subscribe(movies => {
+        this.recentMovies = movies;
+      })
+    );
+    this.subscriptions.push(
+      this.invitedRooms$
+        .pipe(filter(rooms => rooms !== undefined && rooms !== null))
+        .subscribe(rooms => (this.rooms = rooms))
+    );
     this.subscriptions.push(
       interval(5000).subscribe(() => this.watchTogetherService.getRooms())
     );

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UserResponse } from '../../../shared/models/user.models';
 import {
   CommentResults,
@@ -21,7 +21,7 @@ import { MoviePlaylist } from '../../../shared/models/movie-playlist.model';
 import { EpisodePlaylistsService } from '../../../feature/playlist/episode-playlists.service';
 import { Select } from '@ngxs/store';
 import { AuthState } from '../../../core/auth/store/auth.state';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
@@ -29,7 +29,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
   templateUrl: './user-view.component.html',
   styleUrls: ['./user-view.component.less'],
 })
-export class UserViewComponent {
+export class UserViewComponent implements OnInit, OnDestroy {
   isOnPhone = false;
 
   @Select(AuthState.isAdmin)
@@ -59,6 +59,8 @@ export class UserViewComponent {
   friends: FriendResponse[] = [];
   friendsLoading = false;
 
+  subscriptions: Subscription[] = [];
+
   constructor(
     private breakpointObserver: BreakpointObserver,
     private readonly currentRoute: ActivatedRoute,
@@ -69,44 +71,58 @@ export class UserViewComponent {
     private readonly friendshipService: FriendshipService,
     private readonly episodePlaylistService: EpisodePlaylistsService,
     private readonly moviePlaylistService: MoviePlaylistsService
-  ) {
-    this.breakpointObserver
-      .observe([Breakpoints.HandsetPortrait])
-      .subscribe(result => {
-        this.isOnPhone = result.matches;
-      });
-    this.currentRoute.params.subscribe(params => {
-      this.userID = params['id'];
-      this.getUser();
-      this.onGetUserFriends();
-    });
-    this.isAdmin$.subscribe(isAdmin => {
-      this.isAdmin = isAdmin;
-    });
+  ) {}
+
+  ngOnInit(): void {
+    this.subscriptions.push(
+      this.breakpointObserver
+        .observe([Breakpoints.HandsetPortrait])
+        .subscribe(result => {
+          this.isOnPhone = result.matches;
+        })
+    );
+    this.subscriptions.push(
+      this.currentRoute.params.subscribe(params => {
+        this.userID = params['id'];
+        this.getUser();
+        this.onGetUserFriends();
+      })
+    );
+    this.subscriptions.push(
+      this.isAdmin$.subscribe(isAdmin => {
+        this.isAdmin = isAdmin;
+      })
+    );
   }
 
   getUser() {
     this.userLoading = true;
-    this.userService.getUser(this.userID).subscribe(user => {
-      this.user = user;
-      this.userLoading = false;
-    });
+    this.subscriptions.push(
+      this.userService.getUser(this.userID).subscribe(user => {
+        this.user = user;
+        this.userLoading = false;
+      })
+    );
   }
 
   onGetUserMovieComments() {
-    this.commentService
-      .getUserMovieComments(this.userID, this.movieCommentsCurrentPage)
-      .subscribe(comments => {
-        this.movieComments = comments;
-      });
+    this.subscriptions.push(
+      this.commentService
+        .getUserMovieComments(this.userID, this.movieCommentsCurrentPage)
+        .subscribe(comments => {
+          this.movieComments = comments;
+        })
+    );
   }
 
   onGetUserTvComments() {
-    this.commentService
-      .getUserTvComments(this.userID, this.tvCommentsCurrentPage)
-      .subscribe(comments => {
-        this.tvComments = comments;
-      });
+    this.subscriptions.push(
+      this.commentService
+        .getUserTvComments(this.userID, this.tvCommentsCurrentPage)
+        .subscribe(comments => {
+          this.tvComments = comments;
+        })
+    );
   }
 
   onMovieCommentsPageChange(page: number): void {
@@ -137,19 +153,23 @@ export class UserViewComponent {
   }
 
   onGetUserMovieRatings() {
-    this.ratingService
-      .getUserMovieRatings(this.userID, this.movieRatingsCurrentPage)
-      .subscribe(ratings => {
-        this.movieRatings = ratings;
-      });
+    this.subscriptions.push(
+      this.ratingService
+        .getUserMovieRatings(this.userID, this.movieRatingsCurrentPage)
+        .subscribe(ratings => {
+          this.movieRatings = ratings;
+        })
+    );
   }
 
   onGetUserTvRatings() {
-    this.ratingService
-      .getUserTvRatings(this.userID, this.tvRatingsCurrentPage)
-      .subscribe(ratings => {
-        this.tvRatings = ratings;
-      });
+    this.subscriptions.push(
+      this.ratingService
+        .getUserTvRatings(this.userID, this.tvRatingsCurrentPage)
+        .subscribe(ratings => {
+          this.tvRatings = ratings;
+        })
+    );
   }
 
   onMovieRatingsPageChange(page: number): void {
@@ -182,26 +202,36 @@ export class UserViewComponent {
   onGetUserFriends() {
     this.friendsLoading = true;
 
-    this.friendshipService.getUserFriends(this.userID).subscribe(friends => {
-      this.friendsLoading = false;
-      this.friends = friends;
-    });
+    this.subscriptions.push(
+      this.friendshipService.getUserFriends(this.userID).subscribe(friends => {
+        this.friendsLoading = false;
+        this.friends = friends;
+      })
+    );
   }
 
   onGetUserPlaylists() {
     this.playlistsLoading = true;
-    this.episodePlaylistService
-      .getEpisodePlaylists(this.userID)
-      .subscribe(playlists => {
-        this.playlistsLoading = false;
-        this.episodePlaylists = playlists;
-      });
-    this.moviePlaylistService
-      .getMoviePlaylists(this.userID)
-      .subscribe(playlists => {
-        this.playlistsLoading = false;
-        this.moviePlaylists = playlists;
-      });
+    this.subscriptions.push(
+      this.episodePlaylistService
+        .getEpisodePlaylists(this.userID)
+        .subscribe(playlists => {
+          this.playlistsLoading = false;
+          this.episodePlaylists = playlists;
+        })
+    );
+    this.subscriptions.push(
+      this.moviePlaylistService
+        .getMoviePlaylists(this.userID)
+        .subscribe(playlists => {
+          this.playlistsLoading = false;
+          this.moviePlaylists = playlists;
+        })
+    );
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   protected readonly playlistViewLinks = playlistViewLinks;

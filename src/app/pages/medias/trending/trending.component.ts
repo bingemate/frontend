@@ -1,17 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   MovieResponse,
   TvShowResponse,
 } from '../../../shared/models/media.models';
 import { MediaDiscoverService } from '../../../feature/media-info/media-discover.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-trending',
   templateUrl: './trending.component.html',
   styleUrls: ['./trending.component.less'],
 })
-export class TrendingComponent implements OnInit {
+export class TrendingComponent implements OnInit, OnDestroy {
   isOnPhone = false;
 
   popularMovies: MovieResponse[] = [];
@@ -34,16 +35,18 @@ export class TrendingComponent implements OnInit {
 
   onlyAvailable = false;
 
+  subscriptions: Subscription[] = [];
+
   constructor(
     private breakpointObserver: BreakpointObserver,
     private mediaDiscoverService: MediaDiscoverService
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
       this.isOnPhone = result.matches;
     });
-  }
 
-  ngOnInit(): void {
     this.getPopularMovies();
     this.getRecentMovies();
     this.getPopularTvShows();
@@ -53,44 +56,52 @@ export class TrendingComponent implements OnInit {
 
   getPopularMovies(): void {
     this.popularMoviesLoading = true;
-    this.mediaDiscoverService
-      .getPopularMovies(this.popularMoviesPage, this.onlyAvailable)
-      .subscribe(movies => {
-        this.popularMoviesLoading = false;
-        this.popularMoviesTotalResults = movies.totalResult;
-        this.popularMovies = movies.results;
-      });
+    this.subscriptions.push(
+      this.mediaDiscoverService
+        .getPopularMovies(this.popularMoviesPage, this.onlyAvailable)
+        .subscribe(movies => {
+          this.popularMoviesLoading = false;
+          this.popularMoviesTotalResults = movies.totalResult;
+          this.popularMovies = movies.results;
+        })
+    );
   }
 
   getRecentMovies(): void {
     this.recentMoviesLoading = true;
-    this.mediaDiscoverService
-      .getRecentMovies(this.onlyAvailable)
-      .subscribe(movies => {
-        this.recentMoviesLoading = false;
-        this.recentMovies = movies;
-      });
+    this.subscriptions.push(
+      this.mediaDiscoverService
+        .getRecentMovies(this.onlyAvailable)
+        .subscribe(movies => {
+          this.recentMoviesLoading = false;
+          this.recentMovies = movies;
+        })
+    );
   }
 
   getPopularTvShows(): void {
     this.popularTvShowsLoading = true;
-    this.mediaDiscoverService
-      .getPopularTvShows(this.popularTvShowsPage, this.onlyAvailable)
-      .subscribe(tvShows => {
-        this.popularTvShowsLoading = false;
-        this.popularTvShowsTotalResults = tvShows.totalResult;
-        this.popularTvShows = tvShows.results;
-      });
+    this.subscriptions.push(
+      this.mediaDiscoverService
+        .getPopularTvShows(this.popularTvShowsPage, this.onlyAvailable)
+        .subscribe(tvShows => {
+          this.popularTvShowsLoading = false;
+          this.popularTvShowsTotalResults = tvShows.totalResult;
+          this.popularTvShows = tvShows.results;
+        })
+    );
   }
 
   getRecentTvShows(): void {
     this.recentTvShowsLoading = true;
-    this.mediaDiscoverService
-      .getRecentTvShows(this.onlyAvailable)
-      .subscribe(tvShows => {
-        this.recentTvShowsLoading = false;
-        this.recentTvShows = tvShows;
-      });
+    this.subscriptions.push(
+      this.mediaDiscoverService
+        .getRecentTvShows(this.onlyAvailable)
+        .subscribe(tvShows => {
+          this.recentTvShowsLoading = false;
+          this.recentTvShows = tvShows;
+        })
+    );
   }
 
   onPopularMoviesPageChange(page: number): void {
@@ -112,26 +123,34 @@ export class TrendingComponent implements OnInit {
     this.moviesByCommentsLoading = true;
     this.tvShowsByCommentsLoading = true;
     this.mediaByComments = [];
-    this.mediaDiscoverService
-      .getMoviesByComments(this.onlyAvailable)
-      .subscribe(media => {
-        this.moviesByCommentsLoading = false;
-        this.mediaByComments.push(
-          ...media.map(
-            m => ({ type: 'movie', id: m } as { type: 'movie'; id: number })
-          )
-        );
-      });
-    this.mediaDiscoverService
-      .getTvShowsByComments(this.onlyAvailable)
-      .subscribe(media => {
-        this.tvShowsByCommentsLoading = false;
-        this.mediaByComments.push(
-          ...media.map(
-            m => ({ type: 'tv', id: m } as { type: 'tv'; id: number })
-          )
-        );
-      });
+    this.subscriptions.push(
+      this.mediaDiscoverService
+        .getMoviesByComments(this.onlyAvailable)
+        .subscribe(media => {
+          this.moviesByCommentsLoading = false;
+          this.mediaByComments.push(
+            ...media.map(
+              m => ({ type: 'movie', id: m } as { type: 'movie'; id: number })
+            )
+          );
+        })
+    );
+    this.subscriptions.push(
+      this.mediaDiscoverService
+        .getTvShowsByComments(this.onlyAvailable)
+        .subscribe(media => {
+          this.tvShowsByCommentsLoading = false;
+          this.mediaByComments.push(
+            ...media.map(
+              m => ({ type: 'tv', id: m } as { type: 'tv'; id: number })
+            )
+          );
+        })
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   protected readonly Math = Math;

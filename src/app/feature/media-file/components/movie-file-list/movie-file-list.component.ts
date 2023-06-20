@@ -27,6 +27,7 @@ export class MovieFileListComponent implements OnInit, OnDestroy {
 
   inputSubject: Subject<string> = new Subject<string>();
   private subscription: Subscription;
+  subscriptions: Subscription[] = [];
 
   constructor(
     private readonly mediaFileService: MediaFileService,
@@ -59,12 +60,14 @@ export class MovieFileListComponent implements OnInit, OnDestroy {
 
   search() {
     this.loading = true;
-    this.mediaFileService
-      .searchMovieFiles(this.query, this.currentPage, this.pageSize)
-      .subscribe(movieFilesResults => {
-        this.movieFilesResults = movieFilesResults;
-        this.loading = false;
-      });
+    this.subscriptions.push(
+      this.mediaFileService
+        .searchMovieFiles(this.query, this.currentPage, this.pageSize)
+        .subscribe(movieFilesResults => {
+          this.movieFilesResults = movieFilesResults;
+          this.loading = false;
+        })
+    );
   }
 
   onPageIndexChange(pageIndex: number) {
@@ -79,21 +82,24 @@ export class MovieFileListComponent implements OnInit, OnDestroy {
 
   onDelete(id: string) {
     this.movieDeleting = true;
-    this.mediaFileService.deleteMediaFile(id).subscribe({
-      next: () => {
-        this.notificationsService.success(
-          'Le fichier du film a bien été supprimé'
-        );
-        this.search();
-      },
-      complete: () => {
-        this.movieDeleting = false;
-      },
-    });
+    this.subscriptions.push(
+      this.mediaFileService.deleteMediaFile(id).subscribe({
+        next: () => {
+          this.notificationsService.success(
+            'Le fichier du film a bien été supprimé'
+          );
+          this.search();
+        },
+        complete: () => {
+          this.movieDeleting = false;
+        },
+      })
+    );
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
   protected readonly getBadgeColor = getBadgeColor;

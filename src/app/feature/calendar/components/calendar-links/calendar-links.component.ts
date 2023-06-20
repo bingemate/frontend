@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Select } from '@ngxs/store';
 import { AuthState } from '../../../../core/auth/store/auth.state';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { UserResponse } from '../../../../shared/models/user.models';
 import { API_RESOURCE_URI } from '../../../../shared/api-resource-uri/api-resources-uri';
 
@@ -10,7 +10,7 @@ import { API_RESOURCE_URI } from '../../../../shared/api-resource-uri/api-resour
   templateUrl: './calendar-links.component.html',
   styleUrls: ['./calendar-links.component.less'],
 })
-export class CalendarLinksComponent {
+export class CalendarLinksComponent implements OnInit, OnDestroy {
   @Select(AuthState.user) user$!: Observable<UserResponse>;
   user: UserResponse | null = null;
 
@@ -19,7 +19,13 @@ export class CalendarLinksComponent {
     movies: API_RESOURCE_URI.MEDIA_INFO + '/calendar/movies/ical/',
   };
 
-  constructor() {
-    this.user$.subscribe(user => (this.user = user));
+  subscriptions: Subscription[] = [];
+
+  ngOnInit(): void {
+    this.subscriptions.push(this.user$.subscribe(user => (this.user = user)));
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 }

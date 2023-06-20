@@ -52,14 +52,17 @@ export class StreamComponent implements OnInit, OnDestroy {
     private keycloak: KeycloakService,
     private mediaInfoService: MediaInfoService,
     private watchTogetherService: WatchTogetherService
-  ) {
-    this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
-      this.isOnPhone = result.matches;
-    });
-  }
+  ) {}
 
   ngOnInit(): void {
-    this.room$.subscribe(room => (this.room = room));
+    this.subscriptions.push(
+      this.breakpointObserver
+        .observe([Breakpoints.Handset])
+        .subscribe(result => {
+          this.isOnPhone = result.matches;
+        })
+    );
+    this.subscriptions.push(this.room$.subscribe(room => (this.room = room)));
     this.subscriptions.push(
       this.keycloak.keycloakEvents$.subscribe(async event => {
         if (event.type === KeycloakEventType.OnTokenExpired) {

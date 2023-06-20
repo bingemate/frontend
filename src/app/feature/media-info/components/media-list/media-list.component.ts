@@ -1,17 +1,18 @@
-import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import {
   MediaType,
   MovieResponse,
   TvShowResponse,
 } from '../../../../shared/models/media.models';
 import { MediaInfoService } from '../../media-info.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-media-list',
   templateUrl: './media-list.component.html',
   styleUrls: ['./media-list.component.less'],
 })
-export class MediaListComponent implements OnInit, OnChanges {
+export class MediaListComponent implements OnInit, OnChanges, OnDestroy {
   @Input() mediaIds: {
     id: number;
     type: 'tv' | 'movie';
@@ -22,6 +23,8 @@ export class MediaListComponent implements OnInit, OnChanges {
     movieResponse?: MovieResponse;
     tvShowResponse?: TvShowResponse;
   }[] = [];
+
+  subscriptions: Subscription[] = [];
 
   constructor(private readonly mediaService: MediaInfoService) {}
 
@@ -41,24 +44,32 @@ export class MediaListComponent implements OnInit, OnChanges {
 
   getMedia(mediaId: number, type: 'movie' | 'tv', index: number) {
     if (type === 'tv') {
-      this.mediaService.getTvShowShortInfo(mediaId).subscribe({
-        next: tvShow => {
-          this.medias[index] = {
-            type: MediaType.TvShow,
-            tvShowResponse: tvShow,
-          };
-        },
-      });
+      this.subscriptions.push(
+        this.mediaService.getTvShowShortInfo(mediaId).subscribe({
+          next: tvShow => {
+            this.medias[index] = {
+              type: MediaType.TvShow,
+              tvShowResponse: tvShow,
+            };
+          },
+        })
+      );
     } else {
-      this.mediaService.getMovieShortInfo(mediaId).subscribe({
-        next: movie => {
-          this.medias[index] = {
-            type: MediaType.Movie,
-            movieResponse: movie,
-          };
-        },
-      });
+      this.subscriptions.push(
+        this.mediaService.getMovieShortInfo(mediaId).subscribe({
+          next: movie => {
+            this.medias[index] = {
+              type: MediaType.Movie,
+              movieResponse: movie,
+            };
+          },
+        })
+      );
     }
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   protected readonly MediaType = MediaType;

@@ -73,13 +73,16 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
     private readonly store: Store,
     private breakpointObserver: BreakpointObserver,
     private watchTogetherService: WatchTogetherService
-  ) {
-    this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
-      this.isOnPhone = result.matches;
-    });
-  }
+  ) {}
 
   ngOnInit() {
+    this.subscriptions.push(
+      this.breakpointObserver
+        .observe([Breakpoints.Handset])
+        .subscribe(result => {
+          this.isOnPhone = result.matches;
+        })
+    );
     this.loadMediaInfo();
     this.loadMediaFileInfo();
     this.subscriptions.push(
@@ -162,22 +165,26 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   onPlayerReady(api: VgApiService) {
-    this.position$.subscribe(position => {
-      position = position * api.duration;
-      if (position > api.currentTime + 2 || position < api.currentTime - 2) {
-        api.seekTime(position);
-      }
-    });
-    this.status$.subscribe(status => {
-      if (status === WatchTogetherStatus.PAUSED && api.state === 'playing') {
-        api.pause();
-      } else if (
-        status === WatchTogetherStatus.PLAYING &&
-        api.state === 'paused'
-      ) {
-        api.play();
-      }
-    });
+    this.subscriptions.push(
+      this.position$.subscribe(position => {
+        position = position * api.duration;
+        if (position > api.currentTime + 2 || position < api.currentTime - 2) {
+          api.seekTime(position);
+        }
+      })
+    );
+    this.subscriptions.push(
+      this.status$.subscribe(status => {
+        if (status === WatchTogetherStatus.PAUSED && api.state === 'playing') {
+          api.pause();
+        } else if (
+          status === WatchTogetherStatus.PLAYING &&
+          api.state === 'paused'
+        ) {
+          api.play();
+        }
+      })
+    );
     this.subscriptions.push(
       api
         .getDefaultMedia()

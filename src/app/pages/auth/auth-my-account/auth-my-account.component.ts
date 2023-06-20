@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Select } from '@ngxs/store';
 import { AuthState } from '../../../core/auth/store/auth.state';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { UserResponse } from '../../../shared/models/user.models';
 import { HttpClient } from '@angular/common/http';
 import { API_RESOURCE_URI } from '../../../shared/api-resource-uri/api-resources-uri';
@@ -22,7 +22,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
   templateUrl: './auth-my-account.component.html',
   styleUrls: ['./auth-my-account.component.less'],
 })
-export class AuthMyAccountComponent implements OnInit {
+export class AuthMyAccountComponent implements OnInit, OnDestroy {
   @Select(AuthState.user)
   user$!: Observable<UserResponse>;
   user: UserResponse | null = null;
@@ -43,27 +43,32 @@ export class AuthMyAccountComponent implements OnInit {
   tvRatings: RatingResults = emptyRatingResults;
   tvRatingsCurrentPage = 1;
 
+  subscriptions: Subscription[] = [];
+
   constructor(
     private breakpointObserver: BreakpointObserver,
     private readonly httpClient: HttpClient,
     private readonly commentService: CommentService,
     private readonly ratingService: RatingService
-  ) {
-    this.breakpointObserver
-      .observe([Breakpoints.HandsetPortrait])
-      .subscribe(result => {
-        this.isOnPhone = result.matches;
-      });
-  }
+  ) {}
 
   ngOnInit() {
+    this.subscriptions.push(
+      this.breakpointObserver
+        .observe([Breakpoints.HandsetPortrait])
+        .subscribe(result => {
+          this.isOnPhone = result.matches;
+        })
+    );
     this.subscribeForAuthEvents();
   }
 
   subscribeForAuthEvents() {
-    this.user$.subscribe(user => {
-      this.user = user;
-    });
+    this.subscriptions.push(
+      this.user$.subscribe(user => {
+        this.user = user;
+      })
+    );
   }
 
   getHttpBin() {
@@ -79,19 +84,26 @@ export class AuthMyAccountComponent implements OnInit {
   }
 
   onGetUserMovieComments() {
-    this.commentService
-      .getUserMovieComments(this.user?.id ?? '', this.movieCommentsCurrentPage)
-      .subscribe(comments => {
-        this.movieComments = comments;
-      });
+    this.subscriptions.push(
+      this.commentService
+        .getUserMovieComments(
+          this.user?.id ?? '',
+          this.movieCommentsCurrentPage
+        )
+        .subscribe(comments => {
+          this.movieComments = comments;
+        })
+    );
   }
 
   onGetUserTvComments() {
-    this.commentService
-      .getUserTvComments(this.user?.id ?? '', this.tvCommentsCurrentPage)
-      .subscribe(comments => {
-        this.tvComments = comments;
-      });
+    this.subscriptions.push(
+      this.commentService
+        .getUserTvComments(this.user?.id ?? '', this.tvCommentsCurrentPage)
+        .subscribe(comments => {
+          this.tvComments = comments;
+        })
+    );
   }
 
   onMovieCommentsPageChange(page: number): void {
@@ -122,19 +134,23 @@ export class AuthMyAccountComponent implements OnInit {
   }
 
   onGetUserMovieRatings() {
-    this.ratingService
-      .getUserMovieRatings(this.user?.id ?? '', this.movieRatingsCurrentPage)
-      .subscribe(ratings => {
-        this.movieRatings = ratings;
-      });
+    this.subscriptions.push(
+      this.ratingService
+        .getUserMovieRatings(this.user?.id ?? '', this.movieRatingsCurrentPage)
+        .subscribe(ratings => {
+          this.movieRatings = ratings;
+        })
+    );
   }
 
   onGetUserTvRatings() {
-    this.ratingService
-      .getUserTvRatings(this.user?.id ?? '', this.tvRatingsCurrentPage)
-      .subscribe(ratings => {
-        this.tvRatings = ratings;
-      });
+    this.subscriptions.push(
+      this.ratingService
+        .getUserTvRatings(this.user?.id ?? '', this.tvRatingsCurrentPage)
+        .subscribe(ratings => {
+          this.tvRatings = ratings;
+        })
+    );
   }
 
   onMovieRatingsPageChange(page: number): void {
@@ -162,5 +178,9 @@ export class AuthMyAccountComponent implements OnInit {
   onRefreshTvRatings(): void {
     this.tvRatingsCurrentPage = 1;
     this.onGetUserTvRatings();
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 }

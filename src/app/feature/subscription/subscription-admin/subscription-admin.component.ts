@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { PaymentService } from '../payment.service';
 import { UserResponse } from '../../../shared/models/user.models';
-import { mergeMap } from 'rxjs';
+import { mergeMap, Subscription } from 'rxjs';
 import { SubscriptionModel } from '../../../shared/models/streaming.model';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 
@@ -24,6 +24,8 @@ export class SubscriptionAdminComponent implements OnChanges {
   closeModal = new EventEmitter();
   subscription?: SubscriptionModel;
   endDate?: Date;
+
+  subscriptions: Subscription[] = [];
 
   constructor(
     private paymentService: PaymentService,
@@ -41,9 +43,11 @@ export class SubscriptionAdminComponent implements OnChanges {
   }
 
   getCustomer(user: UserResponse) {
-    this.paymentService.getSubscriptionDetails(user.id).subscribe(
-      subscription => (this.subscription = subscription),
-      () => (this.subscription = undefined)
+    this.subscriptions.push(
+      this.paymentService.getSubscriptionDetails(user.id).subscribe({
+        next: subscription => (this.subscription = subscription),
+        error: () => (this.subscription = undefined),
+      })
     );
     this.paymentService.getCustomer(user.id).subscribe({
       error: () => {
@@ -60,22 +64,30 @@ export class SubscriptionAdminComponent implements OnChanges {
   }
 
   cancelSubscription() {
-    this.paymentService
-      .cancelSubscription(this.user!.id)
-      .subscribe(() => (this.subscription = undefined));
+    this.subscriptions.push(
+      this.paymentService
+        .cancelSubscription(this.user!.id)
+        .subscribe(() => (this.subscription = undefined))
+    );
   }
 
   createSubscription() {
-    this.paymentService
-      .createSubscription({
-        cancelAt: this.endDate ? this.endDate.getTime() / 1000 : undefined,
-        userId: this.user!.id,
-      })
-      .pipe(
-        mergeMap(() =>
-          this.paymentService.getSubscriptionDetails(this.user!.id)
+    this.subscriptions.push(
+      this.paymentService
+        .createSubscription({
+          cancelAt: this.endDate ? this.endDate.getTime() / 1000 : undefined,
+          userId: this.user!.id,
+        })
+        .pipe(
+          mergeMap(() =>
+            this.paymentService.getSubscriptionDetails(this.user!.id)
+          )
         )
-      )
-      .subscribe(sub => (this.subscription = sub));
+        .subscribe(sub => (this.subscription = sub))
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 }
