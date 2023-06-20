@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable, Subject, Subscription } from 'rxjs';
 import {
   MovieResults,
@@ -15,7 +15,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
   templateUrl: './media-search.component.html',
   styleUrls: ['./media-search.component.less'],
 })
-export class MediaSearchComponent implements OnDestroy {
+export class MediaSearchComponent implements OnInit, OnDestroy {
   isOnPhone = false;
 
   @Select(MediaSearchState.query)
@@ -30,6 +30,7 @@ export class MediaSearchComponent implements OnDestroy {
 
   inputSubject: Subject<string> = new Subject<string>();
   private subscription: Subscription;
+  subscriptions: Subscription[] = [];
 
   @Select(MediaSearchState.movies)
   movieResults$!: Observable<MovieResults>;
@@ -44,17 +45,27 @@ export class MediaSearchComponent implements OnDestroy {
     private breakpointObserver: BreakpointObserver,
     private store: Store
   ) {
-    this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
-      this.isOnPhone = result.matches;
-    });
     this.subscription = this.inputSubject
       .pipe(debounceTime(1000))
       .subscribe(() => {
         this.search();
       });
-    this.query$.subscribe(query => {
-      this.query = query;
-    });
+  }
+
+  ngOnInit(): void {
+    this.subscriptions.push(
+      this.breakpointObserver
+        .observe([Breakpoints.Handset])
+        .subscribe(result => {
+          this.isOnPhone = result.matches;
+        })
+    );
+
+    this.subscriptions.push(
+      this.query$.subscribe(query => {
+        this.query = query;
+      })
+    );
   }
 
   onInput() {
@@ -107,6 +118,7 @@ export class MediaSearchComponent implements OnDestroy {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   protected readonly Math = Math;
