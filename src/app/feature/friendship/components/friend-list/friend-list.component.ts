@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import {
   FriendResponse,
   FriendState,
@@ -7,13 +14,14 @@ import { FriendshipService } from '../../friendship.service';
 import { userProfilViewLinks } from '../../../../pages/social-network/social-network-routing.module';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-friend-list',
   templateUrl: './friend-list.component.html',
   styleUrls: ['./friend-list.component.less'],
 })
-export class FriendListComponent {
+export class FriendListComponent implements OnInit, OnDestroy {
   isOnPhone = false;
 
   @Input() friends: FriendResponse[] = [];
@@ -25,62 +33,80 @@ export class FriendListComponent {
   @Output()
   friendUpdated: EventEmitter<void> = new EventEmitter();
 
+  subscriptions: Subscription[] = [];
+
   constructor(
     private breakpointObserver: BreakpointObserver,
     private readonly friendshipService: FriendshipService,
     private readonly notificationsService: NotificationsService
-  ) {
-    this.breakpointObserver
-      .observe([Breakpoints.HandsetPortrait])
-      .subscribe(result => {
-        this.isOnPhone = result.matches;
-      });
+  ) {}
+
+  ngOnInit(): void {
+    this.subscriptions.push(
+      this.breakpointObserver
+        .observe([Breakpoints.HandsetPortrait])
+        .subscribe(result => {
+          this.isOnPhone = result.matches;
+        })
+    );
   }
 
   protected readonly userProfilViewLinks = userProfilViewLinks;
   protected readonly FriendState = FriendState;
 
   acceptFriend(friendId: string) {
-    this.friendshipService
-      .updateFriend({
-        friendId,
-        state: FriendState.ACCEPTED,
-      })
-      .subscribe(() => {
-        this.notificationsService.success('Demande acceptée');
-        this.friendUpdated.emit();
-      });
+    this.subscriptions.push(
+      this.friendshipService
+        .updateFriend({
+          friendId,
+          state: FriendState.ACCEPTED,
+        })
+        .subscribe(() => {
+          this.notificationsService.success('Demande acceptée');
+          this.friendUpdated.emit();
+        })
+    );
   }
 
   rejectFriend(friendId: string) {
-    this.friendshipService
-      .updateFriend({
-        friendId,
-        state: FriendState.REJECTED,
-      })
-      .subscribe(() => {
-        this.notificationsService.success('Demande rejetée');
-        this.friendUpdated.emit();
-      });
+    this.subscriptions.push(
+      this.friendshipService
+        .updateFriend({
+          friendId,
+          state: FriendState.REJECTED,
+        })
+        .subscribe(() => {
+          this.notificationsService.success('Demande rejetée');
+          this.friendUpdated.emit();
+        })
+    );
   }
 
   blockFriend(friendId: string) {
-    this.friendshipService
-      .updateFriend({
-        friendId,
-        state: FriendState.BLOCKED,
-      })
-      .subscribe(() => {
-        this.notificationsService.success('Utilisateur bloqué');
-        this.friendUpdated.emit();
-      });
+    this.subscriptions.push(
+      this.friendshipService
+        .updateFriend({
+          friendId,
+          state: FriendState.BLOCKED,
+        })
+        .subscribe(() => {
+          this.notificationsService.success('Utilisateur bloqué');
+          this.friendUpdated.emit();
+        })
+    );
   }
 
   deleteFriend(friendId: string) {
-    this.friendshipService.deleteFriend(friendId).subscribe(() => {
-      this.notificationsService.success('Ami supprimé');
-      this.friendUpdated.emit();
-    });
+    this.subscriptions.push(
+      this.friendshipService.deleteFriend(friendId).subscribe(() => {
+        this.notificationsService.success('Ami supprimé');
+        this.friendUpdated.emit();
+      })
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
   mapStateToLabel(state: FriendState): string {
