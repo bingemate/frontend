@@ -158,6 +158,8 @@ export class WatchlistComponent implements OnInit, OnDestroy {
         const episodeItems: EpisodeWatchlistItem[] = episodes.map(episode => ({
           episodeId: episode.id,
           name: episode.name,
+          episode: episode.episodeNumber,
+          season: episode.seasonNumber,
           tvShowId: item.watchlist.tvShowId,
           saved: false,
           status: '-',

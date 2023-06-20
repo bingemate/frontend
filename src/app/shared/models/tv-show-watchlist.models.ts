@@ -8,6 +8,8 @@ export interface EpisodeWatchlistItem {
   episodeId: number;
   tvShowId: number;
   name: string;
+  episode: number;
+  season: number;
   saved: boolean;
   status: string;
 }
