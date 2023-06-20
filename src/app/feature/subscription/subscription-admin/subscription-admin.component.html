@@ -1,0 +1,45 @@
+<ng-container *ngIf="subscription; else notSubscribed">
+  <p>Abonné depuis le {{ subscription.startedAt | date : 'dd/MM/yyyy' }}</p>
+  <p *ngIf="subscription.isCanceled">
+    L'abonnement prendra fin le {{ subscription.endAt | date : 'dd/MM/yyyy' }}
+  </p>
+  <nz-tag
+    *ngIf="subscription.discount"
+    [nzColor]="'magenta'"
+    nz-tooltip
+    nzTooltipPlacement="bottom"
+    nzTooltipTitle="{{ subscription.discount.percent }}% de réduction"
+    >{{ subscription.discount.code }}</nz-tag
+  >
+  <button
+    nz-popconfirm
+    nzPopconfirmTitle="Voulez vous vraiment annuler cet abonnement ?"
+    nzPopconfirmPlacement="top"
+    (nzOnConfirm)="cancelSubscription()"
+    nzOkText="Oui"
+    nz-button
+    nzType="primary"
+    nzSize="small"
+    nzDanger>
+    Annuler l'abonnement
+  </button>
+</ng-container>
+
+<ng-template #notSubscribed>
+  <h1>Créer un abonnement</h1>
+  <nz-date-picker
+    [(ngModel)]="endDate"
+    [nzDisabledDate]="canGetDate"></nz-date-picker>
+
+  <button
+    nz-popconfirm
+    nzPopconfirmTitle="Voulez vous vraiment créer cet abonnement ?"
+    nzPopconfirmPlacement="top"
+    (nzOnConfirm)="createSubscription()"
+    nzOkText="Oui"
+    nz-button
+    nzType="primary"
+    nzSize="small">
+    Créer
+  </button>
+</ng-template>
