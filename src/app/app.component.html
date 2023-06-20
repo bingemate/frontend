@@ -183,7 +183,7 @@
           </span>
           {{ currentSectionName }}
         </nz-page-header-title>
-        <nz-page-header-extra class="hide-on-phone">
+        <nz-page-header-extra class="hide-on-phone" *ngIf="isAuthenticated">
           <nz-space nzAlign="baseline" nzSize="small">
             <button
               [hidden]="!isAdmin"
