@@ -102,7 +102,7 @@
   <ng-template #modalContent>
     <app-subscription-admin
       [user]="subModalUser"
-      (close)="closeSubscriptionModal()"></app-subscription-admin>
+      (closeModal)="closeSubscriptionModal()"></app-subscription-admin>
   </ng-template>
   <ng-template #modalFooter>
     <button nz-button nzType="default" (click)="closeSubscriptionModal()">
