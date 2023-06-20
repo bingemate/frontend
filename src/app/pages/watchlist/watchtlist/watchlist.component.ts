@@ -3,7 +3,7 @@ import { MediaInfoService } from '../../../feature/media-info/media-info.service
 import { TvShowWatchlistService } from '../../../feature/watchlist/tv-show-watchlist.service';
 import { AuthState } from '../../../core/auth/store/auth.state';
 import { Select, Store } from '@ngxs/store';
-import { forkJoin, map, mergeMap, Observable } from 'rxjs';
+import { forkJoin, map, mergeMap, Observable, Subscription } from 'rxjs';
 import {
   MovieResponse,
   TvShowResponse,
@@ -59,6 +59,8 @@ export class WatchlistComponent implements OnInit, OnDestroy {
   filter = '';
   queryTimeout = 0;
 
+  subscriptions: Subscription[] = [];
+
   constructor(
     private breakpointObserver: BreakpointObserver,
     private readonly store: Store,
@@ -73,12 +75,14 @@ export class WatchlistComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.user$.subscribe(user => {
-      if (user) {
-        this.loadTvWatchlist(user);
-        this.loadMovieWatchlist(user);
-      }
-    });
+    this.subscriptions.push(
+      this.user$.subscribe(user => {
+        if (user) {
+          this.loadTvWatchlist(user);
+          this.loadMovieWatchlist(user);
+        }
+      })
+    );
   }
 
   onQuery() {
@@ -90,55 +94,59 @@ export class WatchlistComponent implements OnInit, OnDestroy {
 
   private loadMovieWatchlist(user: UserResponse) {
     this.movieWatchlistLoading = true;
-    this.movieWatchlistService
-      .getWatchlistByUserId(user.id)
-      .pipe(
-        mergeMap(watchlist => {
-          const movieIds = watchlist.map(item => item.movieId);
-          return this.mediaService.getMoviesShortInfo(movieIds).pipe(
-            map(movies =>
-              movies.map(movie => ({
-                media: movie,
-                watchlist: watchlist.find(item => item.movieId === movie.id)!,
-              }))
-            )
-          );
+    this.subscriptions.push(
+      this.movieWatchlistService
+        .getWatchlistByUserId(user.id)
+        .pipe(
+          mergeMap(watchlist => {
+            const movieIds = watchlist.map(item => item.movieId);
+            return this.mediaService.getMoviesShortInfo(movieIds).pipe(
+              map(movies =>
+                movies.map(movie => ({
+                  media: movie,
+                  watchlist: watchlist.find(item => item.movieId === movie.id)!,
+                }))
+              )
+            );
+          })
+        )
+        .subscribe({
+          next: watchlist => {
+            this.movieWatchlist = watchlist;
+          },
+          complete: () => (this.movieWatchlistLoading = false),
         })
-      )
-      .subscribe({
-        next: watchlist => {
-          this.movieWatchlist = watchlist;
-        },
-        complete: () => (this.movieWatchlistLoading = false),
-      });
+    );
   }
 
   private loadTvWatchlist(user: UserResponse) {
     this.showWatchlistLoading = true;
-    this.tvShowWatchlistService
-      .getWatchlistByUserId(user.id)
-      .pipe(
-        mergeMap(watchlist => {
-          const tvShowIds = watchlist.map(item => item.tvShowId);
-          return this.mediaService.getTvShowsShortInfo(tvShowIds).pipe(
-            map(shows =>
-              shows.map(show => ({
-                media: show,
-                watchlist: watchlist.find(item => item.tvShowId === show.id)!,
-              }))
-            )
-          );
-        }),
-        mergeMap(items =>
-          forkJoin(items.map(item => this.loadTvShowEpisodes(item)))
+    this.subscriptions.push(
+      this.tvShowWatchlistService
+        .getWatchlistByUserId(user.id)
+        .pipe(
+          mergeMap(watchlist => {
+            const tvShowIds = watchlist.map(item => item.tvShowId);
+            return this.mediaService.getTvShowsShortInfo(tvShowIds).pipe(
+              map(shows =>
+                shows.map(show => ({
+                  media: show,
+                  watchlist: watchlist.find(item => item.tvShowId === show.id)!,
+                }))
+              )
+            );
+          }),
+          mergeMap(items =>
+            forkJoin(items.map(item => this.loadTvShowEpisodes(item)))
+          )
         )
-      )
-      .subscribe({
-        next: watchlist => {
-          this.tvShowWatchlist = watchlist;
-        },
-        complete: () => (this.showWatchlistLoading = false),
-      });
+        .subscribe({
+          next: watchlist => {
+            this.tvShowWatchlist = watchlist;
+          },
+          complete: () => (this.showWatchlistLoading = false),
+        })
+    );
   }
 
   loadTvShowEpisodes(item: {
@@ -190,14 +198,16 @@ export class WatchlistComponent implements OnInit, OnDestroy {
     status: TvShowWatchListStatus
   ) {
     item.watchlist.status = status;
-    this.tvShowWatchlistService
-      .updateWatchlistItem(item.watchlist)
-      .subscribe(() =>
-        this.notifService.success(
-          'Liste de suivie modifié',
-          `Suivi ${this.statusMap[status]} pour ${item.media.title}`
+    this.subscriptions.push(
+      this.tvShowWatchlistService
+        .updateWatchlistItem(item.watchlist)
+        .subscribe(() =>
+          this.notifService.success(
+            'Liste de suivie modifié',
+            `Suivi ${this.statusMap[status]} pour ${item.media.title}`
+          )
         )
-      );
+    );
   }
 
   changeEpisodeStatus(
@@ -206,16 +216,20 @@ export class WatchlistComponent implements OnInit, OnDestroy {
   ) {
     item.status = status;
     if (item.saved) {
-      this.tvShowWatchlistService.updateEpisodeWatchlistItem(item).subscribe();
+      this.subscriptions.push(
+        this.tvShowWatchlistService.updateEpisodeWatchlistItem(item).subscribe()
+      );
     } else {
       item.saved = true;
-      this.tvShowWatchlistService
-        .createEpisodeWatchlistItem({
-          status: status,
-          tvShowId: item.tvShowId,
-          episodeId: item.episodeId,
-        })
-        .subscribe();
+      this.subscriptions.push(
+        this.tvShowWatchlistService
+          .createEpisodeWatchlistItem({
+            status: status,
+            tvShowId: item.tvShowId,
+            episodeId: item.episodeId,
+          })
+          .subscribe()
+      );
     }
   }
 
@@ -224,48 +238,54 @@ export class WatchlistComponent implements OnInit, OnDestroy {
     status: MovieWatchListStatus
   ) {
     item.watchlist.status = status;
-    this.movieWatchlistService
-      .updateWatchlistItem(item.watchlist)
-      .subscribe(() =>
-        this.notifService.success(
-          'Liste de suivie modifié',
-          `Suivi ${this.statusMap[status]} pour ${item.media.title}`
+    this.subscriptions.push(
+      this.movieWatchlistService
+        .updateWatchlistItem(item.watchlist)
+        .subscribe(() =>
+          this.notifService.success(
+            'Liste de suivie modifié',
+            `Suivi ${this.statusMap[status]} pour ${item.media.title}`
+          )
         )
-      );
+    );
   }
 
   removeMovieWatchlist(item: {
     media: MovieResponse;
     watchlist: MovieWatchlistItem;
   }) {
-    this.movieWatchlistService
-      .removeFromWatchlist(item.watchlist.movieId)
-      .subscribe(() => {
-        this.movieWatchlist = this.movieWatchlist.filter(
-          wlLtem => item.media.id !== wlLtem.media.id
-        );
-        this.notifService.success(
-          'Liste de suivie modifié',
-          `${item.media.title} a été retiré`
-        );
-      });
+    this.subscriptions.push(
+      this.movieWatchlistService
+        .removeFromWatchlist(item.watchlist.movieId)
+        .subscribe(() => {
+          this.movieWatchlist = this.movieWatchlist.filter(
+            wlLtem => item.media.id !== wlLtem.media.id
+          );
+          this.notifService.success(
+            'Liste de suivie modifié',
+            `${item.media.title} a été retiré`
+          );
+        })
+    );
   }
 
   removeShowWatchlist(item: {
     media: TvShowResponse;
     watchlist: TvShowWatchlistItem;
   }) {
-    this.tvShowWatchlistService
-      .removeFromWatchlist(item.watchlist.tvShowId)
-      .subscribe(() => {
-        this.tvShowWatchlist = this.tvShowWatchlist.filter(
-          wlLtem => item.media.id !== wlLtem.media.id
-        );
-        this.notifService.success(
-          'Liste de suivie modifié',
-          `${item.media.title} a été retiré`
-        );
-      });
+    this.subscriptions.push(
+      this.tvShowWatchlistService
+        .removeFromWatchlist(item.watchlist.tvShowId)
+        .subscribe(() => {
+          this.tvShowWatchlist = this.tvShowWatchlist.filter(
+            wlLtem => item.media.id !== wlLtem.media.id
+          );
+          this.notifService.success(
+            'Liste de suivie modifié',
+            `${item.media.title} a été retiré`
+          );
+        })
+    );
   }
 
   ngOnDestroy(): void {
