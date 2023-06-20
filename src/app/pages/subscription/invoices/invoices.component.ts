@@ -1,36 +1,46 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { PaymentService } from '../../../feature/subscription/payment.service';
 import { Invoice } from '../../../shared/models/payment.models';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-invoices',
   templateUrl: './invoices.component.html',
   styleUrls: ['./invoices.component.less'],
 })
-export class InvoicesComponent implements OnInit {
+export class InvoicesComponent implements OnInit, OnDestroy {
   isOnPhone = false;
 
   invoices: Invoice[] = [];
   invoiceLoading = false;
 
+  subscriptions: Subscription[] = [];
+
   constructor(
     private breakpointObserver: BreakpointObserver,
     private paymentService: PaymentService
-  ) {
-    this.breakpointObserver
-      .observe([Breakpoints.HandsetPortrait])
-      .subscribe(result => {
-        this.isOnPhone = result.matches;
-      });
-  }
+  ) {}
 
   ngOnInit() {
+    this.subscriptions.push(
+      this.breakpointObserver
+        .observe([Breakpoints.HandsetPortrait])
+        .subscribe(result => {
+          this.isOnPhone = result.matches;
+        })
+    );
     this.invoiceLoading = true;
-    this.paymentService.getInvoices().subscribe(invoices => {
-      this.invoiceLoading = false;
-      this.invoices = invoices;
-    });
+    this.subscriptions.push(
+      this.paymentService.getInvoices().subscribe(invoices => {
+        this.invoiceLoading = false;
+        this.invoices = invoices;
+      })
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
   mapStatus(
