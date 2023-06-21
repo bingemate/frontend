@@ -53,6 +53,15 @@ export class WatchlistComponent implements OnInit, OnDestroy {
   movieWatchlistLoading = false;
   tvShowWatchlist: { media: TvShowResponse; watchlist: TvShowWatchlistItem }[] =
     [];
+  episodesWatchlist: Map<
+    number,
+    {
+      loading: boolean;
+      episodes: EpisodeWatchlistItem[];
+    }
+  > = new Map();
+  episodesCollapsed: Map<number, boolean> = new Map();
+
   showWatchlistLoading = false;
 
   query = '';
@@ -127,6 +136,9 @@ export class WatchlistComponent implements OnInit, OnDestroy {
         .pipe(
           mergeMap(watchlist => {
             const tvShowIds = watchlist.map(item => item.tvShowId);
+            for (const tvShowIdsKey in tvShowIds) {
+              this.episodesCollapsed.set(tvShowIds[tvShowIdsKey], false);
+            }
             return this.mediaService.getTvShowsShortInfo(tvShowIds).pipe(
               map(shows =>
                 shows.map(show => ({
@@ -135,10 +147,7 @@ export class WatchlistComponent implements OnInit, OnDestroy {
                 }))
               )
             );
-          }),
-          mergeMap(items =>
-            forkJoin(items.map(item => this.loadTvShowEpisodes(item)))
-          )
+          })
         )
         .subscribe({
           next: watchlist => {
@@ -149,7 +158,7 @@ export class WatchlistComponent implements OnInit, OnDestroy {
     );
   }
 
-  loadTvShowEpisodes(item: {
+  /*loadTvShowEpisodes(item: {
     media: TvShowResponse;
     watchlist: TvShowWatchlistItem;
   }) {
@@ -160,14 +169,16 @@ export class WatchlistComponent implements OnInit, OnDestroy {
           name: episode.name,
           episode: episode.episodeNumber,
           season: episode.seasonNumber,
-          tvShowId: item.watchlist.tvShowId,
+          tvShowId: item.media.id,
           saved: false,
           status: '-',
         }));
         episodeItems.forEach(episodeItem => {
-          const savedItem = item.watchlist.episodes?.find(
-            savedItem => savedItem.episodeId === episodeItem.episodeId
-          );
+          const savedItem = this.episodesWatchlist
+            .get(item.media.id)
+            ?.episodes?.find(
+              savedItem => savedItem.episodeId === episodeItem.episodeId
+            );
           if (savedItem) {
             episodeItem.saved = true;
             episodeItem.status = savedItem.status;
@@ -177,7 +188,7 @@ export class WatchlistComponent implements OnInit, OnDestroy {
         return item;
       })
     );
-  }
+  }*/
 
   getTvListByStatus(status: string) {
     return this.tvShowWatchlist.filter(
@@ -288,6 +299,78 @@ export class WatchlistComponent implements OnInit, OnDestroy {
           );
         })
     );
+  }
+
+  isEpisodePanelOpened(tvShowId: number) {
+    return this.episodesCollapsed.get(tvShowId) ?? false;
+  }
+
+  onEpisodePanelOpened(tvShowId: number, open: boolean) {
+    if (!open) {
+      this.episodesCollapsed.set(tvShowId, false);
+      this.episodesWatchlist.set(tvShowId, {
+        loading: false,
+        episodes: [],
+      });
+      return;
+    }
+    this.episodesCollapsed.forEach((value, key) => {
+      if (key !== tvShowId) {
+        this.episodesCollapsed.set(key, false);
+      } else {
+        this.episodesCollapsed.set(key, true);
+      }
+    });
+    this.episodesWatchlist.set(tvShowId, {
+      loading: true,
+      episodes: [],
+    });
+    const item = this.tvShowWatchlist.find(item => item.media.id === tvShowId);
+    if (!item) {
+      console.error('No item found');
+      return;
+    }
+    this.subscriptions.push(
+      this.mediaService
+        .getTvShowAllEpisodes(item.media.id)
+        .pipe(
+          map(episodes => {
+            const episodeItems: EpisodeWatchlistItem[] = episodes.map(
+              episode => ({
+                episodeId: episode.id,
+                name: episode.name,
+                episode: episode.episodeNumber,
+                season: episode.seasonNumber,
+                tvShowId: item.media.id,
+                saved: false,
+                status: '-',
+              })
+            );
+            episodeItems.forEach(episodeItem => {
+              const savedItem = item.watchlist.episodes?.find(
+                savedItem => savedItem.episodeId === episodeItem.episodeId
+              );
+              if (savedItem) {
+                episodeItem.saved = true;
+                episodeItem.status = savedItem.status;
+              }
+            });
+            this.episodesWatchlist.set(tvShowId, {
+              loading: false,
+              episodes: episodeItems,
+            });
+          })
+        )
+        .subscribe()
+    );
+  }
+
+  getEpisodesWatchlist(tvShowId: number) {
+    return this.episodesWatchlist.get(tvShowId)?.episodes ?? [];
+  }
+
+  isEpisodeWatchlistLoading(tvShowId: number) {
+    return this.episodesWatchlist.get(tvShowId)?.loading ?? false;
   }
 
   ngOnDestroy(): void {
