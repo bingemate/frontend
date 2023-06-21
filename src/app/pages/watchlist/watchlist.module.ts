@@ -43,6 +43,7 @@ import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 import {
   CdkFixedSizeVirtualScroll,
+  CdkVirtualForOf,
   CdkVirtualScrollViewport,
 } from '@angular/cdk/scrolling';
 
@@ -96,6 +97,7 @@ import {
     NzPopconfirmModule,
     CdkFixedSizeVirtualScroll,
     CdkVirtualScrollViewport,
+    CdkVirtualForOf,
   ],
 })
 export class WatchlistModule {}

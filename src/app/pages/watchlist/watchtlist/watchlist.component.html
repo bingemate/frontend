@@ -15,6 +15,7 @@
             *ngFor="let status of tvShowStatusNames"
             [nzHeader]="status | tvShowWatchlistStatus">
             <nz-list
+              nzSize="small"
               nzItemLayout="vertical"
               [nzLoading]="showWatchlistLoading"
               nzBordered>
@@ -40,55 +41,75 @@
                     </a>
                   </nz-list-item-meta-title>
                 </nz-list-item-meta>
-                <nz-collapse class="episode-list">
-                  <nz-collapse-panel [nzHeader]="'Épisodes'">
-                    <nz-list
-                      nzItemLayout="vertical"
-                      [nzLoading]="showWatchlistLoading"
-                      nzBordered>
-                      <cdk-virtual-scroll-viewport
-                        orientation="vertical"
-                        itemSize="101"
-                        class="viewport">
-                        <nz-list-item
-                          *ngFor="let episode of item.watchlist.episodes">
-                          <nz-list-item-meta>
-                            <nz-list-item-meta-title>
-                              <span>
-                                {{ episode.season }}x{{ episode.episode }}
-                              </span>
-                              <span>
-                                {{ episode.name }}
-                              </span>
-                            </nz-list-item-meta-title>
-                          </nz-list-item-meta>
-                          <nz-list-item-extra>
-                            <button
-                              nz-button
-                              nz-dropdown
-                              [nzDropdownMenu]="menu"
-                              [nzPlacement]="'bottomLeft'">
-                              {{ episode.status | tvShowWatchlistStatus }}
-                            </button>
-                            <nz-dropdown-menu #menu="nzDropdownMenu">
-                              <ul nz-menu>
-                                <li
-                                  nz-menu-item
-                                  [nzSelected]="episode.status === status"
-                                  *ngFor="let status of tvShowStatusNames"
-                                  (click)="
-                                    changeEpisodeStatus(episode, status)
-                                  ">
-                                  {{ statusMap[status] }}
-                                </li>
-                              </ul>
-                            </nz-dropdown-menu>
-                          </nz-list-item-extra>
-                        </nz-list-item>
-                      </cdk-virtual-scroll-viewport>
-                    </nz-list>
-                  </nz-collapse-panel>
-                </nz-collapse>
+                <nz-row>
+                  <nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12">
+                    <nz-collapse class="episode-list" [nzBordered]="false">
+                      <nz-collapse-panel
+                        [nzHeader]="'Épisodes'"
+                        [nzActive]="isEpisodePanelOpened(item.media.id)"
+                        (nzActiveChange)="
+                          onEpisodePanelOpened(item.media.id, $event)
+                        ">
+                        <nz-spin
+                          nzSpinning
+                          *ngIf="
+                            isEpisodeWatchlistLoading(item.media.id)
+                          "></nz-spin>
+                        <nz-list
+                          *ngIf="!isEpisodeWatchlistLoading(item.media.id)"
+                          nzItemLayout="vertical"
+                          nzSize="small"
+                          [nzLoading]="showWatchlistLoading"
+                          nzBordered>
+                          <cdk-virtual-scroll-viewport
+                            orientation="vertical"
+                            itemSize="69"
+                            class="viewport">
+                            <nz-list-item
+                              *cdkVirtualFor="
+                                let episode of getEpisodesWatchlist(
+                                  item.media.id
+                                )
+                              ">
+                              <nz-list-item-meta>
+                                <nz-list-item-meta-title>
+                                  <span>
+                                    {{ episode.season }}x{{ episode.episode }}
+                                  </span>
+                                  <span>
+                                    {{ episode.name }}
+                                  </span>
+                                </nz-list-item-meta-title>
+                              </nz-list-item-meta>
+                              <nz-list-item-extra>
+                                <button
+                                  nz-button
+                                  nz-dropdown
+                                  [nzDropdownMenu]="menu"
+                                  [nzPlacement]="'bottomLeft'">
+                                  {{ episode.status | tvShowWatchlistStatus }}
+                                </button>
+                                <nz-dropdown-menu #menu="nzDropdownMenu">
+                                  <ul nz-menu>
+                                    <li
+                                      nz-menu-item
+                                      [nzSelected]="episode.status === status"
+                                      *ngFor="let status of tvShowStatusNames"
+                                      (click)="
+                                        changeEpisodeStatus(episode, status)
+                                      ">
+                                      {{ statusMap[status] }}
+                                    </li>
+                                  </ul>
+                                </nz-dropdown-menu>
+                              </nz-list-item-extra>
+                            </nz-list-item>
+                          </cdk-virtual-scroll-viewport>
+                        </nz-list>
+                      </nz-collapse-panel>
+                    </nz-collapse>
+                  </nz-col>
+                </nz-row>
                 <nz-list-item-extra>
                   <button
                     nz-button
