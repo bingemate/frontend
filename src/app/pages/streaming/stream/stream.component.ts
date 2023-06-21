@@ -6,8 +6,10 @@ import { filter, forkJoin, Observable, Subscription, switchMap } from 'rxjs';
 import { StreamUpdateEvent } from '../../../shared/models/streaming.model';
 import { io, Socket } from 'socket.io-client';
 import { environment } from '../../../../environments/environment';
-import { KeycloakEventType, KeycloakService } from 'keycloak-angular';
-import { MovieResponse, TvEpisodeResponse } from '../../../shared/models/media.models';
+import {
+  MovieResponse,
+  TvEpisodeResponse,
+} from '../../../shared/models/media.models';
 import { Select, Store } from '@ngxs/store';
 import { EpisodePlaylist } from '../../../shared/models/episode-playlist.model';
 import { MoviePlaylist } from '../../../shared/models/movie-playlist.model';
@@ -17,6 +19,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { WatchTogetherState } from '../../../feature/watch-together/store/watch-together.state';
 import { WatchTogetherRoom } from '../../../shared/models/watch-together.models';
 import { WatchTogetherService } from '../../../feature/watch-together/watch-together.service';
+import { HistoryService } from '../../../feature/history/history.service';
 
 @Component({
   selector: 'app-stream',
@@ -46,8 +49,8 @@ export class StreamComponent implements OnInit, OnDestroy {
     private store: Store,
     private breakpointObserver: BreakpointObserver,
     private route: ActivatedRoute,
-    private keycloak: KeycloakService,
     private mediaInfoService: MediaInfoService,
+    private historyService: HistoryService,
     private watchTogetherService: WatchTogetherService
   ) {}
 
@@ -60,19 +63,6 @@ export class StreamComponent implements OnInit, OnDestroy {
         })
     );
     this.subscriptions.push(this.room$.subscribe(room => (this.room = room)));
-    this.subscriptions.push(
-      this.keycloak.keycloakEvents$.subscribe(async event => {
-        if (event.type === KeycloakEventType.OnTokenExpired) {
-          await this.keycloak.updateToken(1);
-        } else if (
-          this.socket &&
-          event.type === KeycloakEventType.OnAuthRefreshSuccess
-        ) {
-          this.socket.close();
-          await this.initSocketConnection();
-        }
-      })
-    );
     this.subscriptions.push(
       this.route.params
         .pipe(
@@ -93,7 +83,11 @@ export class StreamComponent implements OnInit, OnDestroy {
           next: async ([mediaFile, mediaInfo]) => {
             this.mediaInfo = mediaInfo;
             this.mediaFile = mediaFile;
-            await this.initSocketConnection();
+            this.subscriptions.push(
+              this.historyService
+                .getSession()
+                .subscribe(session => this.initSocketConnection(session))
+            );
             if (this.route.snapshot.queryParamMap.has('progress')) {
               this.progress =
                 mediaFile.duration *
@@ -152,14 +146,13 @@ export class StreamComponent implements OnInit, OnDestroy {
     this.socket?.emit('updateMediaHistory', event);
   }
 
-  private async initSocketConnection() {
+  private async initSocketConnection(token: string) {
     if (this.socket) {
       this.socket.close();
     }
-    const key = await this.keycloak.getToken();
     this.socket = io(`${environment.websocketUrl}`, {
       transports: ['polling'],
-      extraHeaders: { Authorization: `Bearer ${key}` },
+      auth: { token },
       path: `${environment.production ? '' : '/dev'}/watch-service/socket.io`,
       query: {
         mediaId: this.mediaId,
