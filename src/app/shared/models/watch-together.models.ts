@@ -27,3 +27,7 @@ export interface CreateWatchTogetherRoomRequest {
   mediaType: 'tv-shows' | 'movies';
   playlistPosition: number;
 }
+
+export interface SessionIdResponse {
+  sessionId: string;
+}
