@@ -6,6 +6,7 @@ import {
 } from '../../../../shared/models/media.models';
 import { MediaInfoService } from '../../media-info.service';
 import { Subscription } from 'rxjs';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-media-list',
@@ -26,9 +27,17 @@ export class MediaListComponent implements OnInit, OnChanges, OnDestroy {
 
   subscriptions: Subscription[] = [];
 
-  constructor(private readonly mediaService: MediaInfoService) {}
+  isOnPhone = false;
+
+  constructor(
+    private breakpointObserver: BreakpointObserver,
+    private readonly mediaService: MediaInfoService
+  ) {}
 
   ngOnInit() {
+    this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
+      this.isOnPhone = result.matches;
+    });
     this.medias = new Array(this.mediaIds.length).fill({});
     this.mediaIds.forEach(({ id, type }, index) => {
       this.getMedia(id, type, index);

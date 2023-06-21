@@ -1,16 +1,15 @@
 <nz-row [nzGutter]="[32, 32]">
   <div
     nz-col
-    [nzXs]="12"
-    [nzMd]="6"
-    [nzXl]="4"
-    [nzXXl]="3"
+    [ngStyle]="{ width: isOnPhone ? '150px' : '200px' }"
     *ngFor="let media of medias">
     <app-movie-info-card
       *ngIf="media.type === MediaType.Movie"
+      [title]="media.movieResponse?.title"
       [movie]="media.movieResponse!"></app-movie-info-card>
     <app-tv-info-card
       *ngIf="media.type === MediaType.TvShow"
+      [title]="media.tvShowResponse?.title"
       [tv]="media.tvShowResponse!"></app-tv-info-card>
   </div>
 </nz-row>
