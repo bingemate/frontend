@@ -11,6 +11,7 @@ import { WatchTogetherActions } from './store/watch-together.actions';
 import { StreamingActions } from '../streaming/store/streaming.actions';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -32,15 +33,10 @@ export class WatchTogetherService {
   }
 
   private initSocketConnection(sessionId: string) {
-    // this.socket = io(`${environment.websocketUrl}/watch-together`, {
-    //   transports: ['polling'],
-    //   extraHeaders: { Authorization: `Bearer ${key}` },
-    //   path: `${environment.production ? '' : '/dev'}/watch-service/socket.io`,
-    // });
-
-    this.socket = io(`http://localhost:3000/watch-together`, {
+    this.socket = io(`${environment.websocketUrl}/watch-together`, {
       transports: ['polling'],
       auth: { token: sessionId },
+      path: `${environment.production ? '' : '/dev'}/watch-service/socket.io`,
     });
     this.socket.on('invitedToRoom', room => {
       this.notificationsService.info('Invitation à une lecture partagée');
