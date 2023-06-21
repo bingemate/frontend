@@ -144,7 +144,7 @@
             </li>
           </ul>
         </li>
-        <li nz-menu-item (click)="toggleTheme()">
+        <li nz-menu-item nzMatchRouter (click)="toggleTheme()">
           <nz-space nzAlign="center">
             <i
               *nzSpaceItem
@@ -152,8 +152,12 @@
               nz-icon
               nzType="bg-colors"
               nzTheme="outline"></i>
-            <span *nzSpaceItem>Thème sombre</span>
-            <nz-switch *nzSpaceItem nzSize="small" [(ngModel)]="isDarkTheme">
+            <span *nzSpaceItem [hidden]="isNavbarCollapsed">Thème sombre</span>
+            <nz-switch
+              *nzSpaceItem
+              [hidden]="isNavbarCollapsed"
+              nzSize="small"
+              [(ngModel)]="isDarkTheme">
             </nz-switch>
           </nz-space>
         </li>
