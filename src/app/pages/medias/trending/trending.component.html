@@ -4,60 +4,70 @@
   [nzSize]="isOnPhone ? 'small' : 'large'"
   [nzTabBarExtraContent]="onlyAvailable">
   <nz-tab nzTitle="Films populaires">
-    <nz-skeleton
-      *ngIf="popularMoviesLoading"
-      [nzActive]="true"
-      [nzParagraph]="{ rows: 10 }"></nz-skeleton>
-    <nz-empty
-      *ngIf="!popularMoviesLoading && popularMovies.length === 0"></nz-empty>
-    <nz-card
-      *ngIf="!popularMoviesLoading"
-      [nzExtra]="popularMoviesPagination"
-      [nzSize]="isOnPhone ? 'small' : 'default'"
-      [nzActions]="[popularMoviesPagination]">
-      <app-movie-list [movies]="popularMovies"></app-movie-list>
-    </nz-card>
+    <ng-template nz-tab>
+      <nz-skeleton
+        *ngIf="popularMoviesLoading"
+        [nzActive]="true"
+        [nzParagraph]="{ rows: 10 }"></nz-skeleton>
+      <nz-empty
+        *ngIf="!popularMoviesLoading && popularMovies.length === 0"></nz-empty>
+      <nz-card
+        *ngIf="!popularMoviesLoading"
+        [nzExtra]="popularMoviesPagination"
+        [nzSize]="isOnPhone ? 'small' : 'default'"
+        [nzActions]="[popularMoviesPagination]">
+        <app-movie-list [movies]="popularMovies"></app-movie-list>
+      </nz-card>
+    </ng-template>
   </nz-tab>
   <nz-tab nzTitle="Films récents">
-    <nz-skeleton
-      *ngIf="recentMoviesLoading"
-      [nzActive]="true"
-      [nzParagraph]="{ rows: 10 }"></nz-skeleton>
-    <nz-empty
-      *ngIf="!recentMoviesLoading && recentMovies.length === 0"></nz-empty>
-    <nz-card
-      *ngIf="!recentMoviesLoading"
-      [nzSize]="isOnPhone ? 'small' : 'default'">
-      <app-movie-list [movies]="recentMovies"></app-movie-list>
-    </nz-card>
+    <ng-template nz-tab>
+      <nz-skeleton
+        *ngIf="recentMoviesLoading"
+        [nzActive]="true"
+        [nzParagraph]="{ rows: 10 }"></nz-skeleton>
+      <nz-empty
+        *ngIf="!recentMoviesLoading && recentMovies.length === 0"></nz-empty>
+      <nz-card
+        *ngIf="!recentMoviesLoading"
+        [nzSize]="isOnPhone ? 'small' : 'default'">
+        <app-movie-list [movies]="recentMovies"></app-movie-list>
+      </nz-card>
+    </ng-template>
   </nz-tab>
   <nz-tab nzTitle="Séries populaires">
-    <nz-skeleton
-      *ngIf="popularTvShowsLoading"
-      [nzActive]="true"
-      [nzParagraph]="{ rows: 10 }"></nz-skeleton>
-    <nz-empty
-      *ngIf="!popularTvShowsLoading && popularTvShows.length === 0"></nz-empty>
-    <nz-card
-      *ngIf="!popularTvShowsLoading"
-      [nzExtra]="popularTvShowsPagination"
-      [nzSize]="isOnPhone ? 'small' : 'default'"
-      [nzActions]="[popularTvShowsPagination]">
-      <app-tv-list [tvShows]="popularTvShows"></app-tv-list>
-    </nz-card>
+    <ng-template nz-tab>
+      <nz-skeleton
+        *ngIf="popularTvShowsLoading"
+        [nzActive]="true"
+        [nzParagraph]="{ rows: 10 }"></nz-skeleton>
+      <nz-empty
+        *ngIf="
+          !popularTvShowsLoading && popularTvShows.length === 0
+        "></nz-empty>
+      <nz-card
+        *ngIf="!popularTvShowsLoading"
+        [nzExtra]="popularTvShowsPagination"
+        [nzSize]="isOnPhone ? 'small' : 'default'"
+        [nzActions]="[popularTvShowsPagination]">
+        <app-tv-list [tvShows]="popularTvShows"></app-tv-list>
+      </nz-card>
+    </ng-template>
   </nz-tab>
   <nz-tab nzTitle="Séries récentes">
-    <nz-skeleton
-      *ngIf="recentTvShowsLoading"
-      [nzActive]="true"
-      [nzParagraph]="{ rows: 10 }"></nz-skeleton>
-    <nz-empty
-      *ngIf="!recentTvShowsLoading && recentTvShows.length === 0"></nz-empty>
-    <nz-card
-      *ngIf="!recentTvShowsLoading"
-      [nzSize]="isOnPhone ? 'small' : 'default'">
-      <app-tv-list [tvShows]="recentTvShows"></app-tv-list>
-    </nz-card>
+    <ng-template nz-tab>
+      <nz-skeleton
+        *ngIf="recentTvShowsLoading"
+        [nzActive]="true"
+        [nzParagraph]="{ rows: 10 }"></nz-skeleton>
+      <nz-empty
+        *ngIf="!recentTvShowsLoading && recentTvShows.length === 0"></nz-empty>
+      <nz-card
+        *ngIf="!recentTvShowsLoading"
+        [nzSize]="isOnPhone ? 'small' : 'default'">
+        <app-tv-list [tvShows]="recentTvShows"></app-tv-list>
+      </nz-card>
+    </ng-template>
   </nz-tab>
   <nz-tab nzTitle="Les plus commentés">
     <ng-template nz-tab>
