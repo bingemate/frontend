@@ -1,12 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { KeycloakEventType, KeycloakService } from 'keycloak-angular';
+import { KeycloakService } from 'keycloak-angular';
 import { io, Socket } from 'socket.io-client';
-import { environment } from '../../../environments/environment';
 import { NotificationsService } from '../../core/notifications/notifications.service';
-import { CreateWatchTogetherRoomRequest } from '../../shared/models/watch-together.models';
+import {
+  CreateWatchTogetherRoomRequest,
+  SessionIdResponse,
+} from '../../shared/models/watch-together.models';
 import { WatchTogetherActions } from './store/watch-together.actions';
 import { StreamingActions } from '../streaming/store/streaming.actions';
+import { HttpClient } from '@angular/common/http';
+import { map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -16,31 +20,27 @@ export class WatchTogetherService {
   constructor(
     private keycloak: KeycloakService,
     private store: Store,
+    private readonly http: HttpClient,
     private notificationsService: NotificationsService
   ) {}
 
   async startWatchTogetherSocket() {
-    await this.initSocketConnection();
-    this.socket?.emit('getMessages');
-    this.keycloak.keycloakEvents$.subscribe(async event => {
-      if (event.type === KeycloakEventType.OnTokenExpired) {
-        await this.keycloak.updateToken(1);
-      } else if (
-        this.socket &&
-        event.type === KeycloakEventType.OnAuthRefreshSuccess
-      ) {
-        this.socket.disconnect();
-        await this.initSocketConnection();
-      }
+    this.getSessionId().subscribe(sessionId => {
+      this.initSocketConnection(sessionId);
+      this.socket?.emit('getMessages');
     });
   }
 
-  private async initSocketConnection() {
-    const key = await this.keycloak.getToken();
-    this.socket = io(`${environment.websocketUrl}/watch-together`, {
+  private initSocketConnection(sessionId: string) {
+    // this.socket = io(`${environment.websocketUrl}/watch-together`, {
+    //   transports: ['polling'],
+    //   extraHeaders: { Authorization: `Bearer ${key}` },
+    //   path: `${environment.production ? '' : '/dev'}/watch-service/socket.io`,
+    // });
+
+    this.socket = io(`http://localhost:3000/watch-together`, {
       transports: ['polling'],
-      extraHeaders: { Authorization: `Bearer ${key}` },
-      path: `${environment.production ? '' : '/dev'}/watch-service/socket.io`,
+      auth: { token: sessionId },
     });
     this.socket.on('invitedToRoom', room => {
       this.notificationsService.info('Invitation à une lecture partagée');
@@ -107,5 +107,11 @@ export class WatchTogetherService {
 
   closeSocket() {
     this.socket?.disconnect();
+  }
+
+  private getSessionId() {
+    return this.http
+      .get<SessionIdResponse>(`http://localhost:3000/watch-together/session`)
+      .pipe(map(id => id.sessionId));
   }
 }
