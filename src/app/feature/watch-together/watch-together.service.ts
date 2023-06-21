@@ -12,6 +12,7 @@ import { StreamingActions } from '../streaming/store/streaming.actions';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { API_RESOURCE_URI } from '../../shared/api-resource-uri/api-resources-uri';
 
 @Injectable({
   providedIn: 'root',
@@ -107,7 +108,9 @@ export class WatchTogetherService {
 
   private getSessionId() {
     return this.http
-      .get<SessionIdResponse>(`http://localhost:3000/watch-together/session`)
+      .get<SessionIdResponse>(
+        `${API_RESOURCE_URI.WATCH_SERVICE}/watch-together/session`
+      )
       .pipe(map(id => id.sessionId));
   }
 }
