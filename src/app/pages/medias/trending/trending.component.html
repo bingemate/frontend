@@ -72,7 +72,7 @@
           mediaByComments.length === 0
         "></nz-empty>
       <nz-card
-        *ngIf="!moviesByCommentsLoading || !tvShowsByCommentsLoading"
+        *ngIf="!moviesByCommentsLoading && !tvShowsByCommentsLoading"
         [nzSize]="isOnPhone ? 'small' : 'default'">
         <app-media-list [mediaIds]="mediaByComments"></app-media-list>
       </nz-card>
