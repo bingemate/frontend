@@ -1,19 +1,13 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import {
-  UpdateUserRequest,
-  UserResponse,
-} from '../../../../shared/models/user.models';
+import { UpdateUserRequest, UserResponse } from '../../../../shared/models/user.models';
 import { UserService } from '../../user.service';
-import { Observable, Subscription, timeout } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Select } from '@ngxs/store';
 import { AuthState } from '../../../../core/auth/store/auth.state';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 import { FriendshipService } from '../../../friendship/friendship.service';
-import {
-  FriendResponse,
-  FriendState,
-} from '../../../../shared/models/friendship.models';
+import { FriendResponse, FriendState } from '../../../../shared/models/friendship.models';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({

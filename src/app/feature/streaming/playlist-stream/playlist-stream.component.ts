@@ -1,13 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
-import {
-  forkJoin,
-  map,
-  mergeMap,
-  Observable,
-  Subscription,
-  switchMap,
-} from 'rxjs';
+import { map, mergeMap, Observable, Subscription, switchMap } from 'rxjs';
 import { MediaInfoService } from '../../media-info/media-info.service';
 import {
   MoviePlaylist,

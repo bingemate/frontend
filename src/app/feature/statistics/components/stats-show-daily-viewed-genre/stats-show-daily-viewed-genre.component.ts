@@ -7,7 +7,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { ChartConfiguration, ChartType } from 'chart.js';
-import { forkJoin, map, of, Subscription, switchMap } from 'rxjs';
+import { map, Subscription, switchMap } from 'rxjs';
 import {
   STAT_COLORS,
   StatDisplay,
@@ -15,12 +15,7 @@ import {
 } from '../../../../shared/models/statistic.models';
 import { MediaInfoService } from '../../../media-info/media-info.service';
 import { getDateDays } from '../../../../shared/utils/date.utils';
-import {
-  Genre,
-  TvEpisodeResponse,
-  TvShowResponse,
-} from '../../../../shared/models/media.models';
-import { tap } from 'rxjs/operators';
+import { Genre, TvShowResponse } from '../../../../shared/models/media.models';
 
 @Component({
   selector: 'app-stats-show-daily-viewed-genre',

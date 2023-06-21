@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
-import { forkJoin, map, mergeMap, Observable, switchMap } from 'rxjs';
+import { map, mergeMap, Observable, switchMap } from 'rxjs';
 import {
   EpisodePlaylist,
   EpisodePlaylistItem,
@@ -13,11 +13,7 @@ import { MediaInfoService } from '../../../feature/media-info/media-info.service
 import { AuthState } from '../../../core/auth/store/auth.state';
 import { UserResponse } from '../../../shared/models/user.models';
 import { StreamingActions } from '../../../feature/streaming/store/streaming.actions';
-import {
-  MoviePlaylist,
-  MoviePlaylistItem,
-  MoviePlaylistItemMedia,
-} from '../../../shared/models/movie-playlist.model';
+import { MoviePlaylist, MoviePlaylistItem, MoviePlaylistItemMedia } from '../../../shared/models/movie-playlist.model';
 import { EpisodePlaylistsService } from '../../../feature/playlist/episode-playlists.service';
 import { tap } from 'rxjs/operators';
 import { NotificationsService } from '../../../core/notifications/notifications.service';

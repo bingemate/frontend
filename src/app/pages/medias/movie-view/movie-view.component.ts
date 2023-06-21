@@ -4,18 +4,11 @@ import { MovieResponse } from '../../../shared/models/media.models';
 import { MediaInfoService } from '../../../feature/media-info/media-info.service';
 import { MediaDiscoverService } from '../../../feature/media-info/media-discover.service';
 import { CommentService } from '../../../feature/comment/comment.service';
-import {
-  CommentResults,
-  emptyCommentResults,
-} from '../../../shared/models/comment.models';
+import { CommentResults, emptyCommentResults } from '../../../shared/models/comment.models';
 import { Select } from '@ngxs/store';
 import { AuthState } from '../../../core/auth/store/auth.state';
 import { Observable, Subscription } from 'rxjs';
-import {
-  emptyRatingResults,
-  RatingResponse,
-  RatingResults,
-} from '../../../shared/models/rating.models';
+import { emptyRatingResults, RatingResponse, RatingResults } from '../../../shared/models/rating.models';
 import { RatingService } from '../../../feature/rating/rating.service';
 import { UserResponse } from '../../../shared/models/user.models';
 

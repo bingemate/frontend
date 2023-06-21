@@ -7,7 +7,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { ChartConfiguration, ChartType } from 'chart.js';
-import { forkJoin, map, Subscription } from 'rxjs';
+import { map, Subscription } from 'rxjs';
 import { MediaInfoService } from '../../../media-info/media-info.service';
 import {
   STAT_COLORS,

@@ -3,20 +3,11 @@ import { MediaInfoService } from '../../../feature/media-info/media-info.service
 import { TvShowWatchlistService } from '../../../feature/watchlist/tv-show-watchlist.service';
 import { AuthState } from '../../../core/auth/store/auth.state';
 import { Select, Store } from '@ngxs/store';
-import { forkJoin, map, mergeMap, Observable, Subscription } from 'rxjs';
-import {
-  MovieResponse,
-  TvShowResponse,
-} from '../../../shared/models/media.models';
+import { map, mergeMap, Observable, Subscription } from 'rxjs';
+import { MovieResponse, TvShowResponse } from '../../../shared/models/media.models';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
-import {
-  movieViewPath,
-  tvShowViewPath,
-} from '../../medias/medias-routing.module';
-import {
-  MovieWatchlistItem,
-  MovieWatchListStatus,
-} from '../../../shared/models/movie-watchlist.models';
+import { movieViewPath, tvShowViewPath } from '../../medias/medias-routing.module';
+import { MovieWatchlistItem, MovieWatchListStatus } from '../../../shared/models/movie-watchlist.models';
 import {
   EpisodeWatchlistItem,
   TvShowWatchlistItem,

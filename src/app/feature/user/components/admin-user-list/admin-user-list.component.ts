@@ -1,8 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  UserResponse,
-  UserResults,
-} from '../../../../shared/models/user.models';
+import { UserResponse, UserResults } from '../../../../shared/models/user.models';
 import { UserService } from '../../user.service';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';

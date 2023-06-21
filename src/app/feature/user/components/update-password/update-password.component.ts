@@ -1,10 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
-import {
-  AbstractControl,
-  FormBuilder,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 import { UserService } from '../../user.service';
 import { Subscription } from 'rxjs';

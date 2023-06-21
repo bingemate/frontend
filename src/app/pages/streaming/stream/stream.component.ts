@@ -7,10 +7,7 @@ import { StreamUpdateEvent } from '../../../shared/models/streaming.model';
 import { io, Socket } from 'socket.io-client';
 import { environment } from '../../../../environments/environment';
 import { KeycloakEventType, KeycloakService } from 'keycloak-angular';
-import {
-  MovieResponse,
-  TvEpisodeResponse,
-} from '../../../shared/models/media.models';
+import { MovieResponse, TvEpisodeResponse } from '../../../shared/models/media.models';
 import { Select, Store } from '@ngxs/store';
 import { EpisodePlaylist } from '../../../shared/models/episode-playlist.model';
 import { MoviePlaylist } from '../../../shared/models/movie-playlist.model';
