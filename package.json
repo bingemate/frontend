@@ -46,7 +46,7 @@
     "prettier-eslint": "^15.0.1",
     "rxjs": "~7.8.1",
     "save-dev": "^0.0.1-security",
-    "socket.io-client": "^4.6.2",
+    "socket.io-client": "^4.7.0",
     "tslib": "^2.5.3",
     "zone.js": "~0.13.1"
   },
