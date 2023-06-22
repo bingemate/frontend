@@ -32,6 +32,7 @@ import {
 } from '../../../shared/models/watch-together.models';
 import { WatchTogetherService } from '../../watch-together/watch-together.service';
 import { debounceTime } from 'rxjs/operators';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-video-player',
@@ -50,7 +51,7 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
   @Input() mediaId: number | undefined;
   @Input() mediaInfo: MovieResponse | TvEpisodeResponse | undefined;
   @Input() mediaFile: MediaFile | undefined;
-  @Input() type: 'movies' | 'tv-shows' | undefined;
+  @Input() type: 'movies' | 'tv-shows' | undefined; // Ne surtout pas changer !
   @Input() timeSeek = 0;
   @Output() streamUpdate = new EventEmitter<StreamUpdateEvent>();
 
@@ -135,7 +136,7 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
   }
   private loadMediaFileInfo() {
     if (this.mediaFile && this.type) {
-      this.videoUrl = `${API_RESOURCE_URI.STREAMING}/${this.type}/${this.mediaId}/${this.mediaFile.filename}`;
+      this.videoUrl = `${environment.streamingBucketUrl}/${this.type}/${this.mediaId}/${this.mediaFile.filename}`;
       // console.log(this.videoUrl);
       this.audioOptions = this.mediaFile.audios.map((audioTrack, index) => {
         return {
@@ -149,13 +150,13 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
       });
       this.audioList = this.mediaFile.audios.map(
         audioTrack =>
-          `${API_RESOURCE_URI.STREAMING}/${this.type}/${this.mediaId}/${audioTrack.filename}`
+          `${environment.streamingBucketUrl}/${this.type}/${this.mediaId}/${audioTrack.filename}`
       );
       this.subtitleList = this.mediaFile.subtitles.map(
         (subtitleTrack, index) => {
           return {
             srcLang: subtitleTrack.language.toLowerCase(),
-            url: `${API_RESOURCE_URI.STREAMING}/${this.type}/${this.mediaId}/${subtitleTrack.filename}`,
+            url: `${environment.streamingBucketUrl}/${this.type}/${this.mediaId}/${subtitleTrack.filename}`,
             default: index === 0,
           };
         }
