@@ -5,7 +5,7 @@ export type EnvironmentType = {
   appVersion: string;
   apiUrl: string;
   websocketUrl: string;
-
+  streamingBucketUrl: string;
   auth: {
     clientId: string;
     realm: string;
