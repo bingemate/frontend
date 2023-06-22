@@ -10,6 +10,7 @@ export const environment: EnvironmentType = {
   appVersion: packageJson.version,
   apiUrl: 'http://localhost:8080',
   websocketUrl: 'http://localhost:8080',
+  streamingBucketUrl: 'https://bingemate-local.s3.fr-par.scw.cloud',
   auth: {
     clientId: 'angular-frontend',
     realm: 'bingemate-local',
