@@ -13,10 +13,16 @@ import {
 })
 export class MediaCalendarComponent {
   @Input() events: MediaEvent[] = [];
-  @Output() monthChange = new EventEmitter<number>();
+  @Output() dateChange = new EventEmitter<{
+    month: number;
+    year: number;
+  }>();
 
   onDateChange(date: Date): void {
-    this.monthChange.emit(date.getMonth() + 1);
+    this.dateChange.emit({
+      month: date.getMonth() + 1,
+      year: date.getFullYear(),
+    });
   }
 
   getEventTitle(event: MediaEvent): string {
