@@ -23,7 +23,6 @@ export class MessagingService {
 
   async startMessagingSocket() {
     this.getToken().subscribe(token => this.initSocketConnection(token));
-    this.socket?.emit('getMessages');
   }
 
   private async initSocketConnection(token: string) {
@@ -47,6 +46,7 @@ export class MessagingService {
     this.socket.on('deletedMessage', message =>
       this.store.dispatch(new MessagingActions.SetMessages(message.messageId))
     );
+    this.socket.emit('getMessages');
   }
 
   deleteMessage(messageId: string) {
