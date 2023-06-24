@@ -151,6 +151,7 @@ export class StreamComponent implements OnInit, OnDestroy {
       this.socket.close();
     }
     this.socket = io(`${environment.websocketUrl}/history`, {
+      forceNew: true,
       transports: ['polling'],
       auth: { token },
       path: `${environment.production ? '' : '/dev'}/watch-service/socket.io`,
