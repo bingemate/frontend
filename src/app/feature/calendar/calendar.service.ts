@@ -15,25 +15,35 @@ export class CalendarService {
   constructor(private readonly http: HttpClient) {}
 
   getFollowedShowsReleases(
-    month?: number
+    month?: number,
+    year?: number
   ): Observable<{ episodes: TvEpisodeResponse[]; tvShows: TvShowResponse[] }> {
     if (!month || month < 1 || month > 12) {
       month = new Date().getMonth() + 1;
     }
+    if (!year) {
+      year = new Date().getFullYear();
+    }
 
-    const params = new HttpParams().set('month', month);
+    const params = new HttpParams().set('month', month).set('year', year);
     return this.http.get<{
       episodes: TvEpisodeResponse[];
       tvShows: TvShowResponse[];
     }>(API_RESOURCE_URI.MEDIA_INFO + '/calendar/tvshows', { params });
   }
 
-  getFollowedMoviesReleases(month?: number): Observable<MovieResponse[]> {
+  getFollowedMoviesReleases(
+    month?: number,
+    year?: number
+  ): Observable<MovieResponse[]> {
     if (!month || month < 1 || month > 12) {
       month = new Date().getMonth() + 1;
     }
+    if (!year) {
+      year = new Date().getFullYear();
+    }
 
-    const params = new HttpParams().set('month', month);
+    const params = new HttpParams().set('month', month).set('year', year);
     return this.http.get<MovieResponse[]>(
       API_RESOURCE_URI.MEDIA_INFO + '/calendar/movies',
       { params }
