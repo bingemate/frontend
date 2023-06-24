@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { KeycloakEventType, KeycloakService } from 'keycloak-angular';
 import { io, Socket } from 'socket.io-client';
 import { environment } from '../../../environments/environment';
 import { NotificationsService } from '../../core/notifications/notifications.service';
 import { MessagingActions } from './store/messaging.actions';
 import { AuthState } from '../../core/auth/store/auth.state';
+import { HttpClient } from '@angular/common/http';
+import { API_RESOURCE_URI } from '../../shared/api-resource-uri/api-resources-uri';
+import { SessionIdResponse } from '../../shared/models/watch-together.models';
+import { map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -13,32 +16,20 @@ import { AuthState } from '../../core/auth/store/auth.state';
 export class MessagingService {
   private socket?: Socket;
   constructor(
-    private keycloak: KeycloakService,
+    private http: HttpClient,
     private store: Store,
     private notificationsService: NotificationsService
   ) {}
 
   async startMessagingSocket() {
-    await this.initSocketConnection();
+    this.getToken().subscribe(token => this.initSocketConnection(token));
     this.socket?.emit('getMessages');
-    this.keycloak.keycloakEvents$.subscribe(async event => {
-      if (event.type === KeycloakEventType.OnTokenExpired) {
-        await this.keycloak.updateToken(1);
-      } else if (
-        this.socket &&
-        event.type === KeycloakEventType.OnAuthRefreshSuccess
-      ) {
-        this.socket.disconnect();
-        await this.initSocketConnection();
-      }
-    });
   }
 
-  private async initSocketConnection() {
-    const key = await this.keycloak.getToken();
+  private async initSocketConnection(token: string) {
     this.socket = io(`${environment.websocketUrl}`, {
       transports: ['polling'],
-      extraHeaders: { Authorization: `Bearer ${key}` },
+      auth: { token },
       path: `${
         environment.production ? '' : '/dev'
       }/messaging-service/socket.io`,
@@ -70,5 +61,13 @@ export class MessagingService {
 
   closeSocket() {
     this.socket?.disconnect();
+  }
+
+  private getToken() {
+    return this.http
+      .get<SessionIdResponse>(
+        `${API_RESOURCE_URI.MESSAGING_SERVICE}/messaging/session`
+      )
+      .pipe(map(id => id.sessionId));
   }
 }

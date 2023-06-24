@@ -34,7 +34,9 @@
       <app-media-calendar
         *nzSpaceItem
         [events]="events"
-        (monthChange)="onMonthChange($event)"></app-media-calendar>
+        (dateChange)="
+          onDateChange($event.month, $event.year)
+        "></app-media-calendar>
     </nz-space>
   </nz-page-header-content>
 </nz-page-header>

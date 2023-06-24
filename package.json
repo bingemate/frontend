@@ -1,6 +1,6 @@
 {
   "name": "binge-mate",
-  "version": "1.5.0",
+  "version": "1.5.3",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --configuration local",
@@ -46,12 +46,12 @@
     "prettier-eslint": "^15.0.1",
     "rxjs": "~7.8.1",
     "save-dev": "^0.0.1-security",
-    "socket.io-client": "^4.6.2",
+    "socket.io-client": "^4.7.0",
     "tslib": "^2.5.3",
     "zone.js": "~0.13.1"
   },
   "devDependencies": {
-    "@angular-devkit/architect": "^0.1601.0",
+    "@angular-devkit/architect": "^0.1601.1",
     "@angular-devkit/build-angular": "^15.2.7",
     "@angular-eslint/builder": "15.2.1",
     "@angular-eslint/eslint-plugin": "15.2.1",
