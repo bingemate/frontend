@@ -9,7 +9,18 @@
     [nzSrc]="posterUrl"
     alt=""
     [ngClass]="{ vertical: vertical, horizontal: !vertical }" />
-  <h5 nz-typography *nzSpaceItem>
-    {{ type === 'movies' ? movieMedia?.title : episodeMedia?.name }}
+  <h5 nz-typography *nzSpaceItem style="text-align: center; width: 100%">
+    <ng-container *ngIf="type === 'movies'; else episode">
+      {{ movieMedia?.title }}
+    </ng-container>
+    <ng-template #episode>
+      {{ episodeMedia?.tvShowId ?? 1 | mediaName : 'tv' | async }}
+      <br />
+      {{ episodeMedia?.seasonNumber }}x{{
+        episodeMedia?.episodeNumber?.toString()?.padStart(2, '0')
+      }}
+      -
+      {{ episodeMedia?.name }}
+    </ng-template>
   </h5>
 </nz-space>

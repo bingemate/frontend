@@ -41,10 +41,9 @@
                   alt="logo"
                   ngSrc="{{ item.media.imageUrl }}" />
                 <nz-space *nzSpaceItem nzDirection="vertical" nzSize="small">
-                  <span *nzSpaceItem>
-                    {{ item.media.season }}x{{ item.media.episode }}
-                  </span>
-                  <span *nzSpaceItem>{{ item.media.name }}</span>
+                  <span *nzSpaceItem>{{
+                    item.playlistItem.episodeId | mediaName : 'episode' | async
+                  }}</span>
                 </nz-space>
               </nz-space>
             </a>
