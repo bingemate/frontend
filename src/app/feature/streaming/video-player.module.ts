@@ -22,6 +22,7 @@ import { AddMediaStreamComponent } from './add-media-stream/add-media-stream.com
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
+import { SharedModule } from '../../shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
     NzButtonModule,
     NzInputModule,
     NzAutocompleteModule,
+    SharedModule,
   ],
   exports: [
     VideoPlayerComponent,
