@@ -1,4 +1,4 @@
-<nz-space nzDirection="vertical">
+<nz-space nzDirection="horizontal">
   <button
     *nzSpaceItem
     nz-button
@@ -16,5 +16,14 @@
     (click)="onScanSeries()">
     <i nz-icon nzType="diff"></i>
     Scanner les séries
+  </button>
+  <button
+    *nzSpaceItem
+    nz-button
+    nzType="primary"
+    [disabled]="disabled"
+    (click)="onScanAll()">
+    <i nz-icon nzType="diff"></i>
+    Scanner tout
   </button>
 </nz-space>

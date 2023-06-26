@@ -49,6 +49,22 @@ export class ScanComponent implements OnDestroy {
     );
   }
 
+  onScanAll(): void {
+    this.subscriptions.push(
+      this.uploadScanService.scanAll().subscribe({
+        next: () => {
+          this.notificationsService.success('Scan des films et séries lancé');
+        },
+        error: err => {
+          this.notificationsService.error(
+            'Erreur lors du lancé du scan des films et séries',
+            err.error
+          );
+        },
+      })
+    );
+  }
+
   ngOnDestroy(): void {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
