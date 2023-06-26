@@ -18,6 +18,11 @@ export class UploadScanService {
     return this.http.post<string>(url, {});
   }
 
+  scanAll(): Observable<string> {
+    const url = `${API_RESOURCE_URI.MEDIA_INDEXER}/scan/all`;
+    return this.http.post<string>(url, {});
+  }
+
   uploadMovie(file: File): Observable<UploadResponse> {
     const url = `${API_RESOURCE_URI.MEDIA_INDEXER}/upload/movie`;
     const formData = new FormData();
