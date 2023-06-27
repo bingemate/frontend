@@ -37,4 +37,13 @@ export class EpisodeHistoryService {
       )
       .pipe(map(response => (response ? toEpisodeHistory(response) : null)));
   }
+
+  getEpisodesHistoryList(mediaList: number[]): Observable<HistoryModel[]> {
+    return this.http
+      .post<EpisodeHistoryListAPIResponse>(
+        `${API_RESOURCE_URI.WATCH_SERVICE}/episode-history/list`,
+        mediaList
+      )
+      .pipe(map(response => toEpisodeHistoryList(response)));
+  }
 }
