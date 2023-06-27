@@ -6,7 +6,10 @@ import { filter, forkJoin, interval, Observable, Subscription } from 'rxjs';
 import { navigationRoot } from '../../../../app-routing.module';
 import { streamingLinks } from '../../../../pages/streaming/streaming-routing.module';
 import { EpisodeHistoryService } from '../../../history/episode-history.service';
-import { MovieResponse, TvShowResponse } from '../../../../shared/models/media.models';
+import {
+  MovieResponse,
+  TvShowResponse,
+} from '../../../../shared/models/media.models';
 import { MediaInfoService } from '../../../media-info/media-info.service';
 import { MediaDiscoverService } from '../../../media-info/media-discover.service';
 import { HistoryModel } from '../../../../shared/models/history.models';
@@ -70,7 +73,7 @@ export class AuthHomeComponent implements OnInit, OnDestroy {
     );
     this.subscriptions.push(
       forkJoin([
-        this.episodeHistoryService.getEpisodeHistory(),
+        this.episodeHistoryService.getEpisodesHistory(),
         this.movieHistoryService.getMovieHistory(),
       ]).subscribe(
         ([episodeHistory, movieHistory]) =>

@@ -14,7 +14,7 @@ import { HistoryModel } from '../../shared/models/history.models';
 export class EpisodeHistoryService {
   constructor(private readonly http: HttpClient) {}
 
-  getEpisodeHistory(): Observable<HistoryModel[]> {
+  getEpisodesHistory(): Observable<HistoryModel[]> {
     return this.http
       .get<EpisodeHistoryListAPIResponse>(
         `${API_RESOURCE_URI.WATCH_SERVICE}/episode-history`
