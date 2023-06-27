@@ -28,6 +28,8 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { FriendshipService } from '../../../friendship/friendship.service';
 import { WatchTogetherService } from '../../../watch-together/watch-together.service';
 import { subscriptionLinks } from '../../../../pages/subscription/subscriptions-routing.module';
+import { MovieHistoryService } from '../../../history/movie-history.service';
+import { HistoryModel } from '../../../../shared/models/history.models';
 
 @Component({
   selector: 'app-movie-info',
@@ -62,6 +64,8 @@ export class MovieInfoComponent implements OnInit, OnChanges, OnDestroy {
   selectedFriends: string[] = [];
   friends: string[] = [];
 
+  movieHistory: HistoryModel | null = null;
+
   subscriptions: Subscription[] = [];
 
   constructor(
@@ -70,6 +74,7 @@ export class MovieInfoComponent implements OnInit, OnChanges, OnDestroy {
     private moviePlaylistsService: MoviePlaylistsService,
     private readonly notificationsService: NotificationsService,
     private watchlistService: MovieWatchlistService,
+    private readonly movieHistoryService: MovieHistoryService,
     private friendshipService: FriendshipService,
     private watchTogetherService: WatchTogetherService
   ) {}
@@ -115,7 +120,20 @@ export class MovieInfoComponent implements OnInit, OnChanges, OnDestroy {
             }
           })
       );
+      this.getMovieHistory();
     }
+  }
+
+  getMovieHistory() {
+    this.subscriptions.push(
+      this.movieHistoryService
+        .getMovieHistoryById(this.movie?.id ?? 0)
+        .subscribe({
+          next: movieHistory => {
+            this.movieHistory = movieHistory;
+          },
+        })
+    );
   }
 
   getRate(): number {
@@ -164,6 +182,15 @@ export class MovieInfoComponent implements OnInit, OnChanges, OnDestroy {
               status,
               userId: this.userId,
             };
+            if (status == MovieWatchListStatus.FINISHED) {
+              this.movieHistory = {
+                userId: this.userId,
+                type: 'movies',
+                mediaId: this.movie!.id,
+                stoppedAt: 1,
+                viewedAt: new Date(),
+              };
+            }
           })
       );
     }
@@ -174,9 +201,21 @@ export class MovieInfoComponent implements OnInit, OnChanges, OnDestroy {
     this.subscriptions.push(
       this.watchlistService
         .updateWatchlistItem(this.watchlistItem!)
-        .subscribe(() =>
-          this.notificationsService.success('Liste de suivie modifié')
-        )
+        .subscribe(() => {
+          this.notificationsService.success('Liste de suivie modifié');
+          if (
+            status == MovieWatchListStatus.FINISHED &&
+            this.movieHistory !== null
+          ) {
+            this.movieHistory = {
+              userId: this.userId,
+              type: 'movies',
+              mediaId: this.movie!.id,
+              stoppedAt: 1,
+              viewedAt: new Date(),
+            };
+          }
+        })
     );
   }
 
@@ -187,6 +226,7 @@ export class MovieInfoComponent implements OnInit, OnChanges, OnDestroy {
         .subscribe(() => {
           this.isMediaInWatchList = false;
           this.watchlistItem = undefined;
+          this.movieHistory = null;
           this.notificationsService.success(
             'Le film a été retiré des films suivis'
           );
@@ -217,4 +257,6 @@ export class MovieInfoComponent implements OnInit, OnChanges, OnDestroy {
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
+
+  protected readonly history = history;
 }

@@ -44,7 +44,7 @@ export class StatisticsHistoryComponent implements OnInit, OnDestroy {
     this.historyLoading = true;
     this.subscriptions.push(
       forkJoin([
-        this.episodeHistoryService.getEpisodeHistory(),
+        this.episodeHistoryService.getEpisodesHistory(),
         this.movieHistoryService.getMovieHistory(),
       ]).subscribe({
         next: ([episodeHistory, movieHistory]) => {

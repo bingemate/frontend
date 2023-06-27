@@ -15,6 +15,8 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { WatchTogetherService } from '../../../watch-together/watch-together.service';
 import { FriendshipService } from '../../../friendship/friendship.service';
 import { subscriptionLinks } from '../../../../pages/subscription/subscriptions-routing.module';
+import { HistoryModel } from '../../../../shared/models/history.models';
+import { EpisodeHistoryService } from '../../../history/episode-history.service';
 
 @Component({
   selector: 'app-episode-info-list',
@@ -37,6 +39,7 @@ export class EpisodeInfoListComponent implements OnInit, OnDestroy {
   loading = false;
 
   seasonEpisodes: TvEpisodeResponse[] = [];
+  seasonEpisodesHistory: Map<number, HistoryModel> = new Map();
   selectedEpisode?: TvEpisodeResponse;
   showWatchTogether = false;
   selectedFriends: string[] = [];
@@ -52,7 +55,8 @@ export class EpisodeInfoListComponent implements OnInit, OnDestroy {
     private episodePlaylistsService: EpisodePlaylistsService,
     private readonly notificationsService: NotificationsService,
     private friendshipService: FriendshipService,
-    private readonly watchTogetherService: WatchTogetherService
+    private readonly watchTogetherService: WatchTogetherService,
+    private readonly episodeHistoryService: EpisodeHistoryService
   ) {}
 
   ngOnInit(): void {
@@ -65,24 +69,44 @@ export class EpisodeInfoListComponent implements OnInit, OnDestroy {
     );
     this.loading = true;
     this.store.dispatch(new PlaylistActions.GetCurrentUserPlaylists());
-    this.subscriptions.push(
-      this.mediaInfoService
-        .getTvShowSeasonEpisodesInfo(this.tvShowId, this.seasonNumber)
-        .subscribe({
-          next: episodes => {
-            this.seasonEpisodes = episodes;
-          },
-          complete: () => {
-            this.loading = false;
-          },
-        })
-    );
+    this.onGetSeasonEpisodes();
     this.subscriptions.push(
       this.friendshipService
         .getFriendships()
         .subscribe(
           friends => (this.friends = friends.map(friend => friend.friendId))
         )
+    );
+  }
+
+  private onGetSeasonEpisodes() {
+    this.subscriptions.push(
+      this.mediaInfoService
+        .getTvShowSeasonEpisodesInfo(this.tvShowId, this.seasonNumber)
+        .subscribe({
+          next: episodes => {
+            this.seasonEpisodes = episodes;
+            this.onGetSeasonEpisodesHistory();
+          },
+          complete: () => {
+            this.loading = false;
+          },
+        })
+    );
+  }
+
+  private onGetSeasonEpisodesHistory() {
+    const episodeIds = this.seasonEpisodes.map(episode => episode.id);
+    this.subscriptions.push(
+      this.episodeHistoryService.getEpisodesHistoryList(episodeIds).subscribe({
+        next: historyList => {
+          if (historyList) {
+            historyList.forEach(history => {
+              this.seasonEpisodesHistory.set(history.mediaId, history);
+            });
+          }
+        },
+      })
     );
   }
 

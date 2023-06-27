@@ -41,6 +41,7 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { MediaListComponent } from './components/media-list/media-list.component';
 import { SharedModule } from '../../shared/shared.module';
+import { NzProgressModule } from 'ng-zorro-antd/progress';
 
 @NgModule({
   declarations: [
@@ -87,6 +88,7 @@ import { SharedModule } from '../../shared/shared.module';
     NzCheckboxModule,
     NzToolTipModule,
     SharedModule,
+    NzProgressModule,
   ],
   exports: [
     MediaInfoComponent,
