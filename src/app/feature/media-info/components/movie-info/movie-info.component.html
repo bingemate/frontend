@@ -6,6 +6,16 @@
   <nz-row [nzGutter]="[24, 24]" class="movie-details">
     <div nz-col [nzXs]="18" [nzLg]="6">
       <img nz-image [nzSrc]="movie.posterUrl" alt="Movie Poster" width="100%" />
+      <ng-container *ngIf="movieHistory !== null">
+        <nz-progress
+          [nzPercent]="
+            (
+              (movieHistory!.stoppedAt > 0.95 ? 1 : movieHistory!.stoppedAt) *
+              100
+            ).toFixed(0)
+          "></nz-progress>
+        Vu le {{ movieHistory!.viewedAt | date : 'dd/MM/yyyy à HH:mm' }}
+      </ng-container>
     </div>
 
     <div class="movie-info" nz-col [nzXs]="24" [nzLg]="18">
@@ -175,6 +185,17 @@
 </nz-dropdown-menu>
 <nz-dropdown-menu #watchMenu="nzDropdownMenu">
   <ul nz-menu>
+    <li
+      nz-menu-item
+      *ngIf="movieHistory !== null && movieHistory.stoppedAt < 0.95">
+      <a
+        [routerLink]="[streamPath, movie?.id]"
+        [queryParams]="{
+          progress: movieHistory.stoppedAt
+        }"
+        >Reprendre la lecture</a
+      >
+    </li>
     <li nz-menu-item>
       <a (click)="watchTogetherModal()">Lecture partagée</a>
     </li>

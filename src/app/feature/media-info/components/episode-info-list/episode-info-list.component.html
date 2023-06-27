@@ -26,7 +26,7 @@
   </ul>
 </nz-dropdown-menu>
 
-<cdk-virtual-scroll-viewport itemSize="50" class="infinite-container">
+<cdk-virtual-scroll-viewport itemSize="110" class="infinite-container">
   <nz-list [nzSize]="isOnPhone ? 'small' : 'default'">
     <nz-list-item *cdkVirtualFor="let episode of seasonEpisodes">
       <nz-list-item-meta>
@@ -49,18 +49,34 @@
               "
               [ngModel]="false"
               (ngModelChange)="onEpisodeSelection(episode)"></label>
-            <img
-              class="hide-on-phone"
-              *nzSpaceItem
-              nz-image
-              [nzSrc]="episode.posterUrl"
-              height="50px"
-              alt="" />
+            <nz-space *nzSpaceItem nzDirection="vertical" class="hide-on-phone">
+              <img
+                *nzSpaceItem
+                nz-image
+                [nzSrc]="episode.posterUrl"
+                height="50px"
+                alt="" />
+              <ng-container *ngIf="seasonEpisodesHistory.has(episode.id)">
+                <nz-progress
+                  *nzSpaceItem
+                  [nzShowInfo]="false"
+                  [nzPercent]="
+                    (
+                      (seasonEpisodesHistory.get(episode.id)!.stoppedAt > 0.95
+                        ? 1
+                        : seasonEpisodesHistory.get(episode.id)!.stoppedAt) *
+                      100
+                    ).toFixed(0)
+                  "></nz-progress>
+              </ng-container>
+            </nz-space>
             <button
               *nzSpaceItem
               [hidden]="!episode.present || (isSubscribed$ | async) === false"
               [routerLink]="[streamPath, episode.id]"
               nz-button
+              nz-dropdown
+              [nzDropdownMenu]="continueEpisode"
               nzType="primary"
               nzShape="circle">
               <span nz-icon nzType="play-circle" nzTheme="fill"></span>
@@ -89,6 +105,19 @@
               {{ episode.overview }}
             </span>
           </nz-space>
+          <nz-dropdown-menu #continueEpisode="nzDropdownMenu">
+            <ul nz-menu *ngIf="seasonEpisodesHistory.has(episode.id)">
+              <li nz-menu-item>
+                <a
+                  [routerLink]="[streamPath, episode.id]"
+                  [queryParams]="{
+                    progress: seasonEpisodesHistory.get(episode.id)!.stoppedAt
+                  }">
+                  Reprendre la lecture
+                </a>
+              </li>
+            </ul>
+          </nz-dropdown-menu>
         </nz-list-item-meta-description>
       </nz-list-item-meta>
       <nz-list-item-extra class="hide-on-phone">
