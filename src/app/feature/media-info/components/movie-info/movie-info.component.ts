@@ -182,6 +182,15 @@ export class MovieInfoComponent implements OnInit, OnChanges, OnDestroy {
               status,
               userId: this.userId,
             };
+            if (status == MovieWatchListStatus.FINISHED) {
+              this.movieHistory = {
+                userId: this.userId,
+                type: 'movies',
+                mediaId: this.movie!.id,
+                stoppedAt: 1,
+                viewedAt: new Date(),
+              };
+            }
           })
       );
     }
@@ -199,7 +208,9 @@ export class MovieInfoComponent implements OnInit, OnChanges, OnDestroy {
             this.movieHistory !== null
           ) {
             this.movieHistory = {
-              ...this.movieHistory,
+              userId: this.userId,
+              type: 'movies',
+              mediaId: this.movie!.id,
               stoppedAt: 1,
               viewedAt: new Date(),
             };

@@ -8,9 +8,11 @@
       <img nz-image [nzSrc]="movie.posterUrl" alt="Movie Poster" width="100%" />
       <ng-container *ngIf="movieHistory !== null">
         <nz-progress
-          [nzShowInfo]="movieHistory!.stoppedAt > 0.95"
           [nzPercent]="
-            (movieHistory!.stoppedAt > 0.95 ? 1 : movieHistory!.stoppedAt) * 100
+            (
+              (movieHistory!.stoppedAt > 0.95 ? 1 : movieHistory!.stoppedAt) *
+              100
+            ).toFixed(0)
           "></nz-progress>
         Vu le {{ movieHistory!.viewedAt | date : 'dd/MM/yyyy à HH:mm' }}
       </ng-container>
