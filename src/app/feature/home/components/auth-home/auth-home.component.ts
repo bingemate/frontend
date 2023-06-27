@@ -75,12 +75,12 @@ export class AuthHomeComponent implements OnInit, OnDestroy {
       forkJoin([
         this.episodeHistoryService.getEpisodesHistory(),
         this.movieHistoryService.getMovieHistory(),
-      ]).subscribe(
-        ([episodeHistory, movieHistory]) =>
-          (this.history = [...episodeHistory, ...movieHistory]
-            .filter(history => history.stoppedAt < 0.9)
-            .sort((a, b) => b.viewedAt.getTime() - a.viewedAt.getTime()))
-      )
+      ]).subscribe(([episodeHistory, movieHistory]) => {
+        this.history = [...episodeHistory, ...movieHistory]
+          .filter(history => history.stoppedAt < 0.9)
+          .sort((a, b) => b.viewedAt.getTime() - a.viewedAt.getTime())
+          .slice(0, 10);
+      })
     );
     this.subscriptions.push(
       this.mediaDiscoverService.getPopularMovies().subscribe(movies => {
