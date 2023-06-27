@@ -30,11 +30,11 @@ export class EpisodeHistoryService {
     );
   }
 
-  getEpisodeHistoryById(episodeId: number): Observable<HistoryModel> {
+  getEpisodeHistoryById(episodeId: number): Observable<HistoryModel | null> {
     return this.http
-      .get<EpisodeHistoryAPIResponse>(
+      .get<EpisodeHistoryAPIResponse | null>(
         `${API_RESOURCE_URI.WATCH_SERVICE}/episode-history/${episodeId}`
       )
-      .pipe(map(response => toEpisodeHistory(response)));
+      .pipe(map(response => (response ? toEpisodeHistory(response) : null)));
   }
 }

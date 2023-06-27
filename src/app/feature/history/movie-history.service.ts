@@ -30,11 +30,11 @@ export class MovieHistoryService {
     );
   }
 
-  getMovieHistoryById(movieId: number): Observable<HistoryModel> {
+  getMovieHistoryById(movieId: number): Observable<HistoryModel | null> {
     return this.http
-      .get<MovieHistoryAPIResponse>(
+      .get<MovieHistoryAPIResponse | null>(
         `${API_RESOURCE_URI.WATCH_SERVICE}/movie-history/${movieId}`
       )
-      .pipe(map(response => toMovieHistory(response)));
+      .pipe(map(response => (response ? toMovieHistory(response) : null)));
   }
 }
