@@ -62,8 +62,4 @@ export class MediaInfoComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
-
-  cutText(text: string, length = 20): string {
-    return text.length > length ? `${text.slice(0, length)}...` : text;
-  }
 }
