@@ -10,6 +10,7 @@ import { RatingService } from '../../../rating/rating.service';
 import { forkJoin, Observable, Subscription } from 'rxjs';
 import { millisToHours } from '../../../../shared/utils/date.utils';
 import { UserService } from '../../../user/user.service';
+import { MediaFileService } from '../../../media-file/media-file.service';
 
 @Component({
   selector: 'app-statistic-view',
@@ -30,11 +31,18 @@ export class StatisticViewComponent implements OnInit, OnDestroy {
 
   userCount = 0;
   subscriberCount = 0;
+  availableMovieCount = 0;
+  availableTvCount = 0;
+  availableEpisodeCount = 0;
+  availableMovieDuration = 0;
+  availableTvDuration = 0;
+  mediafileSize = 0;
 
   private subscriptions: Subscription[] = [];
   constructor(
     private episodeStatisticsService: EpisodeStatisticsService,
     private movieStatisticsService: MovieStatisticsService,
+    private readonly mediaFileService: MediaFileService,
     private commentService: CommentService,
     private ratingService: RatingService,
     private readonly userService: UserService
@@ -78,7 +86,13 @@ export class StatisticViewComponent implements OnInit, OnDestroy {
           ratingsCount,
           comments,
           userCount,
-          SubscriberCount,
+          subscriberCount,
+          availableMovieCount,
+          availableTvCount,
+          availableEpisodeCount,
+          availableMovieDuration,
+          availableTvDuration,
+          metafileSize,
         ]) => {
           this.episodeStats = episodeStats;
           this.movieStats = movieStats;
@@ -92,7 +106,13 @@ export class StatisticViewComponent implements OnInit, OnDestroy {
             this.calculateWatchedMediaCount(episodeStats) +
             this.calculateWatchedMediaCount(movieStats);
           this.userCount = userCount;
-          this.subscriberCount = SubscriberCount;
+          this.subscriberCount = subscriberCount;
+          this.availableMovieCount = availableMovieCount;
+          this.availableTvCount = availableTvCount;
+          this.availableEpisodeCount = availableEpisodeCount;
+          this.availableMovieDuration = availableMovieDuration;
+          this.availableTvDuration = availableTvDuration;
+          this.mediafileSize = metafileSize;
         }
       )
     );
@@ -125,7 +145,21 @@ export class StatisticViewComponent implements OnInit, OnDestroy {
   getAllData(
     sixMonthAgo: Date
   ): Observable<
-    [Statistic[], Statistic[], number, number, CommentStat[], number, number]
+    [
+      Statistic[],
+      Statistic[],
+      number,
+      number,
+      CommentStat[],
+      number,
+      number,
+      number,
+      number,
+      number,
+      number,
+      number,
+      number
+    ]
   > {
     return forkJoin([
       this.episodeStatisticsService.getStatistics(),
@@ -138,6 +172,12 @@ export class StatisticViewComponent implements OnInit, OnDestroy {
       ),
       this.userService.adminCountUsers(),
       this.userService.adminCountUsersByRole('bingemate-subscribed'),
+      this.mediaFileService.countAvailableMovies(),
+      this.mediaFileService.countAvailableTvShows(),
+      this.mediaFileService.countAvailableEpisodes(),
+      this.mediaFileService.countAvailableMovieDuration(),
+      this.mediaFileService.countAvailableEpisodeDuration(),
+      this.mediaFileService.getMediaFileTotalSize(),
     ]);
   }
 

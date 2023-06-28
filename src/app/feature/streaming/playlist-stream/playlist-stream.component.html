@@ -42,7 +42,7 @@
                   ngSrc="{{ item.media.imageUrl }}" />
                 <nz-space *nzSpaceItem nzDirection="vertical" nzSize="small">
                   <span *nzSpaceItem>{{
-                    item.playlistItem.episodeId | mediaName : 'episode' | async
+                    episodeNames.get(item.playlistItem.episodeId)
                   }}</span>
                 </nz-space>
               </nz-space>

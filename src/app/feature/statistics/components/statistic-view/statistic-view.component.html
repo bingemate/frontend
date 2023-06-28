@@ -2,40 +2,97 @@
   nz-row
   [nzGutter]="{ xs: 8, sm: 12, md: 16, lg: 24 }"
   style="margin-bottom: 1rem">
-  <div
-    nz-col
-    [nzXs]="{ span: 12 }"
-    [nzMd]="{ span: 6 }"
-    class="gutter-row"
-    *ngIf="userID === ''">
-    <nz-card>
-      <div nz-row nzJustify="center">
-        <nz-statistic
-          [nzValue]="userCount"
-          nzTitle="Nombre d'utilisateurs"
-          [nzPrefix]="userIc"></nz-statistic>
-        <ng-template #userIc><span nz-icon nzType="user"></span></ng-template>
-      </div>
-    </nz-card>
-  </div>
-  <div
-    nz-col
-    [nzXs]="{ span: 12 }"
-    [nzMd]="{ span: 6 }"
-    class="gutter-row"
-    *ngIf="userID === ''">
-    <nz-card>
-      <div nz-row nzJustify="center">
-        <nz-statistic
-          [nzValue]="subscriberCount"
-          nzTitle="Nombre d'abonnés"
-          [nzPrefix]="subIc"></nz-statistic>
-        <ng-template #subIc
-          ><span nz-icon nzType="dollar-circle"></span
-        ></ng-template>
-      </div>
-    </nz-card>
-  </div>
+  <ng-container *ngIf="userID === ''">
+    <div nz-col [nzXs]="{ span: 24 }" [nzMd]="{ span: 6 }" class="gutter-row">
+      <nz-card>
+        <div nz-row nzJustify="center">
+          <nz-statistic
+            [nzValue]="userCount"
+            nzTitle="Nombre d'utilisateurs"
+            [nzPrefix]="userIc"></nz-statistic>
+          <ng-template #userIc><span nz-icon nzType="user"></span></ng-template>
+        </div>
+      </nz-card>
+    </div>
+    <div nz-col [nzXs]="{ span: 24 }" [nzMd]="{ span: 6 }" class="gutter-row">
+      <nz-card>
+        <div nz-row nzJustify="center">
+          <nz-statistic
+            [nzValue]="subscriberCount"
+            nzTitle="Nombre d'abonnés"
+            [nzPrefix]="subIc"></nz-statistic>
+          <ng-template #subIc
+            ><span nz-icon nzType="dollar-circle"></span
+          ></ng-template>
+        </div>
+      </nz-card>
+    </div>
+    <div nz-col [nzXs]="{ span: 24 }" [nzMd]="{ span: 6 }" class="gutter-row">
+      <nz-card>
+        <div nz-row nzJustify="center">
+          <nz-statistic
+            [nzValue]="availableMovieCount"
+            nzTitle="Nombre de films disponibles"
+            [nzPrefix]="movieCPref"></nz-statistic>
+          <ng-template #movieCPref
+            ><span nz-icon nzType="video-camera"></span
+          ></ng-template>
+        </div>
+      </nz-card>
+    </div>
+    <div nz-col [nzXs]="{ span: 24 }" [nzMd]="{ span: 6 }" class="gutter-row">
+      <nz-card>
+        <div nz-row nzJustify="center">
+          <nz-statistic
+            [nzValue]="availableTvCount + ' / ' + availableEpisodeCount"
+            nzTitle="Nombre de séries / épisodes disponibles"
+            [nzPrefix]="tvCPref"></nz-statistic>
+          <ng-template #tvCPref>
+            <span nz-icon nzType="video-camera"></span>
+          </ng-template>
+        </div>
+      </nz-card>
+    </div>
+    <div nz-col [nzXs]="{ span: 24 }" [nzMd]="{ span: 6 }" class="gutter-row">
+      <nz-card>
+        <div nz-row nzJustify="center">
+          <nz-statistic
+            [nzValue]="availableMovieDuration | duration"
+            nzTitle="Durée totale des films disponibles"
+            [nzPrefix]="movieDPref"></nz-statistic>
+          <ng-template #movieDPref>
+            <span nz-icon nzType="clock-circle"></span>
+          </ng-template>
+        </div>
+      </nz-card>
+    </div>
+    <div nz-col [nzXs]="{ span: 24 }" [nzMd]="{ span: 6 }" class="gutter-row">
+      <nz-card>
+        <div nz-row nzJustify="center">
+          <nz-statistic
+            [nzValue]="availableTvDuration | duration"
+            nzTitle="Durée totale des séries disponibles"
+            [nzPrefix]="tvDPref"></nz-statistic>
+          <ng-template #tvDPref>
+            <span nz-icon nzType="clock-circle"></span>
+          </ng-template>
+        </div>
+      </nz-card>
+    </div>
+    <div nz-col [nzXs]="{ span: 24 }" [nzMd]="{ span: 6 }" class="gutter-row">
+      <nz-card>
+        <div nz-row nzJustify="center">
+          <nz-statistic
+            [nzValue]="mediafileSize | nzBytes : 2"
+            nzTitle="Taille totale des médias"
+            [nzPrefix]="mSize"></nz-statistic>
+          <ng-template #mSize>
+            <span nz-icon nzType="folder"></span>
+          </ng-template>
+        </div>
+      </nz-card>
+    </div>
+  </ng-container>
   <div nz-col [nzXs]="{ span: 12 }" [nzMd]="{ span: 6 }" class="gutter-row">
     <nz-card>
       <div nz-row nzJustify="center">
