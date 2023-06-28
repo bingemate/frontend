@@ -16,6 +16,7 @@ import { StreamingState } from '../store/streaming.state';
 import { StreamingActions } from '../store/streaming.actions';
 import { tap } from 'rxjs/operators';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { TvEpisodeResponse } from '../../../shared/models/media.models';
 
 @Component({
   selector: 'app-playlist-stream',
@@ -39,6 +40,9 @@ export class PlaylistStreamComponent implements OnInit, OnDestroy {
   autoplay?: boolean;
   position?: number;
   subscriptions: Subscription[] = [];
+
+  tvNames: Map<number, string> = new Map<number, string>();
+  episodeNames: Map<number, string> = new Map<number, string>();
 
   isOnPhone = false;
 
@@ -154,6 +158,7 @@ export class PlaylistStreamComponent implements OnInit, OnDestroy {
     const episodesIds = items.map(item => item.episodeId);
     return this.mediaService.getTvShowEpisodesInfoByIds(episodesIds).pipe(
       map(episodes => {
+        this.processTvShowName(episodes);
         return episodes.map(episode => {
           const playlistItem = items.find(
             item => item.episodeId === episode.id
@@ -168,6 +173,32 @@ export class PlaylistStreamComponent implements OnInit, OnDestroy {
             playlistItem: playlistItem!,
           };
         });
+      })
+    );
+  }
+
+  processTvShowName(episodes: TvEpisodeResponse[]): void {
+    const tvShowIds = new Set<number>();
+    episodes.forEach(episode => {
+      tvShowIds.add(episode.tvShowId);
+    });
+    this.subscriptions.push(
+      this.mediaService.getTvShowsShortInfo(Array.from(tvShowIds)).subscribe({
+        next: tvShows => {
+          tvShows.forEach(tvShow => {
+            this.tvNames.set(tvShow.id, tvShow.title);
+          });
+          episodes.forEach(episode => {
+            this.episodeNames.set(
+              episode.id,
+              `${this.tvNames.get(episode.tvShowId)} - ${
+                episode.seasonNumber
+              }x${episode.episodeNumber.toString().padStart(2, '0')} - ${
+                episode.name
+              }`
+            );
+          });
+        },
       })
     );
   }
