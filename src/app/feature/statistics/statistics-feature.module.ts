@@ -16,6 +16,7 @@ import { StatsShowDailyViewedGenreComponent } from './components/stats-show-dail
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NgChartsModule } from 'ng2-charts';
+import { NzPipesModule } from 'ng-zorro-antd/pipes';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { NgChartsModule } from 'ng2-charts';
     NzButtonModule,
     NzDropDownModule,
     NgChartsModule,
+    NzPipesModule,
   ],
   providers: [EpisodeStatisticsService, MovieStatisticsService],
   exports: [StatisticViewComponent],

@@ -64,4 +64,34 @@ export class MediaFileService {
       `${API_RESOURCE_URI.MEDIA_INFO}/file/available`
     );
   }
+
+  countAvailableMovies(): Observable<number> {
+    return this.http.get<number>(
+      `${API_RESOURCE_URI.MEDIA_INFO}/file/movie/count`
+    );
+  }
+
+  countAvailableEpisodes(): Observable<number> {
+    return this.http.get<number>(
+      `${API_RESOURCE_URI.MEDIA_INFO}/file/episode/count`
+    );
+  }
+
+  countAvailableTvShows(): Observable<number> {
+    return this.http.get<number>(
+      `${API_RESOURCE_URI.MEDIA_INFO}/file/tv/count`
+    );
+  }
+
+  countAvailableMovieDuration(): Observable<number> {
+    return this.http.get<number>(
+      `${API_RESOURCE_URI.MEDIA_INFO}/file/movie/duration`
+    );
+  }
+
+  countAvailableEpisodeDuration(): Observable<number> {
+    return this.http.get<number>(
+      `${API_RESOURCE_URI.MEDIA_INFO}/file/episode/duration`
+    );
+  }
 }
