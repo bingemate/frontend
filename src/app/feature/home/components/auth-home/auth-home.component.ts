@@ -79,7 +79,7 @@ export class AuthHomeComponent implements OnInit, OnDestroy {
         this.history = [...episodeHistory, ...movieHistory]
           .filter(history => history.stoppedAt < 0.9)
           .sort((a, b) => b.viewedAt.getTime() - a.viewedAt.getTime())
-          .slice(0, 10);
+          .slice(0, 15);
       })
     );
     this.subscriptions.push(
