@@ -5,6 +5,7 @@ import {
 } from '../../../../shared/models/media.models';
 import { MediaInfoService } from '../../media-info.service';
 import { Subscription } from 'rxjs';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-media-info',
@@ -26,9 +27,17 @@ export class MediaInfoComponent implements OnInit, OnDestroy {
 
   subscriptions: Subscription[] = [];
 
-  constructor(private mediaInfoService: MediaInfoService) {}
+  isOnPhone = false;
+
+  constructor(
+    private mediaInfoService: MediaInfoService,
+    private breakpointObserver: BreakpointObserver
+  ) {}
 
   ngOnInit(): void {
+    this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
+      this.isOnPhone = result.matches;
+    });
     if (this.type === 'tv-shows') {
       this.subscriptions.push(
         this.mediaInfoService

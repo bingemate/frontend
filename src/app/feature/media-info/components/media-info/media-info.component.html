@@ -6,21 +6,52 @@
     *nzSpaceItem
     nzDisablePreview
     nz-image
+    [width]="isOnPhone ? 120 : 200"
+    [height]="isOnPhone ? 67 : 112"
     [nzSrc]="posterUrl"
     alt=""
     [ngClass]="{ vertical: vertical, horizontal: !vertical }" />
-  <h5 nz-typography *nzSpaceItem style="text-align: center; width: 100%">
-    <ng-container *ngIf="type === 'movies'; else episode">
-      {{ movieMedia?.title }}
-    </ng-container>
-    <ng-template #episode>
-      {{ episodeMedia?.tvShowId ?? 1 | mediaName : 'tv' | async }}
-      <br />
-      {{ episodeMedia?.seasonNumber }}x{{
-        episodeMedia?.episodeNumber?.toString()?.padStart(2, '0')
-      }}
-      -
-      {{ episodeMedia?.name }}
-    </ng-template>
-  </h5>
+  <ng-container *ngIf="isOnPhone; else notOnPhone">
+    <h5
+      *nzSpaceItem
+      [class]="
+        vertical
+          ? 'title-container-vertical-mobile'
+          : 'title-container-horizontal-mobile'
+      ">
+      <ng-container *ngIf="type === 'movies'; else episode">
+        {{ movieMedia?.title }}
+      </ng-container>
+      <ng-template #episode>
+        {{ episodeMedia?.tvShowId ?? 1 | mediaName : 'tv' | async }}
+        <br />
+        {{ episodeMedia?.seasonNumber }}x{{
+          episodeMedia?.episodeNumber?.toString()?.padStart(2, '0')
+        }}
+        -
+        {{ episodeMedia?.name }}
+      </ng-template>
+    </h5>
+  </ng-container>
+  <ng-template #notOnPhone>
+    <h5
+      nz-typography
+      *nzSpaceItem
+      [class]="
+        vertical ? 'title-container-vertical' : 'title-container-horizontal'
+      ">
+      <ng-container *ngIf="type === 'movies'; else episode">
+        {{ movieMedia?.title }}
+      </ng-container>
+      <ng-template #episode>
+        {{ episodeMedia?.tvShowId ?? 1 | mediaName : 'tv' | async }}
+        <br />
+        {{ episodeMedia?.seasonNumber }}x{{
+          episodeMedia?.episodeNumber?.toString()?.padStart(2, '0')
+        }}
+        -
+        {{ episodeMedia?.name }}
+      </ng-template>
+    </h5>
+  </ng-template>
 </nz-space>
