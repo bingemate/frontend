@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
-import { map, mergeMap, Observable, switchMap } from 'rxjs';
+import { map, mergeMap, Observable, Subscription, switchMap } from 'rxjs';
 import {
   EpisodePlaylist,
   EpisodePlaylistItem,
@@ -13,10 +13,15 @@ import { MediaInfoService } from '../../../feature/media-info/media-info.service
 import { AuthState } from '../../../core/auth/store/auth.state';
 import { UserResponse } from '../../../shared/models/user.models';
 import { StreamingActions } from '../../../feature/streaming/store/streaming.actions';
-import { MoviePlaylist, MoviePlaylistItem, MoviePlaylistItemMedia } from '../../../shared/models/movie-playlist.model';
+import {
+  MoviePlaylist,
+  MoviePlaylistItem,
+  MoviePlaylistItemMedia,
+} from '../../../shared/models/movie-playlist.model';
 import { EpisodePlaylistsService } from '../../../feature/playlist/episode-playlists.service';
 import { tap } from 'rxjs/operators';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
+import { TvEpisodeResponse } from '../../../shared/models/media.models';
 
 @Component({
   selector: 'app-playlist',
@@ -43,6 +48,10 @@ export class PlaylistComponent implements OnInit, OnDestroy {
 
   moviePlaylistItems: MoviePlaylistItemMedia[] = [];
   episodePlaylistItems: EpisodePlaylistItemMedia[] = [];
+
+  episodeNames: Map<number, string> = new Map<number, string>();
+
+  subscriptions: Subscription[] = [];
 
   query = '';
   filter = '';
@@ -330,6 +339,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
     const episodeIds = items.map(item => item.episodeId);
     return this.mediaService.getTvShowEpisodesInfoByIds(episodeIds).pipe(
       map(episodes => {
+        this.processEpisodesName(episodes);
         return episodes.map(episode => {
           const item = items.find(i => i.episodeId === episode.id);
           return {
@@ -342,6 +352,32 @@ export class PlaylistComponent implements OnInit, OnDestroy {
             playlistItem: item!,
           };
         });
+      })
+    );
+  }
+
+  processEpisodesName(episodes: TvEpisodeResponse[]) {
+    const tvShowIds = new Set<number>();
+    episodes.forEach(episode => {
+      tvShowIds.add(episode.tvShowId);
+    });
+    this.subscriptions.push(
+      this.mediaService.getTvShowsShortInfo(Array.from(tvShowIds)).subscribe({
+        next: tvShows => {
+          tvShows.forEach(tvShow => {
+            this.episodeNames.set(tvShow.id, tvShow.title);
+          });
+          episodes.forEach(episode => {
+            this.episodeNames.set(
+              episode.id,
+              `${this.episodeNames.get(episode.tvShowId)} - ${
+                episode.seasonNumber
+              }x${episode.episodeNumber.toString().padStart(2, '0')} - ${
+                episode.name
+              }`
+            );
+          });
+        },
       })
     );
   }

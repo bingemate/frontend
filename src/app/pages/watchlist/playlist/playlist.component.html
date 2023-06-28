@@ -40,7 +40,7 @@
                   '/medias/movie-view',
                   item.playlistItem.movieId
                 ]">
-                {{ item.playlistItem.movieId | mediaName : 'movie' | async }}
+                {{ item.media.name }}
               </a>
             </nz-space>
           </nz-list-item-meta-title>
@@ -48,7 +48,7 @@
             <a
               style="margin-left: 32px"
               [routerLink]="['/medias/movie-view', item.playlistItem.movieId]">
-              {{ item.playlistItem.movieId | mediaName : 'movie' | async }}
+              {{ item.media.name }}
             </a>
           </nz-list-item-meta-description>
         </nz-list-item-meta>
@@ -110,15 +110,13 @@
                   ngSrc="{{ item.media.imageUrl }}" />
               </a>
               <span *nzSpaceItem class="hide-on-phone">
-                {{
-                  item.playlistItem.episodeId | mediaName : 'episode' | async
-                }}
+                {{ episodeNames.get(item.playlistItem.episodeId) }}
               </span>
             </nz-space>
           </nz-list-item-meta-title>
           <nz-list-item-meta-description class="hide-on-desktop">
             <span style="margin-left: 32px">
-              {{ item.playlistItem.episodeId | mediaName : 'episode' | async }}
+              {{ episodeNames.get(item.playlistItem.episodeId) }}
             </span>
           </nz-list-item-meta-description>
         </nz-list-item-meta>
