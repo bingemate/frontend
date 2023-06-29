@@ -19,7 +19,7 @@ export class LogsComponent implements AfterViewChecked {
   @ViewChild('scrollMe') private myScrollContainer!: ElementRef;
 
   ngAfterViewChecked() {
-    this.scrollToBottom();
+    // this.scrollToBottom();
   }
 
   scrollToBottom(): void {
