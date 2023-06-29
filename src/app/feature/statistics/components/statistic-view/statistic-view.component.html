@@ -83,7 +83,7 @@
       <nz-card>
         <div nz-row nzJustify="center">
           <nz-statistic
-            [nzValue]="mediafileSize | nzBytes : 2"
+            [nzValue]="mediafileSize * 1.07374 | nzBytes : 2"
             nzTitle="Taille totale des médias"
             [nzPrefix]="mSize"></nz-statistic>
           <ng-template #mSize>
