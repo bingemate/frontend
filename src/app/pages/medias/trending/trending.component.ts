@@ -128,13 +128,13 @@ export class TrendingComponent implements OnInit, OnDestroy {
         .getMoviesByComments(this.onlyAvailable)
         .subscribe(media => {
           this.moviesByCommentsLoading = false;
-          console.log('before adding movies', this.mediaByComments);
+          // console.log('before adding movies', this.mediaByComments);
           this.mediaByComments.push(
             ...media.map(
               m => ({ type: 'movie', id: m } as { type: 'movie'; id: number })
             )
           );
-          console.log('after adding movies', this.mediaByComments);
+          // console.log('after adding movies', this.mediaByComments);
         })
     );
     this.subscriptions.push(
@@ -142,13 +142,13 @@ export class TrendingComponent implements OnInit, OnDestroy {
         .getTvShowsByComments(this.onlyAvailable)
         .subscribe(media => {
           this.tvShowsByCommentsLoading = false;
-          console.log('before adding tv shows', this.mediaByComments);
+          // console.log('before adding tv shows', this.mediaByComments);
           this.mediaByComments.push(
             ...media.map(
               m => ({ type: 'tv', id: m } as { type: 'tv'; id: number })
             )
           );
-          console.log('after adding tv shows', this.mediaByComments);
+          // console.log('after adding tv shows', this.mediaByComments);
         })
     );
   }
