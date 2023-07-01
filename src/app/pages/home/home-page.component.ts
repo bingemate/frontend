@@ -15,8 +15,6 @@ export class HomePageComponent implements OnInit, OnDestroy {
 
   subscriptions: Subscription[] = [];
 
-  constructor() {}
-
   ngOnInit(): void {
     this.subscriptions.push(
       this.isAuthenticated$.subscribe(isAuth => {
