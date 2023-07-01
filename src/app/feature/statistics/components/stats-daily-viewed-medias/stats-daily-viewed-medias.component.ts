@@ -34,6 +34,7 @@ export class StatsDailyViewedMediasComponent implements OnInit, OnChanges {
     },
     scales: {
       y: {
+        beginAtZero: true,
         ticks: {
           precision: 0,
         },

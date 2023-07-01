@@ -32,6 +32,7 @@ export class StatsDailySentCommentsComponent implements OnInit, OnChanges {
     },
     scales: {
       y: {
+        beginAtZero: true,
         ticks: {
           precision: 0,
         },
@@ -103,6 +104,13 @@ export class StatsDailySentCommentsComponent implements OnInit, OnChanges {
   }
 
   private getPeriodData(stats: readonly CommentStat[], period: number) {
+    const dataMap: Map<string, number> = new Map<string, number>();
+    const currentDate = new Date();
+    currentDate.setDate(new Date().getDate() - period);
+    while (currentDate.getTime() <= new Date().getTime()) {
+      dataMap.set(format(new Date(currentDate), 'dd MMMM', { locale: fr }), 0);
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
     let statsFiltered = stats.filter(
       stat =>
         getDateDays(new Date().getTime()) - getDateDays(stat.date.getTime()) <=
@@ -111,14 +119,16 @@ export class StatsDailySentCommentsComponent implements OnInit, OnChanges {
     statsFiltered = statsFiltered.sort(
       (a, b) => a.date.getTime() - b.date.getTime()
     );
-    const dailySentComments = this.getDailySentComments(statsFiltered);
-    const labels = Array.from(dailySentComments.keys());
-    const data = Array.from(dailySentComments.values());
+    this.getDailySentComments(statsFiltered, dataMap);
+    const labels = Array.from(dataMap.keys());
+    const data = Array.from(dataMap.values());
     return { data, labels };
   }
 
-  private getDailySentComments(stats: CommentStat[]) {
-    const data: Map<string, number> = new Map<string, number>();
+  private getDailySentComments(
+    stats: CommentStat[],
+    data: Map<string, number>
+  ) {
     stats.forEach(stat => {
       const key = format(stat.date, 'dd MMMM', { locale: fr });
       data.set(key, stat.count);
