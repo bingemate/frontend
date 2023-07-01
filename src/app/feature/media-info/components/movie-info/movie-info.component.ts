@@ -182,41 +182,22 @@ export class MovieInfoComponent implements OnInit, OnChanges, OnDestroy {
               status,
               userId: this.userId,
             };
-            if (status == MovieWatchListStatus.FINISHED) {
-              this.movieHistory = {
-                userId: this.userId,
-                type: 'movies',
-                mediaId: this.movie!.id,
-                stoppedAt: 1,
-                viewedAt: new Date(),
-              };
-            }
           })
       );
     }
   }
 
   changeMovieStatus(status: MovieWatchListStatus) {
-    this.watchlistItem!.status = status;
-    this.subscriptions.push(
-      this.watchlistService
-        .updateWatchlistItem(this.watchlistItem!)
-        .subscribe(() => {
-          this.notificationsService.success('Liste de suivie modifié');
-          if (
-            status == MovieWatchListStatus.FINISHED &&
-            this.movieHistory !== null
-          ) {
-            this.movieHistory = {
-              userId: this.userId,
-              type: 'movies',
-              mediaId: this.movie!.id,
-              stoppedAt: 1,
-              viewedAt: new Date(),
-            };
-          }
-        })
-    );
+    if (this.watchlistItem!.status !== status) {
+      this.watchlistItem!.status = status;
+      this.subscriptions.push(
+        this.watchlistService
+          .updateWatchlistItem(this.watchlistItem!)
+          .subscribe(() => {
+            this.notificationsService.success('Liste de suivie modifié');
+          })
+      );
+    }
   }
 
   removeMovieWatchlist() {
@@ -226,10 +207,57 @@ export class MovieInfoComponent implements OnInit, OnChanges, OnDestroy {
         .subscribe(() => {
           this.isMediaInWatchList = false;
           this.watchlistItem = undefined;
-          this.movieHistory = null;
           this.notificationsService.success(
             'Le film a été retiré des films suivis'
           );
+        })
+    );
+  }
+
+  setMovieHistory(stoppedAt: number) {
+    if (stoppedAt === 1) {
+      this.changeMovieStatus(MovieWatchListStatus.FINISHED);
+    }
+    if (this.movieHistory) {
+      this.subscriptions.push(
+        this.movieHistoryService
+          .updateMovieHistory(this.movie?.id ?? 0, stoppedAt)
+          .subscribe({
+            next: () => {
+              this.notificationsService.success('Progression sauvegardée');
+              this.movieHistory!.stoppedAt = stoppedAt;
+            },
+          })
+      );
+    } else {
+      this.subscriptions.push(
+        this.movieHistoryService
+          .createMovieHistory(this.movie?.id ?? 0, stoppedAt)
+          .subscribe({
+            next: () => {
+              this.notificationsService.success('Progression sauvegardée');
+              this.movieHistory = {
+                mediaId: this.movie?.id ?? 0,
+                stoppedAt,
+                viewedAt: new Date(),
+                userId: this.userId ?? '',
+                type: 'movies',
+              };
+            },
+          })
+      );
+    }
+  }
+
+  deleteMovieHistory() {
+    this.subscriptions.push(
+      this.movieHistoryService
+        .deleteMovieHistory(this.movieHistory!.mediaId)
+        .subscribe({
+          next: () => {
+            this.notificationsService.success('Progression supprimée');
+            this.movieHistory = null;
+          },
         })
     );
   }
@@ -257,6 +285,4 @@ export class MovieInfoComponent implements OnInit, OnChanges, OnDestroy {
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
-
-  protected readonly history = history;
 }
