@@ -1,7 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { UserResponse, UserResults } from '../../../../shared/models/user.models';
+import {
+  UserResponse,
+  UserResults,
+} from '../../../../shared/models/user.models';
 import { UserService } from '../../user.service';
-import { Subject, Subscription } from 'rxjs';
+import { Subject, Subscription, switchMap } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { userProfilViewLinks } from '../../../../pages/social-network/social-network-routing.module';
 
@@ -23,41 +26,34 @@ export class AdminUserListComponent implements OnInit, OnDestroy {
   subModalUser?: UserResponse;
 
   inputSubject: Subject<string> = new Subject<string>();
-  private subscription: Subscription;
 
   subscriptions: Subscription[] = [];
 
-  constructor(private readonly userService: UserService) {
-    this.subscription = this.inputSubject
-      .pipe(debounceTime(1000))
-      .subscribe(() => {
-        this.search();
-      });
-  }
+  constructor(private readonly userService: UserService) {}
 
-  onInput() {
+  onSearch() {
     this.inputSubject.next(this.query);
-  }
-
-  manualSearch() {
-    this.subscription.unsubscribe();
-    this.search();
-    this.subscription = this.inputSubject
-      .pipe(debounceTime(1000))
-      .subscribe(() => {
-        this.search();
-      });
   }
 
   ngOnInit(): void {
     this.search();
+    this.onSearch();
   }
 
   search() {
     this.loading = true;
     this.subscriptions.push(
-      this.userService
-        .adminSearchUsers(this.query, this.currentPage, this.pageSize)
+      this.inputSubject
+        .pipe(
+          debounceTime(1000),
+          switchMap(query =>
+            this.userService.adminSearchUsers(
+              query,
+              this.currentPage,
+              this.pageSize
+            )
+          )
+        )
         .subscribe(userResults => {
           this.userResults = userResults;
           this.loading = false;
@@ -76,7 +72,6 @@ export class AdminUserListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 

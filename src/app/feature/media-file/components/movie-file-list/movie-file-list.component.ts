@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MovieFileResults } from '../../../../shared/models/media-file.models';
-import { Subject, Subscription } from 'rxjs';
+import { Subject, Subscription, switchMap } from 'rxjs';
 import { MediaFileService } from '../../media-file.service';
 import { debounceTime } from 'rxjs/operators';
 import { movieViewPath } from '../../../../pages/medias/medias-routing.module';
@@ -26,43 +26,35 @@ export class MovieFileListComponent implements OnInit, OnDestroy {
   movieDeleting = false;
 
   inputSubject: Subject<string> = new Subject<string>();
-  private subscription: Subscription;
   subscriptions: Subscription[] = [];
 
   constructor(
     private readonly mediaFileService: MediaFileService,
     private notificationsService: NotificationsService
-  ) {
-    this.subscription = this.inputSubject
-      .pipe(debounceTime(1000))
-      .subscribe(() => {
-        this.search();
-      });
-  }
+  ) {}
 
   ngOnInit(): void {
     this.search();
   }
 
-  onInput() {
+  onSearch() {
     this.inputSubject.next(this.query);
-  }
-
-  manualSearch() {
-    this.subscription.unsubscribe();
-    this.search();
-    this.subscription = this.inputSubject
-      .pipe(debounceTime(1000))
-      .subscribe(() => {
-        this.search();
-      });
   }
 
   search() {
     this.loading = true;
     this.subscriptions.push(
-      this.mediaFileService
-        .searchMovieFiles(this.query, this.currentPage, this.pageSize)
+      this.inputSubject
+        .pipe(
+          debounceTime(1000),
+          switchMap(query =>
+            this.mediaFileService.searchMovieFiles(
+              query,
+              this.currentPage,
+              this.pageSize
+            )
+          )
+        )
         .subscribe(movieFilesResults => {
           this.movieFilesResults = movieFilesResults;
           this.loading = false;
@@ -98,7 +90,6 @@ export class MovieFileListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
