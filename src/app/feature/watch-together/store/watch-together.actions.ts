@@ -1,7 +1,4 @@
-import {
-  CreateWatchTogetherRoomRequest,
-  WatchTogetherRoom,
-} from '../../../shared/models/watch-together.models';
+import { WatchTogetherRoom } from '../../../shared/models/watch-together.models';
 
 export namespace WatchTogetherActions {
   export class SetRooms {
@@ -22,8 +19,5 @@ export namespace WatchTogetherActions {
   export class AddRoom {
     static readonly type = '[WatchTogether] Add Room';
     constructor(public room: WatchTogetherRoom) {}
-  }
-  export class CreateRoom {
-    constructor(public request: CreateWatchTogetherRoomRequest) {}
   }
 }
