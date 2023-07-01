@@ -35,6 +35,7 @@ export class EpisodeFileListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.search();
+    this.onSearch();
   }
 
   onSearch() {
