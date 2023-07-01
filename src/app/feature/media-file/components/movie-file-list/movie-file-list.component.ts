@@ -65,12 +65,12 @@ export class MovieFileListComponent implements OnInit, OnDestroy {
 
   onPageIndexChange(pageIndex: number) {
     this.currentPage = pageIndex;
-    this.search();
+    this.onSearch();
   }
 
   onPageSizeChange(pageSize: number) {
     this.pageSize = pageSize;
-    this.search();
+    this.onSearch();
   }
 
   onDelete(id: string) {
@@ -81,7 +81,7 @@ export class MovieFileListComponent implements OnInit, OnDestroy {
           this.notificationsService.success(
             'Le fichier du film a bien été supprimé'
           );
-          this.search();
+          this.onSearch();
         },
         complete: () => {
           this.movieDeleting = false;

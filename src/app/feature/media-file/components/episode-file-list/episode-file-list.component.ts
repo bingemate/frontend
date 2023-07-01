@@ -65,12 +65,12 @@ export class EpisodeFileListComponent implements OnInit, OnDestroy {
 
   onPageIndexChange(pageIndex: number) {
     this.currentPage = pageIndex;
-    this.search();
+    this.onSearch();
   }
 
   onPageSizeChange(pageSize: number) {
     this.pageSize = pageSize;
-    this.search();
+    this.onSearch();
   }
 
   onDelete(id: string) {
@@ -81,7 +81,7 @@ export class EpisodeFileListComponent implements OnInit, OnDestroy {
           this.notificationsService.success(
             "Le fichier de l'épisode a bien été supprimé"
           );
-          this.search();
+          this.onSearch();
         },
         complete: () => {
           this.episodeDeleting = false;
