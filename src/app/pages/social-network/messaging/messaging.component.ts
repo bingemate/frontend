@@ -105,9 +105,7 @@ export class MessagingComponent implements OnInit, OnDestroy {
 
   deleteMessage(messageId: string) {
     this.messagingService.deleteMessage(messageId);
-    this.messageList = this.messageList.filter(
-      message => message.id !== messageId
-    );
+    this.store.dispatch(new MessagingActions.RemoveMessage(messageId));
   }
 
   selectUser(userId: string) {
