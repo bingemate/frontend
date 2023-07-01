@@ -59,7 +59,7 @@ export class MessagingComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       this.currentRoute.params.subscribe(params => {
         if (params['id']) {
-          this.activeUserId = params['id'];
+          this.selectUser(params['id']);
           this.userList.push(params['id']);
         }
       })
