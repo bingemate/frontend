@@ -11,6 +11,7 @@ import { forkJoin, Observable, Subscription } from 'rxjs';
 import { millisToHours } from '../../../../shared/utils/date.utils';
 import { UserService } from '../../../user/user.service';
 import { MediaFileService } from '../../../media-file/media-file.service';
+import { format } from 'date-fns';
 
 @Component({
   selector: 'app-statistic-view',
@@ -39,6 +40,7 @@ export class StatisticViewComponent implements OnInit, OnDestroy {
   mediafileSize = 0;
 
   private subscriptions: Subscription[] = [];
+
   constructor(
     private episodeStatisticsService: EpisodeStatisticsService,
     private movieStatisticsService: MovieStatisticsService,
@@ -136,8 +138,8 @@ export class StatisticViewComponent implements OnInit, OnDestroy {
       this.ratingService.getUserRatingCount(userId),
       this.commentService.getUserCommentStat(
         userId,
-        new Date().toDateString(),
-        sixMonthsAgo.toDateString()
+        format(sixMonthsAgo, 'yyyy-MM-dd'),
+        format(new Date(), 'yyyy-MM-dd')
       ),
     ]);
   }
@@ -167,8 +169,8 @@ export class StatisticViewComponent implements OnInit, OnDestroy {
       this.commentService.getCommentCount(),
       this.ratingService.getRatingCount(),
       this.commentService.getCommentStat(
-        new Date().toDateString(),
-        sixMonthAgo.toDateString()
+        format(sixMonthAgo, 'yyyy-MM-dd'),
+        format(new Date(), 'yyyy-MM-dd')
       ),
       this.userService.adminCountUsers(),
       this.userService.adminCountUsersByRole('bingemate-subscribed'),
