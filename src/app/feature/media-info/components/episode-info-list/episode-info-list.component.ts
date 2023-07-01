@@ -17,6 +17,8 @@ import { FriendshipService } from '../../../friendship/friendship.service';
 import { subscriptionLinks } from '../../../../pages/subscription/subscriptions-routing.module';
 import { HistoryModel } from '../../../../shared/models/history.models';
 import { EpisodeHistoryService } from '../../../history/episode-history.service';
+import { TvShowWatchlistService } from '../../../watchlist/tv-show-watchlist.service';
+import { TvShowWatchListStatus } from '../../../../shared/models/tv-show-watchlist.models';
 
 @Component({
   selector: 'app-episode-info-list',
@@ -56,7 +58,8 @@ export class EpisodeInfoListComponent implements OnInit, OnDestroy {
     private readonly notificationsService: NotificationsService,
     private friendshipService: FriendshipService,
     private readonly watchTogetherService: WatchTogetherService,
-    private readonly episodeHistoryService: EpisodeHistoryService
+    private readonly episodeHistoryService: EpisodeHistoryService,
+    private readonly tvShowWatchlistService: TvShowWatchlistService
   ) {}
 
   ngOnInit(): void {
@@ -158,6 +161,74 @@ export class EpisodeInfoListComponent implements OnInit, OnDestroy {
           )
       );
     }
+  }
+
+  setEpisodeHistory(episode: TvEpisodeResponse, stoppedAt: number) {
+    if (stoppedAt === 1) {
+      this.changeEpisodeWatchlistStatus(
+        episode,
+        TvShowWatchListStatus.FINISHED
+      );
+    }
+    const history = this.seasonEpisodesHistory.get(episode.id);
+    if (history) {
+      this.subscriptions.push(
+        this.episodeHistoryService
+          .updateEpisodeHistory(episode.id, stoppedAt)
+          .subscribe({
+            next: () => {
+              this.notificationsService.success('Progression sauvegardée');
+              this.seasonEpisodesHistory.set(episode.id, {
+                ...history,
+                stoppedAt,
+              });
+            },
+          })
+      );
+    } else {
+      this.subscriptions.push(
+        this.episodeHistoryService
+          .createEpisodeHistory(episode.id, stoppedAt)
+          .subscribe({
+            next: () => {
+              this.notificationsService.success('Progression sauvegardée');
+              this.seasonEpisodesHistory.set(episode.id, {
+                stoppedAt,
+                mediaId: episode.id,
+                userId: '',
+                viewedAt: new Date(),
+                type: 'tv-shows',
+              });
+            },
+          })
+      );
+    }
+  }
+
+  deleteEpisodeHistory(episodeId: number) {
+    this.subscriptions.push(
+      this.episodeHistoryService.deleteEpisodeHistory(episodeId).subscribe({
+        next: () => {
+          this.notificationsService.success('Progression supprimée');
+          this.seasonEpisodesHistory.delete(episodeId);
+        },
+      })
+    );
+  }
+
+  changeEpisodeWatchlistStatus(
+    episode: TvEpisodeResponse,
+    status: TvShowWatchListStatus
+  ) {
+    this.subscriptions.push(
+      this.tvShowWatchlistService
+        .createEpisodeWatchlistItem({
+          episodeId: episode.id,
+          status,
+          tvShowId: this.tvShowId,
+        })
+        .subscribe()
+    );
   }
 
   ngOnDestroy(): void {

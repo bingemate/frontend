@@ -37,6 +37,34 @@
                 <span nz-icon nzType="play-circle" nzTheme="fill"></span
                 >&nbsp;Regarder
               </button>
+              <ng-container
+                *ngIf="
+                  (movieHistory?.stoppedAt ?? 0) < 0.95;
+                  else setUnwatched
+                ">
+                <button
+                  *nzSpaceItem
+                  nz-button
+                  nzType="primary"
+                  nzShape="circle"
+                  nz-tooltip
+                  (click)="setMovieHistory(1)"
+                  nzTooltipTitle="Marquer comme vu">
+                  <span nz-icon nzType="check-circle" nzTheme="outline"></span>
+                </button>
+              </ng-container>
+              <ng-template #setUnwatched>
+                <button
+                  *nzSpaceItem
+                  nz-button
+                  nzType="primary"
+                  nzShape="circle"
+                  (click)="deleteMovieHistory()"
+                  nz-tooltip
+                  nzTooltipTitle="Marquer comme non vu">
+                  <span nz-icon nzType="check-circle" nzTheme="fill"></span>
+                </button>
+              </ng-template>
               <button
                 *nzSpaceItem
                 nz-button

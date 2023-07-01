@@ -37,4 +37,24 @@ export class MovieHistoryService {
       )
       .pipe(map(response => (response ? toMovieHistory(response) : null)));
   }
+
+  createMovieHistory(movieId: number, stoppedAt: number): Observable<void> {
+    return this.http.post<void>(
+      `${API_RESOURCE_URI.WATCH_SERVICE}/movie-history`,
+      {
+        movieId,
+        stoppedAt,
+      }
+    );
+  }
+
+  updateMovieHistory(movieId: number, stoppedAt: number): Observable<void> {
+    return this.http.put<void>(
+      `${API_RESOURCE_URI.WATCH_SERVICE}/movie-history`,
+      {
+        movieId,
+        stoppedAt,
+      }
+    );
+  }
 }

@@ -46,4 +46,24 @@ export class EpisodeHistoryService {
       )
       .pipe(map(response => toEpisodeHistoryList(response)));
   }
+
+  createEpisodeHistory(episodeId: number, stoppedAt: number): Observable<void> {
+    return this.http.post<void>(
+      `${API_RESOURCE_URI.WATCH_SERVICE}/episode-history`,
+      {
+        episodeId,
+        stoppedAt,
+      }
+    );
+  }
+
+  updateEpisodeHistory(episodeId: number, stoppedAt: number): Observable<void> {
+    return this.http.put<void>(
+      `${API_RESOURCE_URI.WATCH_SERVICE}/episode-history`,
+      {
+        episodeId,
+        stoppedAt,
+      }
+    );
+  }
 }
