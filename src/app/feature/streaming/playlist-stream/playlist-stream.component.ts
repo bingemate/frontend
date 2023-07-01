@@ -17,6 +17,9 @@ import { StreamingActions } from '../store/streaming.actions';
 import { tap } from 'rxjs/operators';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { TvEpisodeResponse } from '../../../shared/models/media.models';
+import { WatchTogetherRoom } from '../../../shared/models/watch-together.models';
+import { WatchTogetherState } from '../../watch-together/store/watch-together.state';
+import { WatchTogetherService } from '../../watch-together/watch-together.service';
 
 @Component({
   selector: 'app-playlist-stream',
@@ -24,6 +27,9 @@ import { TvEpisodeResponse } from '../../../shared/models/media.models';
   styleUrls: ['./playlist-stream.component.less'],
 })
 export class PlaylistStreamComponent implements OnInit, OnDestroy {
+  @Select(WatchTogetherState.joinedRoom)
+  room$!: Observable<WatchTogetherRoom>;
+  room?: WatchTogetherRoom;
   @Select(StreamingState.moviePlaylist)
   moviePlaylist$!: Observable<MoviePlaylist>;
   @Select(StreamingState.episodePlaylist)
@@ -49,7 +55,8 @@ export class PlaylistStreamComponent implements OnInit, OnDestroy {
   constructor(
     private breakpointObserver: BreakpointObserver,
     private readonly store: Store,
-    private mediaService: MediaInfoService
+    private mediaService: MediaInfoService,
+    private watchTogetherService: WatchTogetherService
   ) {}
 
   ngOnInit(): void {
@@ -87,6 +94,7 @@ export class PlaylistStreamComponent implements OnInit, OnDestroy {
         )
         .subscribe()
     );
+    this.subscriptions.push(this.room$.subscribe(room => (this.room = room)));
     this.subscriptions.push(
       this.autoplay$.subscribe(autoplay => (this.autoplay = autoplay))
     );
@@ -204,6 +212,9 @@ export class PlaylistStreamComponent implements OnInit, OnDestroy {
   }
 
   seekMedia(index: number) {
+    if (this.room) {
+      this.watchTogetherService.changeMedia(index);
+    }
     this.store.dispatch(new StreamingActions.SeekMediaPlaylist(index));
   }
 
