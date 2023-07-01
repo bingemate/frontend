@@ -10,7 +10,6 @@ import {
 } from '@angular/core';
 import { MediaFile } from '../../../shared/models/media-file.models';
 import { BitrateOptions, VgApiService } from '@videogular/ngx-videogular/core';
-import { API_RESOURCE_URI } from '../../../shared/api-resource-uri/api-resources-uri';
 import { interval, Observable, Subscription, throttleTime } from 'rxjs';
 import { navigationRoot } from '../../../app-routing.module';
 import { mediasLinks } from '../../../pages/medias/medias-routing.module';
@@ -47,6 +46,8 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
   status$!: Observable<WatchTogetherStatus>;
   @Select(WatchTogetherState.position)
   position$!: Observable<number>;
+  @Select(WatchTogetherState.playlistPosition)
+  playlistPosition$!: Observable<number>;
 
   @Input() mediaId: number | undefined;
   @Input() mediaInfo: MovieResponse | TvEpisodeResponse | undefined;
@@ -166,6 +167,13 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   onPlayerReady(api: VgApiService) {
+    this.subscriptions.push(
+      this.playlistPosition$.subscribe(playlistPosition =>
+        this.store.dispatch(
+          new StreamingActions.SeekMediaPlaylist(playlistPosition)
+        )
+      )
+    );
     this.subscriptions.push(
       this.position$.subscribe(position => {
         position = position * api.duration;
