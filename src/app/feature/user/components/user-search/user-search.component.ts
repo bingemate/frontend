@@ -1,7 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { UserSearchState } from '../../store/user-search.state';
-import { filter, Observable, Subject, Subscription } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 import { UserResponse } from '../../../../shared/models/user.models';
 import { debounceTime } from 'rxjs/operators';
 import { UserSearchActions } from '../../store/user-search.actions';
@@ -11,7 +11,7 @@ import { UserSearchActions } from '../../store/user-search.actions';
   templateUrl: './user-search.component.html',
   styleUrls: ['./user-search.component.less'],
 })
-export class UserSearchComponent implements OnInit, OnDestroy {
+export class UserSearchComponent implements OnDestroy {
   @Select(UserSearchState.query)
   query$!: Observable<string>;
   query = '';
@@ -21,40 +21,45 @@ export class UserSearchComponent implements OnInit, OnDestroy {
   userResults$!: Observable<UserResponse[]>;
 
   inputSubject: Subject<string> = new Subject<string>();
-  subscriptions: Subscription[] = [];
+  private subscription: Subscription;
 
-  constructor(private store: Store) {}
-
-  ngOnInit() {
+  constructor(private store: Store) {
+    this.subscription = this.inputSubject
+      .pipe(debounceTime(1000))
+      .subscribe(() => {
+        this.search();
+      });
     this.query$.subscribe(query => {
       this.query = query;
     });
-    this.search();
   }
 
   onInput() {
     this.inputSubject.next(this.query);
   }
 
+  manualSearch() {
+    this.subscription.unsubscribe();
+    this.search();
+    this.subscription = this.inputSubject
+      .pipe(debounceTime(1000))
+      .subscribe(() => {
+        this.search();
+      });
+  }
+
   search() {
-    this.subscriptions.push(
-      this.inputSubject
-        .pipe(
-          debounceTime(1000),
-          filter(query => query.length > 0)
-        )
-        .subscribe(query =>
-          this.store.dispatch(
-            new UserSearchActions.Search({
-              query,
-              includeRoles: false,
-            })
-          )
-        )
-    );
+    if (this.query.length > 0) {
+      this.store.dispatch(
+        new UserSearchActions.Search({
+          query: this.query,
+          includeRoles: false,
+        })
+      );
+    }
   }
 
   ngOnDestroy() {
-    this.subscriptions.forEach(sub => sub.unsubscribe());
+    this.subscription.unsubscribe();
   }
 }

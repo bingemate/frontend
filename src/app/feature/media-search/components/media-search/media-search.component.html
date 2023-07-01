@@ -3,8 +3,8 @@
     <nz-card nzTitle="Rechercher un média">
       <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton" nzSize="large">
         <input
-          (input)="onSearch()"
-          (change)="onSearch()"
+          (input)="onInput()"
+          (change)="manualSearch()"
           [(ngModel)]="query"
           type="text"
           nz-input
