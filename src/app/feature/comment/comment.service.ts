@@ -23,12 +23,12 @@ export class CommentService {
   }
 
   getCommentStat(start?: string, end?: string): Observable<CommentStat[]> {
-    const params = new HttpParams();
+    let params = new HttpParams();
     if (start) {
-      params.set('start', start);
+      params = params.set('start', start);
     }
     if (end) {
-      params.set('end', end);
+      params = params.set('end', end);
     }
     return this.http
       .get<CommentHistory[]>(`${API_RESOURCE_URI.MEDIA_INFO}/comment/history`, {
@@ -49,12 +49,12 @@ export class CommentService {
     start?: string,
     end?: string
   ): Observable<CommentStat[]> {
-    const params = new HttpParams();
+    let params = new HttpParams();
     if (start) {
-      params.set('start', start);
+      params = params.set('start', start);
     }
     if (end) {
-      params.set('end', end);
+      params = params.set('end', end);
     }
     return this.http
       .get<CommentHistory[]>(
