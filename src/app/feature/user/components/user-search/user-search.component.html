@@ -4,7 +4,7 @@
       <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton" nzSize="large">
         <input
           (input)="onInput()"
-          (change)="manualSearch()"
+          (change)="onInput()"
           [(ngModel)]="query"
           type="text"
           nz-input

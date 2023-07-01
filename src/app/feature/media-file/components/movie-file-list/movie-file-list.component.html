@@ -2,8 +2,8 @@
   <nz-col [nzSpan]="24">
     <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton" nzSize="large">
       <input
-        (input)="onInput()"
-        (change)="manualSearch()"
+        (input)="onSearch()"
+        (change)="onSearch()"
         [(ngModel)]="query"
         type="text"
         nz-input

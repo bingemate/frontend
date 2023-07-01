@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { tvShowViewPath } from '../../../../pages/medias/medias-routing.module';
 import { EpisodeFileResults } from '../../../../shared/models/media-file.models';
-import { Subject, Subscription } from 'rxjs';
+import { Subject, Subscription, switchMap } from 'rxjs';
 import { MediaFileService } from '../../media-file.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 import { debounceTime } from 'rxjs/operators';
@@ -26,43 +26,35 @@ export class EpisodeFileListComponent implements OnInit, OnDestroy {
   episodeDeleting = false;
 
   inputSubject: Subject<string> = new Subject<string>();
-  private searchSubscription: Subscription;
   subscriptions: Subscription[] = [];
 
   constructor(
     private readonly mediaFileService: MediaFileService,
     private notificationsService: NotificationsService
-  ) {
-    this.searchSubscription = this.inputSubject
-      .pipe(debounceTime(1000))
-      .subscribe(() => {
-        this.search();
-      });
-  }
+  ) {}
 
   ngOnInit(): void {
     this.search();
   }
 
-  onInput() {
+  onSearch() {
     this.inputSubject.next(this.query);
-  }
-
-  manualSearch() {
-    this.searchSubscription.unsubscribe();
-    this.search();
-    this.searchSubscription = this.inputSubject
-      .pipe(debounceTime(1000))
-      .subscribe(() => {
-        this.search();
-      });
   }
 
   search() {
     this.loading = true;
     this.subscriptions.push(
-      this.mediaFileService
-        .searchEpisodeFiles(this.query, this.currentPage, this.pageSize)
+      this.inputSubject
+        .pipe(
+          debounceTime(1000),
+          switchMap(query =>
+            this.mediaFileService.searchEpisodeFiles(
+              query,
+              this.currentPage,
+              this.pageSize
+            )
+          )
+        )
         .subscribe(episodeFilesResult => {
           this.episodeFilesResults = episodeFilesResult;
           this.loading = false;
@@ -98,7 +90,6 @@ export class EpisodeFileListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.searchSubscription.unsubscribe();
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 

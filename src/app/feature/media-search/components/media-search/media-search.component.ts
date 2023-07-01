@@ -1,14 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable, Subject, Subscription } from 'rxjs';
+import { filter, Observable, Subject, Subscription } from 'rxjs';
 import {
   MovieResults,
   TvShowResults,
 } from '../../../../shared/models/media.models';
-import { debounceTime } from 'rxjs/operators';
 import { Select, Store } from '@ngxs/store';
 import { MediaSearchState } from '../../store/media-search.state';
 import { MediaSearchActions } from '../../store/media-search.actions';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-media-search',
@@ -29,7 +29,6 @@ export class MediaSearchComponent implements OnInit, OnDestroy {
   onlyAvailable = false;
 
   inputSubject: Subject<string> = new Subject<string>();
-  private subscription: Subscription;
   subscriptions: Subscription[] = [];
 
   @Select(MediaSearchState.movies)
@@ -44,13 +43,7 @@ export class MediaSearchComponent implements OnInit, OnDestroy {
   constructor(
     private breakpointObserver: BreakpointObserver,
     private store: Store
-  ) {
-    this.subscription = this.inputSubject
-      .pipe(debounceTime(1000))
-      .subscribe(() => {
-        this.search();
-      });
-  }
+  ) {}
 
   ngOnInit(): void {
     this.subscriptions.push(
@@ -66,31 +59,29 @@ export class MediaSearchComponent implements OnInit, OnDestroy {
         this.query = query;
       })
     );
+    this.search();
   }
 
-  onInput() {
+  onSearch() {
     this.inputSubject.next(this.query);
   }
 
-  manualSearch() {
-    this.subscription.unsubscribe();
-    this.search();
-    this.subscription = this.inputSubject
-      .pipe(debounceTime(1000))
-      .subscribe(() => {
-        this.search();
-      });
-  }
-
   search() {
-    if (this.query.length > 0) {
-      this.store.dispatch(
-        new MediaSearchActions.Search({
-          query: this.query,
-          onlyAvailable: this.onlyAvailable,
-        })
-      );
-    }
+    this.subscriptions.push(
+      this.inputSubject
+        .pipe(
+          debounceTime(1000),
+          filter(query => query.length > 0)
+        )
+        .subscribe(query =>
+          this.store.dispatch(
+            new MediaSearchActions.Search({
+              query,
+              onlyAvailable: this.onlyAvailable,
+            })
+          )
+        )
+    );
   }
 
   onMoviesPageChange(page: number): void {
@@ -113,11 +104,10 @@ export class MediaSearchComponent implements OnInit, OnDestroy {
 
   onOnlyAvailableChecked(checked: boolean) {
     this.onlyAvailable = checked;
-    this.manualSearch();
+    this.onSearch();
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
