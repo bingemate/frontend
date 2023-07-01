@@ -39,6 +39,7 @@ export class StatisticViewComponent implements OnInit, OnDestroy {
   mediafileSize = 0;
 
   private subscriptions: Subscription[] = [];
+
   constructor(
     private episodeStatisticsService: EpisodeStatisticsService,
     private movieStatisticsService: MovieStatisticsService,
@@ -136,8 +137,8 @@ export class StatisticViewComponent implements OnInit, OnDestroy {
       this.ratingService.getUserRatingCount(userId),
       this.commentService.getUserCommentStat(
         userId,
-        new Date().toDateString(),
-        sixMonthsAgo.toDateString()
+        sixMonthsAgo.toDateString(),
+        new Date().toDateString()
       ),
     ]);
   }
@@ -167,8 +168,8 @@ export class StatisticViewComponent implements OnInit, OnDestroy {
       this.commentService.getCommentCount(),
       this.ratingService.getRatingCount(),
       this.commentService.getCommentStat(
-        new Date().toDateString(),
-        sixMonthAgo.toDateString()
+        sixMonthAgo.toDateString(),
+        new Date().toDateString()
       ),
       this.userService.adminCountUsers(),
       this.userService.adminCountUsersByRole('bingemate-subscribed'),
