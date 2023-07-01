@@ -81,17 +81,37 @@
               nzShape="circle">
               <span nz-icon nzType="play-circle" nzTheme="fill"></span>
             </button>
-            <button
-              *nzSpaceItem
-              [hidden]="!episode.present || (isSubscribed$ | async) === false"
-              nz-button
-              nz-tooltip
-              nzTooltipTitle="Lecture partagée"
-              (click)="watchTogetherModal(episode.id)"
-              nzType="primary"
-              nzShape="circle">
-              <span nz-icon nzType="usergroup-add" nzTheme="outline"></span>
-            </button>
+            <ng-container *ngIf="episode.present">
+              <ng-container
+                *ngIf="
+                  !seasonEpisodesHistory.has(episode.id) ||
+                    seasonEpisodesHistory.get(episode.id)!.stoppedAt < 0.95;
+                  else setUnwatched
+                ">
+                <button
+                  *nzSpaceItem
+                  nz-button
+                  nzType="primary"
+                  nzShape="circle"
+                  nz-tooltip
+                  (click)="setEpisodeHistory(episode, 1)"
+                  nzTooltipTitle="Marquer comme vu">
+                  <span nz-icon nzType="check-circle" nzTheme="outline"></span>
+                </button>
+              </ng-container>
+              <ng-template #setUnwatched>
+                <button
+                  *nzSpaceItem
+                  nz-button
+                  nzType="primary"
+                  nzShape="circle"
+                  (click)="deleteEpisodeHistory(episode.id)"
+                  nz-tooltip
+                  nzTooltipTitle="Marquer comme non vu">
+                  <span nz-icon nzType="check-circle" nzTheme="fill"></span>
+                </button>
+              </ng-template>
+            </ng-container>
             <button
               *nzSpaceItem
               [hidden]="!episode.present || (isSubscribed$ | async) === true"
@@ -106,14 +126,24 @@
             </span>
           </nz-space>
           <nz-dropdown-menu #continueEpisode="nzDropdownMenu">
-            <ul nz-menu *ngIf="seasonEpisodesHistory.has(episode.id)">
-              <li nz-menu-item>
+            <ul nz-menu>
+              <li
+                nz-menu-item
+                *ngIf="
+                  seasonEpisodesHistory.has(episode.id) &&
+                  seasonEpisodesHistory.get(episode.id)!.stoppedAt < 0.95
+                ">
                 <a
                   [routerLink]="[streamPath, episode.id]"
                   [queryParams]="{
                     progress: seasonEpisodesHistory.get(episode.id)!.stoppedAt
                   }">
                   Reprendre la lecture
+                </a>
+              </li>
+              <li nz-menu-item>
+                <a (click)="watchTogetherModal(episode.id)">
+                  Lecture partagée
                 </a>
               </li>
             </ul>
