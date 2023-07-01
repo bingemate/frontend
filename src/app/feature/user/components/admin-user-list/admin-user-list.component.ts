@@ -32,6 +32,7 @@ export class AdminUserListComponent implements OnInit, OnDestroy {
   constructor(private readonly userService: UserService) {}
 
   onSearch() {
+    this.loading = true;
     this.inputSubject.next(this.query);
   }
 
@@ -41,7 +42,6 @@ export class AdminUserListComponent implements OnInit, OnDestroy {
   }
 
   search() {
-    this.loading = true;
     this.subscriptions.push(
       this.inputSubject
         .pipe(

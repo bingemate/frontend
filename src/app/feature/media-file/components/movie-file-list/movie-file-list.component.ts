@@ -39,6 +39,7 @@ export class MovieFileListComponent implements OnInit, OnDestroy {
   }
 
   onSearch() {
+    this.loading = true;
     this.inputSubject.next(this.query);
   }
 

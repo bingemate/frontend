@@ -39,6 +39,7 @@ export class EpisodeFileListComponent implements OnInit, OnDestroy {
   }
 
   onSearch() {
+    this.loading = true;
     this.inputSubject.next(this.query);
   }
 
