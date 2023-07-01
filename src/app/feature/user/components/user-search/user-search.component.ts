@@ -29,6 +29,7 @@ export class UserSearchComponent implements OnInit, OnDestroy {
     this.query$.subscribe(query => {
       this.query = query;
     });
+    this.search();
   }
 
   onInput() {

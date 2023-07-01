@@ -63,12 +63,12 @@ export class AdminUserListComponent implements OnInit, OnDestroy {
 
   onPageIndexChange(pageIndex: number) {
     this.currentPage = pageIndex;
-    this.search();
+    this.onSearch();
   }
 
   onPageSizeChange(pageSize: number) {
     this.pageSize = pageSize;
-    this.search();
+    this.onSearch();
   }
 
   ngOnDestroy() {
