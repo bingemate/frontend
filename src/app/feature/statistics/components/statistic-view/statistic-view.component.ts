@@ -11,6 +11,7 @@ import { forkJoin, Observable, Subscription } from 'rxjs';
 import { millisToHours } from '../../../../shared/utils/date.utils';
 import { UserService } from '../../../user/user.service';
 import { MediaFileService } from '../../../media-file/media-file.service';
+import { format } from 'date-fns';
 
 @Component({
   selector: 'app-statistic-view',
@@ -137,8 +138,8 @@ export class StatisticViewComponent implements OnInit, OnDestroy {
       this.ratingService.getUserRatingCount(userId),
       this.commentService.getUserCommentStat(
         userId,
-        sixMonthsAgo.toDateString(),
-        new Date().toDateString()
+        format(sixMonthsAgo, 'yyyy-MM-dd'),
+        format(new Date(), 'yyyy-MM-dd')
       ),
     ]);
   }
@@ -168,8 +169,8 @@ export class StatisticViewComponent implements OnInit, OnDestroy {
       this.commentService.getCommentCount(),
       this.ratingService.getRatingCount(),
       this.commentService.getCommentStat(
-        sixMonthAgo.toDateString(),
-        new Date().toDateString()
+        format(sixMonthAgo, 'yyyy-MM-dd'),
+        format(new Date(), 'yyyy-MM-dd')
       ),
       this.userService.adminCountUsers(),
       this.userService.adminCountUsersByRole('bingemate-subscribed'),
