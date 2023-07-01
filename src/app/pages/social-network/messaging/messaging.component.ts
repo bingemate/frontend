@@ -1,4 +1,10 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { AuthState } from '../../../core/auth/store/auth.state';
 import { filter, Observable, Subscription, switchMap } from 'rxjs';
@@ -77,7 +83,9 @@ export class MessagingComponent implements OnInit, OnDestroy {
   }
 
   setUserList(users: string[]) {
-    this.userList = [...new Set([...users, ...this.userList])];
+    this.userList = [...new Set([...users, ...this.userList])].filter(
+      id => id !== this.authUserId
+    );
   }
 
   ngOnDestroy() {
