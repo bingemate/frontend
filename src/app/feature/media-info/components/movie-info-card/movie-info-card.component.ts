@@ -15,15 +15,20 @@ export class MovieInfoCardComponent implements OnInit, OnDestroy {
   isOnPhone = false;
 
   subscriptions: Subscription[] = [];
+
   constructor(
     private breakpointObserver: BreakpointObserver,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
-      this.isOnPhone = result.matches;
-    });
+    this.subscriptions.push(
+      this.breakpointObserver
+        .observe([Breakpoints.Handset])
+        .subscribe(result => {
+          this.isOnPhone = result.matches;
+        })
+    );
   }
 
   getRate(): number {
