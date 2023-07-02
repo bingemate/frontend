@@ -1,4 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { Link, navigationRoot } from './app-routing.module';
 import { accountLinks } from './pages/auth/auth-routing.module';
 import { socialNetworkLinks } from './pages/social-network/social-network-routing.module';
@@ -26,6 +32,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MessagingService } from './feature/messaging/messaging.service';
 import { MessagingState } from './feature/messaging/store/messaging.state';
 import { WatchTogetherService } from './feature/watch-together/watch-together.service';
+import { Message } from './shared/models/messaging.model';
 
 @Component({
   selector: 'app-root',
@@ -33,6 +40,9 @@ import { WatchTogetherService } from './feature/watch-together/watch-together.se
   styleUrls: ['./app.component.less'],
 })
 export class AppComponent implements OnInit, OnDestroy {
+  @ViewChild('notificationTemplate') notificationTemplate!: TemplateRef<object>;
+  receivedMessage?: Message;
+
   readonly environment = environment;
   isOnPhone = false;
 
@@ -79,6 +89,8 @@ export class AppComponent implements OnInit, OnDestroy {
     this.subscribeForAuthEvents();
     this.subscribeForThemeEvents();
     this.isUserLoggedIn();
+    this.messagingService.notificationCb =
+      this.openMessageNotification.bind(this);
   }
 
   ngOnDestroy() {
@@ -117,6 +129,13 @@ export class AppComponent implements OnInit, OnDestroy {
       this.user = user;
       this.accountLinks = this._accountLinks();
     });
+  }
+
+  openMessageNotification(message: Message) {
+    if (this.user?.id !== message.senderId) {
+      this.receivedMessage = message;
+      this.notificationsService.template(this.notificationTemplate);
+    }
   }
 
   isUserLoggedIn() {

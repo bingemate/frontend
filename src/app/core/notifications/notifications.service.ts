@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, TemplateRef } from '@angular/core';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { Actions } from '@ngxs/store';
 
@@ -39,5 +39,9 @@ export class NotificationsService {
     this.nzNotificationService.error(title, message, {
       nzDuration: duration,
     });
+  }
+
+  template(template: TemplateRef<object>, nzData?: any) {
+    this.nzNotificationService.template(template, { nzData });
   }
 }

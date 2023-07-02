@@ -48,6 +48,7 @@ import { LottieModule } from 'ngx-lottie';
 import player from 'lottie-web';
 import { MessagingModule } from './feature/messaging/messaging.module';
 import { WatchTogetherModule } from './feature/watch-together/watch-together.module';
+import { SharedModule } from './shared/shared.module';
 
 registerLocaleData(fr);
 
@@ -93,15 +94,15 @@ export function playerFactory() {
     }),
     // SessionStorage Ngxs State, persist at refresh
     /*    NgxsStoragePluginModule.forRoot({
-      key: [AuthState],
-      storage: StorageOption.SessionStorage,
-      afterDeserialize(obj: unknown, key: string): unknown {
-        if (!environment.production) {
-          console.debug('Deserialize NGXS from session storage', obj, key);
-        }
-        return obj;
-      },
-    }),*/
+          key: [AuthState],
+          storage: StorageOption.SessionStorage,
+          afterDeserialize(obj: unknown, key: string): unknown {
+            if (!environment.production) {
+              console.debug('Deserialize NGXS from session storage', obj, key);
+            }
+            return obj;
+          },
+        }),*/
     // LocalStorage Ngxs State, persist at refresh and browser close
     NgxsStoragePluginModule.forRoot({
       key: [ThemeState],
@@ -126,6 +127,7 @@ export function playerFactory() {
     NzSpinModule,
     MessagingModule,
     WatchTogetherModule,
+    SharedModule,
   ],
   providers: [
     KeycloakInitializerProvider,
