@@ -35,6 +35,7 @@ import { CommentModule } from '../../feature/comment/comment.module';
 import { NzRateModule } from 'ng-zorro-antd/rate';
 import { RatingModule } from '../../feature/rating/rating.module';
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
+import { MediaByActorComponent } from './media-by-actor/media-by-actor.component';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import { NzTypographyModule } from 'ng-zorro-antd/typography';
     TvByNetworkComponent,
     TvByActorComponent,
     SearchComponent,
+    MediaByActorComponent,
   ],
   imports: [
     CommonModule,
