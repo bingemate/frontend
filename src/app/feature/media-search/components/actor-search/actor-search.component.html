@@ -1,0 +1,71 @@
+<nz-row [nzGutter]="[16, 16]">
+  <nz-col [nzSpan]="24">
+    <nz-card nzTitle="Rechercher un/une acteur/actrice">
+      <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton" nzSize="large">
+        <input
+          (click)="click()"
+          (input)="onInput()"
+          (change)="manualSearch()"
+          [(ngModel)]="query"
+          type="text"
+          nz-input
+          placeholder="entrez le nom d'une personne" />
+      </nz-input-group>
+      <ng-template #suffixIconButton>
+        <nz-space
+          class="hide-on-phone"
+          nzDirection="horizontal"
+          [nzSize]="isOnPhone ? 'small' : 'large'"
+          style="padding-left: 10px">
+          <ng-container *ngIf="adult$ | async">
+            <label
+              *nzSpaceItem
+              nz-checkbox
+              nzChecked
+              (nzCheckedChange)="adultUnchecked()">
+              🔞
+            </label>
+          </ng-container>
+          <button *nzSpaceItem nz-button nzType="primary" nzSearch>
+            <span nz-icon nzType="search"></span>
+          </button>
+        </nz-space>
+      </ng-template>
+      <ng-container *ngIf="adult$ | async">
+        <label
+          class="hide-on-desktop"
+          nz-checkbox
+          nzChecked
+          (nzCheckedChange)="adultUnchecked()">
+          🔞
+        </label>
+      </ng-container>
+      <nz-progress
+        *ngIf="searching$ | async"
+        nzStatus="active"
+        [nzShowInfo]="false"
+        [nzPercent]="100"></nz-progress>
+    </nz-card>
+  </nz-col>
+  <nz-col [nzSpan]="24">
+    <nz-card [nzExtra]="actorPagination" [nzActions]="[actorPagination]">
+      <nz-empty
+        *ngIf="
+          (results$ | async)?.results?.length === 0 &&
+          (searching$ | async) === false
+        "></nz-empty>
+      <app-actor-list
+        [actors]="(results$ | async)?.results ?? []"></app-actor-list>
+    </nz-card>
+  </nz-col>
+</nz-row>
+
+<ng-template #actorPagination>
+  <nz-pagination
+    [nzSize]="isOnPhone ? 'small' : 'default'"
+    [nzPageIndex]="currentPage$ | async"
+    [nzTotal]="Math.min((results$ | async)?.totalResult ?? 0, 1000)"
+    [nzPageSize]="20"
+    (nzPageIndexChange)="onPageChange($event)">
+  </nz-pagination>
+</ng-template>
