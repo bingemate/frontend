@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {
+  ActorsResults,
   MovieResponse,
   MovieResults,
   TvShowResponse,
@@ -98,12 +99,17 @@ export class MediaDiscoverService {
   searchMovies(
     query: string,
     page = 1,
-    available = false
+    available = false,
+    adult = false
   ): Observable<MovieResults> {
-    const params = new HttpParams()
+    let params = new HttpParams()
       .set('query', query)
       .set('page', page)
       .set('available', available);
+
+    if (adult) {
+      params = params.set('adult', adult);
+    }
 
     return this.http.get<MovieResults>(
       API_RESOURCE_URI.MEDIA_INFO + '/discover/movie/search',
@@ -177,15 +183,37 @@ export class MediaDiscoverService {
   searchTvShows(
     query: string,
     page = 1,
-    available = false
+    available = false,
+    adult = false
   ): Observable<TvShowResults> {
-    const params = new HttpParams()
+    let params = new HttpParams()
       .set('query', query)
       .set('page', page)
       .set('available', available);
 
+    if (adult) {
+      params = params.set('adult', adult);
+    }
+
     return this.http.get<TvShowResults>(
       API_RESOURCE_URI.MEDIA_INFO + '/discover/tv/search',
+      { params }
+    );
+  }
+
+  searchActors(
+    query: string,
+    page = 1,
+    adult = false
+  ): Observable<ActorsResults> {
+    let params = new HttpParams().set('query', query).set('page', page);
+
+    if (adult) {
+      params = params.set('adult', adult);
+    }
+
+    return this.http.get<ActorsResults>(
+      API_RESOURCE_URI.MEDIA_INFO + '/discover/actor/search',
       { params }
     );
   }

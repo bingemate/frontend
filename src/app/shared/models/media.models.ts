@@ -105,6 +105,12 @@ export interface TvShowResults {
   totalResult: number;
 }
 
+export interface ActorsResults {
+  results: Actor[];
+  totalPage: number;
+  totalResult: number;
+}
+
 export interface MediaSearchStateModel {
   query: string;
   movies: MovieResults;
