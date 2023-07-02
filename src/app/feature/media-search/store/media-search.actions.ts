@@ -16,4 +16,10 @@ export namespace MediaSearchActions {
 
     constructor(public payload: { page: number; onlyAvailable: boolean }) {}
   }
+
+  export class Adult {
+    static readonly type = '[MediaSearch] Adult';
+
+    constructor(public payload: boolean) {}
+  }
 }

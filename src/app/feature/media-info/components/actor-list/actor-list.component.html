@@ -1,0 +1,10 @@
+<nz-row [nzGutter]="[32, 32]">
+  <div
+    nz-col
+    [ngStyle]="{ width: isOnPhone ? '150px' : '200px' }"
+    *ngFor="let actor of actors">
+    <app-actor-info-card
+      [actor]="actor"
+      [title]="actor.name"></app-actor-info-card>
+  </div>
+</nz-row>

@@ -16,9 +16,11 @@ import { MediaSearchState } from './store/media-search.state';
 import { NgxsModule } from '@ngxs/store';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
+import { ActorSearchState } from './store/actor-search.state';
+import { ActorSearchComponent } from './components/actor-search/actor-search.component';
 
 @NgModule({
-  declarations: [MediaSearchComponent],
+  declarations: [MediaSearchComponent, ActorSearchComponent],
   imports: [
     CommonModule,
     NzGridModule,
@@ -32,10 +34,10 @@ import { NzSpaceModule } from 'ng-zorro-antd/space';
     NzEmptyModule,
     MediaInfoModule,
     NzPaginationModule,
-    NgxsModule.forFeature([MediaSearchState]),
+    NgxsModule.forFeature([MediaSearchState, ActorSearchState]),
     NzCheckboxModule,
     NzSpaceModule,
   ],
-  exports: [MediaSearchComponent],
+  exports: [MediaSearchComponent, ActorSearchComponent],
 })
 export class MediaSearchModule {}

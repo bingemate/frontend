@@ -40,6 +40,10 @@ export class MediaSearchComponent implements OnInit, OnDestroy {
   tvResults$!: Observable<TvShowResults>;
   @Select(MediaSearchState.tvShowsCurrentPage)
   tvResultsPage$!: Observable<number>;
+  @Select(MediaSearchState.adult)
+  adult$!: Observable<boolean>;
+
+  adultCounter = 0;
 
   constructor(
     private breakpointObserver: BreakpointObserver,
@@ -83,6 +87,9 @@ export class MediaSearchComponent implements OnInit, OnDestroy {
   }
 
   search() {
+    if (this.adultCounter < 8) {
+      this.adultCounter = 0;
+    }
     if (this.query.length > 0) {
       this.store.dispatch(
         new MediaSearchActions.Search({
@@ -113,6 +120,20 @@ export class MediaSearchComponent implements OnInit, OnDestroy {
 
   onOnlyAvailableChecked(checked: boolean) {
     this.onlyAvailable = checked;
+    this.manualSearch();
+  }
+
+  click() {
+    this.adultCounter++;
+    if (this.adultCounter === 8) {
+      this.store.dispatch(new MediaSearchActions.Adult(true));
+      this.manualSearch();
+    }
+  }
+
+  adultUnchecked() {
+    this.adultCounter = 0;
+    this.store.dispatch(new MediaSearchActions.Adult(false));
     this.manualSearch();
   }
 

@@ -9,7 +9,10 @@ import {
 import { MovieResponse, Person } from '../../../../shared/models/media.models';
 import { navigationRoot } from '../../../../app-routing.module';
 import { streamingLinks } from '../../../../pages/streaming/streaming-routing.module';
-import { mediasLinks } from '../../../../pages/medias/medias-routing.module';
+import {
+  mediaByActorPath,
+  mediasLinks,
+} from '../../../../pages/medias/medias-routing.module';
 import { Select, Store } from '@ngxs/store';
 import { Observable, Subscription } from 'rxjs';
 import { PlaylistState } from '../../../playlist/store/playlist.state';
@@ -48,7 +51,7 @@ export class MovieInfoComponent implements OnInit, OnChanges, OnDestroy {
 
   readonly streamPath = `/${navigationRoot.streaming.path}/${streamingLinks.stream.path}/movies/`;
   readonly moviesByGenrePath = `/${navigationRoot.medias.path}/${mediasLinks.movies_by_genre.path}/`;
-  readonly moviesByActorPath = `/${navigationRoot.medias.path}/${mediasLinks.movies_by_actor.path}/`;
+  readonly mediasByActorPath = mediaByActorPath;
   readonly moviesByStudioPath = `/${navigationRoot.medias.path}/${mediasLinks.movies_by_studio.path}/`;
   readonly subscriptionPath = `/${navigationRoot.subscriptions.path}/${subscriptionLinks.subscriptions.path}/`;
   readonly statusNames = Object.values(MovieWatchListStatus);

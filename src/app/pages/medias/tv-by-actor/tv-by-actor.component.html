@@ -11,14 +11,14 @@
     <nz-card
       *ngIf="tvShows.length > 0"
       [nzSize]="isOnPhone ? 'small' : 'default'"
-      [nzExtra]="moviesPagination"
-      [nzActions]="[moviesPagination]">
+      [nzExtra]="tvPagination"
+      [nzActions]="[tvPagination]">
       <app-tv-list [tvShows]="tvShows"></app-tv-list>
     </nz-card>
   </nz-col>
 </nz-row>
 
-<ng-template #moviesPagination>
+<ng-template #tvPagination>
   <div (click)="$event.stopPropagation()">
     <nz-pagination
       [nzSize]="isOnPhone ? 'small' : 'default'"

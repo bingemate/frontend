@@ -7,7 +7,10 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { navigationRoot } from '../../../../app-routing.module';
-import { mediasLinks } from '../../../../pages/medias/medias-routing.module';
+import {
+  mediaByActorPath,
+  mediasLinks,
+} from '../../../../pages/medias/medias-routing.module';
 import { Person, TvShowResponse } from '../../../../shared/models/media.models';
 import { TvShowWatchlistService } from '../../../watchlist/tv-show-watchlist.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
@@ -34,7 +37,7 @@ export class TvInfoComponent implements OnChanges, OnInit, OnDestroy {
   isOnPhone = false;
 
   readonly tvsByGenrePath = `/${navigationRoot.medias.path}/${mediasLinks.tv_shows_by_genre.path}/`;
-  readonly tvsByActorPath = `/${navigationRoot.medias.path}/${mediasLinks.tv_show_by_actor.path}/`;
+  readonly mediasByActorPath = mediaByActorPath;
   readonly tvsByNetworkPath = `/${navigationRoot.medias.path}/${mediasLinks.tv_shows_by_network.path}/`;
   readonly statusNames = Object.values(TvShowWatchListStatus);
 
@@ -45,6 +48,7 @@ export class TvInfoComponent implements OnChanges, OnInit, OnDestroy {
   watchlistItem: TvShowWatchlistItem | undefined;
 
   subscriptions: Subscription[] = [];
+
   constructor(
     private breakpointObserver: BreakpointObserver,
     private readonly notificationsService: NotificationsService,

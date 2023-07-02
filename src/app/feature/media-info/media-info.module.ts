@@ -42,6 +42,8 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { MediaListComponent } from './components/media-list/media-list.component';
 import { SharedModule } from '../../shared/shared.module';
 import { NzProgressModule } from 'ng-zorro-antd/progress';
+import { ActorInfoCardComponent } from './components/actor-info-card/actor-info-card.component';
+import { ActorListComponent } from './components/actor-list/actor-list.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +57,8 @@ import { NzProgressModule } from 'ng-zorro-antd/progress';
     TvListComponent,
     ActorInfoComponent,
     MediaListComponent,
+    ActorInfoCardComponent,
+    ActorListComponent,
   ],
   imports: [
     CommonModule,
@@ -101,6 +105,7 @@ import { NzProgressModule } from 'ng-zorro-antd/progress';
     ActorInfoComponent,
     TvInfoComponent,
     MediaListComponent,
+    ActorListComponent,
   ],
 })
 export class MediaInfoModule {}
