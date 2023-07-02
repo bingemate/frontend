@@ -245,6 +245,7 @@ export class AppComponent implements OnInit, OnDestroy {
         ![
           'view',
           'movie-view',
+          'media-by-actor',
           'movies-by-genre',
           'movies-by-actor',
           'movies-by-studio',

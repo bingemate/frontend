@@ -103,7 +103,7 @@
         <nz-list-item
           *ngFor="let actor of getActorsSlice()"
           style="cursor: pointer"
-          [routerLink]="tvsByActorPath + actor.id">
+          [routerLink]="[mediasByActorPath, actor.id]">
           <nz-list-item-meta
             [nzAvatar]="actor.profileUrl"
             nzTitle="{{ actor.name }}"

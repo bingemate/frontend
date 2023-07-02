@@ -8,6 +8,7 @@ import { MediaDiscoverService } from '../../media-info/media-discover.service';
   name: 'mediaSearch',
   defaults: {
     query: '',
+    adult: false,
     movies: {
       results: [],
       totalPage: 0,
@@ -87,6 +88,21 @@ export class MediaSearchState {
     return state.hasTvShowsError;
   }
 
+  @Selector()
+  static adult(state: MediaSearchStateModel) {
+    return state.adult;
+  }
+
+  @Action(MediaSearchActions.Adult)
+  adult(
+    ctx: StateContext<MediaSearchStateModel>,
+    action: MediaSearchActions.Adult
+  ) {
+    ctx.patchState({
+      adult: action.payload,
+    });
+  }
+
   @Action(MediaSearchActions.Search)
   search(
     ctx: StateContext<MediaSearchStateModel>,
@@ -123,7 +139,8 @@ export class MediaSearchState {
       .searchMovies(
         ctx.getState().query,
         action.payload.page,
-        action.payload.onlyAvailable
+        action.payload.onlyAvailable,
+        ctx.getState().adult
       )
       .subscribe({
         next: response => {
@@ -156,7 +173,8 @@ export class MediaSearchState {
       .searchTvShows(
         ctx.getState().query,
         action.payload.page,
-        action.payload.onlyAvailable
+        action.payload.onlyAvailable,
+        ctx.getState().adult
       )
       .subscribe({
         next: response => {

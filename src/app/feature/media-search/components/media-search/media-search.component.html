@@ -4,6 +4,7 @@
       <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton" nzSize="large">
         <input
           (input)="onInput()"
+          (click)="click()"
           (change)="manualSearch()"
           [(ngModel)]="query"
           type="text"
@@ -22,6 +23,15 @@
             (nzCheckedChange)="onOnlyAvailableChecked($event.valueOf())">
             Disponibles
           </label>
+          <ng-container *ngIf="adult$ | async">
+            <label
+              *nzSpaceItem
+              nz-checkbox
+              nzChecked
+              (nzCheckedChange)="adultUnchecked()">
+              🔞
+            </label>
+          </ng-container>
           <button *nzSpaceItem nz-button nzType="primary" nzSearch>
             <span nz-icon nzType="search"></span>
           </button>
@@ -34,6 +44,15 @@
         (nzCheckedChange)="onOnlyAvailableChecked($event.valueOf())">
         Disponibles
       </label>
+      <ng-container *ngIf="adult$ | async">
+        <label
+          class="hide-on-desktop"
+          nz-checkbox
+          nzChecked
+          (nzCheckedChange)="adultUnchecked()">
+          🔞
+        </label>
+      </ng-container>
       <nz-progress
         *ngIf="(searchingMovie$ | async) || (searchingTv$ | async)"
         nzStatus="active"

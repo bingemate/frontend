@@ -1,17 +1,17 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { movieViewPath } from 'src/app/pages/medias/medias-routing.module';
-import { MovieResponse } from '../../../../shared/models/media.models';
+import { Actor } from '../../../../shared/models/media.models';
 import { Router } from '@angular/router';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Subscription } from 'rxjs';
+import { mediaByActorPath } from '../../../../pages/medias/medias-routing.module';
 
 @Component({
-  selector: 'app-movie-info-card',
-  templateUrl: './movie-info-card.component.html',
-  styleUrls: ['./movie-info-card.component.less'],
+  selector: 'app-actor-info-card',
+  templateUrl: './actor-info-card.component.html',
+  styleUrls: ['./actor-info-card.component.less'],
 })
-export class MovieInfoCardComponent implements OnInit, OnDestroy {
-  @Input() movie?: MovieResponse;
+export class ActorInfoCardComponent implements OnInit, OnDestroy {
+  @Input() actor?: Actor;
   isOnPhone = false;
 
   subscriptions: Subscription[] = [];
@@ -31,13 +31,9 @@ export class MovieInfoCardComponent implements OnInit, OnDestroy {
     );
   }
 
-  getRate(): number {
-    return Math.round(this.movie?.voteAverage ?? 0) / 2;
-  }
-
-  onViewMovie(): void {
+  onViewActor(): void {
     this.router
-      .navigate([movieViewPath, this.movie?.id], {
+      .navigate([mediaByActorPath, this.actor?.id], {
         onSameUrlNavigation: 'reload',
       })
       .then();

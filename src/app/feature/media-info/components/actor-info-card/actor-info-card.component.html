@@ -1,0 +1,18 @@
+<nz-card
+  [nzSize]="isOnPhone ? 'small' : 'default'"
+  nzHoverable
+  class="movie-poster"
+  [nzCover]="cover"
+  (click)="onViewActor()">
+  <nz-card-meta nzTitle="{{ actor?.name }}"></nz-card-meta>
+</nz-card>
+
+<ng-template #cover>
+  <img
+    nz-image
+    nzDisablePreview
+    [nzSrc]="actor?.profileUrl!"
+    [width]="isOnPhone ? 135 : 180"
+    [height]="isOnPhone ? 180 : 270"
+    alt="" />
+</ng-template>
