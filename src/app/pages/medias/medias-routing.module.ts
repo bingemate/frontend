@@ -11,11 +11,13 @@ import { TvByGenreComponent } from './tv-by-genre/tv-by-genre.component';
 import { TvByNetworkComponent } from './tv-by-network/tv-by-network.component';
 import { TvByActorComponent } from './tv-by-actor/tv-by-actor.component';
 import { SearchComponent } from './media-search/search.component';
+import { MediaByActorComponent } from './media-by-actor/media-by-actor.component';
 
 export const mediasLinks: NavigationLinks<
   | 'search'
   | 'trending'
   | 'movie_view'
+  | 'media_by_actor'
   | 'movies_by_genre'
   | 'movies_by_actor'
   | 'movies_by_studio'
@@ -30,11 +32,15 @@ export const mediasLinks: NavigationLinks<
   },
   search: {
     path: 'search',
-    name: 'Rechercher un média',
+    name: 'Rechercher',
   },
   movie_view: {
     path: 'movie-view',
     name: 'Film',
+  },
+  media_by_actor: {
+    path: 'media-by-actor',
+    name: 'Médias par acteur',
   },
   movies_by_genre: {
     path: 'movies-by-genre',
@@ -75,6 +81,9 @@ export const movieViewPath =
 export const tvShowViewPath =
   '/' + navigationRoot.medias.path + '/' + mediasLinks.tv_show_view.path;
 
+export const mediaByActorPath =
+  '/' + navigationRoot.medias.path + '/' + mediasLinks.media_by_actor.path;
+
 const routes: Routes = [
   {
     path: mediasLinks.search.path,
@@ -85,6 +94,11 @@ const routes: Routes = [
     path: mediasLinks.trending.path,
     component: TrendingComponent,
     data: { title: mediasLinks.trending.name },
+  },
+  {
+    path: mediasLinks.media_by_actor.path + '/:id',
+    component: MediaByActorComponent,
+    data: { title: mediasLinks.media_by_actor.name },
   },
   {
     path: mediasLinks.movie_view.path + '/:id',
