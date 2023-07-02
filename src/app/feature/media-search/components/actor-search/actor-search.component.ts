@@ -75,6 +75,9 @@ export class ActorSearchComponent {
   }
 
   search() {
+    if (this.adultCounter < 8) {
+      this.adultCounter = 0;
+    }
     if (this.query.length > 0) {
       this.store.dispatch(
         new ActorSearchActions.Search({
@@ -87,7 +90,7 @@ export class ActorSearchComponent {
 
   click() {
     this.adultCounter++;
-    if (this.adultCounter === 6) {
+    if (this.adultCounter === 8) {
       this.store.dispatch(new ActorSearchActions.Adult(true));
       this.manualSearch();
     }

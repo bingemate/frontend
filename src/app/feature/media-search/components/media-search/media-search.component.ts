@@ -87,6 +87,9 @@ export class MediaSearchComponent implements OnInit, OnDestroy {
   }
 
   search() {
+    if (this.adultCounter < 8) {
+      this.adultCounter = 0;
+    }
     if (this.query.length > 0) {
       this.store.dispatch(
         new MediaSearchActions.Search({
@@ -122,7 +125,7 @@ export class MediaSearchComponent implements OnInit, OnDestroy {
 
   click() {
     this.adultCounter++;
-    if (this.adultCounter === 6) {
+    if (this.adultCounter === 8) {
       this.store.dispatch(new MediaSearchActions.Adult(true));
       this.manualSearch();
     }
