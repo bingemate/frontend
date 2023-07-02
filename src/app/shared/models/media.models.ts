@@ -123,4 +123,15 @@ export interface MediaSearchStateModel {
   tvShowsLoading: boolean;
   hasMoviesError: boolean;
   hasTvShowsError: boolean;
+  adult: boolean;
+}
+
+export interface ActorSearchStateModel {
+  query: string;
+  actors: ActorsResults;
+  currentPage: number;
+  error: string;
+  loading: boolean;
+  hasError: boolean;
+  adult: boolean;
 }
