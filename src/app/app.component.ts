@@ -34,6 +34,7 @@ import { MessagingState } from './feature/messaging/store/messaging.state';
 import { WatchTogetherService } from './feature/watch-together/watch-together.service';
 import { Message } from './shared/models/messaging.model';
 import { WatchTogetherRoom } from './shared/models/watch-together.models';
+import { PlaylistActions } from './feature/playlist/store/playlist.actions';
 
 @Component({
   selector: 'app-root',
@@ -150,6 +151,9 @@ export class AppComponent implements OnInit, OnDestroy {
               );
               this.messagingService.startMessagingSocket();
               this.watchTogetherService.startWatchTogetherSocket();
+              this.store.dispatch(
+                new PlaylistActions.GetCurrentUserPlaylists()
+              );
             },
             error: () => {
               this.notificationsService.error(
