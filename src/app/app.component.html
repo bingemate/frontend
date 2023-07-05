@@ -24,7 +24,7 @@
         <li
           *ngIf="isAuthenticated"
           nz-submenu
-          [nzOpen]="!isOnPhone"
+          [nzOpen]="!isOnPhone && !isNavbarCollapsed"
           nzTitle="Médiathèque"
           [nzIcon]="navigationRoot.medias.icon!">
           <ul>
