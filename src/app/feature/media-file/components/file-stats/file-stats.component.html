@@ -8,12 +8,12 @@
     </nz-col>
     <nz-col [nzXl]="6" [nzMd]="12">
       <nz-statistic
-        nzValue="{{ mediaFileTotalSize * 1.07374 | nzBytes : 2 }}"
+        nzValue="{{ mediaFileTotalSize * 1.07374 | nzBytes : 2 : 'B' : 'GB' }}"
         nzTitle="Espace disque utilisé"></nz-statistic>
     </nz-col>
     <nz-col [nzXl]="6" [nzMd]="12">
       <nz-statistic
-        nzValue="{{ availableDiskSpace * 1.07374 | nzBytes : 2 }}"
+        nzValue="{{ availableDiskSpace * 1.07374 | nzBytes : 2 : 'B' : 'GB' }}"
         nzTitle="Espace disque disponible"></nz-statistic>
     </nz-col>
     <nz-col [nzXl]="6" [nzMd]="12">

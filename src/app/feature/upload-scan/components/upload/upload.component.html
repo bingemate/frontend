@@ -32,7 +32,9 @@
           </nz-list-item-meta-title>
         </nz-list-item-meta>
         <nz-space nzSize="large" nzAlign="center">
-          <span *nzSpaceItem>{{ item.file.size * 1.07374 | nzBytes }}</span>
+          <span *nzSpaceItem>{{
+            item.file.size * 1.07374 | nzBytes : 2 : 'B' : 'GB'
+          }}</span>
           <span *nzSpaceItem
             ><nz-spin *ngIf="item.progress" nzSpinning></nz-spin
           ></span>
