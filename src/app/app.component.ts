@@ -288,7 +288,10 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   openMessageNotification(message: Message) {
-    if (this.user?.id !== message.senderId) {
+    if (
+      this.user?.id !== message.senderId &&
+      !this.router.url.includes('chat')
+    ) {
       this.notificationsService.template(
         this.messageNotificationTemplate,
         message
