@@ -182,7 +182,7 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
           position < api.currentTime - 2 ||
           api.state === 'paused'
         ) {
-          api.currentTime = position;
+          api.seekTime(position);
         }
       })
     );
