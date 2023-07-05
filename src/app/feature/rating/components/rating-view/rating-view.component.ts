@@ -1,4 +1,10 @@
-import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  Output,
+} from '@angular/core';
 import { RatingResponse } from '../../../../shared/models/rating.models';
 import { RatingService } from '../../rating.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';

@@ -6,8 +6,14 @@ import { UserResponse } from '../../../shared/models/user.models';
 import { HttpClient } from '@angular/common/http';
 import { API_RESOURCE_URI } from '../../../shared/api-resource-uri/api-resources-uri';
 import { CommentService } from '../../../feature/comment/comment.service';
-import { CommentResults, emptyCommentResults } from '../../../shared/models/comment.models';
-import { emptyRatingResults, RatingResults } from '../../../shared/models/rating.models';
+import {
+  CommentResults,
+  emptyCommentResults,
+} from '../../../shared/models/comment.models';
+import {
+  emptyRatingResults,
+  RatingResults,
+} from '../../../shared/models/rating.models';
 import { RatingService } from '../../../feature/rating/rating.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 

@@ -1,7 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UserResponse } from '../../../shared/models/user.models';
-import { CommentResults, emptyCommentResults } from '../../../shared/models/comment.models';
-import { emptyRatingResults, RatingResults } from '../../../shared/models/rating.models';
+import {
+  CommentResults,
+  emptyCommentResults,
+} from '../../../shared/models/comment.models';
+import {
+  emptyRatingResults,
+  RatingResults,
+} from '../../../shared/models/rating.models';
 import { CommentService } from '../../../feature/comment/comment.service';
 import { RatingService } from '../../../feature/rating/rating.service';
 import { UserService } from '../../../feature/user/user.service';
