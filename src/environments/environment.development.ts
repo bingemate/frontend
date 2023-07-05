@@ -9,7 +9,8 @@ export const environment: EnvironmentType = {
   envName: 'DEV',
   appVersion: packageJson.version,
   apiUrl: 'https://api.bingemate.fr/dev',
-  websocketUrl: 'https://api.bingemate.fr',
+  messagingWebsocketUrl: 'https://ws-messaging-dev.bingemate.fr',
+  watchWebsocketUrl: 'https://ws-watch-dev.bingemate.fr',
   streamingBucketUrl: 'https://bingemate-dev.s3.fr-par.scw.cloud',
   auth: {
     clientId: 'angular-frontend',

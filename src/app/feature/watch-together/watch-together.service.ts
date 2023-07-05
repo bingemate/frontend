@@ -35,10 +35,9 @@ export class WatchTogetherService {
   }
 
   private initSocketConnection(sessionId: string) {
-    this.socket = io(`${environment.websocketUrl}/watch-together`, {
-      transports: ['polling'],
+    this.socket = io(`${environment.watchWebsocketUrl}/watch-together`, {
+      transports: ['websocket'],
       auth: { token: sessionId },
-      path: `${environment.production ? '' : '/dev'}/watch-service/socket.io`,
     });
     this.socket.on('invitedToRoom', room => {
       this.notificationCb?.(room);
