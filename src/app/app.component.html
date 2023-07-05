@@ -242,23 +242,48 @@
     </nz-content>
   </nz-layout>
 </nz-layout>
-<ng-template #notificationTemplate let-notification>
-  <div class="ant-notification-notice-content" *ngIf="receivedMessage">
+<ng-template #messageNotificationTemplate let-message="data">
+  <div class="ant-notification-notice-content" *ngIf="message">
     <div>
       <div class="ant-notification-notice-message">
-        Message reçu de {{ receivedMessage.senderId | username | async }}
+        Message reçu de {{ message.senderId | username | async }}
       </div>
       <div class="ant-notification-notice-description">
-        {{ receivedMessage.text }}
+        {{ message.text }}
       </div>
       <span class="ant-notification-notice-btn">
         <button
           nz-button
           nzType="primary"
           nzSize="small"
-          [routerLink]="['/social-network/chat', receivedMessage.senderId]"
-          (click)="notification.close()">
+          [routerLink]="['/social-network/chat', message.senderId]"
+          (click)="message.close()">
           <span>Répondre</span>
+        </button>
+      </span>
+    </div>
+  </div>
+</ng-template>
+<ng-template #roomNotificationTemplate let-room="data">
+  <div class="ant-notification-notice-content" *ngIf="room">
+    <div>
+      <div class="ant-notification-notice-message">
+        Lecture partagée démarrée par {{ room.ownerId | username | async }}
+      </div>
+      <div class="ant-notification-notice-description">
+        {{
+          room.mediaIds[room.playlistPosition]
+            | mediaName : (room.mediaType === 'movies' ? 'movie' : 'episode')
+            | async
+        }}
+      </div>
+      <span class="ant-notification-notice-btn">
+        <button
+          nz-button
+          nzType="primary"
+          nzSize="small"
+          (click)="joinRoom(room.id); room.close()">
+          <span>Rejoindre</span>
         </button>
       </span>
     </div>

@@ -42,7 +42,7 @@ export class EpisodeInfoListComponent implements OnInit, OnDestroy {
 
   seasonEpisodes: TvEpisodeResponse[] = [];
   seasonEpisodesHistory: Map<number, HistoryModel> = new Map();
-  selectedEpisode?: TvEpisodeResponse;
+  selectedEpisodes: TvEpisodeResponse[] = [];
   showWatchTogether = false;
   selectedFriends: string[] = [];
   friends: string[] = [];
@@ -114,20 +114,25 @@ export class EpisodeInfoListComponent implements OnInit, OnDestroy {
   }
 
   onEpisodeSelection(episode: TvEpisodeResponse) {
-    if (this.selectedEpisode === episode) {
-      this.selectedEpisode = undefined;
+    if (this.selectedEpisodes.includes(episode)) {
+      this.selectedEpisodes = this.selectedEpisodes.filter(
+        selected => selected !== episode
+      );
       return;
     }
-    this.selectedEpisode = episode;
+    this.selectedEpisodes.push(episode);
   }
 
   addToPlaylist(playlistId: string) {
-    if (this.selectedEpisode) {
+    if (this.selectedEpisodes.length > 0) {
       this.subscriptions.push(
         this.episodePlaylistsService
-          .addToPlaylist(playlistId, {
-            episodeId: this.selectedEpisode.id,
-          })
+          .addToPlaylist(
+            playlistId,
+            this.selectedEpisodes.map(episode => ({
+              episodeId: episode.id,
+            }))
+          )
           .subscribe(() =>
             this.notificationsService.success('Episode ajouté à la playlist')
           )
