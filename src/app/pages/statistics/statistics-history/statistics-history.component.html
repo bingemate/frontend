@@ -1,46 +1,64 @@
-<nz-list nzItemLayout="vertical" [nzLoading]="historyLoading">
-  <nz-list-item *ngFor="let item of history">
-    <nz-list-item-meta>
-      <nz-list-item-meta-description>
-        <app-media-info
-          [type]="item.type"
-          [vertical]="isOnPhone"
-          [routerLink]="
-            (isSubscribed$ | async)
-              ? [mediaStreamPath, item.type, item.mediaId]
-              : []
-          "
-          [queryParams]="{
-            progress: item.stoppedAt > 0.95 ? 0 : item.stoppedAt
-          }"
-          style="cursor: pointer"
-          [mediaId]="item.mediaId"></app-media-info>
-        <nz-progress
-          [nzPercent]="
-            ((item.stoppedAt > 0.95 ? 1 : item.stoppedAt) * 100).toFixed(2)
-          "></nz-progress>
-      </nz-list-item-meta-description>
-    </nz-list-item-meta>
-    <ul nz-list-item-actions>
-      <nz-list-item-action>
-        <span nz-typography class="hide-on-phone">
-          Vu le {{ item.viewedAt | date : 'dd/MM/yyyy à HH:mm' }}
-        </span>
-      </nz-list-item-action>
-      <nz-list-item-action>
-        <button
-          nz-button
-          nzType="primary"
-          nzDanger
-          nz-popconfirm
-          nzPopconfirmTitle="Voulez-vous vraiment supprimer cet élément de votre historique ?"
-          (nzOnConfirm)="deleteMedia(item)">
-          <span nz-icon nzType="delete"></span>
-          <span class="hide-on-phone"> Supprimer </span>
-        </button>
-      </nz-list-item-action>
-    </ul>
-  </nz-list-item>
+<nz-list nzItemLayout="vertical" [nzLoading]="historyLoading || mediaLoading">
+  <ng-container *ngIf="!historyLoading && !mediaLoading">
+    <nz-list-item *ngFor="let item of history">
+      <nz-list-item-meta>
+        <nz-list-item-meta-description>
+          <app-media-info
+            [vertical]="isOnPhone"
+            [routerLink]="
+              (isSubscribed$ | async)
+                ? [mediaStreamPath, item.type, item.mediaId]
+                : []
+            "
+            [queryParams]="{
+              progress: item.stoppedAt > 0.95 ? 0 : item.stoppedAt
+            }"
+            style="cursor: pointer"
+            [type]="item.type"
+            [movieMedia]="
+              item.type === 'movies'
+                ? movieResponseMap.get(item.mediaId)!
+                : undefined
+            "
+            [episodeMedia]="
+              item.type === 'tv-shows'
+                ? episodeResponseMap.get(item.mediaId)!
+                : undefined
+            "
+            [tvShowMedia]="
+              item.type === 'tv-shows'
+                ? tvShowsResponseMap.get(
+                    episodeResponseMap.get(item.mediaId)!.tvShowId
+                  )!
+                : undefined
+            "></app-media-info>
+          <nz-progress
+            [nzPercent]="
+              ((item.stoppedAt > 0.95 ? 1 : item.stoppedAt) * 100).toFixed(2)
+            "></nz-progress>
+        </nz-list-item-meta-description>
+      </nz-list-item-meta>
+      <ul nz-list-item-actions>
+        <nz-list-item-action>
+          <span nz-typography class="hide-on-phone">
+            Vu le {{ item.viewedAt | date : 'dd/MM/yyyy à HH:mm' }}
+          </span>
+        </nz-list-item-action>
+        <nz-list-item-action>
+          <button
+            nz-button
+            nzType="primary"
+            nzDanger
+            nz-popconfirm
+            nzPopconfirmTitle="Voulez-vous vraiment supprimer cet élément de votre historique ?"
+            (nzOnConfirm)="deleteMedia(item)">
+            <span nz-icon nzType="delete"></span>
+            <span class="hide-on-phone"> Supprimer </span>
+          </button>
+        </nz-list-item-action>
+      </ul>
+    </nz-list-item>
+  </ng-container>
   <nz-list-empty
     *ngIf="history.length === 0 && !historyLoading"
     nzNoResult="Historique vide"></nz-list-empty>

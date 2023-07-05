@@ -13,7 +13,11 @@ import { UserSearchState } from './store/user-search.state';
 import { NgxsModule } from '@ngxs/store';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
 import { UserListComponent } from './components/user-list/user-list.component';
-import { CdkFixedSizeVirtualScroll, CdkVirtualForOf, CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
+import {
+  CdkFixedSizeVirtualScroll,
+  CdkVirtualForOf,
+  CdkVirtualScrollViewport,
+} from '@angular/cdk/scrolling';
 import { NzListModule } from 'ng-zorro-antd/list';
 import { RouterLink } from '@angular/router';
 import { UserInfoComponent } from './components/user-info/user-info.component';

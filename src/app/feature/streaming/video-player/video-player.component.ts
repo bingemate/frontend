@@ -91,7 +91,7 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
       this.room$.subscribe(room => {
         this.room = room;
         if (room && !this.interval) {
-          this.interval = interval(2000).subscribe(() =>
+          this.interval = interval(1000).subscribe(() =>
             this.watchTogetherService.getRoomStatus()
           );
         } else if (!room && this.interval) {
