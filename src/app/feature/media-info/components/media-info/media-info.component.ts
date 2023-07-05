@@ -2,6 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   MovieResponse,
   TvEpisodeResponse,
+  TvShowResponse,
 } from '../../../../shared/models/media.models';
 import { MediaInfoService } from '../../media-info.service';
 import { Subscription } from 'rxjs';
@@ -21,8 +22,13 @@ export class MediaInfoComponent implements OnInit, OnDestroy {
   @Input()
   vertical = false;
 
+  @Input()
   movieMedia: MovieResponse | undefined;
+  @Input()
   episodeMedia: TvEpisodeResponse | undefined;
+  @Input()
+  tvShowMedia: TvShowResponse | undefined;
+
   posterUrl = this.emptyImage;
 
   subscriptions: Subscription[] = [];
@@ -39,23 +45,31 @@ export class MediaInfoComponent implements OnInit, OnDestroy {
       this.isOnPhone = result.matches;
     });
     if (this.type === 'tv-shows') {
-      this.subscriptions.push(
-        this.mediaInfoService
-          .getTvShowEpisodeInfoById(this.mediaId)
-          .subscribe(episode => {
-            this.episodeMedia = episode;
-            this.posterUrl = episode.posterUrl;
-          })
-      );
+      if (this.mediaId !== 0 && this.episodeMedia === undefined) {
+        this.subscriptions.push(
+          this.mediaInfoService
+            .getTvShowEpisodeInfoById(this.mediaId)
+            .subscribe(episode => {
+              this.episodeMedia = episode;
+              this.posterUrl = episode.posterUrl;
+            })
+        );
+      } else {
+        this.posterUrl = this.episodeMedia?.posterUrl ?? this.emptyImage;
+      }
     } else {
-      this.subscriptions.push(
-        this.mediaInfoService
-          .getMovieShortInfo(this.mediaId)
-          .subscribe(movie => {
-            this.movieMedia = movie;
-            this.posterUrl = movie.backdropUrl;
-          })
-      );
+      if (this.mediaId !== 0 && this.movieMedia === undefined) {
+        this.subscriptions.push(
+          this.mediaInfoService
+            .getMovieShortInfo(this.mediaId)
+            .subscribe(movie => {
+              this.movieMedia = movie;
+              this.posterUrl = movie.backdropUrl;
+            })
+        );
+      } else {
+        this.posterUrl = this.movieMedia?.backdropUrl ?? this.emptyImage;
+      }
     }
   }
 

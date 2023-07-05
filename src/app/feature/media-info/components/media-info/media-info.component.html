@@ -23,7 +23,12 @@
         {{ movieMedia?.title }}
       </ng-container>
       <ng-template #episode>
-        {{ episodeMedia?.tvShowId ?? 1 | mediaName : 'tv' | async }}
+        <ng-container *ngIf="tvShowMedia !== undefined; else tvNamePipe">
+          {{ tvShowMedia?.title }}
+        </ng-container>
+        <ng-template #tvNamePipe>
+          {{ episodeMedia?.tvShowId ?? 1 | mediaName : 'tv' | async }}
+        </ng-template>
         <br />
         {{ episodeMedia?.seasonNumber }}x{{
           episodeMedia?.episodeNumber?.toString()?.padStart(2, '0')
@@ -44,7 +49,12 @@
         {{ movieMedia?.title }}
       </ng-container>
       <ng-template #episode>
-        {{ episodeMedia?.tvShowId ?? 1 | mediaName : 'tv' | async }}
+        <ng-container *ngIf="tvShowMedia !== undefined; else tvNamePipe">
+          {{ tvShowMedia?.title }}
+        </ng-container>
+        <ng-template #tvNamePipe>
+          {{ episodeMedia?.tvShowId ?? 1 | mediaName : 'tv' | async }}
+        </ng-template>
         <br />
         {{ episodeMedia?.seasonNumber }}x{{
           episodeMedia?.episodeNumber?.toString()?.padStart(2, '0')
