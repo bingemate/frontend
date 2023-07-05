@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { KeycloakService } from 'keycloak-angular';
 import { io, Socket } from 'socket.io-client';
-import { NotificationsService } from '../../core/notifications/notifications.service';
 import {
   CreateWatchTogetherRoomRequest,
   SessionIdResponse,
+  WatchTogetherRoom,
 } from '../../shared/models/watch-together.models';
 import { WatchTogetherActions } from './store/watch-together.actions';
 import { StreamingActions } from '../streaming/store/streaming.actions';
@@ -19,11 +19,12 @@ import { API_RESOURCE_URI } from '../../shared/api-resource-uri/api-resources-ur
 })
 export class WatchTogetherService {
   private socket?: Socket;
+  notificationCb?: (room: WatchTogetherRoom) => void;
+
   constructor(
     private keycloak: KeycloakService,
     private store: Store,
-    private readonly http: HttpClient,
-    private notificationsService: NotificationsService
+    private readonly http: HttpClient
   ) {}
 
   async startWatchTogetherSocket() {
@@ -40,7 +41,7 @@ export class WatchTogetherService {
       path: `${environment.production ? '' : '/dev'}/watch-service/socket.io`,
     });
     this.socket.on('invitedToRoom', room => {
-      this.notificationsService.info('Invitation à une lecture partagée');
+      this.notificationCb?.(room);
       this.store.dispatch(new WatchTogetherActions.AddRoom(room));
     });
     this.socket.on('rooms', rooms =>
