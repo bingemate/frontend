@@ -52,6 +52,9 @@ export interface EpisodePlaylistIdDto {
 export interface AddPlaylistEpisodeRequest {
   episodeId: number;
 }
+export interface AddPlaylistEpisodesRequest {
+  episodes: AddPlaylistEpisodeRequest[];
+}
 
 export function toEpisodePlaylists(
   playlist: EpisodePlaylistsApiResponse

@@ -7,7 +7,9 @@
   nzType="default"
   nzShape="round"
   nz-dropdown
-  [disabled]="!selectedEpisode || (playlists$ | async)?.length === 0"
+  [disabled]="
+    selectedEpisodes.length <= 0 || (playlists$ | async)?.length === 0
+  "
   nz-tooltip
   [nzTooltipTitle]="
     (playlists$ | async)?.length === 0
@@ -42,11 +44,7 @@
             <label
               *nzSpaceItem
               nz-checkbox
-              [nzDisabled]="
-                (selectedEpisode !== undefined &&
-                  selectedEpisode !== episode) ||
-                !episode.present
-              "
+              [nzDisabled]="!episode.present"
               [ngModel]="false"
               (ngModelChange)="onEpisodeSelection(episode)"></label>
             <nz-space *nzSpaceItem nzDirection="vertical" class="hide-on-phone">

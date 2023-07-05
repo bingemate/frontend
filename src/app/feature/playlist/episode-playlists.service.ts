@@ -67,10 +67,10 @@ export class EpisodePlaylistsService {
     );
   }
 
-  addToPlaylist(playlistId: string, request: AddPlaylistEpisodeRequest) {
+  addToPlaylist(playlistId: string, episodes: AddPlaylistEpisodeRequest[]) {
     return this.http.patch<void>(
       `${API_RESOURCE_URI.WATCH_SERVICE}/episode-playlist/${playlistId}`,
-      request
+      { episodes }
     );
   }
 }
