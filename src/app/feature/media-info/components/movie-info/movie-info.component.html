@@ -184,8 +184,11 @@
 
 <nz-dropdown-menu #playlistMenu="nzDropdownMenu">
   <ul nz-menu>
-    <li nz-menu-item *ngFor="let playlist of playlists$ | async">
-      <a (click)="addToPlaylist(playlist.id)">{{ playlist.name }}</a>
+    <li
+      nz-menu-item
+      (click)="addToPlaylist(playlist.id)"
+      *ngFor="let playlist of playlists$ | async">
+      {{ playlist.name }}
     </li>
   </ul>
 </nz-dropdown-menu>
@@ -215,18 +218,14 @@
   <ul nz-menu>
     <li
       nz-menu-item
+      [routerLink]="[streamPath, movie?.id]"
+      [queryParams]="{
+        progress: movieHistory.stoppedAt
+      }"
       *ngIf="movieHistory !== null && movieHistory.stoppedAt < 0.95">
-      <a
-        [routerLink]="[streamPath, movie?.id]"
-        [queryParams]="{
-          progress: movieHistory.stoppedAt
-        }"
-        >Reprendre la lecture</a
-      >
+      Reprendre la lecture
     </li>
-    <li nz-menu-item>
-      <a (click)="watchTogetherModal()">Lecture partagée</a>
-    </li>
+    <li nz-menu-item (click)="watchTogetherModal()">Lecture partagée</li>
   </ul>
 </nz-dropdown-menu>
 <nz-modal

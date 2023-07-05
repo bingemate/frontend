@@ -22,8 +22,11 @@
 </button>
 <nz-dropdown-menu #playlistMenu="nzDropdownMenu">
   <ul nz-menu>
-    <li nz-menu-item *ngFor="let playlist of playlists$ | async">
-      <a (click)="addToPlaylist(playlist.id)">{{ playlist.name }}</a>
+    <li
+      (click)="addToPlaylist(playlist.id)"
+      nz-menu-item
+      *ngFor="let playlist of playlists$ | async">
+      {{ playlist.name }}
     </li>
   </ul>
 </nz-dropdown-menu>
@@ -127,22 +130,18 @@
             <ul nz-menu>
               <li
                 nz-menu-item
+                [routerLink]="[streamPath, episode.id]"
+                [queryParams]="{
+                  progress: seasonEpisodesHistory.get(episode.id)!.stoppedAt
+                }"
                 *ngIf="
                   seasonEpisodesHistory.has(episode.id) &&
                   seasonEpisodesHistory.get(episode.id)!.stoppedAt < 0.95
                 ">
-                <a
-                  [routerLink]="[streamPath, episode.id]"
-                  [queryParams]="{
-                    progress: seasonEpisodesHistory.get(episode.id)!.stoppedAt
-                  }">
-                  Reprendre la lecture
-                </a>
+                Reprendre la lecture
               </li>
-              <li nz-menu-item>
-                <a (click)="watchTogetherModal(episode.id)">
-                  Lecture partagée
-                </a>
+              <li nz-menu-item (click)="watchTogetherModal(episode.id)">
+                Lecture partagée
               </li>
             </ul>
           </nz-dropdown-menu>
