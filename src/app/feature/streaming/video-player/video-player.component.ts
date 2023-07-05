@@ -177,7 +177,11 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
     this.subscriptions.push(
       this.position$.subscribe(position => {
         position = position * api.duration;
-        if (position > api.currentTime + 2 || position < api.currentTime - 2) {
+        if (
+          position > api.currentTime + 2 ||
+          position < api.currentTime - 2 ||
+          api.state === 'paused'
+        ) {
           api.seekTime(position);
         }
       })
