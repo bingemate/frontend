@@ -41,7 +41,6 @@ import { Message } from './shared/models/messaging.model';
 })
 export class AppComponent implements OnInit, OnDestroy {
   @ViewChild('notificationTemplate') notificationTemplate!: TemplateRef<object>;
-  receivedMessage?: Message;
 
   readonly environment = environment;
   isOnPhone = false;
@@ -133,8 +132,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   openMessageNotification(message: Message) {
     if (this.user?.id !== message.senderId) {
-      this.receivedMessage = message;
-      this.notificationsService.template(this.notificationTemplate);
+      this.notificationsService.template(this.notificationTemplate, message);
     }
   }
 

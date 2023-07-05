@@ -242,21 +242,21 @@
     </nz-content>
   </nz-layout>
 </nz-layout>
-<ng-template #notificationTemplate let-notification>
-  <div class="ant-notification-notice-content" *ngIf="receivedMessage">
+<ng-template #notificationTemplate let-notification="data">
+  <div class="ant-notification-notice-content" *ngIf="notification">
     <div>
       <div class="ant-notification-notice-message">
-        Message reçu de {{ receivedMessage.senderId | username | async }}
+        Message reçu de {{ notification.senderId | username | async }}
       </div>
       <div class="ant-notification-notice-description">
-        {{ receivedMessage.text }}
+        {{ notification.text }}
       </div>
       <span class="ant-notification-notice-btn">
         <button
           nz-button
           nzType="primary"
           nzSize="small"
-          [routerLink]="['/social-network/chat', receivedMessage.senderId]"
+          [routerLink]="['/social-network/chat', notification.senderId]"
           (click)="notification.close()">
           <span>Répondre</span>
         </button>
