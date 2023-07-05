@@ -150,11 +150,10 @@ export class StreamComponent implements OnInit, OnDestroy {
     if (this.socket) {
       this.socket.close();
     }
-    this.socket = io(`${environment.websocketUrl}/history`, {
+    this.socket = io(`${environment.watchWebsocketUrl}/history`, {
       forceNew: true,
-      transports: ['polling'],
+      transports: ['websocket'],
       auth: { token },
-      path: `${environment.production ? '' : '/dev'}/watch-service/socket.io`,
       query: {
         mediaId: this.mediaId,
         type: this.type,

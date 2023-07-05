@@ -66,7 +66,9 @@
             <td>{{ episodeFile.episodeNumber }}</td>
             <td>{{ episodeFile.releaseDate | date : 'dd/MM/yyyy' }}</td>
             <td>{{ episodeFile.file.duration | duration }}</td>
-            <td>{{ episodeFile.file.size * 1.07374 | nzBytes : 2 }}</td>
+            <td>
+              {{ episodeFile.file.size * 1.07374 | nzBytes : 2 }}
+            </td>
             <td>{{ episodeFile.file.createdAt | date : 'dd/MM/yyyy' }}</td>
             <td>
               <nz-tag

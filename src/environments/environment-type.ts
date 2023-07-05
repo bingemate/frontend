@@ -4,7 +4,8 @@ export type EnvironmentType = {
   envName: string;
   appVersion: string;
   apiUrl: string;
-  websocketUrl: string;
+  messagingWebsocketUrl: string;
+  watchWebsocketUrl: string;
   streamingBucketUrl: string;
   auth: {
     clientId: string;

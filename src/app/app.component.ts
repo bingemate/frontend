@@ -33,6 +33,7 @@ import { MessagingService } from './feature/messaging/messaging.service';
 import { MessagingState } from './feature/messaging/store/messaging.state';
 import { WatchTogetherService } from './feature/watch-together/watch-together.service';
 import { Message } from './shared/models/messaging.model';
+import { WatchTogetherRoom } from './shared/models/watch-together.models';
 
 @Component({
   selector: 'app-root',
@@ -40,8 +41,10 @@ import { Message } from './shared/models/messaging.model';
   styleUrls: ['./app.component.less'],
 })
 export class AppComponent implements OnInit, OnDestroy {
-  @ViewChild('notificationTemplate') notificationTemplate!: TemplateRef<object>;
-  receivedMessage?: Message;
+  @ViewChild('messageNotificationTemplate')
+  messageNotificationTemplate!: TemplateRef<object>;
+  @ViewChild('roomNotificationTemplate')
+  roomNotificationTemplate!: TemplateRef<object>;
 
   readonly environment = environment;
   isOnPhone = false;
@@ -89,6 +92,8 @@ export class AppComponent implements OnInit, OnDestroy {
     this.subscribeForAuthEvents();
     this.subscribeForThemeEvents();
     this.isUserLoggedIn();
+    this.watchTogetherService.notificationCb =
+      this.openRoomNotification.bind(this);
     this.messagingService.notificationCb =
       this.openMessageNotification.bind(this);
   }
@@ -129,13 +134,6 @@ export class AppComponent implements OnInit, OnDestroy {
       this.user = user;
       this.accountLinks = this._accountLinks();
     });
-  }
-
-  openMessageNotification(message: Message) {
-    if (this.user?.id !== message.senderId) {
-      this.receivedMessage = message;
-      this.notificationsService.template(this.notificationTemplate);
-    }
   }
 
   isUserLoggedIn() {
@@ -287,6 +285,28 @@ export class AppComponent implements OnInit, OnDestroy {
     if (this.isOnPhone) {
       this.isNavbarCollapsed = true;
     }
+  }
+
+  openMessageNotification(message: Message) {
+    if (
+      this.user?.id !== message.senderId &&
+      !this.router.url.includes('chat')
+    ) {
+      this.notificationsService.template(
+        this.messageNotificationTemplate,
+        message
+      );
+    }
+  }
+
+  openRoomNotification(room: WatchTogetherRoom) {
+    if (this.user?.id !== room.ownerId) {
+      this.notificationsService.template(this.roomNotificationTemplate, room);
+    }
+  }
+
+  joinRoom(roomId: string) {
+    this.watchTogetherService.joinRoom(roomId);
   }
 
   protected readonly uploadLink = uploadLink;

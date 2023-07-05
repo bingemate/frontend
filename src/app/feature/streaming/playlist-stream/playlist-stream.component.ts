@@ -1,4 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { map, mergeMap, Observable, Subscription, switchMap } from 'rxjs';
 import { MediaInfoService } from '../../media-info/media-info.service';
@@ -20,6 +26,7 @@ import { TvEpisodeResponse } from '../../../shared/models/media.models';
 import { WatchTogetherRoom } from '../../../shared/models/watch-together.models';
 import { WatchTogetherState } from '../../watch-together/store/watch-together.state';
 import { WatchTogetherService } from '../../watch-together/watch-together.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-playlist-stream',
@@ -27,6 +34,8 @@ import { WatchTogetherService } from '../../watch-together/watch-together.servic
   styleUrls: ['./playlist-stream.component.less'],
 })
 export class PlaylistStreamComponent implements OnInit, OnDestroy {
+  @ViewChild('scrollContainer') scrollContainer: ElementRef | undefined;
+
   @Select(WatchTogetherState.joinedRoom)
   room$!: Observable<WatchTogetherRoom>;
   room?: WatchTogetherRoom;
@@ -51,15 +60,22 @@ export class PlaylistStreamComponent implements OnInit, OnDestroy {
   episodeNames: Map<number, string> = new Map<number, string>();
 
   isOnPhone = false;
+  mediaId = 0;
 
   constructor(
     private breakpointObserver: BreakpointObserver,
     private readonly store: Store,
     private mediaService: MediaInfoService,
-    private watchTogetherService: WatchTogetherService
+    private watchTogetherService: WatchTogetherService,
+    private activatedRoute: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
+    this.subscriptions.push(
+      this.activatedRoute.params.subscribe(params => {
+        this.mediaId = params['id'];
+      })
+    );
     this.subscriptions.push(
       this.breakpointObserver
         .observe([Breakpoints.Handset])
@@ -78,6 +94,7 @@ export class PlaylistStreamComponent implements OnInit, OnDestroy {
                 }),
                 tap(items => {
                   this.moviePlaylistItems = items;
+                  this.scrollToMedia();
                 })
               );
             } else {
@@ -87,6 +104,7 @@ export class PlaylistStreamComponent implements OnInit, OnDestroy {
                 }),
                 tap(items => {
                   this.episodePlaylistItems = items;
+                  this.scrollToMedia();
                 })
               );
             }
@@ -101,6 +119,23 @@ export class PlaylistStreamComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       this.position$.subscribe(position => (this.position = position))
     );
+  }
+
+  scrollToMedia() {
+    setTimeout(() => {
+      if (this.mediaId === 0) {
+        console.log('mediaId is 0');
+        return;
+      }
+      console.log('mediaId is ' + this.mediaId);
+      const targetElement = document.getElementById('media-' + this.mediaId);
+      if (targetElement) {
+        console.log('scrolling to ' + targetElement.offsetTop);
+        this.scrollContainer!.nativeElement.scrollTop = targetElement.offsetTop;
+      } else {
+        console.log('targetElement is null');
+      }
+    }, 1000);
   }
 
   ngOnDestroy(): void {

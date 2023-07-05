@@ -55,7 +55,9 @@
             </td>
             <td>{{ movieFile.releaseDate | date : 'dd/MM/yyyy' }}</td>
             <td>{{ movieFile.file.duration | duration }}</td>
-            <td>{{ movieFile.file.size * 1.07374 | nzBytes : 2 }}</td>
+            <td>
+              {{ movieFile.file.size * 1.07374 | nzBytes : 2 }}
+            </td>
             <td>{{ movieFile.file.createdAt | date : 'dd/MM/yyyy' }}</td>
             <td>
               <nz-tag

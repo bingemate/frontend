@@ -22,12 +22,9 @@ export class MessagingService {
   }
 
   private async initSocketConnection(token: string) {
-    this.socket = io(`${environment.websocketUrl}`, {
-      transports: ['polling'],
+    this.socket = io(`${environment.messagingWebsocketUrl}`, {
+      transports: ['websocket'],
       auth: { token },
-      path: `${
-        environment.production ? '' : '/dev'
-      }/messaging-service/socket.io`,
     });
     this.socket.on('messages', messages =>
       this.store.dispatch(new MessagingActions.SetMessages(messages))
