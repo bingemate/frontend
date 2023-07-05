@@ -2,11 +2,12 @@
   nzTitle="{{ playlist?.name }}"
   [nzExtra]="autoplayTemplate"
   [nzSize]="isOnPhone ? 'small' : 'default'">
-  <div class="infinite-container">
+  <div class="infinite-container" #scrollContainer>
     <nz-list nzItemLayout="vertical" [nzSize]="isOnPhone ? 'small' : 'default'">
       <nz-list-item
         class="media"
         *ngFor="let item of moviePlaylistItems; let index = index"
+        [id]="'media-' + item.playlistItem.movieId"
         [ngClass]="{ 'active-media': index === position }">
         <nz-list-item-meta style="margin: 0">
           <nz-list-item-meta-title class="media-title">
@@ -28,6 +29,7 @@
       <nz-list-item
         class="media"
         *ngFor="let item of episodePlaylistItems; let index = index"
+        [id]="'media-' + item.playlistItem.episodeId"
         [ngClass]="{ 'active-media': index === position }">
         <nz-list-item-meta style="margin: 0">
           <nz-list-item-meta-title class="media-title">
