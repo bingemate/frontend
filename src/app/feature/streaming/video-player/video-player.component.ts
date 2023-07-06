@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { MediaFile } from '../../../shared/models/media-file.models';
 import { BitrateOptions, VgApiService } from '@videogular/ngx-videogular/core';
-import { interval, Observable, Subscription, throttleTime } from 'rxjs';
+import { Observable, Subscription, throttleTime } from 'rxjs';
 import { navigationRoot } from '../../../app-routing.module';
 import { mediasLinks } from '../../../pages/medias/medias-routing.module';
 import {
@@ -59,7 +59,6 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
   isOnPhone = false;
 
   room?: WatchTogetherRoom;
-  private interval?: Subscription;
 
   audioOptions: BitrateOptions[] = [];
   audioList: string[] = [];
@@ -70,6 +69,8 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
   currentAudio = '';
   subscriptions: Subscription[] = [];
   mediaName = '';
+
+  isActionReceived = false;
 
   constructor(
     private readonly store: Store,
@@ -87,23 +88,11 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
     );
     this.loadMediaInfo();
     this.loadMediaFileInfo();
-    this.subscriptions.push(
-      this.room$.subscribe(room => {
-        this.room = room;
-        if (room && !this.interval) {
-          this.interval = interval(200).subscribe(() =>
-            this.watchTogetherService.getRoomStatus()
-          );
-        } else if (!room && this.interval) {
-          this.interval.unsubscribe();
-        }
-      })
-    );
+    this.subscriptions.push(this.room$.subscribe(room => (this.room = room)));
   }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(sub => sub.unsubscribe());
-    this.interval?.unsubscribe();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -185,11 +174,13 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
     this.subscriptions.push(
       this.status$.subscribe(status => {
         if (status === WatchTogetherStatus.PAUSED && api.state === 'playing') {
+          this.isActionReceived = true;
           api.pause();
         } else if (
           status === WatchTogetherStatus.PLAYING &&
           api.state === 'paused'
         ) {
+          this.isActionReceived = true;
           api.play();
         }
       })
@@ -219,9 +210,10 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
           watchStatus: StreamStatusEnum.STOPPED,
           stoppedAt: api.currentTime / api.duration || 0,
         });
-        if (this.room) {
+        if (this.room && !this.isActionReceived) {
           this.watchTogetherService.pause();
         }
+        this.isActionReceived = false;
       })
     );
     this.subscriptions.push(
@@ -230,9 +222,10 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
           watchStatus: StreamStatusEnum.STARTED,
           stoppedAt: api.currentTime / api.duration || 0,
         });
-        if (this.room) {
+        if (this.room && !this.isActionReceived) {
           this.watchTogetherService.play();
         }
+        this.isActionReceived = false;
       })
     );
     this.subscriptions.push(

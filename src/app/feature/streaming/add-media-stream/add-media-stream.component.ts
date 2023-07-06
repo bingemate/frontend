@@ -1,7 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { WatchTogetherService } from '../../watch-together/watch-together.service';
-import { map, Observable, Subject, Subscription, switchMap } from 'rxjs';
+import {
+  filter,
+  map,
+  Observable,
+  Subject,
+  Subscription,
+  switchMap,
+} from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { MediaDiscoverService } from '../../media-info/media-discover.service';
 import { WatchTogetherState } from '../../watch-together/store/watch-together.state';
@@ -33,8 +40,9 @@ export class AddMediaStreamComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.room$.subscribe(room => (this.room = room)));
     this.subscriptions.push(
       this.searchSubject
-        .pipe(debounceTime(300))
         .pipe(
+          filter(query => query.length > 0),
+          debounceTime(300),
           switchMap(query =>
             this.mediaDiscoverService.searchMovies(query, 1, true).pipe(
               map(movies =>

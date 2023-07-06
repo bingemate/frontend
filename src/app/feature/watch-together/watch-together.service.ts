@@ -30,7 +30,7 @@ export class WatchTogetherService {
   async startWatchTogetherSocket() {
     this.getSessionId().subscribe(sessionId => {
       this.initSocketConnection(sessionId);
-      this.socket?.emit('getMessages');
+      this.getRooms();
     });
   }
 
@@ -64,9 +64,6 @@ export class WatchTogetherService {
 
   getRooms() {
     this.socket?.emit('getRooms');
-  }
-  getRoomStatus() {
-    this.socket?.emit('getRoomStatus');
   }
 
   joinRoom(roomId: string) {
