@@ -70,6 +70,8 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
   subscriptions: Subscription[] = [];
   mediaName = '';
 
+  isActionReceived = false;
+
   constructor(
     private readonly store: Store,
     private breakpointObserver: BreakpointObserver,
@@ -172,11 +174,13 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
     this.subscriptions.push(
       this.status$.subscribe(status => {
         if (status === WatchTogetherStatus.PAUSED && api.state === 'playing') {
+          this.isActionReceived = true;
           api.pause();
         } else if (
           status === WatchTogetherStatus.PLAYING &&
           api.state === 'paused'
         ) {
+          this.isActionReceived = true;
           api.play();
         }
       })
@@ -206,9 +210,10 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
           watchStatus: StreamStatusEnum.STOPPED,
           stoppedAt: api.currentTime / api.duration || 0,
         });
-        if (this.room) {
+        if (this.room && !this.isActionReceived) {
           this.watchTogetherService.pause();
         }
+        this.isActionReceived = false;
       })
     );
     this.subscriptions.push(
@@ -217,11 +222,10 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
           watchStatus: StreamStatusEnum.STARTED,
           stoppedAt: api.currentTime / api.duration || 0,
         });
-        console.log('aaaaaa');
-        if (this.room) {
-          console.log('aaaaaa');
+        if (this.room && !this.isActionReceived) {
           this.watchTogetherService.play();
         }
+        this.isActionReceived = false;
       })
     );
     this.subscriptions.push(
