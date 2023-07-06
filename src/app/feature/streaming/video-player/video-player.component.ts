@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { MediaFile } from '../../../shared/models/media-file.models';
 import { BitrateOptions, VgApiService } from '@videogular/ngx-videogular/core';
-import { interval, Observable, Subscription, throttleTime } from 'rxjs';
+import { Observable, Subscription, throttleTime } from 'rxjs';
 import { navigationRoot } from '../../../app-routing.module';
 import { mediasLinks } from '../../../pages/medias/medias-routing.module';
 import {
@@ -59,7 +59,6 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
   isOnPhone = false;
 
   room?: WatchTogetherRoom;
-  private interval?: Subscription;
 
   audioOptions: BitrateOptions[] = [];
   audioList: string[] = [];
@@ -87,23 +86,11 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
     );
     this.loadMediaInfo();
     this.loadMediaFileInfo();
-    this.subscriptions.push(
-      this.room$.subscribe(room => {
-        this.room = room;
-        if (room && !this.interval) {
-          this.interval = interval(200).subscribe(() =>
-            this.watchTogetherService.getRoomStatus()
-          );
-        } else if (!room && this.interval) {
-          this.interval.unsubscribe();
-        }
-      })
-    );
+    this.subscriptions.push(this.room$.subscribe(room => (this.room = room)));
   }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(sub => sub.unsubscribe());
-    this.interval?.unsubscribe();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -230,7 +217,9 @@ export class VideoPlayerComponent implements OnInit, OnChanges, OnDestroy {
           watchStatus: StreamStatusEnum.STARTED,
           stoppedAt: api.currentTime / api.duration || 0,
         });
+        console.log('aaaaaa');
         if (this.room) {
+          console.log('aaaaaa');
           this.watchTogetherService.play();
         }
       })
