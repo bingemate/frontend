@@ -60,7 +60,7 @@
     "@angular-eslint/template-parser": "15.2.1",
     "@angular/cli": "~15.2.7",
     "@angular/compiler-cli": "^15.2.8",
-    "@compodoc/compodoc": "^1.1.21",
+    "@compodoc/compodoc": "^1.1.25",
     "@ngxs/devtools-plugin": "^3.8.1",
     "@types/core-js": "^2.5.5",
     "@types/socket.io-client": "^3.0.0",
