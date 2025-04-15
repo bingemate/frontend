@@ -33,7 +33,7 @@
     "@ngxs/store": "3.8.2",
     "@videogular/ngx-videogular": "^7.0.1",
     "chart.js": "^3.6.0",
-    "eslint-config-prettier": "^8.10.0",
+    "eslint-config-prettier": "^10.1.2",
     "eslint-plugin-prettier": "^4.2.1",
     "hls.js": "^1.5.18",
     "keycloak-angular": "^13.0.0",
